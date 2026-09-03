@@ -1,0 +1,172 @@
+/* AARO 화면 셸 — 3열 작업대.
+ *
+ * 좌 파라미터 · 중 뷰어 · 우 검사. 2D/3D 뷰어를 낀 설계 도구는 이 골격으로 수렴한다 —
+ * 다이얼을 돌리고, 결과를 보고, 왜 그렇게 됐는지 캔다. 세 앱이 각자 같은 구조를 다시
+ * 쓰고 있었다(DataCenter `aaro-dc-ds.css`, FulfillmentCenter `Sidebar`+`Hud`).
+ *
+ * **여백이 아니라 선이 구조를 만든다.** 패널 사이는 `--gap`(헤어라인 1px)이고 배경이
+ * 비쳐 경계가 된다. 그래서 패널마다 테두리를 그리지 않아도 격자가 읽힌다.
+ *
+ * 도메인 색(배치 객체 종류 등)은 여기 없다. 앱이 자기 CSS 에서 얹는다.
+ */
+
+@import "./tokens.css";
+
+/* ── 앱 셸 · Modularization 3열 ────────────────────────────── */
+
+.app-shell {
+  display: grid;
+  grid-template-rows: var(--topbar-h) minmax(0, 1fr);
+  height: 100vh;
+  background: var(--line);
+  gap: var(--gap);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: var(--panel-w) minmax(0, 1fr) var(--inspect-w);
+  gap: var(--gap);
+  min-height: 0;
+}
+
+@media (max-width: 1180px) {
+  .workspace { grid-template-columns: 260px minmax(0, 1fr); }
+  .panel-inspect { display: none; }
+}
+
+/* ── 상단 ──────────────────────────────────────────────────── */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  background: var(--surface);
+}
+.topbar h1 { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+.eyebrow {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted);
+}
+.topbar-spacer { margin-left: auto; }
+
+/* 룰셋이 잠정이라는 사실은 항상 보여야 한다 — 화면 어디에도 없으면
+   잠정값에서 나온 결과가 확정처럼 읽힌다. */
+.rule-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  color: var(--warn); background: var(--warn-pale);
+  border: 1px solid currentColor; padding: 4px 8px;
+}
+.status-dot { width: 6px; height: 6px; background: currentColor; }
+
+/* ── 패널 공통 ─────────────────────────────────────────────── */
+
+.panel {
+  background: var(--surface);
+  overflow-y: auto;
+  min-height: 0;
+}
+.panel-head {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.panel-head h2 { font-size: 11px; font-weight: 800; letter-spacing: 0.02em; }
+
+.group { border-bottom: 1px solid var(--line); }
+.group > summary {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  padding: 9px 12px; cursor: pointer; list-style: none;
+  font-size: 11px; font-weight: 800;
+}
+.group > summary::-webkit-details-marker { display: none; }
+.group > summary:hover { background: var(--surface-2); }
+/* 그룹 머리에 그 그룹이 지금 만들어내는 값을 되비친다 — 슬라이더를 움직였을 때
+   무엇이 바뀌는지 눈이 따라가야 한다. */
+.group > summary .echo {
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  color: var(--muted); text-align: right;
+}
+.group-body { padding: 4px 12px 12px; display: grid; gap: 9px; }
+
+/* ── 컨트롤 ────────────────────────────────────────────────── */
+
+.field { display: grid; gap: 4px; }
+.field > .label {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  font-size: 10.5px; color: var(--ink-2);
+}
+.field .val { font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--ink); }
+.field .path { font-family: var(--mono); font-size: 9px; color: var(--silver); }
+
+select, input[type="number"], input[type="text"], button {
+  font: inherit; font-size: 11.5px;
+  color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line-strong);
+  padding: 5px 7px;
+}
+/* 폭 100% 는 **패널 안의 다이얼**에만 맞는 값이다. 요소 선택자로 두면 상단 바 버튼까지
+   늘어나고, 그러면 앱마다 `style={{ width: "auto" }}` 우회가 생긴다 — DataCenter 가 실제로
+   그 한 줄을 달고 있었다. 우회를 지우려면 규칙을 좁혀야 한다. */
+.panel select, .panel input[type="number"], .panel input[type="text"], .panel button,
+.field select, .field input[type="number"], .field input[type="text"], .field button {
+  width: 100%;
+}
+input[type="range"] { width: 100%; accent-color: var(--ink); }
+button { cursor: pointer; font-weight: 700; }
+button:hover, select:hover { border-color: var(--ink); }
+button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--ink); outline-offset: 1px;
+}
+.btn-row { display: grid; grid-auto-flow: column; gap: var(--gap); }
+.seg { display: grid; grid-auto-flow: column; gap: 0; border: 1px solid var(--line-strong); }
+.seg button { border: 0; border-right: 1px solid var(--line-strong); background: var(--surface); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"],
+.seg button[aria-checked="true"] { background: var(--ink); color: var(--surface); }
+
+/* ── 뷰어 ──────────────────────────────────────────────────── */
+
+.viewer-panel { position: relative; background: var(--surface); display: grid; grid-template-rows: auto minmax(0,1fr); min-height: 0; }
+.viewer-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 12px; border-bottom: 1px solid var(--line);
+}
+.viewer { position: relative; min-height: 0; overflow: hidden; background: var(--surface-2); }
+.viewer svg { width: 100%; height: 100%; display: block; }
+
+/* ── HUD ── Hotel의 hud 패턴. 캔버스 위에 뜨되 캔버스를 가리지 않는다 ── */
+
+.hud {
+  position: absolute; top: 10px; left: 10px; right: 10px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--gap); background: var(--line);
+  border: 1px solid var(--line-strong);
+  pointer-events: none;
+}
+.hud-cell { background: color-mix(in srgb, var(--surface) 92%, transparent); padding: 6px 8px; }
+.hud-cell .k { font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.hud-cell .v { font-family: var(--mono); font-size: 15px; font-weight: 800; line-height: 1.25; }
+.hud-cell .u { font-size: 9.5px; color: var(--muted); }
+.hud-cell[data-verdict="ok"] .v { color: var(--ok); }
+.hud-cell[data-verdict="warn"] .v { color: var(--warn); }
+.hud-cell[data-verdict="danger"] .v { color: var(--danger); }
+.hud-cell[data-verdict="danger"] { background: var(--danger-pale); }
+
+.legend {
+  position: absolute; left: 10px; bottom: 10px;
+  display: grid; gap: 3px; padding: 8px 9px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--line);
+  font-size: 10px;
+}
+.legend i { display: inline-block; width: 9px; height: 9px; margin-right: 6px; vertical-align: -1px; }
+.scalebar {
+  position: absolute; right: 10px; bottom: 10px;
+  font-family: var(--mono); font-size: 9.5px; color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--line); padding: 5px 8px;
+}

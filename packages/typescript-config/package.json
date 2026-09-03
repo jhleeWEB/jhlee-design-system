@@ -1,0 +1,9 @@
+{
+  "name": "@buildos/typescript-config",
+  "version": "0.1.0",
+  "private": true,
+  "description": "워크스페이스가 공유하는 tsconfig 프리셋. 소비자는 extends 로만 쓴다 — 빌드도 테스트도 없다.",
+  "files": [
+    "base.json"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "extends": "@buildos/typescript-config/base.json",
+  "compilerOptions": {
+    "types": [],
+    // 앱 경계를 넘는 표면은 **가장 엄격한 소비자**의 프로필로 검사한다.
+    // 이 패키지는 소스로 소비되므로 각 앱의 tsconfig로도 한 번씩 더 컴파일된다 —
+    // DataCenter·FulfillmentCenter가 kaufland보다 엄격하니, 그들이 보는 파일은 여기서
+    // 미리 그 프로필을 통과해야 소비자 쪽에서 뒤늦게 터지지 않는다.
+    // 화면 컴포넌트라 DOM 이 필요하다 — 기하 패키지의 좁은 lib 를 그대로 쓰면
+    // 이벤트 타깃이 해석되지 않는다.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true
+  },
+  // 목록이 곧 계약이다: **여기 있는 파일만 엄격한 앱이 import해도 안전하다.**
+  // 나머지는 tsconfig.app-profile.json이 kaufland 프로필로 검사한다 — 그 코드는 느슨한
+  // 설정에서 자랐고(noUncheckedIndexedAccess 위반 151건), 전용 단위 테스트 없이 기계적으로
+  // 뜯는 것은 파이프라인 스펙으로만 간접 검증되는 코드에 낼 위험이 아니다.
+  // 하나씩 손보면서 이 목록으로 옮긴다. 옮기기 전에는 엄격한 앱이 배럴을 import하면 안 된다.
+  "include": ["src/shell.tsx", "src/controls.tsx", "src/index.ts"]
+}
