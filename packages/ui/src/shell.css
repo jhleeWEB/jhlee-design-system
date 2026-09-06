@@ -29,6 +29,11 @@
   min-height: 0;
 }
 
+/* 검사 패널을 닫은 상태(#367) — 열이 빠지고 뷰어가 그 자리를 쓴다. */
+.workspace.inspect-closed { grid-template-columns: var(--panel-w) minmax(0, 1fr); }
+.panel-actions { margin-left: auto; display: inline-flex; gap: 4px; }
+.panel-actions button { padding: 2px 8px; font-size: 11px; line-height: 1.4; }
+
 @media (max-width: 1180px) {
   .workspace { grid-template-columns: 260px minmax(0, 1fr); }
   .panel-inspect { display: none; }

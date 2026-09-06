@@ -16,20 +16,24 @@ export function AppShell({
   parameters,
   viewer,
   inspect,
+  inspectOpen = true,
 }: {
   topbar: ReactNode;
   parameters: ReactNode;
   viewer: ReactNode;
   /** 좁은 화면에서 숨는다. **검사 패널에만 있는 정보는 두지 않는다** — 판정은 HUD 에도 나와야 한다. */
   inspect?: ReactNode;
+  /** 검사 패널을 닫으면 그 열이 빠지고 뷰어가 넓어진다 — 토글은 앱이 든다(#367). */
+  inspectOpen?: boolean;
 }) {
+  const open = inspectOpen && inspect !== undefined;
   return (
     <div className="app-shell">
       {topbar}
-      <div className="workspace">
+      <div className={`workspace${open ? "" : " inspect-closed"}`}>
         {parameters}
         {viewer}
-        {inspect}
+        {open ? inspect : null}
       </div>
     </div>
   );
@@ -74,12 +78,15 @@ export function Panel({
   title,
   eyebrow,
   variant = "control",
+  actions,
   children,
 }: {
   title: string;
   eyebrow?: string;
   /** `inspect` 는 우측 검사 패널 — 좁은 화면에서 숨는 쪽이다. */
   variant?: "control" | "inspect";
+  /** 머리 오른쪽의 버튼들(닫기 등). */
+  actions?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -87,6 +94,7 @@ export function Panel({
       <div className="panel-head">
         <h2>{title}</h2>
         {eyebrow === undefined ? null : <span className="eyebrow">{eyebrow}</span>}
+        {actions === undefined ? null : <span className="panel-actions">{actions}</span>}
       </div>
       {children}
     </aside>
