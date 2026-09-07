@@ -195,14 +195,22 @@ export function Segmented<T extends string | number>({
   );
 }
 
-/** 켬/끔. `role="switch"` 라 스크린리더가 체크박스가 아니라 스위치로 읽는다. */
+/**
+ * 켬/끔 스위치. `role="switch"` 라 스크린리더가 체크박스가 아니라 스위치로 읽는다. 글자만 있는 버튼이었을 때는 켜짐/꺼짐이 색으로만
+ * 갈려 한눈에 읽히지 않았다(#396) — 트랙·노브를 그리고, `label` 은 aria-label 이자 보이는 글자, `hint` 는 옆의 흐린 설명이다.
+ * `hideText` 는 `Field` 라벨이 이미 그 이름을 적은 자리에서 쓴다.
+ */
 export function Toggle({
   label,
+  hint,
+  hideText = false,
   value,
   disabled = false,
   onChange,
 }: {
   label: string;
+  hint?: string;
+  hideText?: boolean;
   value: boolean;
   disabled?: boolean;
   onChange: (value: boolean) => void;
@@ -210,13 +218,18 @@ export function Toggle({
   return (
     <button
       type="button"
+      className="switch"
       role="switch"
       aria-checked={value}
       aria-label={label}
       disabled={disabled}
       onClick={() => onChange(!value)}
     >
-      {label}
+      <span className="switch-track" aria-hidden="true">
+        <span className="switch-knob" />
+      </span>
+      {hideText ? null : <span className="switch-text">{label}</span>}
+      {hint && !hideText ? <span className="switch-hint">{hint}</span> : null}
     </button>
   );
 }
