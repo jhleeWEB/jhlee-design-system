@@ -79,6 +79,7 @@ export function Panel({
   eyebrow,
   variant = "control",
   actions,
+  titleHidden = false,
   children,
 }: {
   title: string;
@@ -87,15 +88,24 @@ export function Panel({
   variant?: "control" | "inspect";
   /** 머리 오른쪽의 버튼들(닫기 등). */
   actions?: ReactNode;
+  /**
+   * 제목을 화면에서 뺀다 — **이름은 남는다**(`aside[aria-label]`). 그 칸이 무엇인지 자리와 내용으로 이미 아는
+   * 패널에서 제목 줄은 한 줄을 통째로 쓰면서 아무것도 말하지 않는다. 머리에 들 것이 하나도 없으면 머리 자체를
+   * 그리지 않는다 — 빈 막대를 남기면 자리를 돌려준 것이 아니다.
+   */
+  titleHidden?: boolean;
   children: ReactNode;
 }) {
+  const head = !titleHidden || eyebrow !== undefined || actions !== undefined;
   return (
     <aside className={`panel panel-${variant}`} aria-label={title}>
-      <div className="panel-head">
-        <h2>{title}</h2>
-        {eyebrow === undefined ? null : <span className="eyebrow">{eyebrow}</span>}
-        {actions === undefined ? null : <span className="panel-actions">{actions}</span>}
-      </div>
+      {head ? (
+        <div className="panel-head">
+          {titleHidden ? null : <h2>{title}</h2>}
+          {eyebrow === undefined ? null : <span className="eyebrow">{eyebrow}</span>}
+          {actions === undefined ? null : <span className="panel-actions">{actions}</span>}
+        </div>
+      ) : null}
       {children}
     </aside>
   );
