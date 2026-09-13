@@ -80,19 +80,27 @@ export function Slider({
   const draftRef = useRef(value);
   const committedRef = useRef(value);
   const dirtyRef = useRef(false);
+  /** 손잡이를 잡고 있는 중인가 — 첫 입력부터 commit/cancel 까지. */
+  const holdingRef = useRef(false);
   const commit = () => {
+    holdingRef.current = false;
     if (!onCommit || !dirtyRef.current) return;
     dirtyRef.current = false;
     committedRef.current = draftRef.current;
     onCommit(draftRef.current);
   };
   const cancel = () => {
+    holdingRef.current = false;
     dirtyRef.current = false;
     draftRef.current = committedRef.current;
     setDraft(committedRef.current);
   };
   useEffect(() => {
     committedRef.current = value;
+    /* 잡고 있는 동안 들어온 값은 손잡이를 빼앗지 않는다. 소비자가 `onChange` 로 값을 따라 올리면
+       (드래그 중 실시간 반영) 그 값이 이 효과로 돌아오는데, 간격을 두고 미느라 한 박자 뒤처진 값이면
+       손잡이가 뒤로 튄다. 놓을 때 `commit` 이 마지막 draft 를 앉히므로 잃는 값은 없다. */
+    if (holdingRef.current) return;
     draftRef.current = value;
     dirtyRef.current = false;
     setDraft(value);
@@ -121,6 +129,7 @@ export function Slider({
         if (onCommit) {
           draftRef.current = next;
           dirtyRef.current = true;
+          holdingRef.current = true;
           setDraft(next);
         }
         onChange?.(next);
