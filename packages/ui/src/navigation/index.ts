@@ -1,5 +1,5 @@
 export { Breadcrumb, type Crumb } from "./Breadcrumb";
-export { ScrollArea } from "./ScrollArea";
+export { ScrollArea, type ScrollAreaProps } from "./ScrollArea";
 export { usePanelLayout, type PanelLayout } from "./usePanelLayout";
 export {
   SegmentedControl,

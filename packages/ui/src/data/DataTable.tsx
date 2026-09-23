@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 
 import { cn } from "../cn";
 import { Skeleton } from "../feedback/Skeleton";
+import { ScrollArea } from "../navigation/ScrollArea";
 
 /* 데이터 표 — 이 제품에서 표는 대부분 **명세서**다.
  * FSI 원장 · 세대 믹스 · 주차 명세 · 층별 집계. 그래서 일반 데이터 그리드와 요구가 다르다:
@@ -110,8 +111,9 @@ export function DataTable<Row>({
   return (
     <div
       data-slot="data-table"
-      className={cn("w-full overflow-auto overscroll-contain", className)}
+      className={cn("flex min-h-0 min-w-0 w-full max-w-full flex-col overflow-hidden", className)}
     >
+      <ScrollArea className="min-h-0 flex-auto" orientation="both">
       <table className="w-full border-collapse text-body text-ink">
         <caption
           className={cn(
@@ -259,6 +261,7 @@ export function DataTable<Row>({
           </tfoot>
         ) : null}
       </table>
+      </ScrollArea>
     </div>
   );
 }

@@ -46,6 +46,7 @@ import {
   RadioGroup,
   RadioGroupItem,
   SectionLabel,
+  ScrollArea,
   SegmentedControl,
   Separator,
   Sidebar,
@@ -547,6 +548,19 @@ function Gallery() {
             <label className="flex items-center gap-2 text-body"><Switch defaultChecked />Podium deck</label>
           </Spec>
 
+          <Spec name="ScrollArea" note="6px overlay scrollbars reserve no space. Scroll to reveal; after 500ms at rest, they fade out over 200ms.">
+            <ScrollArea className="h-[160px] w-full max-w-[400px] rounded-control border border-line" viewportProps={{ "aria-label": "Scroll area example", tabIndex: 0 }}>
+              <div className="min-w-[540px] divide-y divide-line">
+                {Array.from({ length: 12 }, (_, index) => (
+                  <div key={index} className="flex justify-between gap-8 px-4 py-3">
+                    <span>Floor {index + 1}</span>
+                    <span className="text-muted">Residential · 4 homes · 320 m²</span>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </Spec>
+
           <Spec name="Badge" note="State is never colour alone — a badge always carries its word. Dashed means to-be-verified.">
             <Badge>Draft</Badge>
             <Badge tone="ok" dot>FSI-01 pass</Badge>
@@ -627,6 +641,7 @@ function Gallery() {
             <Card elevation="flat" className="w-full overflow-hidden">
               <DataTable
                 caption="Tower schedule"
+                className="max-h-[180px]"
                 rows={TOWER_ROWS}
                 rowKey={r => r.tower}
                 selectedKey={picked}

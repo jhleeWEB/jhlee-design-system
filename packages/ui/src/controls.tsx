@@ -4,6 +4,7 @@ import { useDesignSystem } from "./design-system";
 import { Switch } from "./primitives/Choice";
 import { Button } from "./primitives/Button";
 import { SegmentedControl } from "./navigation/SegmentedControl";
+import { ScrollArea } from "./navigation/ScrollArea";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "./overlay/DropdownMenu";
 
 /**
@@ -60,16 +61,18 @@ export function Select<T extends string | number>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="ds-select-menu" aria-label={label} align="start" collisionPadding={8} loop>
-          <DropdownMenuRadioGroup value={String(selected?.value ?? "")} onValueChange={(raw) => {
-            const next = pick(options, raw);
-            if (next !== undefined && next !== value) onChange(next);
-          }}>
-            {options.map((option) => (
-              <DropdownMenuRadioItem key={String(option.value)} value={String(option.value)} textValue={option.label} data-slot="select-option" className="ds-select-option">
-                <span className="ds-select-option-label">{option.label}</span>
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
+          <ScrollArea className="ds-select-scroll" orientation="vertical" viewportProps={{ tabIndex: -1 }}>
+            <DropdownMenuRadioGroup value={String(selected?.value ?? "")} onValueChange={(raw) => {
+              const next = pick(options, raw);
+              if (next !== undefined && next !== value) onChange(next);
+            }}>
+              {options.map((option) => (
+                <DropdownMenuRadioItem key={String(option.value)} value={String(option.value)} textValue={option.label} data-slot="select-option" className="ds-select-option">
+                  <span className="ds-select-option-label">{option.label}</span>
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </ScrollArea>
         </DropdownMenuContent>
       </DropdownMenu>
     );

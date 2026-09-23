@@ -1,6 +1,7 @@
 import { Dialog } from "radix-ui";
 
 import { cn, cva, type VariantProps } from "../cn";
+import { ScrollArea } from "../navigation/ScrollArea";
 
 /* 서랍 — 화면 가장자리에서 들어온다. 모달과 달리 **캔버스를 덜 가린다**.
  * 긴 목록·설정처럼 보면서 캔버스를 참조해야 하는 것에 쓴다. */
@@ -106,12 +107,10 @@ export function DrawerHeader({
   );
 }
 
-export function DrawerBody({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+export function DrawerBody({ className, onScroll, onScrollCapture, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      data-slot="drawer-body"
-      className={cn("min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5", className)}
-      {...rest}
-    />
+    <ScrollArea className="min-h-0 min-w-0 flex-auto" viewportProps={{ onScroll, onScrollCapture }}>
+      <div data-slot="drawer-body" className={cn("px-6 py-5", className)} {...rest} />
+    </ScrollArea>
   );
 }

@@ -221,8 +221,9 @@ button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, in
   box-shadow: var(--shadow-card);
   min-width: 0;
 }
-.panel[data-design-system] { display: flex; flex-direction: column; }
+.panel[data-design-system] { display: flex; flex-direction: column; overflow: hidden; }
 .panel[data-design-system] > * { flex-shrink: 0; }
+.panel[data-design-system] > .ds-panel-scroll { flex: 1 1 0; min-height: 0; }
 .panel[data-design-system] > .panel-head { padding: 12px 16px; border-bottom-color: var(--chrome-line); }
 .panel[data-design-system] .panel-head h2 { margin: 0; font-size: var(--text-control); font-weight: 600; }
 .panel[data-design-system] .panel-actions { min-width: 0; max-width: 100%; }
@@ -271,8 +272,9 @@ button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, in
   box-sizing: border-box; width: max(168px, var(--radix-dropdown-menu-trigger-width)); min-width: 0;
   max-width: min(calc(100vw - 16px), var(--radix-dropdown-menu-content-available-width));
   max-height: min(320px, var(--radix-dropdown-menu-content-available-height));
-  overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
+  overflow: hidden;
 }
+.ds-select-scroll { max-height: min(302px, calc(var(--radix-dropdown-menu-content-available-height) - 18px)); }
 .ds-select-option { min-width: 0; white-space: normal; line-height: 1.4; }
 .ds-select-option-label { min-width: 0; overflow-wrap: anywhere; }
 .ds-select[data-slot="select"]:hover { border-color: var(--chrome-ink-2); }

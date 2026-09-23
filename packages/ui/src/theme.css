@@ -432,3 +432,32 @@
 @utility w-ctl-sm { width: var(--height-ctl-sm); }
 @utility w-ctl { width: var(--height-ctl); }
 @utility w-ctl-lg { width: var(--height-ctl-lg); }
+
+/* 스크롤 크롬은 내용 위에만 겹친다. 너비를 예약하지 않고 실제 활동이 끝난 뒤 사라진다. */
+.ds-scroll-area { min-width: 0; min-height: 0; }
+.ds-scroll-area-viewport {
+  flex: 1 1 auto; min-width: 0; min-height: 0; width: 100%; max-height: inherit;
+  overscroll-behavior: contain; scrollbar-gutter: auto;
+}
+.ds-scroll-area-viewport > div { display: block !important; }
+.ds-scroll-area-scrollbar {
+  z-index: 1; display: flex; touch-action: none; user-select: none;
+  padding: 0; background: transparent; opacity: 0; pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.ds-scroll-area-scrollbar[data-orientation="vertical"] { width: 6px; }
+.ds-scroll-area-scrollbar[data-orientation="horizontal"] { height: 6px; flex-direction: column; }
+.ds-scroll-area[data-scroll-active="true"] > .ds-scroll-area-scrollbar:has([data-slot="scroll-area-thumb"]) {
+  opacity: 1; pointer-events: auto; transition: none;
+}
+.ds-scroll-area-thumb { position: relative; flex: 1; border-radius: 999px; background: var(--chrome-line-strong); }
+@media (prefers-reduced-motion: reduce) {
+  .ds-scroll-area-scrollbar { transition: none; }
+}
+@media print {
+  .ds-scroll-area, .ds-scroll-area-viewport, [data-slot="data-table"]:has(.ds-scroll-area) {
+    display: block !important; height: auto !important; min-height: 0 !important;
+    max-height: none !important; overflow: visible !important;
+  }
+  .ds-scroll-area-scrollbar { display: none !important; }
+}

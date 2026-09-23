@@ -1,4 +1,5 @@
 import { cn } from "../cn";
+import { ScrollArea } from "../navigation/ScrollArea";
 
 /* 표 — 이 제품에서 표는 대부분 **수치**다(FSI 원장 · 세대 믹스 · 주차 명세).
  * 그래서 숫자 칸은 우측 정렬 + mono + tabular-nums 가 기본이고, `<Td numeric>` 하나로 셋이 온다.
@@ -6,13 +7,13 @@ import { cn } from "../cn";
  * radius 0 인 이유: 표는 캔버스 쪽 어휘다. 인쇄되고, 격자가 정보를 나른다. */
 export function Table({ className, ...rest }: React.TableHTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="min-w-0 w-full max-w-full overflow-x-auto">
+    <ScrollArea className="min-w-0 w-full max-w-full" orientation="horizontal">
       <table
         data-slot="table"
         className={cn("w-full border-collapse text-body text-ink", className)}
         {...rest}
       />
-    </div>
+    </ScrollArea>
   );
 }
 

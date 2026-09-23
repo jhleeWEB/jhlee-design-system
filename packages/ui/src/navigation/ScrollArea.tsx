@@ -1,38 +1,85 @@
+import { useCallback, useEffect, useRef, useState, type ComponentPropsWithoutRef, type PointerEvent, type Ref } from "react";
 import { ScrollArea as Radix } from "radix-ui";
 
 import { cn } from "../cn";
 
-/* 스크롤 영역 — 검사 패널처럼 **스크롤이 바깥으로 새면 안 되는** 자리에 쓴다.
- * 캔버스 위에서 휠이 패널을 지나 확대/축소로 넘어가는 것이 그 증상이고,
- * `overscroll-contain` 이 그것을 막는다. */
-export function ScrollArea({
-  className,
-  children,
-  ...rest
-}: React.ComponentPropsWithoutRef<typeof Radix.Root>) {
+export interface ScrollAreaProps extends Omit<ComponentPropsWithoutRef<typeof Radix.Root>, "type" | "scrollHideDelay"> {
+  viewportRef?: Ref<HTMLDivElement>;
+  viewportClassName?: string;
+  viewportProps?: ComponentPropsWithoutRef<typeof Radix.Viewport> & { "data-slot"?: string };
+  orientation?: "vertical" | "horizontal" | "both";
+}
+
+/* Radix의 type="scroll"은 종료 판정에 100ms를 더하므로 DS의 500ms 계약과 어긋난다.
+ * 스크롤바는 항상 마운트하고 실제 스크롤·드래그 활동만 직접 재서 표시한다. */
+export function ScrollArea({ className, children, viewportRef, viewportClassName, viewportProps, orientation = "both", ...rest }: ScrollAreaProps) {
+  const [active, setActive] = useState(false);
+  const hideTimer = useRef<number | null>(null);
+  const dragPointer = useRef<number | null>(null);
+  const detachDrag = useRef<(() => void) | null>(null);
+  const clearHide = useCallback(() => {
+    if (hideTimer.current !== null) window.clearTimeout(hideTimer.current);
+    hideTimer.current = null;
+  }, []);
+  const scheduleHide = useCallback(() => {
+    clearHide();
+    if (dragPointer.current !== null) return;
+    hideTimer.current = window.setTimeout(() => {
+      hideTimer.current = null;
+      setActive(false);
+    }, 500);
+  }, [clearHide]);
+  useEffect(() => () => {
+    clearHide();
+    detachDrag.current?.();
+  }, [clearHide]);
+
+  const beginDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    detachDrag.current?.();
+    clearHide();
+    dragPointer.current = event.pointerId;
+    setActive(true);
+    const finish = () => {
+      detachDrag.current?.();
+      detachDrag.current = null;
+      dragPointer.current = null;
+      scheduleHide();
+    };
+    const end = (up: globalThis.PointerEvent) => { if (up.pointerId === dragPointer.current) finish(); };
+    // 포인터 캡처가 바깥으로 이동하거나 브라우저가 드래그를 취소해도 표시 상태를 회수한다.
+    window.addEventListener("pointerup", end, true);
+    window.addEventListener("pointercancel", end, true);
+    window.addEventListener("blur", finish);
+    detachDrag.current = () => {
+      window.removeEventListener("pointerup", end, true);
+      window.removeEventListener("pointercancel", end, true);
+      window.removeEventListener("blur", finish);
+    };
+  };
+  const { className: viewportPropsClassName, onScroll, ...viewportRest } = viewportProps ?? {};
+  const scrollbar = (axis: "vertical" | "horizontal") => (
+    <Radix.Scrollbar key={axis} data-slot="scroll-area-scrollbar" orientation={axis} className="ds-scroll-area-scrollbar" onPointerDownCapture={beginDrag}>
+      <Radix.Thumb data-slot="scroll-area-thumb" className="ds-scroll-area-thumb" />
+    </Radix.Scrollbar>
+  );
   return (
-    <Radix.Root
-      data-slot="scroll-area"
-      type="hover"
-      className={cn("relative min-h-0 overflow-hidden", className)}
-      {...rest}
-    >
-      <Radix.Viewport className="size-full overscroll-contain [&>div]:!block">
+    <Radix.Root {...rest} data-slot="scroll-area" data-scroll-active={active ? "true" : "false"} type="always" className={cn("ds-scroll-area relative flex min-h-0 min-w-0 flex-col overflow-hidden", className)}>
+      <Radix.Viewport
+        data-slot="scroll-area-viewport"
+        {...viewportRest}
+        ref={viewportRef}
+        className={cn("ds-scroll-area-viewport", viewportPropsClassName, viewportClassName)}
+        onScroll={event => {
+          setActive(true);
+          scheduleHide();
+          onScroll?.(event);
+        }}
+      >
         {children}
       </Radix.Viewport>
-      <Radix.Scrollbar
-        orientation="vertical"
-        className="flex w-3 touch-none select-none p-px transition-colors hover:bg-surface-2"
-      >
-        <Radix.Thumb className="relative flex-1 rounded-full bg-line-strong" />
-      </Radix.Scrollbar>
-      <Radix.Scrollbar
-        orientation="horizontal"
-        className="flex h-3 touch-none select-none flex-col p-px transition-colors hover:bg-surface-2"
-      >
-        <Radix.Thumb className="relative flex-1 rounded-full bg-line-strong" />
-      </Radix.Scrollbar>
-      <Radix.Corner className="bg-surface-2" />
+      {orientation !== "horizontal" ? scrollbar("vertical") : null}
+      {orientation !== "vertical" ? scrollbar("horizontal") : null}
     </Radix.Root>
   );
 }

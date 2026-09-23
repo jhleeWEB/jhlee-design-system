@@ -3,6 +3,7 @@ import { useDesignSystem } from "./design-system";
 import { Card, CardHeader, CardWell } from "./primitives/Card";
 import { Badge } from "./primitives/Badge";
 import { Button } from "./primitives/Button";
+import { ScrollArea } from "./navigation/ScrollArea";
 
 /**
  * 3열 작업대 셸 — 좌 파라미터 · 중 뷰어 · 우 검사.
@@ -88,6 +89,7 @@ export function Panel({
   variant = "control",
   actions,
   titleHidden = false,
+  scrollable = true,
   children,
 }: {
   title: string;
@@ -102,6 +104,8 @@ export function Panel({
    * 그리지 않는다 — 빈 막대를 남기면 자리를 돌려준 것이 아니다.
    */
   titleHidden?: boolean;
+  /** 고정 바닥과 별도 스크롤 본문을 가진 패널은 직접 스크롤 영역을 배치한다. */
+  scrollable?: boolean;
   children: ReactNode;
 }) {
   const ds = useDesignSystem();
@@ -111,7 +115,7 @@ export function Panel({
       {head ? <CardHeader className="panel-head" title={titleHidden ? undefined : <h2>{title}</h2>} meta={eyebrow}>
         {actions === undefined ? null : <span className="panel-actions">{actions}</span>}
       </CardHeader> : null}
-      {children}
+      {scrollable ? <ScrollArea className="ds-panel-scroll" orientation="vertical">{children}</ScrollArea> : children}
     </Card>
   );
   return (

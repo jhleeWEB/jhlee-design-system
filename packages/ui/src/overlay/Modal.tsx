@@ -1,6 +1,7 @@
 import { Dialog } from "radix-ui";
 
 import { cn, cva, type VariantProps } from "../cn";
+import { ScrollArea } from "../navigation/ScrollArea";
 
 /* 모달 — 이 저장소에 손으로 쓴 백드롭이 **다섯 계열** 있었고(#1198 게이트 실측),
  * 앞의 셋은 `z-index`(30/20/21)와 내부 폭만 다른 같은 네 줄이었다. 넷째는 토큰 대신 생 hex 와
@@ -130,14 +131,13 @@ export function ModalHeader({
   );
 }
 
-/* 본문만 스크롤한다 — 머리와 바닥은 붙어 있어야 긴 목록에서 버튼을 찾아 내려가지 않는다. */
-export function ModalBody({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+/* 본문만 스크롤한다 — 머리와 바닥은 붙어 있어야 긴 목록에서 버튼을 찾아 내려가지 않는다.
+ * 본문 div는 유지해 소비자의 grid·gap·자식 선택자가 Radix 내부 래퍼에 끊기지 않게 한다. */
+export function ModalBody({ className, onScroll, onScrollCapture, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      data-slot="modal-body"
-      className={cn("min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5", className)}
-      {...rest}
-    />
+    <ScrollArea className="min-h-0 min-w-0 flex-auto" viewportProps={{ onScroll, onScrollCapture }}>
+      <div data-slot="modal-body" className={cn("px-6 py-5", className)} {...rest} />
+    </ScrollArea>
   );
 }
 
