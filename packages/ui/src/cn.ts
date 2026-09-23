@@ -22,6 +22,18 @@ const twMerge = extendTailwindMerge({
       ease: ["out-quick"],
     },
   },
+  extend: {
+    /* `theme.css` 가 `@utility` 로 손수 낸 것들. **Tailwind 네임스페이스가 아니라서**
+       twMerge 가 모르고, 모르면 «충돌 없음» 으로 보아 **둘 다 남긴다**.
+       실측으로 `cn("h-ctl", "h-auto")` 가 둘을 다 남겼고, 그러면 승자가 생성 CSS 의 소스
+       순서에 달린다 — 호출처가 `h-auto` 로 높이를 풀려 해도 안 풀리는 조용한 실패다.
+       (#1202 의 적대적 검토가 실제로 이 모양을 두 건 잡았다.) */
+    classGroups: {
+      h: [{ h: ["ctl", "ctl-sm", "ctl-lg"] }],
+      w: [{ w: ["ctl", "ctl-sm", "ctl-lg", "rail"] }],
+      gap: [{ gap: ["shell"] }],
+    },
+  },
 });
 
 export function cn(...inputs: ClassValue[]): string {

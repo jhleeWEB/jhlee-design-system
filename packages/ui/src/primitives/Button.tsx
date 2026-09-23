@@ -44,6 +44,11 @@ export const buttonVariants = cva(
       },
     },
     compoundVariants: [
+      /* `link` 는 **상자가 없다.** `size` 가 주는 높이·가로 패딩을 여기서 되돌린다 —
+         compoundVariants 가 variants 뒤에 이어 붙으므로 이 한 줄이 이긴다.
+         이게 없으면 `variant="link" size="sm"` 이 30px 높이와 12px 패딩을 달고 나와
+         글자처럼 보여야 할 것이 칩이 된다(#1202 의 적대적 검토가 잡았다). */
+      { variant: "link", class: "h-auto px-0 py-0" },
       { variant: "solid", tone: "neutral", class: "border-line-strong bg-surface-2 text-ink hover:bg-surface-3" },
       { variant: "solid", tone: "accent", class: "border-accent bg-accent text-accent-ink hover:border-accent-hover hover:bg-accent-hover" },
       { variant: "solid", tone: "danger", class: "border-danger bg-danger text-white hover:brightness-110" },

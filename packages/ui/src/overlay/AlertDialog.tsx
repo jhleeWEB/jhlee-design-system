@@ -19,6 +19,16 @@ export interface ConfirmDialogProps {
   /** 파괴적이면 `danger`. 기본값이 그것인 이유는 이 컴포넌트의 용도 자체가 그렇기 때문이다. */
   tone?: ButtonProps["tone"];
   busy?: boolean | undefined;
+  /**
+   * 세 번째 갈림길. 「저장하지 않고 나간다」처럼 **취소도 실행도 아닌** 결과가 있을 때만 쓴다.
+   *
+   * 두 갈래로 억지로 접으면 사용자가 원하지 않는 쪽을 고르게 된다 — 저장하지 않고 나가려는
+   * 사람에게 「취소」와 「저장」만 주면 취소를 눌러 다시 갇힌다. 미저장 이탈 확인은 세 결과가
+   * 표준이고(저장 · 버리기 · 머무르기), 그래서 축을 하나 더 두는 쪽이 옳다.
+   *
+   * 자리는 취소와 실행 **사이**다. 파괴적인 쪽(버리기)이 실행 버튼에서 멀수록 오폭이 준다.
+   */
+  secondaryAction?: { label: string; onSelect: () => void } | undefined;
   onConfirm: () => void;
   children?: React.ReactNode;
 }
@@ -32,6 +42,7 @@ export function ConfirmDialog({
   cancelLabel = "Cancel",
   tone = "danger",
   busy,
+  secondaryAction,
   onConfirm,
   children,
 }: ConfirmDialogProps) {
@@ -64,6 +75,11 @@ export function ConfirmDialog({
                 {cancelLabel}
               </Button>
             </Radix.Cancel>
+            {secondaryAction ? (
+              <Button variant="outline" disabled={busy} onClick={secondaryAction.onSelect}>
+                {secondaryAction.label}
+              </Button>
+            ) : null}
             {/* `asChild` 없이 둔다 — Radix.Action 은 누르면 무조건 닫는데, 실패할 수 있는
                 작업은 닫지 않고 결과를 보여줘야 한다. 닫기는 호출처가 onOpenChange 로 한다. */}
             <Button tone={tone} variant="solid" loading={busy} onClick={onConfirm}>

@@ -32,7 +32,7 @@
 /* 검사 패널을 닫은 상태(#367) — 열이 빠지고 뷰어가 그 자리를 쓴다. */
 .workspace.inspect-closed { grid-template-columns: var(--panel-w) minmax(0, 1fr); }
 .panel-actions { margin-left: auto; display: inline-flex; gap: 4px; }
-.panel-actions button { padding: 2px 8px; font-size: 11px; line-height: 1.4; }
+.panel-actions button:not([data-slot]) { padding: 2px 8px; font-size: 11px; line-height: 1.4; }
 
 @media (max-width: 1180px) {
   .workspace { grid-template-columns: 260px minmax(0, 1fr); }
@@ -107,7 +107,7 @@
 .field .val { font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--ink); }
 .field .path { font-family: var(--mono); font-size: 9px; color: var(--silver); }
 
-select, input[type="number"], input[type="text"], button {
+select:not([data-slot]), input[type="number"]:not([data-slot]), input[type="text"]:not([data-slot]), button:not([data-slot]) {
   font: inherit; font-size: 11.5px;
   color: var(--ink); background: var(--surface);
   border: 1px solid var(--line-strong);
@@ -116,22 +116,22 @@ select, input[type="number"], input[type="text"], button {
 /* 폭 100% 는 **패널 안의 다이얼**에만 맞는 값이다. 요소 선택자로 두면 상단 바 버튼까지
    늘어나고, 그러면 앱마다 `style={{ width: "auto" }}` 우회가 생긴다 — DataCenter 가 실제로
    그 한 줄을 달고 있었다. 우회를 지우려면 규칙을 좁혀야 한다. */
-.panel select, .panel input[type="number"], .panel input[type="text"], .panel button,
-.field select, .field input[type="number"], .field input[type="text"], .field button {
+.panel select:not([data-slot]), .panel input[type="number"]:not([data-slot]), .panel input[type="text"]:not([data-slot]), .panel button:not([data-slot]),
+.field select:not([data-slot]), .field input[type="number"]:not([data-slot]), .field input[type="text"]:not([data-slot]), .field button:not([data-slot]) {
   width: 100%;
 }
-input[type="range"] { width: 100%; accent-color: var(--ink); }
-button { cursor: pointer; font-weight: 700; }
-button:hover, select:hover { border-color: var(--ink); }
-button:focus-visible, select:focus-visible, input:focus-visible {
+input[type="range"]:not([data-slot]) { width: 100%; accent-color: var(--ink); }
+button:not([data-slot]) { cursor: pointer; font-weight: 700; }
+button:not([data-slot]):hover, select:not([data-slot]):hover { border-color: var(--ink); }
+button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, input:not([data-slot]):focus-visible {
   outline: 2px solid var(--ink); outline-offset: 1px;
 }
 .btn-row { display: grid; grid-auto-flow: column; gap: var(--gap); }
 .seg { display: grid; grid-auto-flow: column; gap: 0; border: 1px solid var(--line-strong); }
-.seg button { border: 0; border-right: 1px solid var(--line-strong); background: var(--surface); }
-.seg button:last-child { border-right: 0; }
-.seg button[aria-pressed="true"],
-.seg button[aria-checked="true"] { background: var(--ink); color: var(--surface); }
+.seg button:not([data-slot]) { border: 0; border-right: 1px solid var(--line-strong); background: var(--surface); }
+.seg button:not([data-slot]):last-child { border-right: 0; }
+.seg button[aria-pressed="true"]:not([data-slot]),
+.seg button[aria-checked="true"]:not([data-slot]) { background: var(--ink); color: var(--surface); }
 
 /* ── 스위치(#396) ─────────────────────────────────────────────
    버튼의 테두리·폭 100% 규칙에서 벗어난 켬/끔 컨트롤. 상태는 트랙 색과 노브 위치로 읽힌다. */
