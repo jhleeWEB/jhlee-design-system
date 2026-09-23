@@ -87,6 +87,7 @@ describe("Card — strip 접기", () => {
     const button = card().querySelector("button")!;
     expect(button.getAttribute("aria-expanded")).toBe("false");
     expect(button.title).toBe("Expand Planning brief");
+    expect(button.getAttribute("aria-label")).toBe("Expand Planning brief");
     /* 세로 탭에 이름이 적혀 있어야 «방금 무엇을 없앴나» 를 기억하지 않아도 된다. */
     expect(button.textContent).toContain("Planning brief");
     /* `getElementById` 로 찾는다 — React 의 `useId` 는 `:` 를 넣으므로 CSS 선택자로는
@@ -105,6 +106,58 @@ describe("Card — strip 접기", () => {
     act(() => {
       card().querySelector("button")!.click();
     });
+    expect(seen).toEqual([false]);
+  });
+
+  it("헤더의 공통 아이콘과 전체 strip을 왕복해도 포커스와 본문을 보존한다", () => {
+    function Example() {
+      const [collapsed, setCollapsed] = useState(false);
+      return <Card collapsed={collapsed} onCollapsedChange={next => {
+        // 실제 브라우저는 inert로 바뀐 strip의 포커스를 effect 전에 해제할 수 있다.
+        if (!next) (document.activeElement as HTMLElement).blur();
+        setCollapsed(next);
+      }} collapseTo="strip" collapsedLabel="Model view" side="right">
+        <CardHeader title="Model" />
+        <input defaultValue="draft" />
+      </Card>;
+    }
+    render(<Example />);
+    const headerButton = host.querySelector<HTMLButtonElement>('[data-slot="card-header"] [data-slot="card-collapse"]')!;
+    const strip = host.querySelector<HTMLButtonElement>('[data-card-strip]')!;
+    const input = host.querySelector("input")!;
+    const body = document.getElementById(headerButton.getAttribute("aria-controls")!)!;
+    expect(headerButton.getAttribute("aria-label")).toBe("Collapse the Model view");
+    expect(headerButton.classList.contains("opacity-0")).toBe(false);
+    expect(headerButton.querySelector("svg")?.getAttribute("stroke-width")).toBe("2");
+    expect(strip.querySelector("svg")?.getAttribute("stroke-width")).toBe("2");
+    input.value = "half typed";
+    act(() => { headerButton.focus(); headerButton.click(); });
+    expect(card().getAttribute("data-collapsed")).toBe("true");
+    expect(document.activeElement).toBe(strip);
+    expect(strip.getAttribute("aria-expanded")).toBe("false");
+    expect(strip.hasAttribute("inert")).toBe(false);
+    expect(body.hasAttribute("inert")).toBe(true);
+    expect(document.getElementById(strip.getAttribute("aria-controls")!)).toBe(body);
+    act(() => strip.click());
+    expect(card().hasAttribute("data-collapsed")).toBe(false);
+    expect(document.activeElement).toBe(headerButton);
+    expect(host.querySelector('[data-slot="card-header"] [data-slot="card-collapse"]')).toBe(headerButton);
+    expect(host.querySelector("input")).toBe(input);
+    expect(input.value).toBe("half typed");
+    expect(body.hasAttribute("inert")).toBe(false);
+  });
+
+  it("보기 전용 헤더는 자동 버튼만 생략하고 strip과 본문 구조는 유지한다", () => {
+    const seen: boolean[] = [];
+    render(<Card collapsed onCollapsedChange={value => seen.push(value)} collapseTo="strip" collapsedLabel="Model">
+      <CardHeader title="Model" collapseButton={false} />
+      <input defaultValue="draft" />
+    </Card>);
+    expect(host.querySelector('[data-slot="card-header"] button')).toBeNull();
+    expect(host.querySelector('[data-slot="card-content"] input')).not.toBeNull();
+    const strip = host.querySelector<HTMLButtonElement>('[data-card-strip]')!;
+    expect(strip.getAttribute("aria-label")).toBe("Expand Model");
+    act(() => strip.click());
     expect(seen).toEqual([false]);
   });
 });

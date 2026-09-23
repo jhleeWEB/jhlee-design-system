@@ -1,6 +1,8 @@
 import { Children, Fragment, cloneElement, createContext, isValidElement, useContext, useId, useLayoutEffect, useMemo, useRef } from "react";
+import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import { cn, cva, type VariantProps } from "../cn";
+import { PanelToggleButton } from "./PanelToggleButton";
 import "./card-motion.css";
 
 /* 카드 — 이 제품의 기본 구획.
@@ -24,6 +26,7 @@ import "./card-motion.css";
 interface CardCtx {
   collapsible: boolean;
   collapsed: boolean;
+  collapseTo: "strip" | "header";
   toggle: () => void;
   contentId: string;
   label: string;
@@ -109,6 +112,7 @@ export function Card({
   const contentRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLButtonElement>(null);
   const stripScroll = useRef<{ top: number; left: number } | null>(null);
+  const toggleFocus = useRef(false);
   const collapsible = collapsed !== undefined && onCollapsedChange !== undefined;
   const isCollapsed = collapsible && collapsed === true;
 
@@ -116,12 +120,17 @@ export function Card({
     () => ({
       collapsible,
       collapsed: isCollapsed,
-      toggle: () => onCollapsedChange?.(!isCollapsed),
+      collapseTo,
+      toggle: () => {
+        // 펼침 즉시 strip이 inert가 되면 브라우저가 layout effect 전에 activeElement를 지운다.
+        toggleFocus.current = true;
+        onCollapsedChange?.(!isCollapsed);
+      },
       contentId,
       label: collapsedLabel ?? "panel",
       side,
     }),
-    [collapsible, isCollapsed, onCollapsedChange, contentId, collapsedLabel, side],
+    [collapsible, isCollapsed, collapseTo, onCollapsedChange, contentId, collapsedLabel, side],
   );
 
   const stripMode = collapsible && collapseTo === "strip";
@@ -179,19 +188,21 @@ export function Card({
     const element = rootRef.current, content = contentRef.current;
     if (!collapsible || !element || !content) return;
     const active = document.activeElement;
-    if (isCollapsed && active && content.contains(active)) {
+    const requestedFocus = stripMode && toggleFocus.current;
+    if (isCollapsed && (requestedFocus || (active && content.contains(active)))) {
       const trigger = stripMode ? stripRef.current : element.querySelector<HTMLButtonElement>('[data-slot="card-header"] [data-slot="card-collapse"]');
       (trigger ?? element).focus({ preventScroll: true });
-    } else if (!isCollapsed && active === stripRef.current) {
+    } else if (!isCollapsed && (requestedFocus || active === stripRef.current)) {
       (content.querySelector<HTMLButtonElement>('[data-slot="card-collapse"]') ?? content).focus({ preventScroll: true });
     }
+    toggleFocus.current = false;
   }, [collapsible, isCollapsed, stripMode]);
 
   const childList = headerCollapse ? flattenCardChildren(children) : [];
   const isHeader = (child: React.ReactNode) => isValidElement(child) && child.type === CardHeader;
   /* 셰브론은 **누르면 일어날 일**을 가리킨다. 왼쪽에 붙은 패널을 펼치면 내용이 오른쪽으로
      자라므로 오른쪽을 가리킨다. */
-  const pointing = side === "left" ? "right" : "left";
+  const StripChevron = side === "left" ? LuChevronRight : LuChevronLeft;
 
   return (
     <Ctx.Provider value={ctx}>
@@ -217,6 +228,7 @@ export function Card({
               inert={!isCollapsed || undefined}
               tabIndex={isCollapsed ? 0 : -1}
               aria-controls={contentId}
+              aria-label={`Expand ${ctx.label}`}
               onClick={ctx.toggle}
               title={`Expand ${ctx.label}`}
               className={cn(
@@ -226,7 +238,7 @@ export function Card({
                 "focus-visible:focus-ring focus-visible:outline-none",
               )}
             >
-              <Chevron pointing={pointing} />
+              <StripChevron className="size-4 shrink-0" size={16} strokeWidth={2} aria-hidden="true" focusable={false} />
               <span
                 className={cn(
                   "flex-1 whitespace-nowrap font-mono text-micro uppercase tracking-caps",
@@ -267,10 +279,13 @@ export function CardHeader({
   title,
   meta,
   children,
+  collapseButton = true,
   ...rest
 }: Omit<React.HTMLAttributes<HTMLDivElement>, "title"> & {
   title?: React.ReactNode;
   meta?: React.ReactNode;
+  /** 보기 전용 뷰도 본문 DOM 구조는 유지하고 접기 조작만 뺄 수 있다. */
+  collapseButton?: boolean;
 }) {
   const ctx = useContext(Ctx);
   return (
@@ -282,7 +297,16 @@ export function CardHeader({
       {title ? <div className="min-w-0 truncate text-control font-semibold text-ink">{title}</div> : null}
       {children}
       {meta ? <div className="ml-auto shrink-0 tnum text-label text-muted">{meta}</div> : null}
-      {ctx?.collapsible ? (
+      {ctx?.collapsible && collapseButton ? ctx.collapseTo === "strip" ? (
+        <PanelToggleButton
+          data-slot="card-collapse"
+          open={!ctx.collapsed}
+          onOpenChange={ctx.toggle}
+          label={ctx.label}
+          controls={ctx.contentId}
+          className={!meta ? "ml-auto" : undefined}
+        />
+      ) : (
         <button
           data-slot="card-collapse"
           type="button"

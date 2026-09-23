@@ -67,6 +67,52 @@ describe("기존 셸의 DS 전환", () => {
     expect(viewport.scrollTop).toBe(80);
   });
 
+  it("검사 막대는 본문만 숨기고 자체 복원 버튼과 입력·스크롤·포커스를 유지한다", () => {
+    function Example() {
+      const [open, setOpen] = useState(true);
+      return <AppShell topbar="Header" parameters={<Panel title="Parameters">Inputs</Panel>}
+        viewer={<button aria-controls="inspect-strip" onClick={() => setOpen(!open)}>External toggle</button>}
+        inspectId="inspect-strip" inspectOpen={open} inspectCollapseTo="strip"
+        inspect={<Panel title="Inspect" variant="inspect" collapsed={!open} onCollapsedChange={collapsed => setOpen(!collapsed)}
+          collapseTo="strip" collapsedLabel="Inspect" collapsedSignal={<span>2 checks</span>} side="right">
+          <input aria-label="Draft" defaultValue="10" />
+        </Panel>} />;
+    }
+    const { container } = render(<DesignSystemProvider><Example /></DesignSystemProvider>);
+    const input = screen.getByRole("textbox") as HTMLInputElement;
+    const slot = document.getElementById("inspect-strip")!;
+    const card = screen.getByRole("complementary", { name: "Inspect" });
+    const content = card.querySelector<HTMLElement>('[data-slot="card-content"]')!;
+    const viewport = card.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]')!;
+    const close = card.querySelector<HTMLButtonElement>('[data-slot="card-header"] [data-slot="card-collapse"]')!;
+    expect(close.getAttribute("aria-controls")).toBe(content.id);
+    fireEvent.change(input, { target: { value: "24" } });
+    viewport.scrollTop = 80;
+    input.focus();
+    fireEvent.click(close);
+
+    const restore = screen.getByRole("button", { name: /Expand Inspect/ });
+    expect(container.querySelector('.workspace.inspect-closed')?.getAttribute("data-inspect-collapse")).toBe("strip");
+    expect(slot.hasAttribute("inert")).toBe(false);
+    expect(slot.getAttribute("aria-hidden")).not.toBe("true");
+    expect(card.getAttribute("data-collapsed")).toBe("true");
+    expect(content.getAttribute("aria-hidden")).toBe("true");
+    expect(content.hasAttribute("inert")).toBe(true);
+    expect(restore.textContent).toContain("2 checks");
+    expect(restore.getAttribute("aria-controls")).toBe(content.id);
+    expect(document.activeElement).toBe(restore);
+
+    fireEvent.click(restore);
+    expect(screen.getByRole("complementary", { name: "Inspect" })).toBe(card);
+    expect(card.querySelector('[data-slot="card-content"]')).toBe(content);
+    expect(card.querySelector('[data-slot="scroll-area-viewport"]')).toBe(viewport);
+    expect(screen.getByRole("textbox")).toBe(input);
+    expect(input.value).toBe("24");
+    expect(viewport.scrollTop).toBe(80);
+    expect(content.hasAttribute("inert")).toBe(false);
+    expect(document.activeElement).toBe(close);
+  });
+
   it("숫자 선택과 스위치의 공개 값 계약을 보존한다", () => {
     const select = vi.fn(), toggle = vi.fn();
     render(<DesignSystemProvider><Select label="Floors" value={10} options={[{ value: 10, label: "Ten" }, { value: 20, label: "Twenty" }]} onChange={select} className="floor-select" /><Toggle label="Shadows" hint="Model shading" value={false} onChange={toggle} /></DesignSystemProvider>);

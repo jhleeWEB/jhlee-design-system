@@ -42,6 +42,8 @@
 [data-collapse-to="strip"][data-collapsed="true"]:not([data-card-measuring]) > .ds-card-strip-content {
   width: var(--card-content-width, 100%);
   visibility: hidden;
+  /* 아코디언처럼 자식이 visibility를 명시해도 접힌 본문 전체가 막대 위로 비치지 않게 한다. */
+  opacity: 0;
 }
 [data-collapse-to="strip"][data-collapsed="true"] > .ds-card-strip { visibility: visible; opacity: 1; pointer-events: auto; }
 

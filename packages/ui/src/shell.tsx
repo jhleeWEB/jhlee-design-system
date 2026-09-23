@@ -1,6 +1,6 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { useDesignSystem } from "./design-system";
-import { Card, CardHeader, CardWell } from "./primitives/Card";
+import { Card, CardHeader, CardWell, type CardProps } from "./primitives/Card";
 import { Badge } from "./primitives/Badge";
 import { Button } from "./primitives/Button";
 import { ScrollArea } from "./navigation/ScrollArea";
@@ -34,36 +34,41 @@ export function AppShell({
   inspect,
   inspectOpen = true,
   inspectId,
+  inspectCollapseTo = "hidden",
 }: {
   topbar: ReactNode;
   parameters: ReactNode;
   viewer: ReactNode;
   /** 좁은 화면에서 숨는다. **검사 패널에만 있는 정보는 두지 않는다** — 판정은 HUD 에도 나와야 한다. */
   inspect?: ReactNode;
-  /** 검사 패널을 닫으면 그 열이 빠지고 뷰어가 넓어진다 — 토글은 앱이 든다(#367). */
+  /** 검사 패널의 열림 상태. 닫힌 열의 폭은 inspectCollapseTo에 따른다. */
   inspectOpen?: boolean;
   /** 외부 접기 버튼의 aria-controls와 연결한다. */
   inspectId?: string;
+  /** DS 검사 카드를 닫아도 복원 막대와 간격을 남긴다. 기본값은 기존 열 숨김이다. */
+  inspectCollapseTo?: "hidden" | "strip";
 }) {
   const ds = useDesignSystem();
   const open = inspectOpen && inspect !== undefined;
+  const strip = ds && inspect !== undefined && inspectCollapseTo === "strip";
   const generatedId = useId();
   const contentId = inspectId ?? generatedId;
   const shellRef = useRef<HTMLDivElement>(null);
   const inspectRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
-    if (open || !inspectRef.current?.contains(document.activeElement)) return;
+    // 막대 모드에서는 내부 Card가 본문 접근성과 복원 버튼 포커스를 함께 소유한다.
+    if (strip || open || !inspectRef.current?.contains(document.activeElement)) return;
     const trigger = Array.from(shellRef.current?.querySelectorAll<HTMLElement>('[aria-controls]') ?? [])
       .find(element => element.getAttribute('aria-controls') === contentId && !inspectRef.current?.contains(element) && canRestorePanelFocus(element));
     (trigger ?? shellRef.current)?.focus();
-  }, [open, contentId]);
+  }, [open, contentId, strip]);
   return (
     <div ref={shellRef} className="app-shell" data-design-system={ds || undefined} tabIndex={-1}>
       {topbar}
-      <div className={`workspace${open ? "" : " inspect-closed"}`}>
+      <div className={`workspace${open ? "" : " inspect-closed"}`} data-inspect-collapse={ds ? (strip ? "strip" : "hidden") : undefined}>
         {parameters}
         {viewer}
-        {ds ? inspect !== undefined && <div ref={inspectRef} id={contentId} className="ds-inspect-slot" data-open={open} inert={!open} aria-hidden={!open}>{inspect}</div> : open ? inspect : null}
+        {ds ? inspect !== undefined && <div ref={inspectRef} id={contentId} className="ds-inspect-slot" data-open={open} inert={!open && !strip} aria-hidden={!open && !strip}>{inspect}</div> : open ? inspect : null}
       </div>
     </div>
   );
@@ -115,6 +120,7 @@ export function Panel({
   titleHidden = false,
   scrollable = true,
   children,
+  ...collapse
 }: {
   title: string;
   eyebrow?: string;
@@ -131,11 +137,11 @@ export function Panel({
   /** 고정 바닥과 별도 스크롤 본문을 가진 패널은 직접 스크롤 영역을 배치한다. */
   scrollable?: boolean;
   children: ReactNode;
-}) {
+} & Pick<CardProps, "collapsed" | "onCollapsedChange" | "collapseTo" | "collapsedLabel" | "collapsedSignal" | "side">) {
   const ds = useDesignSystem();
   const head = !titleHidden || eyebrow !== undefined || actions !== undefined;
   if (ds) return (
-    <Card className={`panel panel-${variant}`} role="complementary" aria-label={title} data-design-system>
+    <Card className={`panel panel-${variant}`} role="complementary" aria-label={title} data-design-system {...collapse}>
       {head ? <CardHeader className="panel-head" title={titleHidden ? undefined : <h2>{title}</h2>} meta={eyebrow}>
         {actions === undefined ? null : <span className="panel-actions">{actions}</span>}
       </CardHeader> : null}
