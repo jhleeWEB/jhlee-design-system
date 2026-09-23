@@ -21,6 +21,8 @@
  *
  * `@source` 가 빠지면 Tailwind 가 이 패키지 안의 클래스를 보지 못해 **컴포넌트가 스타일 없이
  * 렌더된다** — 에러가 나지 않으므로 이 줄을 의심한다.
+ * 기존 셸·컨트롤 API까지 전환할 앱은 최상단을 `DesignSystemProvider`로 감싼다.
+ * 선택하지 않은 스튜디오는 `shell.css`만으로 기존 UI를 유지한다.
  *
  * 방향 C: 도면이 사는 면(`--canvas-*`)과 UI 가 사는 면(`--chrome-*`)을 가른다. 캔버스는
  * 라이트 고정 · radius 0 · 무채색이고, 다크와 그림자와 모서리는 크롬에만 있다. 새 컴포넌트를
@@ -45,6 +47,7 @@ export type { Verdict } from "./shell";
 
 export { Segmented, Select, Slider, Toggle } from "./controls";
 export type { Option } from "./controls";
+export { DesignSystemProvider } from "./design-system";
 
 /* ── 디자인 시스템(#1198) ─────────────────────────────────────────────────── */
 export { cn, cva, type VariantProps } from "./cn";

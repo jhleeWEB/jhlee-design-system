@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // @vitest-environment node
 // 이 스펙은 소스 «파일» 을 읽는다. jsdom 환경에서는 `import.meta.url` 이 file: 스킴이 아니라
 // fileURLToPath 가 죽는다 — DOM 이 필요 없으므로 이 파일만 node 로 돌린다.

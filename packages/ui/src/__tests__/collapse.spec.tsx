@@ -1,4 +1,4 @@
-import { StrictMode, act } from "react";
+import { Fragment, StrictMode, act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -114,9 +114,10 @@ describe("Card — header 접기", () => {
       </Card>,
     );
     expect(host.querySelector('[data-slot="card-header"]')).not.toBeNull();
-    /* CSS 로 감추므로 DOM 에는 남는다 — 선택자가 깨지면 이 검사가 잡는다. */
-    expect(host.querySelector('[data-testid="body"]')).not.toBeNull();
-    expect(card().className).toContain("[&>*:not([data-slot='card-header'])]:hidden");
+    const body = host.querySelector('[data-testid="body"]')!;
+    expect(body).not.toBeNull();
+    expect(body.closest('[hidden]')).not.toBeNull();
+    expect(host.querySelector('[data-slot="card-header"]')?.closest('[hidden]')).toBeNull();
   });
 
   it("머리줄이 접기 버튼을 스스로 단다", () => {
@@ -127,9 +128,64 @@ describe("Card — header 접기", () => {
       </Card>,
     );
     /* 호출처가 매번 버튼을 달게 하면 빠진다. */
-    const button = host.querySelector('[data-slot="card-header"] button')!;
+    const button = host.querySelector<HTMLButtonElement>('[data-slot="card-header"] button')!;
     expect(button.getAttribute("aria-expanded")).toBe("true");
     expect(button.title).toBe("Collapse FSI ledger");
+    expect(document.getElementById(button.getAttribute("aria-controls")!)).not.toBeNull();
+  });
+
+  it("본문 ARIA 대상과 입력 DOM을 접기 전후 동일하게 보존한다", () => {
+    const renderCard = (collapsed: boolean) => render(
+      <Card collapsed={collapsed} onCollapsedChange={() => {}} collapsedLabel="Draft">
+        <CardHeader title="Draft" />
+        <div><input defaultValue="original" /></div>
+      </Card>,
+    );
+    renderCard(false);
+    const button = host.querySelector('[data-slot="card-header"] button')!;
+    const body = document.getElementById(button.getAttribute("aria-controls")!)!;
+    const input = body.querySelector("input")!;
+    input.value = "half typed";
+    for (const collapsed of [true, false]) {
+      renderCard(collapsed);
+      const current = host.querySelector('[data-slot="card-header"] button')!;
+      expect(document.getElementById(current.getAttribute("aria-controls")!)).toBe(body);
+      expect(body.hidden).toBe(collapsed);
+      expect(body.querySelector("input")).toBe(input);
+      expect(input.value).toBe("half typed");
+    }
+  });
+
+  it("중첩 Fragment의 머리줄은 남기고 같은 지역 key의 입력도 따로 보존한다", () => {
+    function Example() {
+      const [collapsed, setCollapsed] = useState(false);
+      return <Card collapsed={collapsed} onCollapsedChange={setCollapsed} collapsedLabel="Draft">
+        <>
+          <><CardHeader title="Draft" /></>
+          <Fragment key="first"><input key="draft" aria-label="First" defaultValue="first" /></Fragment>
+          <Fragment key="second"><input key="draft" aria-label="Second" defaultValue="second" /></Fragment>
+        </>
+      </Card>;
+    }
+    render(<Example />);
+    const header = host.querySelector('[data-slot="card-header"]')!;
+    const button = header.querySelector<HTMLButtonElement>("button")!;
+    const body = document.getElementById(button.getAttribute("aria-controls")!)!;
+    const first = body.querySelector<HTMLInputElement>('[aria-label="First"]')!;
+    const second = body.querySelector<HTMLInputElement>('[aria-label="Second"]')!;
+    first.value = "first draft";
+    second.value = "second draft";
+    for (const collapsed of [true, false]) {
+      act(() => button.click());
+      expect(header.closest('[hidden]')).toBeNull();
+      expect(button.getAttribute("aria-expanded")).toBe(String(!collapsed));
+      expect(body.hidden).toBe(collapsed);
+      expect(document.getElementById(button.getAttribute("aria-controls")!)).toBe(body);
+      expect(body.querySelector('[aria-label="First"]')).toBe(first);
+      expect(body.querySelector('[aria-label="Second"]')).toBe(second);
+      expect(first.value).toBe("first draft");
+      expect(second.value).toBe("second draft");
+    }
   });
 });
 

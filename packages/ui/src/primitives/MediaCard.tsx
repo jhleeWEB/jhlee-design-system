@@ -139,6 +139,7 @@ export function MediaCard({
           <h3 className="truncate text-control font-semibold text-ink">
             {onSelect ? (
               <button
+                data-slot="media-card-select"
                 type="button"
                 onClick={onSelect}
                 /* 카드 전체로 늘어나는 얇은 버튼. 조치들은 z-1 로 그 위에 뜬다. */

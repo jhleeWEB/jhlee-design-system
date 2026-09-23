@@ -1,4 +1,4 @@
-import { createContext, useContext, useId, useMemo } from "react";
+import { Children, Fragment, cloneElement, createContext, isValidElement, useContext, useId, useMemo } from "react";
 
 import { cn, cva, type VariantProps } from "../cn";
 
@@ -78,6 +78,17 @@ function Chevron({ pointing, className }: { pointing: "left" | "right" | "up" | 
   );
 }
 
+/* Fragment는 DOM 구획이 아니므로 머리/본문 분류 전에 펼친다. 경로 전체를 key로 쓰면
+   서로 다른 Fragment의 같은 지역 key도 충돌하지 않아 접기 중 입력 상태를 보존한다. */
+function flattenCardChildren(children: React.ReactNode, ancestry: readonly (string | number)[] = []): React.ReactNode[] {
+  return Children.toArray(children).flatMap<React.ReactNode>((child, index) => {
+    if (!isValidElement<{ children?: React.ReactNode }>(child)) return [child];
+    const path = [...ancestry, child.key ?? index];
+    if (child.type === Fragment) return flattenCardChildren(child.props.children, path);
+    return [cloneElement(child, { key: JSON.stringify(path) })];
+  });
+}
+
 export function Card({
   className,
   elevation,
@@ -109,6 +120,9 @@ export function Card({
   );
 
   const strip = isCollapsed && collapseTo === "strip";
+  const headerCollapse = collapsible && collapseTo === "header";
+  const childList = headerCollapse ? flattenCardChildren(children) : [];
+  const isHeader = (child: React.ReactNode) => isValidElement(child) && child.type === CardHeader;
   /* 셰브론은 **누르면 일어날 일**을 가리킨다. 왼쪽에 붙은 패널을 펼치면 내용이 오른쪽으로
      자라므로 오른쪽을 가리킨다. */
   const pointing = side === "left" ? "right" : "left";
@@ -129,9 +143,6 @@ export function Card({
              `data-collapsed` 만 달고 그대로 서 있는다 — 실제로 그랬다. */
           strip && "w-9 min-w-0 flex-none overflow-hidden",
           isCollapsed && collapseTo === "header" && "flex-none",
-          /* 머리줄만 남기는 접기 — 머리 아닌 자식을 전부 감춘다. `hidden` 속성 대신 CSS 를
-             쓰는 이유는 호출처가 자식을 어떻게 구성하든 동작해야 하기 때문이다. */
-          isCollapsed && collapseTo === "header" && "[&>*:not([data-slot='card-header'])]:hidden",
         )}
         style={strip ? { ...style, width: undefined } : style}
         {...rest}
@@ -139,6 +150,7 @@ export function Card({
         {strip ? (
           <>
             <button
+              data-slot="card-collapse"
               type="button"
               aria-expanded={false}
               aria-controls={contentId}
@@ -166,6 +178,15 @@ export function Card({
             </button>
             <div id={contentId} hidden className="flex min-h-0 flex-1 flex-col">
               {children}
+            </div>
+          </>
+        ) : headerCollapse ? (
+          <>
+            {childList.filter(isHeader)}
+            {/* 접기 버튼의 ARIA 대상은 항상 같은 본문이다. contents는 기존 flex/grid 자식의
+                배치를 보존하고 hidden은 언마운트 없이 입력·스크롤 상태를 남긴다. */}
+            <div id={contentId} data-slot="card-content" hidden={isCollapsed} style={{ display: isCollapsed ? "none" : "contents" }}>
+              {childList.filter(child => !isHeader(child))}
             </div>
           </>
         ) : (
@@ -201,6 +222,7 @@ export function CardHeader({
       {meta ? <div className="ml-auto shrink-0 tnum text-label text-muted">{meta}</div> : null}
       {ctx?.collapsible ? (
         <button
+          data-slot="card-collapse"
           type="button"
           aria-expanded={!ctx.collapsed}
           aria-controls={ctx.contentId}
@@ -233,6 +255,7 @@ export function CardCollapse({ className, ...rest }: React.HTMLAttributes<HTMLBu
   if (!ctx?.collapsible) return null;
   return (
     <button
+      data-slot="card-collapse"
       type="button"
       aria-expanded={!ctx.collapsed}
       aria-controls={ctx.contentId}

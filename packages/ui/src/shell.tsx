@@ -1,4 +1,8 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { useDesignSystem } from "./design-system";
+import { Card, CardHeader, CardWell } from "./primitives/Card";
+import { Badge } from "./primitives/Badge";
+import { Button } from "./primitives/Button";
 
 /**
  * 3열 작업대 셸 — 좌 파라미터 · 중 뷰어 · 우 검사.
@@ -26,9 +30,10 @@ export function AppShell({
   /** 검사 패널을 닫으면 그 열이 빠지고 뷰어가 넓어진다 — 토글은 앱이 든다(#367). */
   inspectOpen?: boolean;
 }) {
+  const ds = useDesignSystem();
   const open = inspectOpen && inspect !== undefined;
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-design-system={ds || undefined}>
       {topbar}
       <div className={`workspace${open ? "" : " inspect-closed"}`}>
         {parameters}
@@ -49,8 +54,9 @@ export function TopBar({
   eyebrow?: string;
   children?: ReactNode;
 }) {
+  const ds = useDesignSystem();
   return (
-    <header className="topbar">
+    <header className="topbar" data-design-system={ds || undefined}>
       <h1>{title}</h1>
       {eyebrow === undefined ? null : <span className="eyebrow">{eyebrow}</span>}
       <span className="topbar-spacer" />
@@ -66,6 +72,8 @@ export function TopBar({
  * 색만으로 알리면 흑백 인쇄와 색각 이상에서 그 경고가 사라진다.
  */
 export function StatusBadge({ label }: { label: string }) {
+  const ds = useDesignSystem();
+  if (ds) return <Badge tone="warn" provisional dot>{label}</Badge>;
   return (
     <span className="rule-status">
       <i className="status-dot" aria-hidden="true" />
@@ -96,7 +104,16 @@ export function Panel({
   titleHidden?: boolean;
   children: ReactNode;
 }) {
+  const ds = useDesignSystem();
   const head = !titleHidden || eyebrow !== undefined || actions !== undefined;
+  if (ds) return (
+    <Card className={`panel panel-${variant}`} role="complementary" aria-label={title} data-design-system>
+      {head ? <CardHeader className="panel-head" title={titleHidden ? undefined : <h2>{title}</h2>} meta={eyebrow}>
+        {actions === undefined ? null : <span className="panel-actions">{actions}</span>}
+      </CardHeader> : null}
+      {children}
+    </Card>
+  );
   return (
     <aside className={`panel panel-${variant}`} aria-label={title}>
       {head ? (
@@ -128,6 +145,15 @@ export function PanelGroup({
   open?: boolean;
   children: ReactNode;
 }) {
+  const ds = useDesignSystem();
+  const [expanded, setExpanded] = useState(open);
+  useEffect(() => setExpanded(open), [open]);
+  if (ds) return (
+    <Card className="ds-panel-group" elevation="flat" collapsed={!expanded} onCollapsedChange={collapsed => setExpanded(!collapsed)} collapsedLabel={title}>
+      <CardHeader title={title} meta={typeof echo === "string" ? <span title={echo}>{echo}</span> : echo} />
+      <div className="group-body">{children}</div>
+    </Card>
+  );
   return (
     <details className="group" open={open}>
       <summary>
@@ -171,6 +197,13 @@ export function Field({
 
 /** 뷰어 칸 — 머리(뷰 전환 등)와 캔버스를 세로로 나눈다. */
 export function ViewerPanel({ head, children }: { head?: ReactNode; children: ReactNode }) {
+  const ds = useDesignSystem();
+  if (ds) return (
+    <Card className="viewer-panel" role="region" aria-label="Viewer" data-design-system>
+      {head === undefined ? null : <CardHeader className="viewer-head">{head}</CardHeader>}
+      <CardWell className="viewer">{children}</CardWell>
+    </Card>
+  );
   return (
     <section className="viewer-panel" aria-label="Viewer">
       {head === undefined ? null : <div className="viewer-head">{head}</div>}
@@ -211,6 +244,8 @@ export function HudCell({
 
 /** 캔버스 위 지표 줄. `role="status"` 로 값이 바뀌면 스크린리더가 읽는다. */
 export function Hud({ children }: { children: ReactNode }) {
+  const ds = useDesignSystem();
+  if (ds) return <Card className="hud" role="status" data-design-system>{children}</Card>;
   return (
     <div className="hud" role="status">
       {children}
@@ -263,14 +298,28 @@ export function Tabs<T extends string>({
   options: readonly { value: T; label: string }[];
   onChange: (value: T) => void;
 }) {
+  const ds = useDesignSystem();
   return (
-    <div className="tabs" role="tablist" aria-label={label}>
+    <div className="tabs" role="tablist" aria-label={label} data-design-system={ds || undefined} onKeyDown={event => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const index = options.findIndex(option => option.value === value);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? options.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + options.length) % options.length;
+      const option = options[next];
+      if (!option) return;
+      onChange(option.value);
+      event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus();
+    }}>
       {options.map((option) => (
-        <button
+        ds ? <Button
+          key={option.value} type="button" role="tab" size="sm" variant="ghost"
+          aria-selected={option.value === value} tabIndex={option.value === value ? 0 : -1}
+          onClick={() => onChange(option.value)}>{option.label}</Button> : <button
           key={option.value}
           type="button"
           role="tab"
           aria-selected={option.value === value}
+          tabIndex={option.value === value ? 0 : -1}
           onClick={() => onChange(option.value)}
         >
           {option.label}

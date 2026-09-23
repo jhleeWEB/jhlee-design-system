@@ -94,6 +94,7 @@ export function DrawerHeader({
         ) : null}
       </div>
       <Dialog.Close
+        data-slot="dialog-close"
         aria-label="Close"
         className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit -mr-2 -mt-1 shrink-0 cursor-pointer rounded-control p-2 text-muted hover:bg-surface-2 hover:text-ink focus-visible:focus-ring focus-visible:outline-none"
       >

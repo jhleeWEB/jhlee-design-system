@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { cn } from "./cn";
+import { useDesignSystem } from "./design-system";
+import { Switch } from "./primitives/Choice";
+import { SegmentedControl } from "./navigation/SegmentedControl";
 
 /**
  * 폼 컨트롤.
@@ -8,8 +12,8 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
  * 그렸다 — 도메인을 모르는 prop 주도 구현이고 `Segmented` 는 roving tabindex 와 ←/→ 내비를
  * 이미 갖고 있었다. 새로 쓰면 그 키보드 패턴을 잃는다.
  *
- * 바뀐 것은 스타일 경로 하나다: Tailwind 유틸리티를 `shell.css` 클래스로 옮겼다. Tailwind 를
- * 쓰는 앱이 kaufland 하나뿐이라, 유틸리티에 묶인 채로는 공유가 성립하지 않는다.
+ * Tailwind를 쓰지 않는 소비자는 기존 CSS 경로를 유지한다. DesignSystemProvider를 선택한
+ * 앱은 같은 값·이벤트 계약으로 DS 스위치·세그먼트와 크롬 토큰을 사용한다.
  */
 
 /** 컨트롤 넷이 공유하는 선택지. 구 `SelectOption<T>` 과 같은 모양이다. */
@@ -28,16 +32,21 @@ export function Select<T extends string | number>({
   value,
   options,
   disabled = false,
+  className,
   onChange,
 }: {
   label: string;
   value: T;
   options: readonly Option<T>[];
   disabled?: boolean;
+  className?: string;
   onChange: (value: T) => void;
 }) {
+  const ds = useDesignSystem();
   return (
     <select
+      data-slot={ds ? "select" : undefined}
+      className={cn(ds && "ds-select", className)}
       aria-label={label}
       value={String(value)}
       disabled={disabled}
@@ -64,6 +73,7 @@ export function Slider({
   disabled = false,
   onChange,
   onCommit,
+  className,
 }: {
   label: string;
   value: number;
@@ -75,7 +85,9 @@ export function Slider({
   onChange?: (value: number) => void;
   /** 있으면 range 이동은 로컬 draft로만 보이고 입력이 끝날 때 한 번 전달한다. */
   onCommit?: (value: number) => void;
+  className?: string;
 }) {
+  const ds = useDesignSystem();
   const [draft, setDraft] = useState(value);
   const draftRef = useRef(value);
   const committedRef = useRef(value);
@@ -116,6 +128,8 @@ export function Slider({
   }, [onCommit]);
   return (
     <input
+      data-slot={ds ? "slider" : undefined}
+      className={cn(ds && "ds-slider", className)}
       type="range"
       aria-label={label}
       min={min}
@@ -164,6 +178,7 @@ export function Segmented<T extends string | number>({
   disabled?: boolean;
   onChange: (value: T) => void;
 }) {
+  const ds = useDesignSystem();
   function onKeyDown(event: KeyboardEvent) {
     if (disabled) return;
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
@@ -178,6 +193,7 @@ export function Segmented<T extends string | number>({
     if (picked) onChange(picked.value);
   }
 
+  if (ds) return <SegmentedControl options={options} value={value} onChange={onChange} label={label} disabled={disabled} size="sm" />;
   return (
     <div
       className="seg"
@@ -224,6 +240,13 @@ export function Toggle({
   disabled?: boolean;
   onChange: (value: boolean) => void;
 }) {
+  const ds = useDesignSystem();
+  if (ds) return (
+    <label className={cn("ds-toggle", hideText && "ds-toggle-icon")}>
+      {hideText ? null : <span className="ds-toggle-copy"><span>{label}</span>{hint ? <small>{hint}</small> : null}</span>}
+      <Switch aria-label={label} checked={value} disabled={disabled} onCheckedChange={onChange} />
+    </label>
+  );
   return (
     <button
       type="button"

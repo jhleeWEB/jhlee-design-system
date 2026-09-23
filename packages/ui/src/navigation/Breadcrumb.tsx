@@ -38,6 +38,7 @@ export function Breadcrumb({
               </a>
             ) : (
               <button
+                data-slot="breadcrumb-link"
                 type="button"
                 onClick={item.onSelect}
                 className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit min-w-0 cursor-pointer truncate rounded-control hover:text-ink hover:underline focus-visible:focus-ring focus-visible:outline-none"

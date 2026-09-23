@@ -149,6 +149,7 @@ export function DataTable<Row>({
                 >
                   {column.sortValue ? (
                     <button
+                      data-slot="table-sort"
                       type="button"
                       onClick={() => toggleSort(column.key)}
                       aria-label={column.label ?? undefined}

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Toast as RadixToast } from "radix-ui";
 
 import { cn, cva, type VariantProps } from "../cn";
@@ -88,6 +88,23 @@ export function ToastProvider({
 }: ToastProviderProps) {
   const [queue, setQueue] = useState<readonly QueuedToast[]>([]);
   const nextId = useRef(0);
+  const removalTimers = useRef(new Map<number, ReturnType<typeof setTimeout>>());
+
+  useEffect(() => {
+    /* 제어 prop으로 닫은 경우 Radix가 onOpenChange를 다시 부르지 않는다. 모든 닫힘 경로를
+       큐 상태에서 정리해야 명시적 dismiss와 개수 제한도 같은 퇴장 수명을 갖는다. */
+    for (const item of queue) {
+      if (item.open || removalTimers.current.has(item.id)) continue;
+      removalTimers.current.set(item.id, setTimeout(() => {
+        removalTimers.current.delete(item.id);
+        setQueue(prev => prev.filter(toast => toast.id !== item.id));
+      }, 240));
+    }
+  }, [queue]);
+  useEffect(() => () => {
+    for (const timer of removalTimers.current.values()) clearTimeout(timer);
+    removalTimers.current.clear();
+  }, []);
 
   const dismiss = useCallback((id: number) => {
     setQueue(prev => prev.map(t => (t.id === id ? { ...t, open: false } : t)));
@@ -114,21 +131,19 @@ export function ToastProvider({
 
   return (
     <ToastContext.Provider value={api}>
-      <RadixToast.Provider duration={duration} swipeDirection="right">
+      <RadixToast.Provider duration={duration === 0 ? Infinity : duration} swipeDirection="right">
         {children}
         {queue.map(item => (
           <RadixToast.Root
+            data-slot="toast"
             key={item.id}
             open={item.open}
             /* Radix 의 `duration` 은 필수 number 라 `undefined` 를 넘기면 타입이 깨진다.
                값이 없을 때는 Provider 의 기본값이 이겨야 하므로 **prop 자체를 빼야** 한다. */
-            {...(item.duration === undefined ? {} : { duration: item.duration })}
+            {...(item.duration === undefined ? {} : { duration: item.duration === 0 ? Infinity : item.duration })}
             onOpenChange={open => {
               if (open) return;
               dismiss(item.id);
-              /* 퇴장이 끝난 뒤에 배열에서 뺀다. Radix 가 `data-state="closed"` 를 거쳐 가므로
-                 즉시 제거하면 화면에서 툭 사라진다. */
-              window.setTimeout(() => setQueue(prev => prev.filter(t => t.id !== item.id)), 240);
             }}
             className={cn(toastVariants({ tone: item.tone }))}
           >
@@ -142,6 +157,7 @@ export function ToastProvider({
             </div>
             {item.action ? (
               <RadixToast.Action
+                data-slot="toast-action"
                 altText={item.action.altText}
                 onClick={item.action.onSelect}
                 className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit shrink-0 cursor-pointer rounded-control border border-solid border-line-strong bg-surface px-3 py-1 text-body text-ink hover:bg-surface-2 focus-visible:focus-ring focus-visible:outline-none"
@@ -150,6 +166,7 @@ export function ToastProvider({
               </RadixToast.Action>
             ) : null}
             <RadixToast.Close
+              data-slot="toast-close"
               aria-label="Dismiss"
               className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit -mr-1 -mt-1 shrink-0 cursor-pointer rounded-control p-1 text-muted hover:bg-surface-2 hover:text-ink focus-visible:focus-ring focus-visible:outline-none"
             >
