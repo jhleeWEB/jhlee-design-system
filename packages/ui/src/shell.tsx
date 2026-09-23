@@ -6,6 +6,16 @@ import { Button } from "./primitives/Button";
 import { ScrollArea } from "./navigation/ScrollArea";
 import { Accordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionContent } from "./navigation/Accordion";
 
+function canRestorePanelFocus(element: HTMLElement) {
+  if (element.closest('[inert], [hidden], [aria-hidden="true"]') || element.matches(':disabled')) return false;
+  // 겹쳐 보관하는 뷰어의 버튼보다 현재 화면의 복원 버튼을 고른다.
+  for (let ancestor: HTMLElement | null = element; ancestor; ancestor = ancestor.parentElement) {
+    const style = getComputedStyle(ancestor);
+    if (style.display === "none" || style.visibility === "hidden" || style.visibility === "collapse") return false;
+  }
+  return true;
+}
+
 /**
  * 3열 작업대 셸 — 좌 파라미터 · 중 뷰어 · 우 검사.
  *
@@ -44,7 +54,7 @@ export function AppShell({
   useLayoutEffect(() => {
     if (open || !inspectRef.current?.contains(document.activeElement)) return;
     const trigger = Array.from(shellRef.current?.querySelectorAll<HTMLElement>('[aria-controls]') ?? [])
-      .find(element => element.getAttribute('aria-controls') === contentId && !inspectRef.current?.contains(element));
+      .find(element => element.getAttribute('aria-controls') === contentId && !inspectRef.current?.contains(element) && canRestorePanelFocus(element));
     (trigger ?? shellRef.current)?.focus();
   }, [open, contentId]);
   return (

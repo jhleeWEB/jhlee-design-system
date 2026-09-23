@@ -33,11 +33,19 @@ describe("기존 셸의 DS 전환", () => {
     expect(input.value).toBe("24");
   });
 
-  it("검사 패널을 접어도 입력과 스크롤을 보존하고 닫힌 본문을 비활성화한다", () => {
+  it("검사 패널을 접어도 입력과 스크롤을 보존하고 보이는 복원 버튼으로 포커스를 돌린다", () => {
     function Example() {
       const [open, setOpen] = useState(true);
       return <AppShell topbar="Header" parameters={<Panel title="Parameters">Inputs</Panel>}
-        viewer={<button aria-controls="inspect-test" onClick={() => setOpen(!open)}>Toggle inspect</button>}
+        viewer={<>
+          <div inert><button aria-controls="inspect-test">Inactive viewer</button></div>
+          <div hidden><button aria-controls="inspect-test">Hidden viewer</button></div>
+          <div aria-hidden="true"><button aria-controls="inspect-test">Hidden programme</button></div>
+          <div style={{ visibility: "hidden" }}><button aria-controls="inspect-test">Invisible viewer</button></div>
+          <div style={{ display: "none" }}><button aria-controls="inspect-test">Removed viewer</button></div>
+          <button disabled aria-controls="inspect-test">Unavailable restore</button>
+          <button aria-controls="inspect-test" onClick={() => setOpen(!open)}>Toggle inspect</button>
+        </>}
         inspectId="inspect-test" inspectOpen={open}
         inspect={<Panel title="Inspect" variant="inspect"><input aria-label="Draft" defaultValue="10" /></Panel>} />;
     }
