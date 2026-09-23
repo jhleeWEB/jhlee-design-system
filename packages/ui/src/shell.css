@@ -267,7 +267,8 @@ button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, in
 .ds-toggle-copy small { font-size: var(--text-label); color: var(--chrome-muted); }
 .ds-toggle [data-slot="switch"] { width: 36px; height: 22px; padding: 1px; }
 .ds-toggle [data-slot="switch"] > span { width: 18px; height: 18px; }
-.ds-toggle [data-slot="switch"] > span[data-state="checked"] { transform: translateX(14px); }
+/* Tailwind의 개별 translate를 덮어쓴다. transform을 쓰면 두 이동이 합산된다. */
+.ds-toggle [data-slot="switch"] > span[data-state="checked"] { translate: 14px 0; }
 
 @media (max-width: 1180px) {
   .panel-inspect[data-design-system] { display: none; }
