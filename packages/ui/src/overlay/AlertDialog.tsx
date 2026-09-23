@@ -2,6 +2,7 @@ import { AlertDialog as Radix } from "radix-ui";
 
 import { Button, type ButtonProps } from "../primitives/Button";
 import { cn } from "../cn";
+import { ModalBody, ModalFooter } from "./Modal";
 
 /* 확인 대화 — **되돌릴 수 없는 것**에만 쓴다. 그 밖은 `Modal`.
  *
@@ -53,12 +54,15 @@ export function ConfirmDialog({
         <Radix.Content
           data-slot="confirm-dialog"
           className={cn(
-            "fixed left-1/2 top-1/2 z-50 w-[min(380px,calc(100vw-24px))] -translate-x-1/2 -translate-y-1/2",
+            "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
+            "flex max-h-[calc(100dvh-32px)] flex-col overflow-hidden [overflow-wrap:anywhere]",
+            // 세 갈래 확인은 일반 모달 폭을 쓰고, 좁은 화면의 줄바꿈은 공용 바닥이 맡는다.
+            secondaryAction ? "w-[min(560px,calc(100vw-24px))]" : "w-[min(380px,calc(100vw-24px))]",
             "rounded-modal border border-line bg-surface shadow-modal",
             "text-body text-ink animate-in-pop focus-visible:outline-none",
           )}
         >
-          <div className="px-6 pb-4 pt-5">
+          <ModalBody className="pb-4 pt-5">
             <Radix.Title className="text-title font-semibold leading-snug text-ink">
               {title}
             </Radix.Title>
@@ -68,8 +72,8 @@ export function ConfirmDialog({
               </Radix.Description>
             ) : null}
             {children}
-          </div>
-          <div className="flex items-center justify-end gap-3 border-t border-line bg-surface-2 px-6 py-4">
+          </ModalBody>
+          <ModalFooter>
             <Radix.Cancel asChild>
               <Button variant="ghost" disabled={busy}>
                 {cancelLabel}
@@ -85,7 +89,7 @@ export function ConfirmDialog({
             <Button tone={tone} variant="solid" loading={busy} onClick={onConfirm}>
               {confirmLabel}
             </Button>
-          </div>
+          </ModalFooter>
         </Radix.Content>
       </Radix.Portal>
     </Radix.Root>
