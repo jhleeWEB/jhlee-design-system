@@ -1,0 +1,50 @@
+/* 일반 Card의 배치는 건드리지 않고 접기 모드가 있는 카드만 전환을 소유한다. */
+[data-slot="card"][data-collapse-to] {
+  --card-strip-width: 36px;
+  transition-property: width, flex-basis, flex-grow, row-gap;
+  transition-duration: var(--motion-collapse-duration, 200ms);
+  transition-timing-function: var(--motion-collapse-easing, ease-out);
+}
+
+.ds-card-header-content {
+  display: grid;
+  grid-template-rows: 1fr;
+  gap: inherit;
+  min-height: 0;
+  transition: grid-template-rows var(--motion-collapse-duration, 200ms) var(--motion-collapse-easing, ease-out), visibility 0s;
+}
+.ds-card-header-inner { display: flex; min-height: 0; flex-direction: column; gap: inherit; overflow: hidden; }
+[data-collapse-to="header"][data-collapsed="true"] { flex: none !important; row-gap: 0 !important; }
+[data-collapse-to="header"][data-collapsed="true"] > .ds-card-header-content { grid-template-rows: 0fr; }
+.ds-card-header-content[aria-hidden="true"] { visibility: hidden; transition-delay: 0s, var(--motion-collapse-duration, 200ms); }
+
+[data-collapse-to="strip"] { overflow-x: hidden; }
+.ds-card-strip-content { display: flex; min-width: 0; min-height: 0; flex: 1 0 auto; flex-direction: column; gap: inherit; }
+.ds-card-strip {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-collapse-duration, 200ms) var(--motion-collapse-easing, ease-out);
+}
+[data-collapse-to="strip"][data-collapsed="true"]:not([data-card-measuring]) {
+  width: var(--card-strip-width) !important;
+  min-width: 0 !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  overflow: hidden;
+}
+[data-collapse-to="strip"][data-card-flexible="true"][data-collapsed="true"]:not([data-card-measuring]) { flex-basis: var(--card-strip-width) !important; }
+[data-collapse-to="strip"][data-collapsed="true"]:not([data-card-measuring]) > .ds-card-strip-content {
+  width: var(--card-content-width, 100%);
+  visibility: hidden;
+}
+[data-collapse-to="strip"][data-collapsed="true"] > .ds-card-strip { visibility: visible; opacity: 1; pointer-events: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="card"][data-collapse-to] { --motion-collapse-duration: 0ms; }
+}

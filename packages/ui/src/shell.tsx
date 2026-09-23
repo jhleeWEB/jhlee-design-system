@@ -1,9 +1,10 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { useDesignSystem } from "./design-system";
 import { Card, CardHeader, CardWell } from "./primitives/Card";
 import { Badge } from "./primitives/Badge";
 import { Button } from "./primitives/Button";
 import { ScrollArea } from "./navigation/ScrollArea";
+import { Accordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionContent } from "./navigation/Accordion";
 
 /**
  * 3열 작업대 셸 — 좌 파라미터 · 중 뷰어 · 우 검사.
@@ -22,6 +23,7 @@ export function AppShell({
   viewer,
   inspect,
   inspectOpen = true,
+  inspectId,
 }: {
   topbar: ReactNode;
   parameters: ReactNode;
@@ -30,16 +32,28 @@ export function AppShell({
   inspect?: ReactNode;
   /** 검사 패널을 닫으면 그 열이 빠지고 뷰어가 넓어진다 — 토글은 앱이 든다(#367). */
   inspectOpen?: boolean;
+  /** 외부 접기 버튼의 aria-controls와 연결한다. */
+  inspectId?: string;
 }) {
   const ds = useDesignSystem();
   const open = inspectOpen && inspect !== undefined;
+  const generatedId = useId();
+  const contentId = inspectId ?? generatedId;
+  const shellRef = useRef<HTMLDivElement>(null);
+  const inspectRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (open || !inspectRef.current?.contains(document.activeElement)) return;
+    const trigger = Array.from(shellRef.current?.querySelectorAll<HTMLElement>('[aria-controls]') ?? [])
+      .find(element => element.getAttribute('aria-controls') === contentId && !inspectRef.current?.contains(element));
+    (trigger ?? shellRef.current)?.focus();
+  }, [open, contentId]);
   return (
-    <div className="app-shell" data-design-system={ds || undefined}>
+    <div ref={shellRef} className="app-shell" data-design-system={ds || undefined} tabIndex={-1}>
       {topbar}
       <div className={`workspace${open ? "" : " inspect-closed"}`}>
         {parameters}
         {viewer}
-        {open ? inspect : null}
+        {ds ? inspect !== undefined && <div ref={inspectRef} id={contentId} className="ds-inspect-slot" data-open={open} inert={!open} aria-hidden={!open}>{inspect}</div> : open ? inspect : null}
       </div>
     </div>
   );
@@ -153,10 +167,17 @@ export function PanelGroup({
   const [expanded, setExpanded] = useState(open);
   useEffect(() => setExpanded(open), [open]);
   if (ds) return (
-    <Card className="ds-panel-group" elevation="flat" collapsed={!expanded} onCollapsedChange={collapsed => setExpanded(!collapsed)} collapsedLabel={title}>
-      <CardHeader title={title} meta={typeof echo === "string" ? <span title={echo}>{echo}</span> : echo} />
-      <div className="group-body">{children}</div>
-    </Card>
+    <Accordion type="single" collapsible value={expanded ? "section" : ""} onValueChange={value => setExpanded(value === "section")}>
+      <AccordionItem value="section" className="ds-panel-group">
+        <AccordionHeader>
+          <AccordionTrigger title={`${expanded ? "Collapse" : "Expand"} ${title}`} aria-label={title}>
+            <span className="ds-panel-group-title">{title}</span>
+            {echo === undefined ? null : <span className="ds-panel-group-meta" title={typeof echo === "string" ? echo : undefined}>{echo}</span>}
+          </AccordionTrigger>
+        </AccordionHeader>
+        <AccordionContent contentClassName="group-body">{children}</AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
   return (
     <details className="group" open={open}>

@@ -1,4 +1,4 @@
-import { Fragment, StrictMode, act, useState } from "react";
+import { Fragment, StrictMode, act, useEffect, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -36,18 +36,22 @@ afterEach(() => {
 const card = () => host.querySelector('[data-slot="card"]')!;
 
 describe("Card — strip 접기", () => {
-  it("접히면 호출처의 폭 클래스를 **이긴다**", () => {
-    render(
-      <Card className="w-[290px] shrink-0" collapsed onCollapsedChange={() => {}} collapseTo="strip" collapsedLabel="Planning brief">
+  it.each(["w-[290px] shrink-0", "min-w-0 flex-1"])("접는 동안 펼침 치수 %s를 지워 버리지 않는다", className => {
+    const draw = (collapsed: boolean) => render(
+      <Card className={className} style={{ maxWidth: 600 }} collapsed={collapsed} onCollapsedChange={() => {}} collapseTo="strip" collapsedLabel="Planning brief">
         <CardWell>body</CardWell>
       </Card>,
     );
-    const cls = card().className;
-    /* tailwind-merge 는 같은 그룹에서 **뒤에 온 것**을 남긴다. 접힘은 모드이고 모드가
-       소유한 속성은 모드가 이겨야 하므로, 병합 순서상 w-9 가 살아남아야 한다. */
-    expect(cls).toContain("w-9");
-    expect(cls).not.toContain("w-[290px]");
-    expect(cls).toContain("flex-none");
+    draw(false);
+    const original = card();
+    for (const collapsed of [true, false]) {
+      draw(collapsed);
+      expect(card()).toBe(original);
+      expect(card().getAttribute("data-collapse-to")).toBe("strip");
+      expect(card().getAttribute("data-collapsed")).toBe(collapsed ? "true" : null);
+      for (const token of className.split(" ")) expect(card().classList.contains(token)).toBe(true);
+      expect((card() as HTMLElement).style.maxWidth).toBe("600px");
+    }
   });
 
   it("펼쳐 있으면 호출처의 폭이 산다", () => {
@@ -71,7 +75,7 @@ describe("Card — strip 접기", () => {
     const input = host.querySelector("input");
     /* 언마운트하면 되펼칠 때 «처음 상태» 가 되어 접기가 파괴적 동작이 된다. */
     expect(input).not.toBeNull();
-    expect(input!.closest("[hidden]")).not.toBeNull();
+    expect(input!.closest('[aria-hidden="true"][inert]')).not.toBeNull();
   });
 
   it("접힌 자리에 되돌리는 버튼과 이름이 남는다", () => {
@@ -116,8 +120,8 @@ describe("Card — header 접기", () => {
     expect(host.querySelector('[data-slot="card-header"]')).not.toBeNull();
     const body = host.querySelector('[data-testid="body"]')!;
     expect(body).not.toBeNull();
-    expect(body.closest('[hidden]')).not.toBeNull();
-    expect(host.querySelector('[data-slot="card-header"]')?.closest('[hidden]')).toBeNull();
+    expect(body.closest('[aria-hidden="true"][inert]')).not.toBeNull();
+    expect(host.querySelector('[data-slot="card-header"]')?.closest('[aria-hidden="true"]')).toBeNull();
   });
 
   it("머리줄이 접기 버튼을 스스로 단다", () => {
@@ -150,7 +154,8 @@ describe("Card — header 접기", () => {
       renderCard(collapsed);
       const current = host.querySelector('[data-slot="card-header"] button')!;
       expect(document.getElementById(current.getAttribute("aria-controls")!)).toBe(body);
-      expect(body.hidden).toBe(collapsed);
+      expect(body.getAttribute("aria-hidden")).toBe(collapsed ? "true" : null);
+      expect(body.hasAttribute("inert")).toBe(collapsed);
       expect(body.querySelector("input")).toBe(input);
       expect(input.value).toBe("half typed");
     }
@@ -177,14 +182,71 @@ describe("Card — header 접기", () => {
     second.value = "second draft";
     for (const collapsed of [true, false]) {
       act(() => button.click());
-      expect(header.closest('[hidden]')).toBeNull();
+      expect(header.closest('[aria-hidden="true"]')).toBeNull();
       expect(button.getAttribute("aria-expanded")).toBe(String(!collapsed));
-      expect(body.hidden).toBe(collapsed);
+      expect(body.getAttribute("aria-hidden")).toBe(collapsed ? "true" : null);
+      expect(body.hasAttribute("inert")).toBe(collapsed);
       expect(document.getElementById(button.getAttribute("aria-controls")!)).toBe(body);
       expect(body.querySelector('[aria-label="First"]')).toBe(first);
       expect(body.querySelector('[aria-label="Second"]')).toBe(second);
       expect(first.value).toBe("first draft");
       expect(second.value).toBe("second draft");
+    }
+  });
+});
+
+describe("Card — 접기 중 본문과 포커스 수명", () => {
+  it.each(["strip", "header"] as const)("%s 왕복에도 입력·지역 상태·스크롤과 ARIA 대상을 보존한다", collapseTo => {
+    let mounts = 0;
+    function Body() {
+      const [count, setCount] = useState(0);
+      useEffect(() => { mounts++; }, []);
+      return <div data-test-scroll style={{ overflow: "auto", height: 80 }}>
+        <input defaultValue="draft" />
+        <button data-counter onClick={() => setCount(value => value + 1)}>{count}</button>
+        <div style={{ height: 400 }}>Long content</div>
+      </div>;
+    }
+    const draw = (collapsed: boolean) => render(<Card collapsed={collapsed} onCollapsedChange={() => {}} collapseTo={collapseTo} collapsedLabel="Draft">
+      <CardHeader title="Draft" /><Body />
+    </Card>);
+    draw(false);
+    const content = host.querySelector<HTMLElement>('[data-slot="card-content"]')!;
+    const input = content.querySelector("input")!;
+    const scroll = content.querySelector<HTMLElement>('[data-test-scroll]')!;
+    const counter = content.querySelector<HTMLButtonElement>('[data-counter]')!;
+    const initialMounts = mounts;
+    input.value = "half typed";
+    scroll.scrollTop = 48;
+    (card() as HTMLElement).scrollTop = 120;
+    act(() => counter.click());
+    for (const collapsed of [true, false, true, false]) {
+      draw(collapsed);
+      expect(host.querySelector('[data-slot="card-content"]')).toBe(content);
+      expect(content.querySelector("input")).toBe(input);
+      expect(input.value).toBe("half typed");
+      expect(scroll.scrollTop).toBe(48);
+      expect((card() as HTMLElement).scrollTop).toBe(collapseTo === "strip" && collapsed ? 0 : 120);
+      expect(counter.textContent).toBe("1");
+      expect(mounts).toBe(initialMounts);
+      for (const trigger of host.querySelectorAll('[data-slot="card-collapse"]')) {
+        expect(document.getElementById(trigger.getAttribute("aria-controls")!)).toBe(content);
+      }
+    }
+  });
+
+  it.each(["strip", "header"] as const)("%s 외부 접기는 내부 포커스를 남아 있는 접기 버튼으로 돌린다", collapseTo => {
+    const draw = (collapsed: boolean) => render(<Card collapsed={collapsed} onCollapsedChange={() => {}} collapseTo={collapseTo} collapsedLabel="Draft">
+      <CardHeader title="Draft" /><input />
+    </Card>);
+    draw(false);
+    host.querySelector("input")!.focus();
+    draw(true);
+    const trigger = collapseTo === "strip" ? host.querySelector('[data-card-strip]') : host.querySelector('[data-slot="card-header"] button');
+    expect(document.activeElement).toBe(trigger);
+    if (collapseTo === "strip") {
+      draw(false);
+      expect(document.activeElement).toBe(host.querySelector('[data-slot="card-header"] button'));
     }
   });
 });
@@ -199,5 +261,8 @@ describe("Card — 접히지 않는 카드", () => {
     );
     expect(host.querySelector("button")).toBeNull();
     expect(card().hasAttribute("data-collapsed")).toBe(false);
+    expect(card().hasAttribute("data-collapse-to")).toBe(false);
+    expect(card().querySelector('[data-slot="card-content"]')).toBeNull();
+    expect(card().firstElementChild?.getAttribute("data-slot")).toBe("card-header");
   });
 });

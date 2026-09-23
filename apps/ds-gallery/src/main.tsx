@@ -2,6 +2,11 @@ import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 
 import {
+  Accordion,
+  AccordionContent,
+  AccordionHeader,
+  AccordionItem,
+  AccordionTrigger,
   Alert,
   Badge,
   Breadcrumb,
@@ -775,7 +780,34 @@ function Gallery() {
             </CardGrid>
           </Spec>
 
-          <Spec name="Collapse" note="Two shapes, one prop. Side by side collapses to a vertical tab so the sibling takes the width; stacked collapses to its header row so the one below takes the height.">
+          <Spec name="Accordion" note="Compose Root, Item, Header, Trigger and Content. Single or multiple sections, controlled or uncontrolled. Arrow keys move between headers; drafts stay mounted when closed.">
+            <div className="flex w-full flex-wrap gap-4">
+              <Accordion type="single" collapsible defaultValue="programme" className="min-w-[240px] flex-1 space-y-2">
+                <AccordionItem value="programme">
+                  <AccordionHeader><AccordionTrigger>Programme</AccordionTrigger></AccordionHeader>
+                  <AccordionContent>
+                    <label className="flex flex-col gap-2">Scheme name<Input aria-label="Accordion draft" defaultValue="Tower A" /></label>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="checks">
+                  <AccordionHeader><AccordionTrigger>Checks</AccordionTrigger></AccordionHeader>
+                  <AccordionContent>One section opens at a time. Close and reopen the programme to keep editing the same draft.</AccordionContent>
+                </AccordionItem>
+              </Accordion>
+              <Accordion type="multiple" defaultValue={["height", "parking"]} className="min-w-[240px] flex-1 space-y-2">
+                <AccordionItem value="height">
+                  <AccordionHeader><AccordionTrigger>Height</AccordionTrigger></AccordionHeader>
+                  <AccordionContent>21 residential floors · 2.95 m per floor</AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="parking">
+                  <AccordionHeader><AccordionTrigger>Parking</AccordionTrigger></AccordionHeader>
+                  <AccordionContent>Multiple sections can stay open together.</AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          </Spec>
+
+          <Spec name="Collapse" note="Cards and view panels share a 200ms transition. Side by side collapses to a vertical tab; stacked collapses to the header. Reduced motion switches instantly.">
             <div className="flex w-full flex-col gap-2">
               <Card
                 elevation="flat"

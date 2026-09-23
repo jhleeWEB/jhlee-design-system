@@ -433,6 +433,35 @@
 @utility w-ctl { width: var(--height-ctl); }
 @utility w-ctl-lg { width: var(--height-ctl-lg); }
 
+/* 접기 모션은 카드·아코디언·뷰 패널이 같은 길이와 곡선을 읽는다. */
+:root { --motion-collapse-duration: 200ms; --motion-collapse-easing: var(--ease-out-quick); }
+@media (prefers-reduced-motion: reduce) { :root { --motion-collapse-duration: 0ms; } }
+.ds-accordion { min-width: 0; }
+.ds-accordion-item { min-width: 0; border: 1px solid var(--chrome-line); border-radius: var(--radius-card); background: var(--chrome-surface); color: var(--chrome-ink); }
+.ds-accordion-header { display: flex; margin: 0; }
+.ds-accordion-trigger {
+  display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0;
+  border: 0; border-radius: var(--radius-card); padding: 10px 12px;
+  background: transparent; color: inherit; font: inherit; font-size: var(--text-control); font-weight: 600;
+  text-align: left; cursor: pointer;
+}
+.ds-accordion-trigger:focus-visible { outline: 2px solid var(--chrome-focus); outline-offset: 2px; }
+.ds-accordion-trigger:disabled { cursor: default; opacity: .45; }
+.ds-accordion-trigger-label { display: flex; flex: 1; min-width: 0; align-items: center; gap: 8px; }
+.ds-accordion-chevron { flex: none; width: 16px; height: 16px; transition: rotate var(--motion-collapse-duration) var(--motion-collapse-easing); }
+.ds-accordion-trigger[data-state="open"] .ds-accordion-chevron { rotate: 180deg; }
+.ds-accordion-content { min-width: 0; }
+.ds-accordion-motion {
+  display: grid; grid-template-rows: 1fr; min-width: 0; opacity: 1; visibility: visible;
+  transition: grid-template-rows var(--motion-collapse-duration) var(--motion-collapse-easing), opacity var(--motion-collapse-duration) var(--motion-collapse-easing), visibility 0s;
+}
+.ds-accordion-content[data-state="closed"] > .ds-accordion-motion {
+  grid-template-rows: 0fr; opacity: 0; visibility: hidden;
+  transition-delay: 0s, 0s, var(--motion-collapse-duration);
+}
+.ds-accordion-content-clip { min-height: 0; min-width: 0; overflow: hidden; }
+.ds-accordion-content-body { min-width: 0; padding: 4px 12px 12px; }
+
 /* 스크롤 크롬은 내용 위에만 겹친다. 너비를 예약하지 않고 실제 활동이 끝난 뒤 사라진다. */
 .ds-scroll-area { min-width: 0; min-height: 0; }
 .ds-scroll-area-viewport {

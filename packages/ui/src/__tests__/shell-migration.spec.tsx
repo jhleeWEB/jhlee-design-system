@@ -16,7 +16,7 @@ describe("기존 셸의 DS 전환", () => {
     expect(container.querySelector('[data-slot="card"]')).toBeNull();
     rerender(<DesignSystemProvider>{shell}</DesignSystemProvider>);
     expect(container.querySelector('.app-shell[data-design-system]')).not.toBeNull();
-    expect(container.querySelectorAll('.workspace > [data-slot="card"]')).toHaveLength(3);
+    expect(container.querySelectorAll('.workspace [data-slot="card"]')).toHaveLength(3);
     expect(screen.getByRole("region", { name: "Viewer" }).textContent).toBe("Canvas");
   });
 
@@ -26,10 +26,37 @@ describe("기존 셸의 DS 전환", () => {
     const input = screen.getByRole("textbox") as HTMLInputElement;
     fireEvent.change(input, { target: { value: "24" } });
     fireEvent.click(screen.getByTitle("Collapse Height"));
-    expect(container.querySelector('[data-slot="card"]')?.getAttribute("data-collapsed")).toBe("true");
+    expect(screen.getByTitle("Expand Height").getAttribute("aria-expanded")).toBe("false");
+    expect(input.closest('[aria-hidden="true"]')).not.toBeNull();
     fireEvent.click(screen.getByTitle("Expand Height"));
     expect(screen.getByRole("textbox")).toBe(input);
     expect(input.value).toBe("24");
+  });
+
+  it("검사 패널을 접어도 입력과 스크롤을 보존하고 닫힌 본문을 비활성화한다", () => {
+    function Example() {
+      const [open, setOpen] = useState(true);
+      return <AppShell topbar="Header" parameters={<Panel title="Parameters">Inputs</Panel>}
+        viewer={<button aria-controls="inspect-test" onClick={() => setOpen(!open)}>Toggle inspect</button>}
+        inspectId="inspect-test" inspectOpen={open}
+        inspect={<Panel title="Inspect" variant="inspect"><input aria-label="Draft" defaultValue="10" /></Panel>} />;
+    }
+    render(<DesignSystemProvider><Example /></DesignSystemProvider>);
+    const input = screen.getByRole("textbox") as HTMLInputElement;
+    const slot = document.getElementById("inspect-test")!;
+    const viewport = slot.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]')!;
+    fireEvent.change(input, { target: { value: "24" } });
+    viewport.scrollTop = 80;
+    input.focus();
+    fireEvent.click(screen.getByRole("button", { name: "Toggle inspect" }));
+    expect(slot.getAttribute("aria-hidden")).toBe("true");
+    expect(slot.hasAttribute("inert")).toBe(true);
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Toggle inspect" }));
+    fireEvent.click(screen.getByRole("button", { name: "Toggle inspect" }));
+    expect(slot.hasAttribute("inert")).toBe(false);
+    expect(screen.getByRole("textbox")).toBe(input);
+    expect(input.value).toBe("24");
+    expect(viewport.scrollTop).toBe(80);
   });
 
   it("숫자 선택과 스위치의 공개 값 계약을 보존한다", () => {

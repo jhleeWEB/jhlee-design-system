@@ -1,6 +1,7 @@
-import { Children, Fragment, cloneElement, createContext, isValidElement, useContext, useId, useMemo } from "react";
+import { Children, Fragment, cloneElement, createContext, isValidElement, useContext, useId, useLayoutEffect, useMemo, useRef } from "react";
 
 import { cn, cva, type VariantProps } from "../cn";
+import "./card-motion.css";
 
 /* 카드 — 이 제품의 기본 구획.
  *
@@ -16,7 +17,7 @@ import { cn, cva, type VariantProps } from "../cn";
  *   1. **접혀도 돌아갈 길이 사라지지 않는다.** 접힌 자리에는 세로 탭이나 머리줄이 남고,
  *      그것 자체가 되돌리는 버튼이다. 어딘가의 메뉴에서만 되살릴 수 있으면 사용자가 방금
  *      무엇을 없앴는지 기억해야 한다.
- *   2. **내용을 언마운트하지 않는다.** `hidden` 으로 감춘다. 언마운트하면 스크롤 위치와
+ *   2. **내용을 언마운트하지 않는다.** 같은 본문을 접고 입력만 잠근다. 언마운트하면 스크롤 위치와
  *      패널 안의 지역 상태(펼친 섹션, 입력 중이던 값)가 날아가 접기가 파괴적 동작이 된다.
  */
 
@@ -104,6 +105,10 @@ export function Card({
   ...rest
 }: CardProps) {
   const contentId = useId();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLButtonElement>(null);
+  const stripScroll = useRef<{ top: number; left: number } | null>(null);
   const collapsible = collapsed !== undefined && onCollapsedChange !== undefined;
   const isCollapsed = collapsible && collapsed === true;
 
@@ -119,8 +124,69 @@ export function Card({
     [collapsible, isCollapsed, onCollapsedChange, contentId, collapsedLabel, side],
   );
 
-  const strip = isCollapsed && collapseTo === "strip";
+  const stripMode = collapsible && collapseTo === "strip";
   const headerCollapse = collapsible && collapseTo === "header";
+  const collapsedRef = useRef(isCollapsed);
+  useLayoutEffect(() => { collapsedRef.current = isCollapsed; }, [isCollapsed]);
+
+  /* 고정 폭은 width로, 남는 폭을 나누는 카드는 flex-basis/grow로 보간한다.
+     접힌 채 처음 마운트해도 원래 클래스·인라인 크기를 읽고, 측정 과정은 그리지 않는다. */
+  useLayoutEffect(() => {
+    const element = rootRef.current;
+    if (!stripMode || !element) return;
+    const transition = element.style.getPropertyValue("transition");
+    const priority = element.style.getPropertyPriority("transition");
+    element.style.setProperty("transition", "none", "important");
+    element.dataset.cardMeasuring = "true";
+    const computed = getComputedStyle(element);
+    element.dataset.cardFlexible = Number(computed.flexGrow) > 0 || (computed.flexBasis !== "auto" && computed.flexBasis !== "") ? "true" : "false";
+    const rememberWidth = () => {
+      const style = getComputedStyle(element);
+      const width = element.getBoundingClientRect().width
+        - (parseFloat(style.borderLeftWidth) || 0) - (parseFloat(style.borderRightWidth) || 0)
+        - (parseFloat(style.paddingLeft) || 0) - (parseFloat(style.paddingRight) || 0);
+      if (width > 0) element.style.setProperty("--card-content-width", `${width}px`);
+    };
+    rememberWidth();
+    delete element.dataset.cardMeasuring;
+    // 닫힌 초기 상태를 먼저 확정해야 첫 렌더가 펼침→접힘 애니메이션으로 보이지 않는다.
+    element.getBoundingClientRect();
+    if (transition) element.style.setProperty("transition", transition, priority);
+    else element.style.removeProperty("transition");
+    const observer = new ResizeObserver(() => {
+      if (!collapsedRef.current) rememberWidth();
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [stripMode, className, pad, style?.width, style?.minWidth, style?.maxWidth, style?.flex, style?.flexBasis, style?.flexGrow, style?.flexShrink]);
+
+  useLayoutEffect(() => {
+    const element = rootRef.current;
+    if (!stripMode || !element) return;
+    if (isCollapsed && stripScroll.current === null) {
+      // 카드 자체가 스크롤되어 있어도 절대 위치 탭은 화면 밖으로 따라 올라가면 안 된다.
+      stripScroll.current = { top: element.scrollTop, left: element.scrollLeft };
+      element.scrollTop = 0;
+      element.scrollLeft = 0;
+    } else if (!isCollapsed && stripScroll.current) {
+      element.scrollTop = stripScroll.current.top;
+      element.scrollLeft = stripScroll.current.left;
+      stripScroll.current = null;
+    }
+  }, [stripMode, isCollapsed]);
+
+  useLayoutEffect(() => {
+    const element = rootRef.current, content = contentRef.current;
+    if (!collapsible || !element || !content) return;
+    const active = document.activeElement;
+    if (isCollapsed && active && content.contains(active)) {
+      const trigger = stripMode ? stripRef.current : element.querySelector<HTMLButtonElement>('[data-slot="card-header"] [data-slot="card-collapse"]');
+      (trigger ?? element).focus({ preventScroll: true });
+    } else if (!isCollapsed && active === stripRef.current) {
+      (content.querySelector<HTMLButtonElement>('[data-slot="card-collapse"]') ?? content).focus({ preventScroll: true });
+    }
+  }, [collapsible, isCollapsed, stripMode]);
+
   const childList = headerCollapse ? flattenCardChildren(children) : [];
   const isHeader = (child: React.ReactNode) => isValidElement(child) && child.type === CardHeader;
   /* 셰브론은 **누르면 일어날 일**을 가리킨다. 왼쪽에 붙은 패널을 펼치면 내용이 오른쪽으로
@@ -130,35 +196,32 @@ export function Card({
   return (
     <Ctx.Provider value={ctx}>
       <div
+        ref={rootRef}
         data-slot="card"
         data-collapsed={isCollapsed || undefined}
-        className={cn(
-          "group/card",
-          cardVariants({ elevation, pad }),
-          collapsible && "transition-[width,flex-grow] duration-150 motion-reduce:transition-none",
-          className,
-          /* 접힘 클래스는 `className` **뒤에** 온다. 호출처는 펼쳤을 때의 치수를 준다
-             (`w-[290px]` · `flex-1`), 접힘은 **모드**이고 그 모드가 소유한 속성은 모드가
-             이겨야 한다. 앞에 두면 tailwind-merge 가 뒤의 `w-[290px]` 을 남겨 카드가
-             `data-collapsed` 만 달고 그대로 서 있는다 — 실제로 그랬다. */
-          strip && "w-9 min-w-0 flex-none overflow-hidden",
-          isCollapsed && collapseTo === "header" && "flex-none",
-        )}
-        style={strip ? { ...style, width: undefined } : style}
+        data-collapse-to={collapsible ? collapseTo : undefined}
+        tabIndex={collapsible ? -1 : undefined}
+        className={cn("group/card", cardVariants({ elevation, pad }), className)}
+        style={style}
         {...rest}
       >
-        {strip ? (
+        {stripMode ? (
           <>
             <button
+              ref={stripRef}
               data-slot="card-collapse"
+              data-card-strip=""
               type="button"
-              aria-expanded={false}
+              aria-expanded={!isCollapsed}
+              aria-hidden={!isCollapsed || undefined}
+              inert={!isCollapsed || undefined}
+              tabIndex={isCollapsed ? 0 : -1}
               aria-controls={contentId}
               onClick={ctx.toggle}
               title={`Expand ${ctx.label}`}
               className={cn(
                 "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
-                "flex size-full cursor-pointer flex-col items-center gap-2 py-2.5",
+                "ds-card-strip flex cursor-pointer flex-col items-center gap-2 py-2.5",
                 "text-muted hover:bg-surface-2 hover:text-ink",
                 "focus-visible:focus-ring focus-visible:outline-none",
               )}
@@ -176,17 +239,16 @@ export function Card({
               </span>
               {collapsedSignal ? <span className="shrink-0">{collapsedSignal}</span> : null}
             </button>
-            <div id={contentId} hidden className="flex min-h-0 flex-1 flex-col">
+            <div ref={contentRef} id={contentId} data-slot="card-content" className="ds-card-strip-content" aria-hidden={isCollapsed || undefined} inert={isCollapsed || undefined} tabIndex={-1}>
               {children}
             </div>
           </>
         ) : headerCollapse ? (
           <>
             {childList.filter(isHeader)}
-            {/* 접기 버튼의 ARIA 대상은 항상 같은 본문이다. contents는 기존 flex/grid 자식의
-                배치를 보존하고 hidden은 언마운트 없이 입력·스크롤 상태를 남긴다. */}
-            <div id={contentId} data-slot="card-content" hidden={isCollapsed} style={{ display: isCollapsed ? "none" : "contents" }}>
-              {childList.filter(child => !isHeader(child))}
+            {/* grid의 한 행을 줄여 내용 높이를 보간한다. 본문과 그 자식의 DOM 위치는 변하지 않는다. */}
+            <div ref={contentRef} id={contentId} data-slot="card-content" className="ds-card-header-content" aria-hidden={isCollapsed || undefined} inert={isCollapsed || undefined} tabIndex={-1}>
+              <div className="ds-card-header-inner">{childList.filter(child => !isHeader(child))}</div>
             </div>
           </>
         ) : (

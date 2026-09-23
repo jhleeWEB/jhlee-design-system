@@ -211,7 +211,24 @@ button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, in
   background: var(--chrome-bg);
   color: var(--chrome-ink);
 }
-.app-shell[data-design-system] > .workspace { gap: var(--size-gap, 12px); padding: 12px; }
+.app-shell[data-design-system] > .workspace {
+  grid-template-columns: calc(var(--panel-w) + var(--size-gap)) minmax(0, 1fr) calc(var(--inspect-w) + var(--size-gap));
+  gap: 0; padding: 12px;
+  transition: grid-template-columns var(--motion-collapse-duration) var(--motion-collapse-easing);
+}
+.app-shell[data-design-system] > .workspace > :first-child { margin-right: var(--size-gap); }
+/* 오른쪽 간격도 접히는 열 안에 둬, 닫힌 뒤 빈 홈통이 남지 않게 한다. */
+.app-shell[data-design-system] > .workspace.inspect-closed { grid-template-columns: calc(var(--panel-w) + var(--size-gap)) minmax(0, 1fr) 0px; }
+.ds-inspect-slot {
+  display: flex; min-width: 0; min-height: 0; overflow: hidden; padding-left: var(--size-gap);
+  visibility: visible; opacity: 1;
+  transition: padding-left var(--motion-collapse-duration) var(--motion-collapse-easing), opacity var(--motion-collapse-duration) var(--motion-collapse-easing), visibility 0s;
+}
+.ds-inspect-slot > .panel { flex: 0 0 var(--inspect-w); width: var(--inspect-w); }
+.ds-inspect-slot[data-open="false"] {
+  padding-left: 0; opacity: 0; visibility: hidden;
+  transition-delay: 0s, 0s, var(--motion-collapse-duration);
+}
 .topbar[data-design-system] { background: var(--chrome-surface); border-bottom: 1px solid var(--chrome-line); }
 .topbar[data-design-system] h1 { font-size: var(--text-title); font-weight: 600; }
 .panel[data-design-system], .viewer-panel[data-design-system] {
@@ -230,17 +247,17 @@ button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, in
 .viewer-panel[data-design-system] { display: flex; flex-direction: column; overflow: hidden; }
 .viewer-panel[data-design-system] > .viewer-head { padding: 12px 16px; border-bottom-color: var(--chrome-line); }
 .viewer-panel[data-design-system] > .viewer { flex: 1; background: var(--canvas-bg, #fff); }
-.ds-panel-group[data-slot="card"] { margin: 8px 12px; border: 1px solid var(--chrome-line); box-shadow: none; }
-.ds-panel-group > [data-slot="card-header"] { padding: 10px 12px; gap: 8px; }
-.ds-panel-group > [data-slot="card-header"] > :first-child { min-width: 0; flex: 1 1 0; }
-.ds-panel-group > [data-slot="card-header"] > .tnum {
+.ds-panel-group[data-slot="accordion-item"] { margin: 8px 12px; border: 1px solid var(--chrome-line); box-shadow: none; }
+.ds-panel-group [data-slot="accordion-trigger"] { padding: 10px 12px; gap: 8px; }
+.ds-panel-group-title { min-width: 0; flex: 1 1 0; }
+.ds-panel-group-meta {
   min-width: 0; max-width: 45%; flex-shrink: 1; text-align: right;
+  color: var(--chrome-muted); font-family: var(--mono); font-size: var(--text-label); font-weight: 400;
   white-space: normal; overflow-wrap: anywhere; word-break: normal;
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
 }
-.ds-panel-group > [data-slot="card-header"] > [data-slot="card-collapse"] { flex: none; opacity: 1; }
 /* 긴 선택지·표의 최소 내용 폭이 패널 격자를 넓히지 않게 한다. 표는 자기 스크롤 영역에서 읽는다. */
-.ds-panel-group > [data-slot="card-content"] > .group-body { min-width: 0; grid-template-columns: minmax(0, 1fr); padding: 4px 12px 12px; gap: 12px; }
+.ds-panel-group .group-body { min-width: 0; grid-template-columns: minmax(0, 1fr); padding: 4px 12px 12px; gap: 12px; }
 .ds-panel-group .group-body > *, .panel[data-design-system] .field > * { min-width: 0; }
 .panel[data-design-system] .field { min-width: 0; grid-template-columns: minmax(0, 1fr); }
 .panel[data-design-system] .field > .label { flex-wrap: wrap; }
@@ -292,4 +309,7 @@ button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, in
 
 @media (max-width: 1180px) {
   .panel-inspect[data-design-system] { display: none; }
+  .app-shell[data-design-system] > .workspace,
+  .app-shell[data-design-system] > .workspace.inspect-closed { grid-template-columns: calc(260px + var(--size-gap)) minmax(0, 1fr) 0px; }
+  .ds-inspect-slot { display: none; }
 }
