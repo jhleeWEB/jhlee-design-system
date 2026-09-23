@@ -814,8 +814,9 @@ function Gallery() {
                 collapsed={stack.isCollapsed("ledger")}
                 onCollapsedChange={v => stack.setCollapsed("ledger", v)}
                 collapseTo="header"
+                collapsedLabel="FSI ledger"
+                header={<CardHeader title="FSI ledger" meta="3 rows" />}
               >
-                <CardHeader title="FSI ledger" meta="3 rows" />
                 <div className="px-4 pb-4">
                   <DescriptionList rows={[
                     { k: "Permitted", v: "38,420 m²", numeric: true },
@@ -829,8 +830,9 @@ function Gallery() {
                 collapsed={stack.isCollapsed("notes")}
                 onCollapsedChange={v => stack.setCollapsed("notes", v)}
                 collapseTo="header"
+                collapsedLabel="Pack notes"
+                header={<CardHeader title="Pack notes" meta="in-mh-mumbai" />}
               >
-                <CardHeader title="Pack notes" meta="in-mh-mumbai" />
                 <div className="px-4 pb-4">
                   <Alert tone="info" title="3 placeholders in this pack">
                     Values with a dashed underline have not been verified against the source.

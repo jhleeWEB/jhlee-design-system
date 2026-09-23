@@ -41,20 +41,15 @@ const contentVariants = cva(
   },
 );
 
-/* 스크림 클릭·바깥 상호작용으로 닫히지 않게 한다. Radix 의 prop 은 필수 시그니처라
-   `undefined` 를 넘길 수 없어, «끄는» 대신 **prop 자체를 빼는** 모양이어야 한다. */
-type ContentProps = React.ComponentPropsWithoutRef<typeof Dialog.Content>;
-const DISMISS_GUARD: Pick<ContentProps, "onPointerDownOutside" | "onInteractOutside"> = {
-  onPointerDownOutside: event => event.preventDefault(),
-  onInteractOutside: event => event.preventDefault(),
-};
+type ContentProps = Omit<React.ComponentPropsWithRef<typeof Dialog.Content>, "forceMount">;
 
 export const Modal = Dialog.Root;
 export const ModalTrigger = Dialog.Trigger;
 export const ModalClose = Dialog.Close;
 
+/** 포털의 열림·닫힘 수명은 DS가 소유한다. forceMount로 닫힌 모달의 포커스·스크롤 잠금을 남기지 않는다. */
 export interface ModalContentProps
-  extends React.ComponentPropsWithoutRef<typeof Dialog.Content>,
+  extends ContentProps,
     VariantProps<typeof contentVariants> {
   /** 스크림을 눌러도 닫히지 않게 한다 — 되돌릴 수 없는 작업의 확인창에 쓴다. */
   dismissible?: boolean;
@@ -65,6 +60,8 @@ export function ModalContent({
   size,
   dismissible = true,
   children,
+  onPointerDownOutside,
+  onInteractOutside,
   ...rest
 }: ModalContentProps) {
   return (
@@ -76,8 +73,16 @@ export function ModalContent({
       <Dialog.Content
         data-slot="modal"
         className={cn(contentVariants({ size }), className)}
-        {...(dismissible ? {} : DISMISS_GUARD)}
         {...rest}
+        // 호출자의 관찰·취소 핸들러는 유지하되 닫기 금지 계약을 덮어쓰지는 못하게 한다.
+        onPointerDownOutside={event => {
+          onPointerDownOutside?.(event);
+          if (!dismissible) event.preventDefault();
+        }}
+        onInteractOutside={event => {
+          onInteractOutside?.(event);
+          if (!dismissible) event.preventDefault();
+        }}
       >
         {children}
       </Dialog.Content>
@@ -85,13 +90,14 @@ export function ModalContent({
   );
 }
 
+/** description을 생략하고 별도 Description도 없으면 ModalContent에 aria-describedby={undefined}를 지정한다. */
 export function ModalHeader({
   className,
   title,
   description,
   children,
   ...rest
-}: React.HTMLAttributes<HTMLDivElement> & {
+}: Omit<React.ComponentPropsWithRef<"div">, "title"> & {
   title: React.ReactNode;
   description?: React.ReactNode;
 }) {
@@ -126,7 +132,7 @@ export function ModalHeader({
 
 /* 본문만 스크롤한다 — 머리와 바닥은 붙어 있어야 긴 목록에서 버튼을 찾아 내려가지 않는다.
  * 본문 div는 유지해 소비자의 grid·gap·자식 선택자가 Radix 내부 래퍼에 끊기지 않게 한다. */
-export function ModalBody({ className, onScroll, onScrollCapture, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+export function ModalBody({ className, onScroll, onScrollCapture, ...rest }: React.ComponentPropsWithRef<"div">) {
   return (
     <ScrollArea className="min-h-0 min-w-0 flex-auto" viewportProps={{ onScroll, onScrollCapture }}>
       <div data-slot="modal-body" className={cn("px-6 py-5", className)} {...rest} />
@@ -134,7 +140,7 @@ export function ModalBody({ className, onScroll, onScrollCapture, ...rest }: Rea
   );
 }
 
-export function ModalFooter({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+export function ModalFooter({ className, ...rest }: React.ComponentPropsWithRef<"div">) {
   return (
     <div
       data-slot="modal-footer"

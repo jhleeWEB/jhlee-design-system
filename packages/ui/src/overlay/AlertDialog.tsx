@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { AlertDialog as Radix } from "radix-ui";
 
 import { Button, type ButtonProps } from "../primitives/Button";
@@ -9,7 +10,7 @@ import { ModalBody, ModalFooter } from "./Modal";
  * `Modal` 과 나눠 둔 이유는 외형이 아니라 행동이다: `AlertDialog` 는 스크림 클릭으로 닫히지 않고,
  * 포커스가 기본으로 취소 쪽에 간다. 저장소에 있던 `role="alertdialog"` 네 자리(필지 삭제 ·
  * 저장 확인 ·닫히지 않은 필지 · 필지 비우기)가 전부 이 경우였다. */
-export interface ConfirmDialogProps {
+export interface ConfirmDialogProps extends Omit<React.ComponentPropsWithRef<typeof Radix.Content>, "title" | "children" | "forceMount" | "asChild"> {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: React.ReactNode;
@@ -46,12 +47,18 @@ export function ConfirmDialog({
   secondaryAction,
   onConfirm,
   children,
+  className,
+  ...contentProps
 }: ConfirmDialogProps) {
+  const descriptionId = useId();
   return (
     <Radix.Root open={open} onOpenChange={onOpenChange}>
       <Radix.Portal>
         <Radix.Overlay className="fixed inset-0 z-50 bg-scrim animate-in-fade" />
         <Radix.Content
+          // 설명을 소유하므로 없는 ID를 만들지 않는다. 호출자가 지정한 ARIA 연결은 그대로 우선한다.
+          aria-describedby={description ? descriptionId : undefined}
+          {...contentProps}
           data-slot="confirm-dialog"
           className={cn(
             "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
@@ -60,6 +67,7 @@ export function ConfirmDialog({
             secondaryAction ? "w-[min(560px,calc(100vw-24px))]" : "w-[min(380px,calc(100vw-24px))]",
             "rounded-modal border border-line bg-surface shadow-modal",
             "text-body text-ink animate-in-pop focus-visible:outline-none",
+            className,
           )}
         >
           <ModalBody className="pb-4 pt-5">
@@ -67,7 +75,7 @@ export function ConfirmDialog({
               {title}
             </Radix.Title>
             {description ? (
-              <Radix.Description className="mt-2 leading-relaxed text-muted">
+              <Radix.Description id={descriptionId} className="mt-2 leading-relaxed text-muted">
                 {description}
               </Radix.Description>
             ) : null}

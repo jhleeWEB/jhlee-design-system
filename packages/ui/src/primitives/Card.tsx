@@ -1,4 +1,4 @@
-import { Children, Fragment, cloneElement, createContext, isValidElement, useContext, useId, useLayoutEffect, useMemo, useRef } from "react";
+import { Children, Fragment, cloneElement, createContext, isValidElement, useContext, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import { cn, cva, type VariantProps } from "../cn";
@@ -49,8 +49,10 @@ export const cardVariants = cva("relative flex min-h-0 min-w-0 flex-col bg-surfa
 });
 
 export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends React.ComponentPropsWithRef<"div">,
     VariantProps<typeof cardVariants> {
+  /** 머리줄을 명시하면 사용자 정의 컴포넌트로 감싸도 헤더 접기에서 항상 남는다. */
+  header?: React.ReactNode;
   /** 주면 이 카드는 접힌다. 제어 컴포넌트이므로 `onCollapsedChange` 도 함께 준다. */
   collapsed?: boolean | undefined;
   onCollapsedChange?: ((collapsed: boolean) => void) | undefined;
@@ -82,8 +84,8 @@ function Chevron({ pointing, className }: { pointing: "left" | "right" | "up" | 
   );
 }
 
-/* Fragment는 DOM 구획이 아니므로 머리/본문 분류 전에 펼친다. 경로 전체를 key로 쓰면
-   서로 다른 Fragment의 같은 지역 key도 충돌하지 않아 접기 중 입력 상태를 보존한다. */
+/* 기존 직접 자식 CardHeader API의 호환 경로다. 새 코드는 header 슬롯을 사용한다.
+   경로 전체를 key로 쓰면 서로 다른 Fragment의 같은 지역 key도 충돌하지 않는다. */
 function flattenCardChildren(children: React.ReactNode, ancestry: readonly (string | number)[] = []): React.ReactNode[] {
   return Children.toArray(children).flatMap<React.ReactNode>((child, index) => {
     if (!isValidElement<{ children?: React.ReactNode }>(child)) return [child];
@@ -94,6 +96,7 @@ function flattenCardChildren(children: React.ReactNode, ancestry: readonly (stri
 }
 
 export function Card({
+  ref,
   className,
   elevation,
   pad,
@@ -104,11 +107,14 @@ export function Card({
   collapsedSignal,
   side = "left",
   style,
+  header,
   children,
   ...rest
 }: CardProps) {
   const contentId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  // 외부 ref가 접기 크기 측정용 ref를 덮어쓰지 않도록 같은 DOM만 노출한다.
+  useImperativeHandle(ref, () => rootRef.current!, []);
   const contentRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLButtonElement>(null);
   const stripScroll = useRef<{ top: number; left: number } | null>(null);
@@ -198,8 +204,10 @@ export function Card({
     toggleFocus.current = false;
   }, [collapsible, isCollapsed, stripMode]);
 
-  const childList = headerCollapse ? flattenCardChildren(children) : [];
+  const childList = headerCollapse && header === undefined ? flattenCardChildren(children) : [];
   const isHeader = (child: React.ReactNode) => isValidElement(child) && child.type === CardHeader;
+  const headerContent = header === undefined ? childList.filter(isHeader) : header;
+  const bodyContent = header === undefined ? childList.filter(child => !isHeader(child)) : children;
   /* 셰브론은 **누르면 일어날 일**을 가리킨다. 왼쪽에 붙은 패널을 펼치면 내용이 오른쪽으로
      자라므로 오른쪽을 가리킨다. */
   const StripChevron = side === "left" ? LuChevronRight : LuChevronLeft;
@@ -252,19 +260,20 @@ export function Card({
               {collapsedSignal ? <span className="shrink-0">{collapsedSignal}</span> : null}
             </button>
             <div ref={contentRef} id={contentId} data-slot="card-content" className="ds-card-strip-content" aria-hidden={isCollapsed || undefined} inert={isCollapsed || undefined} tabIndex={-1}>
+              {header}
               {children}
             </div>
           </>
         ) : headerCollapse ? (
           <>
-            {childList.filter(isHeader)}
+            {headerContent}
             {/* grid의 한 행을 줄여 내용 높이를 보간한다. 본문과 그 자식의 DOM 위치는 변하지 않는다. */}
             <div ref={contentRef} id={contentId} data-slot="card-content" className="ds-card-header-content" aria-hidden={isCollapsed || undefined} inert={isCollapsed || undefined} tabIndex={-1}>
-              <div className="ds-card-header-inner">{childList.filter(child => !isHeader(child))}</div>
+              <div className="ds-card-header-inner">{bodyContent}</div>
             </div>
           </>
         ) : (
-          children
+          <>{header}{children}</>
         )}
       </div>
     </Ctx.Provider>
@@ -284,7 +293,7 @@ export function CardHeader({
   children,
   collapseButton = true,
   ...rest
-}: Omit<React.HTMLAttributes<HTMLDivElement>, "title"> & {
+}: Omit<React.ComponentPropsWithRef<"div">, "title"> & {
   title?: React.ReactNode;
   meta?: React.ReactNode;
   leading?: React.ReactNode;
@@ -352,7 +361,7 @@ export function CardHeader({
 /* 접기 버튼을 **머리줄 밖에** 두어야 할 때. 브리프처럼 편집형 들머리를 갖는 패널은 일반
    머리줄을 원하지 않는데, 그렇다고 접을 길이 없으면 `collapseTo="strip"` 이 한쪽으로만
    동작한다(펼칠 수는 있는데 접을 수가 없다). 호출처가 원하는 자리에 이것을 놓는다. */
-export function CardCollapse({ className, ...rest }: React.HTMLAttributes<HTMLButtonElement>) {
+export function CardCollapse({ className, onClick, ...rest }: React.ComponentPropsWithRef<"button">) {
   const ctx = useContext(Ctx);
   if (!ctx?.collapsible) return null;
   return (
@@ -361,7 +370,10 @@ export function CardCollapse({ className, ...rest }: React.HTMLAttributes<HTMLBu
       type="button"
       aria-expanded={!ctx.collapsed}
       aria-controls={ctx.contentId}
-      onClick={ctx.toggle}
+      onClick={event => {
+        onClick?.(event);
+        if (!event.defaultPrevented) ctx.toggle();
+      }}
       title={`${ctx.collapsed ? "Expand" : "Collapse"} ${ctx.label}`}
       className={cn(
         "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
@@ -382,7 +394,7 @@ export function CardCollapse({ className, ...rest }: React.HTMLAttributes<HTMLBu
 /* 카드 안의 «웰» — 캔버스가 앉는 자리. 실측에서 카드 면(#ffffff)보다 한 단 들어간
    #f9fbfc 였고, 그 안에 흰 도면 시트가 다시 놓였다. 웰이 없으면 시트와 카드가 한 면으로
    붙어 «종이가 놓여 있다» 는 감각이 사라진다. */
-export function CardWell({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+export function CardWell({ className, ...rest }: React.ComponentPropsWithRef<"div">) {
   return (
     <div
       data-slot="card-well"

@@ -153,9 +153,11 @@ describe("기존 셸의 DS 전환", () => {
   it("세그먼트는 비활성 선택지를 건너뛰고 숫자 값을 반환한다", () => {
     const change = vi.fn();
     render(<SegmentedControl label="Levels" value={1} onChange={change} options={[{ value: 1, label: "One" }, { value: 2, label: "Two", disabled: true }, { value: 3, label: "Three" }]} />);
-    fireEvent.keyDown(screen.getByRole("radio", { name: "One" }), { key: "ArrowRight" });
-    expect(change).toHaveBeenCalledWith(3);
+    const one = screen.getByRole("radio", { name: "One" });
+    one.focus();
+    fireEvent.keyDown(one, { key: "ArrowRight" });
     expect(document.activeElement).toBe(screen.getByRole("radio", { name: "Three" }));
+    expect(change).toHaveBeenCalledWith(3);
     expect(screen.getAllByRole("radio").every(button => button.hasAttribute("data-slot"))).toBe(true);
   });
 });

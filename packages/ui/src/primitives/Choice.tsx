@@ -1,4 +1,5 @@
-import { Checkbox as RadixCheckbox, RadioGroup as RadixRadio, Switch as RadixSwitch } from "radix-ui";
+import { forwardRef } from "react";
+import { Checkbox as RadixCheckbox, RadioGroup as RadixRadio, Slot, Switch as RadixSwitch } from "radix-ui";
 
 import { cn } from "../cn";
 
@@ -17,12 +18,15 @@ const box = [
   "disabled:pointer-events-none disabled:opacity-45",
 ].join(" ");
 
-export function Checkbox({
+export const Checkbox = forwardRef<HTMLButtonElement, React.ComponentPropsWithoutRef<typeof RadixCheckbox.Root>>(function Checkbox({
   className,
+  asChild = false,
+  children,
   ...rest
-}: React.ComponentPropsWithoutRef<typeof RadixCheckbox.Root>) {
+}, ref) {
   return (
-    <RadixCheckbox.Root data-slot="checkbox" className={cn(box, "size-7", className)} {...rest}>
+    <RadixCheckbox.Root ref={ref} asChild={asChild} data-slot="checkbox" className={cn(box, "size-7", className)} {...rest}>
+      {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : null}
       <RadixCheckbox.Indicator className="flex items-center justify-center">
         <svg viewBox="0 0 16 16" aria-hidden="true" className="size-6">
           <path
@@ -37,32 +41,41 @@ export function Checkbox({
       </RadixCheckbox.Indicator>
     </RadixCheckbox.Root>
   );
-}
+});
 
 export const RadioGroup = RadixRadio.Root;
 
-export function RadioGroupItem({
+export const RadioGroupItem = forwardRef<HTMLButtonElement, React.ComponentPropsWithoutRef<typeof RadixRadio.Item>>(function RadioGroupItem({
   className,
+  asChild = false,
+  children,
   ...rest
-}: React.ComponentPropsWithoutRef<typeof RadixRadio.Item>) {
+}, ref) {
   return (
     <RadixRadio.Item
+      ref={ref}
+      asChild={asChild}
       data-slot="radio"
       className={cn(box, "size-7 rounded-full", className)}
       {...rest}
     >
+      {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : null}
       <RadixRadio.Indicator className="block size-3 rounded-full bg-current" />
     </RadixRadio.Item>
   );
-}
+});
 
 /* 스위치. 손잡이는 `--radius-full`, 트랙은 그 절반 높이 — 사다리에 없는 값이라 여기서 계산한다. */
-export function Switch({
+export const Switch = forwardRef<HTMLButtonElement, React.ComponentPropsWithoutRef<typeof RadixSwitch.Root>>(function Switch({
   className,
+  asChild = false,
+  children,
   ...rest
-}: React.ComponentPropsWithoutRef<typeof RadixSwitch.Root>) {
+}, ref) {
   return (
     <RadixSwitch.Root
+      ref={ref}
+      asChild={asChild}
       data-slot="switch"
       className={cn(
         "peer inline-flex h-9 w-16 shrink-0 items-center rounded-full border border-line-strong bg-line-strong p-px",
@@ -74,6 +87,7 @@ export function Switch({
       )}
       {...rest}
     >
+      {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : null}
       <RadixSwitch.Thumb
         className={cn(
           "block size-7 rounded-full bg-surface shadow-chip",
@@ -83,4 +97,4 @@ export function Switch({
       />
     </RadixSwitch.Root>
   );
-}
+});

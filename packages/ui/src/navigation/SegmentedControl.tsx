@@ -32,6 +32,8 @@ export function SegmentedControl<T extends string | number>({
   className?: string;
   disabled?: boolean;
 }) {
+  const enabled = options.filter(option => !option.disabled);
+  const tabStop = disabled ? undefined : enabled.find(option => option.value === value) ?? enabled[0];
   return (
     <div
       data-slot="segmented"
@@ -39,16 +41,21 @@ export function SegmentedControl<T extends string | number>({
       aria-label={label}
       aria-disabled={disabled || undefined}
       onKeyDown={event => {
-        if (disabled || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
-        const enabled = options.filter(option => !option.disabled);
-        if (enabled.length === 0) return;
-        event.preventDefault();
-        const index = enabled.findIndex(option => option.value === value);
-        const next = event.key === "Home" ? 0 : event.key === "End" ? enabled.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + enabled.length) % enabled.length;
+        if (disabled || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
+        const target = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[role="radio"]') : null;
+        if (!target || target.disabled) return;
+        const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]:not(:disabled)'));
+        // 외부 제어 값의 반영이 늦어도 연속 키 입력은 실제 포커스에서 계속 이동해야 한다.
+        const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
+        if (index < 0 || enabled.length === 0) return;
+        const delta = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : -1;
+        const next = event.key === "Home" ? 0 : event.key === "End" ? enabled.length - 1 : (index + delta + enabled.length) % enabled.length;
         const option = enabled[next];
         if (!option) return;
+        event.preventDefault();
         onChange(option.value);
-        event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')[next]?.focus();
+        buttons[next]?.focus();
       }}
       className={cn(
         "inline-flex shrink-0 items-center rounded-control bg-accent-track p-0.5",
@@ -65,7 +72,7 @@ export function SegmentedControl<T extends string | number>({
             role="radio"
             aria-checked={active}
             disabled={disabled || option.disabled}
-            tabIndex={active ? 0 : -1}
+            tabIndex={option === tabStop ? 0 : -1}
             onClick={() => onChange(option.value)}
             className={cn(
               "appearance-none border-0 bg-transparent font-inherit",

@@ -274,10 +274,12 @@ export function Toggle({
   onChange: (value: boolean) => void;
 }) {
   const ds = useDesignSystem();
+  const hintId = useId();
+  const describedBy = hint && !hideText ? hintId : undefined;
   if (ds) return (
     <label className={cn("ds-toggle", hideText && "ds-toggle-icon")}>
-      {hideText ? null : <span className="ds-toggle-copy"><span>{label}</span>{hint ? <small>{hint}</small> : null}</span>}
-      <Switch aria-label={label} checked={value} disabled={disabled} onCheckedChange={onChange} />
+      {hideText ? null : <span className="ds-toggle-copy"><span>{label}</span>{hint ? <small id={hintId}>{hint}</small> : null}</span>}
+      <Switch aria-label={label} aria-describedby={describedBy} checked={value} disabled={disabled} onCheckedChange={onChange} />
     </label>
   );
   return (
@@ -287,6 +289,7 @@ export function Toggle({
       role="switch"
       aria-checked={value}
       aria-label={label}
+      aria-describedby={describedBy}
       disabled={disabled}
       onClick={() => onChange(!value)}
     >
@@ -294,7 +297,7 @@ export function Toggle({
         <span className="switch-knob" />
       </span>
       {hideText ? null : <span className="switch-text">{label}</span>}
-      {hint && !hideText ? <span className="switch-hint">{hint}</span> : null}
+      {hint && !hideText ? <span id={hintId} className="switch-hint">{hint}</span> : null}
     </button>
   );
 }

@@ -1,4 +1,4 @@
-import { Fragment, StrictMode, act, useEffect, useState } from "react";
+import { Fragment, StrictMode, act, createRef, useEffect, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -163,6 +163,33 @@ describe("Card — strip 접기", () => {
 });
 
 describe("Card — header 접기", () => {
+  it("명시적 헤더 슬롯은 사용자 정의 컴포넌트로 감싸도 남고 본문 초안은 보존한다", () => {
+    function DraftHeader() {
+      return <CardHeader title="Draft" />;
+    }
+    function Example() {
+      const [collapsed, setCollapsed] = useState(false);
+      return <Card collapsed={collapsed} onCollapsedChange={setCollapsed} collapsedLabel="Draft" header={<DraftHeader />}>
+        <input aria-label="Draft name" defaultValue="original" />
+      </Card>;
+    }
+    render(<Example />);
+    const header = host.querySelector('[data-slot="card-header"]')!;
+    const trigger = header.querySelector<HTMLButtonElement>("button")!;
+    const input = host.querySelector("input")!;
+    input.value = "half typed";
+    input.focus();
+    for (const collapsed of [true, false]) {
+      act(() => trigger.click());
+      expect(header.closest("[inert]")).toBeNull();
+      expect(trigger.getAttribute("aria-expanded")).toBe(String(!collapsed));
+      expect(document.activeElement).toBe(trigger);
+      expect(host.querySelector("input")).toBe(input);
+      expect(input.value).toBe("half typed");
+      expect(input.closest("[inert]") !== null).toBe(collapsed);
+    }
+  });
+
   it("머리줄만 남기고 나머지 자식을 감춘다", () => {
     render(
       <Card collapsed onCollapsedChange={() => {}} collapseTo="header" collapsedLabel="FSI ledger">
@@ -317,5 +344,36 @@ describe("Card — 접히지 않는 카드", () => {
     expect(card().hasAttribute("data-collapse-to")).toBe(false);
     expect(card().querySelector('[data-slot="card-content"]')).toBeNull();
     expect(card().firstElementChild?.getAttribute("data-slot")).toBe("card-header");
+  });
+});
+
+describe("Card — ref와 이벤트 합성", () => {
+  it("외부 ref와 내부 strip 측정이 동일한 루트를 사용하고 해제된다", () => {
+    const ref = createRef<HTMLDivElement>();
+    render(<Card ref={ref} collapsed={false} onCollapsedChange={() => {}} collapseTo="strip" collapsedLabel="Draft" header={<CardHeader title="Draft" />}>
+      <input />
+    </Card>);
+    expect(ref.current).toBe(card());
+    expect(ref.current?.hasAttribute("data-card-flexible")).toBe(true);
+    expect(ref.current?.querySelector('[data-slot="card-content"] [data-slot="card-header"]')).not.toBeNull();
+    render(null);
+    expect(ref.current).toBeNull();
+  });
+
+  it("추가 클릭 핸들러를 먼저 부르고 preventDefault일 때만 접기를 취소한다", () => {
+    const seen: string[] = [];
+    const draw = (cancel: boolean) => render(<Card collapsed={false} onCollapsedChange={() => seen.push("collapse")}>
+      <CardCollapse onClick={event => {
+        seen.push("click");
+        if (cancel) event.preventDefault();
+      }} />
+    </Card>);
+    draw(false);
+    act(() => host.querySelector<HTMLButtonElement>("button")!.click());
+    expect(seen).toEqual(["click", "collapse"]);
+    seen.length = 0;
+    draw(true);
+    act(() => host.querySelector<HTMLButtonElement>("button")!.click());
+    expect(seen).toEqual(["click"]);
   });
 });

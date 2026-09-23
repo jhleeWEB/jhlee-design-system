@@ -1,4 +1,4 @@
-import { Popover as Radix } from "radix-ui";
+import { Popover as Radix, Slot } from "radix-ui";
 
 import { cn } from "../cn";
 
@@ -9,8 +9,9 @@ export const PopoverTrigger = Radix.Trigger;
 export const PopoverAnchor = Radix.Anchor;
 export const PopoverClose = Radix.Close;
 
+/** 포털의 마운트 수명은 DS가 소유하므로 Content만 forceMount하는 조합은 공개하지 않는다. */
 export interface PopoverContentProps
-  extends React.ComponentPropsWithoutRef<typeof Radix.Content> {
+  extends Omit<React.ComponentPropsWithRef<typeof Radix.Content>, "forceMount"> {
   /** 캔버스 위에 얹힌다 — 반투명 + 블러로 도면이 비친다. */
   onCanvas?: boolean;
   arrow?: boolean;
@@ -22,11 +23,13 @@ export function PopoverContent({
   arrow,
   sideOffset = 6,
   children,
+  asChild = false,
   ...rest
 }: PopoverContentProps) {
   return (
     <Radix.Portal>
       <Radix.Content
+        asChild={asChild}
         data-slot="popover"
         sideOffset={sideOffset}
         className={cn(
@@ -38,7 +41,7 @@ export function PopoverContent({
         )}
         {...rest}
       >
-        {children}
+        {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : children}
         {arrow ? <Radix.Arrow className="fill-surface stroke-line" width={10} height={5} /> : null}
       </Radix.Content>
     </Radix.Portal>

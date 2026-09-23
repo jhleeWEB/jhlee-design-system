@@ -41,24 +41,25 @@ export const Drawer = Dialog.Root;
 export const DrawerTrigger = Dialog.Trigger;
 export const DrawerClose = Dialog.Close;
 
+/** 포털 수명은 DS가 소유한다. 비모달 동작은 Drawer의 modal={false} 한 곳에서 설정한다. */
 export interface DrawerContentProps
-  extends React.ComponentPropsWithoutRef<typeof Dialog.Content>,
+  extends Omit<React.ComponentPropsWithRef<typeof Dialog.Content>, "forceMount">,
     VariantProps<typeof panelVariants> {
-  /** 스크림 없이 연다 — 캔버스를 계속 조작해야 하는 검사 서랍용. */
-  modal?: boolean;
+  /** 모달성은 바꾸지 않고 스크림만 숨긴다. 비모달 Drawer에는 Radix가 스크림을 렌더하지 않는다. */
+  showOverlay?: boolean;
 }
 
 export function DrawerContent({
   className,
   side,
   size,
-  modal = true,
+  showOverlay = true,
   children,
   ...rest
 }: DrawerContentProps) {
   return (
     <Dialog.Portal>
-      {modal ? (
+      {showOverlay ? (
         <Dialog.Overlay className="fixed inset-0 z-50 bg-scrim animate-in-fade" />
       ) : null}
       <Dialog.Content
@@ -72,12 +73,13 @@ export function DrawerContent({
   );
 }
 
+/** description을 생략하고 별도 Description도 없으면 DrawerContent에 aria-describedby={undefined}를 지정한다. */
 export function DrawerHeader({
   className,
   title,
   description,
   ...rest
-}: React.HTMLAttributes<HTMLDivElement> & {
+}: Omit<React.ComponentPropsWithRef<"div">, "title"> & {
   title: React.ReactNode;
   description?: React.ReactNode;
 }) {
@@ -106,7 +108,7 @@ export function DrawerHeader({
   );
 }
 
-export function DrawerBody({ className, onScroll, onScrollCapture, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+export function DrawerBody({ className, onScroll, onScrollCapture, ...rest }: React.ComponentPropsWithRef<"div">) {
   return (
     <ScrollArea className="min-h-0 min-w-0 flex-auto" viewportProps={{ onScroll, onScrollCapture }}>
       <div data-slot="drawer-body" className={cn("px-6 py-5", className)} {...rest} />

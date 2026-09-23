@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 
 import { cn } from "../cn";
 import { Skeleton } from "../feedback/Skeleton";
@@ -62,6 +62,9 @@ export interface DataTableProps<Row> {
 
 type SortState = { key: string; dir: "asc" | "desc" } | null;
 
+/* 셀 안의 편집·이동 동작이 행 선택까지 일으키면 앱의 캔버스 선택이 의도치 않게 바뀐다. */
+const ROW_CONTROL = 'a[href], button, input, label, select, textarea, summary, [role="button"], [role="link"], [role="checkbox"], [role="radio"], [role="switch"], [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
+
 export function DataTable<Row>({
   columns,
   rows,
@@ -78,6 +81,7 @@ export function DataTable<Row>({
   className,
 }: DataTableProps<Row>) {
   const [sort, setSort] = useState<SortState>(null);
+  const selectionGroup = useId();
 
   const sorted = useMemo(() => {
     if (!sort) return rows;
@@ -203,16 +207,22 @@ export function DataTable<Row>({
                 return (
                   <tr
                     key={key}
-                    aria-selected={onSelect ? selected : undefined}
-                    onClick={onSelect ? () => onSelect(key, row) : undefined}
+                    data-selected={onSelect ? selected : undefined}
+                    onClick={onSelect ? event => {
+                      if (event.defaultPrevented || (event.target instanceof Element && event.target.closest(ROW_CONTROL))) return;
+                      onSelect(key, row);
+                    } : undefined}
                     className={cn(
                       "border-b border-line last:border-b-0",
                       onSelect && "cursor-pointer hover:bg-surface-2",
                       selected && "bg-accent-soft hover:bg-accent-soft",
                     )}
                   >
-                    {columns.map(column => {
+                    {columns.map((column, columnIndex) => {
                       const tone = column.tone?.(row);
+                      const content = column.cell
+                        ? column.cell(row, index)
+                        : ((row as Record<string, unknown>)[column.key] as React.ReactNode);
                       return (
                         <td
                           key={column.key}
@@ -225,9 +235,22 @@ export function DataTable<Row>({
                             tone === "danger" && "text-danger",
                           )}
                         >
-                          {column.cell
-                            ? column.cell(row, index)
-                            : ((row as Record<string, unknown>)[column.key] as React.ReactNode)}
+                          {onSelect && columnIndex === 0 ? (
+                            <div className={cn("flex items-center gap-2", column.numeric && "justify-end")}>
+                              {/* 선택은 네이티브 radio가 맡고 임의 셀 내용은 형제로 남겨 중첩 버튼을 만들지 않는다. */}
+                              <input
+                                data-slot="table-row-select"
+                                type="radio"
+                                name={selectionGroup}
+                                value={key}
+                                checked={selected}
+                                aria-label={`Select row ${key}`}
+                                onChange={() => onSelect(key, row)}
+                                className="m-0 size-4 shrink-0 cursor-pointer accent-accent focus-visible:focus-ring focus-visible:outline-none"
+                              />
+                              {content}
+                            </div>
+                          ) : content}
                         </td>
                       );
                     })}

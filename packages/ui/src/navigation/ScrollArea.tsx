@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useRef, useState, type ComponentPropsWithoutRef, type PointerEvent, type Ref } from "react";
+import { useCallback, useEffect, useRef, useState, type ComponentPropsWithoutRef, type ComponentPropsWithRef, type PointerEvent, type Ref } from "react";
 import { ScrollArea as Radix } from "radix-ui";
 
 import { cn } from "../cn";
 
-export interface ScrollAreaProps extends Omit<ComponentPropsWithoutRef<typeof Radix.Root>, "type" | "scrollHideDelay"> {
+// 뷰포트와 스크롤바의 고정 구조는 DS가 소유하므로 Root/Viewport의 asChild는 지원하지 않는다.
+export interface ScrollAreaProps extends Omit<ComponentPropsWithRef<typeof Radix.Root>, "type" | "scrollHideDelay" | "asChild"> {
   viewportRef?: Ref<HTMLDivElement>;
   viewportClassName?: string;
-  viewportProps?: ComponentPropsWithoutRef<typeof Radix.Viewport> & { "data-slot"?: string };
+  viewportProps?: Omit<ComponentPropsWithoutRef<typeof Radix.Viewport>, "asChild"> & { "data-slot"?: string };
   orientation?: "vertical" | "horizontal" | "both";
 }
 

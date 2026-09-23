@@ -79,6 +79,7 @@ export function SidebarItem({
       type="button"
       data-slot="sidebar-item"
       aria-current={active ? "page" : undefined}
+      aria-label={collapsed ? label : undefined}
       className={cn(
         "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit cursor-pointer",
         "flex h-ctl-lg shrink-0 items-center gap-4 rounded-control border border-solid border-transparent",

@@ -1,4 +1,4 @@
-import { forwardRef, type ButtonHTMLAttributes } from "react";
+import { cloneElement, forwardRef, isValidElement, type ButtonHTMLAttributes, type HTMLAttributes, type KeyboardEvent, type ReactElement, type SyntheticEvent } from "react";
 import { Slot } from "radix-ui";
 
 import { cn, cva, type VariantProps } from "../cn";
@@ -17,6 +17,7 @@ export const buttonVariants = cva(
     "cursor-pointer appearance-none rounded-control border border-solid transition-colors duration-100",
     "focus-visible:focus-ring focus-visible:outline-none",
     "disabled:pointer-events-none disabled:opacity-45",
+    "aria-disabled:pointer-events-none aria-disabled:opacity-45",
     /* 아이콘만 든 버튼이 정사각이 되도록. 텍스트가 있으면 패딩이 이긴다. */
     "[&_svg]:size-7 [&_svg]:shrink-0",
   ],
@@ -75,26 +76,69 @@ export interface ButtonProps
   loading?: boolean | undefined;
 }
 
+const preventActivation = (event: SyntheticEvent) => {
+  event.preventDefault();
+  event.stopPropagation();
+};
+const guardKeyActivation = <T extends HTMLElement>(handler?: (event: KeyboardEvent<T>) => void) => (event: KeyboardEvent<T>) => {
+  if (event.key === "Enter" || event.key === " ") preventActivation(event);
+  else handler?.(event);
+};
+const guardedKeyboardProps = <T extends HTMLElement>(props: HTMLAttributes<T>) => ({
+  onKeyDown: guardKeyActivation(props.onKeyDown),
+  onKeyDownCapture: guardKeyActivation(props.onKeyDownCapture),
+  onKeyUp: guardKeyActivation(props.onKeyUp),
+  onKeyUpCapture: guardKeyActivation(props.onKeyUpCapture),
+});
+/* Slot은 자식 이벤트를 먼저 호출한다. 부모 핸들러만 막으면 자식의 저장·이동은 이미 실행된다.
+ * 잠긴 동안만 양쪽의 활성화 핸들러를 막고 ref·class·비활성화 전 핸들러는 그대로 합성한다. */
+const disabledSlotProps = {
+  "aria-disabled": true,
+  tabIndex: -1,
+  onClick: preventActivation,
+  onClickCapture: preventActivation,
+  onAuxClick: preventActivation,
+  onAuxClickCapture: preventActivation,
+  onDoubleClickCapture: preventActivation,
+  onPointerDownCapture: preventActivation,
+  onPointerUpCapture: preventActivation,
+  onMouseDownCapture: preventActivation,
+  onMouseUpCapture: preventActivation,
+} satisfies HTMLAttributes<HTMLElement>;
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { className, variant, tone, size, asChild, loading, disabled, children, ...rest },
   ref,
 ) {
   const Comp = asChild ? Slot.Root : "button";
+  const blocked = Boolean(disabled || loading);
+  const child = asChild && blocked && isValidElement(children)
+    ? cloneElement(children as ReactElement<HTMLAttributes<HTMLElement> & { disabled?: boolean | undefined; href?: string | undefined }>, {
+      ...disabledSlotProps,
+      ...guardedKeyboardProps(children.props as HTMLAttributes<HTMLElement>),
+      disabled: children.type === "a" ? undefined : true,
+      ...(children.type === "a" ? {
+        href: undefined,
+        role: (children.props as HTMLAttributes<HTMLElement>).role ?? "link",
+      } : {}),
+    })
+    : children;
   return (
     <Comp
       ref={ref}
       data-slot="button"
       data-loading={loading || undefined}
       className={cn(buttonVariants({ variant, tone, size }), className)}
-      disabled={asChild ? undefined : disabled || loading}
+      disabled={blocked}
       aria-busy={loading || undefined}
       {...rest}
+      {...(asChild && blocked ? { ...disabledSlotProps, ...guardedKeyboardProps(rest) } : {})}
     >
       {loading ? <Spinner size="sm" /> : null}
       {/* `asChild` 일 때 Slot 은 **요소 하나**만 받는다. 스피너와 children 을 나란히 두면
           자식이 둘이 되어 "Slot failed to slot onto its children" 으로 죽는다 — Slottable 이
           «이쪽이 슬롯 대상» 이라고 표시해 주므로 로딩과 asChild 가 함께 설 수 있다. */}
-      {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : children}
+      {asChild ? <Slot.Slottable>{child}</Slot.Slottable> : children}
     </Comp>
   );
 });

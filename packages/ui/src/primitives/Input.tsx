@@ -46,40 +46,29 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   { className, size, invalid, numeric, suffix, ...rest },
   ref,
 ) {
-  /* `style` 은 접미사 패딩과 합쳐야 하므로 따로 받는다. */
-  if (!suffix) {
-    return (
-      <input
-        ref={ref}
-        data-slot="input"
-        aria-invalid={invalid || undefined}
-        className={cn(fieldVariants({ size, invalid, numeric }), className)}
-        {...rest}
-      />
-    );
-  }
   /* 접미사가 있으면 **래퍼가 폭을 갖는다.** 래퍼를 `w-full` 로 두고 입력에만 폭 클래스를 주면
      접미사가 행 끝까지 밀려난다(절대 배치의 기준이 래퍼이기 때문). 그래서 `className` 은
-     래퍼로 가고 입력은 그 안을 채운다 — 폭 이외의 클래스를 주고 싶으면 `suffix` 없이 쓴다. */
+     래퍼로 가고 입력은 그 안을 채운다. 접미사가 없는 래퍼는 레이아웃 상자를 만들지 않는다.
+     두 경우 모두 같은 input을 유지해야 단위가 바뀔 때 포커스·선택 영역·비제어 값이 남는다. */
   return (
-    <span className={cn("relative inline-flex items-center", className)}>
+    <span data-slot="input-wrapper" className={suffix ? cn("relative inline-flex items-center", className) : "contents"}>
       <input
         ref={ref}
         data-slot="input"
         aria-invalid={invalid || undefined}
-        className={cn(fieldVariants({ size, invalid, numeric }), "w-full")}
+        className={cn(fieldVariants({ size, invalid, numeric }), !suffix && className)}
         {...rest}
         /* 오른쪽 패딩은 **접미사 길이에 따라** 잡는다. 고정값을 주면 "bays" 처럼 긴 단위가
            값 위에 겹친다(실측). `ch` 는 mono 글꼴에서 글자 하나 폭이므로 정확하다.
            `{...rest}` **뒤에** 와야 한다 — 앞에 두면 호출처의 `style` 이 통째로 덮어쓴다. */
-        style={{ paddingRight: `calc(${suffix.length}ch + 10px)`, ...rest.style }}
+        style={suffix ? { paddingRight: `calc(${suffix.length}ch + 10px)`, ...rest.style } : rest.style}
       />
-      <span
+      {suffix ? <span
         aria-hidden="true"
         className="pointer-events-none absolute right-3 font-mono text-micro text-muted"
       >
         {suffix}
-      </span>
+      </span> : null}
     </span>
   );
 });
