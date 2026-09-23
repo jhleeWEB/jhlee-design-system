@@ -2,7 +2,7 @@
   "name": "@buildos/ui",
   "version": "0.1.0",
   "private": true,
-  "description": "AARO 화면 셸 — 3열 작업대(파라미터·뷰어·검사) 컴포넌트와 컨트롤, 그리고 그것이 서는 디자인 토큰.",
+  "description": "AARO 디자인 시스템 — 도면 캔버스와 UI 크롬을 가른 토큰(방향 C), Radix 기반 오버레이·피드백 층, 3열 작업대 셸, 그리고 그 위의 컨트롤.",
   "exports": {
     "./tokens.css": "./src/tokens.css",
     "./shell.css": "./src/shell.css",
@@ -13,7 +13,8 @@
     "./*": {
       "types": "./dist/*.d.ts",
       "default": "./src/*.ts"
-    }
+    },
+    "./theme.css": "./src/theme.css"
   },
   "files": [
     "src"
@@ -24,12 +25,29 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "react": "^19.2.0"
+    "react": "^19.2.0",
+    "radix-ui": "^1.6.7",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
     "@buildos/typescript-config": "workspace:*",
+    "@testing-library/react": "^16.3.0",
     "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "jsdom": "^26.1.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5",
     "vitest": "^4"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.3.0"
+  },
+  "peerDependenciesMeta": {
+    "tailwindcss": {
+      "optional": false
+    }
   }
 }

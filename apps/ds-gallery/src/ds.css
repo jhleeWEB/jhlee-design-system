@@ -1,0 +1,9 @@
+/* 갤러리의 Tailwind 진입. 소비 앱 셋과 같은 세 줄이고 이유도 같다 — 소비 앱의 `src/ds.css` 주석 참조.
+   다만 여기에는 기존 평문 CSS 가 없으므로 preflight 를 빼는 이유가 하나 더 단순하다:
+   이 화면도 다른 앱과 **같은 기준선**에서 보여야 갤러리가 대표성을 갖는다. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "@buildos/ui/theme.css";
+@import "tailwindcss/utilities.css" source(none);
+
+@source "./";
+@source "../../../packages/ui/src";

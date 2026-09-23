@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BuildOS Design System</title>
+    <!-- 글꼴은 외부 요청이다. 단일 HTML 빌드에서도 링크로 남으므로 오프라인에서는 시스템
+         스택으로 떨어진다(깨지지 않고 성격만 잃는다). 오프라인 데모가 요건이 되면
+         woff2 서브셋을 base64 로 인라인하는 것으로 바꾼다. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
