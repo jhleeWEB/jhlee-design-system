@@ -142,7 +142,7 @@ export function Panel({
   const head = !titleHidden || eyebrow !== undefined || actions !== undefined;
   if (ds) return (
     <Card className={`panel panel-${variant}`} role="complementary" aria-label={title} data-design-system {...collapse}>
-      {head ? <CardHeader className="panel-head" title={titleHidden ? undefined : <h2>{title}</h2>} meta={eyebrow}>
+      {head ? <CardHeader variant="panel" headingLevel={2} className="panel-head" title={titleHidden ? undefined : title} meta={eyebrow}>
         {actions === undefined ? null : <span className="panel-actions">{actions}</span>}
       </CardHeader> : null}
       {scrollable ? <ScrollArea className="ds-panel-scroll" orientation="vertical">{children}</ScrollArea> : children}

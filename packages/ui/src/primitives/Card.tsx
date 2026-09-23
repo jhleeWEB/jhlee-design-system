@@ -278,23 +278,39 @@ export function CardHeader({
   className,
   title,
   meta,
+  leading,
+  variant = "default",
+  headingLevel,
   children,
   collapseButton = true,
   ...rest
 }: Omit<React.HTMLAttributes<HTMLDivElement>, "title"> & {
   title?: React.ReactNode;
   meta?: React.ReactNode;
+  leading?: React.ReactNode;
+  /** 뷰·페이지 패널은 같은 높이와 홈통을 공유한다. 일반 카드의 기존 여백은 유지한다. */
+  variant?: "default" | "panel";
+  headingLevel?: 2 | 3 | 4;
   /** 보기 전용 뷰도 본문 DOM 구조는 유지하고 접기 조작만 뺄 수 있다. */
   collapseButton?: boolean;
 }) {
   const ctx = useContext(Ctx);
+  const Heading = headingLevel === 2 ? "h2" : headingLevel === 3 ? "h3" : headingLevel === 4 ? "h4" : "div";
   return (
     <div
       data-slot="card-header"
-      className={cn("group/head flex shrink-0 items-center gap-3 px-4 py-3", className)}
+      data-variant={variant}
+      className={cn(
+        "group/head flex min-w-0 shrink-0 items-center gap-3",
+        variant === "panel"
+          ? "box-border min-h-12 border-b border-line bg-surface px-3 py-2"
+          : "px-4 py-3",
+        className,
+      )}
       {...rest}
     >
-      {title ? <div className="min-w-0 truncate text-control font-semibold text-ink">{title}</div> : null}
+      {leading ? <div className="flex shrink-0 items-center">{leading}</div> : null}
+      {title ? <Heading data-slot="card-title" className="m-0 min-w-0 truncate text-control font-semibold text-ink">{title}</Heading> : null}
       {children}
       {meta ? <div className="ml-auto shrink-0 tnum text-label text-muted">{meta}</div> : null}
       {ctx?.collapsible && collapseButton ? ctx.collapseTo === "strip" ? (

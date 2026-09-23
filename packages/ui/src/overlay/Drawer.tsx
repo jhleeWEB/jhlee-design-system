@@ -1,4 +1,7 @@
 import { Dialog } from "radix-ui";
+import { LuX } from "react-icons/lu";
+
+import { Button } from "../primitives/Button";
 
 import { cn, cva, type VariantProps } from "../cn";
 import { ScrollArea } from "../navigation/ScrollArea";
@@ -85,7 +88,7 @@ export function DrawerHeader({
       {...rest}
     >
       <div className="min-w-0 flex-1">
-        <Dialog.Title className="text-title font-semibold leading-snug text-ink">
+        <Dialog.Title className="m-0 text-title font-semibold leading-snug text-ink">
           {title}
         </Dialog.Title>
         {description ? (
@@ -94,14 +97,10 @@ export function DrawerHeader({
           </Dialog.Description>
         ) : null}
       </div>
-      <Dialog.Close
-        data-slot="dialog-close"
-        aria-label="Close"
-        className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit -mr-2 -mt-1 shrink-0 cursor-pointer rounded-control p-2 text-muted hover:bg-surface-2 hover:text-ink focus-visible:focus-ring focus-visible:outline-none"
-      >
-        <svg viewBox="0 0 16 16" aria-hidden="true" className="size-7">
-          <path d="M4.4 4.4l7.2 7.2M11.6 4.4l-7.2 7.2" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
+      <Dialog.Close asChild>
+        <Button data-slot="dialog-close" type="button" variant="ghost" size="icon-sm" aria-label="Close" className="-mr-2 -mt-1 shrink-0 [&_svg]:size-4">
+          <LuX size={16} strokeWidth={2} aria-hidden="true" focusable={false} />
+        </Button>
       </Dialog.Close>
     </div>
   );
