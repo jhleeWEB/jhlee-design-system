@@ -73,7 +73,7 @@ export function TopBar({
  */
 export function StatusBadge({ label }: { label: string }) {
   const ds = useDesignSystem();
-  if (ds) return <Badge tone="warn" provisional dot>{label}</Badge>;
+  if (ds) return <Badge tone="warn" provisional dot className="max-w-full whitespace-normal break-words">{label}</Badge>;
   return (
     <span className="rule-status">
       <i className="status-dot" aria-hidden="true" />

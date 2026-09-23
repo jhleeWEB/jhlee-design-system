@@ -6,7 +6,7 @@ import { cn } from "../cn";
  * radius 0 인 이유: 표는 캔버스 쪽 어휘다. 인쇄되고, 격자가 정보를 나른다. */
 export function Table({ className, ...rest }: React.TableHTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="min-w-0 w-full max-w-full overflow-x-auto">
       <table
         data-slot="table"
         className={cn("w-full border-collapse text-body text-ink", className)}

@@ -35,9 +35,10 @@ describe("기존 셸의 DS 전환", () => {
   it("숫자 선택과 스위치의 공개 값 계약을 보존한다", () => {
     const select = vi.fn(), toggle = vi.fn();
     render(<DesignSystemProvider><Select label="Floors" value={10} options={[{ value: 10, label: "Ten" }, { value: 20, label: "Twenty" }]} onChange={select} className="floor-select" /><Toggle label="Shadows" hint="Model shading" value={false} onChange={toggle} /></DesignSystemProvider>);
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "20" } });
+    fireEvent.keyDown(screen.getByRole("button", { name: "Floors" }), { key: "ArrowDown" });
+    fireEvent.click(screen.getByRole("menuitemradio", { name: "Twenty" }));
     expect(select).toHaveBeenCalledWith(20);
-    expect(screen.getByRole("combobox").getAttribute("data-slot")).toBe("select");
+    expect(screen.getByRole("button", { name: "Floors" }).getAttribute("data-slot")).toBe("select");
     fireEvent.click(screen.getByRole("switch", { name: "Shadows" }));
     expect(toggle).toHaveBeenCalledWith(true);
   });

@@ -5,7 +5,7 @@ import { cn, cva, type VariantProps } from "../cn";
  * 원칙 2 를 지킨다: **색만으로 말하지 않는다.** 아이콘과 제목이 항상 함께 실리고,
  * 그래서 `tone` 마다 기본 아이콘을 여기서 고정한다 — 호출처가 잊으면 흑백에서 정보가 사라진다. */
 const alertVariants = cva(
-  "flex gap-4 rounded-control border border-l-3 p-5 text-body leading-relaxed",
+  "flex min-w-0 max-w-full gap-4 rounded-control border border-l-3 p-5 text-body leading-relaxed",
   {
     variants: {
       tone: {
@@ -53,7 +53,8 @@ export function Alert({ className, tone = "info", title, action, children, ...re
           strokeLinecap="round"
         />
       </svg>
-      <div className="min-w-0 flex-1">
+      {/* 출처·식별자의 긴 한 단어도 경고의 최소 폭을 늘리지 않게 한다. */}
+      <div className="min-w-0 flex-1 [overflow-wrap:anywhere]">
         {title ? <div className="font-semibold text-ink">{title}</div> : null}
         {children ? <div className={cn(title && "mt-1")}>{children}</div> : null}
       </div>

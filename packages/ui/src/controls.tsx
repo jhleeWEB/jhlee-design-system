@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { cn } from "./cn";
 import { useDesignSystem } from "./design-system";
 import { Switch } from "./primitives/Choice";
+import { Button } from "./primitives/Button";
 import { SegmentedControl } from "./navigation/SegmentedControl";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "./overlay/DropdownMenu";
 
 /**
  * 폼 컨트롤.
@@ -43,10 +45,38 @@ export function Select<T extends string | number>({
   onChange: (value: T) => void;
 }) {
   const ds = useDesignSystem();
+  const valueId = useId();
+  if (ds) {
+    // 네이티브 select처럼 저장 값이 목록에 없으면 첫 항목을 보여 주되 입력 자체는 바꾸지 않는다.
+    const selected = options.find((option) => String(option.value) === String(value)) ?? options[0];
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild disabled={disabled || options.length === 0}>
+          <Button type="button" size="sm" data-slot="select" className={cn("ds-select", className)} aria-label={label} aria-describedby={valueId} title={selected?.label ?? label} disabled={disabled || options.length === 0}>
+            <span id={valueId} className="ds-select-value">{selected?.label ?? ""}</span>
+            <svg className="ds-select-chevron" viewBox="0 0 16 16" aria-hidden="true" fill="none">
+              <path d="m4 6 4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="ds-select-menu" aria-label={label} align="start" collisionPadding={8} loop>
+          <DropdownMenuRadioGroup value={String(selected?.value ?? "")} onValueChange={(raw) => {
+            const next = pick(options, raw);
+            if (next !== undefined && next !== value) onChange(next);
+          }}>
+            {options.map((option) => (
+              <DropdownMenuRadioItem key={String(option.value)} value={String(option.value)} textValue={option.label} data-slot="select-option" className="ds-select-option">
+                <span className="ds-select-option-label">{option.label}</span>
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
   return (
     <select
-      data-slot={ds ? "select" : undefined}
-      className={cn(ds && "ds-select", className)}
+      className={className}
       aria-label={label}
       value={String(value)}
       disabled={disabled}
