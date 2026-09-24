@@ -1,7 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Toast as RadixToast } from "radix-ui";
+import { LuX } from "react-icons/lu";
 
 import { cn, cva, type VariantProps } from "../cn";
+import { Button } from "../primitives/Button";
+import "./toast.css";
 
 /* 토스트 — 지나가는 알림. 흐름에 남아야 하면 `Alert` 다.
  *
@@ -16,12 +19,9 @@ import { cn, cva, type VariantProps } from "../cn";
 
 const toastVariants = cva(
   [
-    "group pointer-events-auto relative flex w-full items-start gap-4",
-    "rounded-float border border-l-3 bg-surface p-5 shadow-pop",
-    "text-body text-ink animate-in-rise",
-    "data-[state=closed]:animate-in-fade data-[state=closed]:[animation-direction:reverse]",
-    "data-[swipe=move]:translate-x-(--radix-toast-swipe-move-x)",
-    "data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-transform",
+    "ds-toast group pointer-events-auto relative flex w-full items-start gap-3",
+    "rounded-float border border-solid border-l-3 bg-surface p-4 shadow-pop",
+    "text-body text-ink",
   ],
   {
     variants: {
@@ -39,7 +39,7 @@ const toastVariants = cva(
 export interface ToastOptions extends VariantProps<typeof toastVariants> {
   title: React.ReactNode;
   description?: React.ReactNode;
-  /** 오른쪽에 붙는 되돌리기 등. `altText` 는 스크린리더가 읽는 대체 문구다. */
+  /** 본문 아래의 되돌리기 등. `altText` 는 스크린리더가 읽는 대체 문구다. */
   action?: { label: string; altText: string; onSelect: () => void };
   /** ms. `0` 이면 사용자가 닫을 때까지 남는다 — 실패 알림에만 쓴다. */
   duration?: number;
@@ -136,6 +136,7 @@ export function ToastProvider({
         {queue.map(item => (
           <RadixToast.Root
             data-slot="toast"
+            data-position={position}
             key={item.id}
             open={item.open}
             /* Radix 의 `duration` 은 필수 number 라 `undefined` 를 넘기면 타입이 깨진다.
@@ -147,44 +148,32 @@ export function ToastProvider({
             }}
             className={cn(toastVariants({ tone: item.tone }))}
           >
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 self-center [overflow-wrap:anywhere]">
               <RadixToast.Title className="font-semibold">{item.title}</RadixToast.Title>
               {item.description ? (
-                <RadixToast.Description className="mt-1 leading-relaxed text-muted">
+                <RadixToast.Description className="m-0 mt-1 leading-relaxed text-muted">
                   {item.description}
                 </RadixToast.Description>
               ) : null}
+              {item.action ? (
+                <RadixToast.Action asChild altText={item.action.altText} onClick={item.action.onSelect}>
+                  <Button data-slot="toast-action" size="sm" className="mt-3 h-auto min-h-[30px] max-w-full whitespace-normal py-1">
+                    {item.action.label}
+                  </Button>
+                </RadixToast.Action>
+              ) : null}
             </div>
-            {item.action ? (
-              <RadixToast.Action
-                data-slot="toast-action"
-                altText={item.action.altText}
-                onClick={item.action.onSelect}
-                className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit shrink-0 cursor-pointer rounded-control border border-solid border-line-strong bg-surface px-3 py-1 text-body text-ink hover:bg-surface-2 focus-visible:focus-ring focus-visible:outline-none"
-              >
-                {item.action.label}
-              </RadixToast.Action>
-            ) : null}
-            <RadixToast.Close
-              data-slot="toast-close"
-              aria-label="Dismiss"
-              className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit -mr-1 -mt-1 shrink-0 cursor-pointer rounded-control p-1 text-muted hover:bg-surface-2 hover:text-ink focus-visible:focus-ring focus-visible:outline-none"
-            >
-              <svg viewBox="0 0 16 16" aria-hidden="true" className="size-6">
-                <path
-                  d="M4.4 4.4l7.2 7.2M11.6 4.4l-7.2 7.2"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
+            <RadixToast.Close asChild>
+              <Button data-slot="toast-close" variant="ghost" size="icon-sm" aria-label="Dismiss" className="shrink-0 [&_svg]:size-4">
+                <LuX size={16} aria-hidden="true" focusable={false} />
+              </Button>
             </RadixToast.Close>
           </RadixToast.Root>
         ))}
         <RadixToast.Viewport
+          data-slot="toast-viewport"
           className={cn(
-            "pointer-events-none fixed z-50 m-0 flex max-h-screen w-[min(320px,calc(100vw-24px))] flex-col gap-4 p-6 outline-none",
+            "pointer-events-none fixed z-50 m-0 flex max-h-screen w-[min(352px,100vw)] list-none flex-col gap-3 p-4 outline-none",
             VIEWPORT_POSITION[position],
           )}
         />

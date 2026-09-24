@@ -1,0 +1,37 @@
+/* Radix Presence가 서로 다른 애니메이션 이름으로 퇴장을 감지한다.
+   퇴장 180ms는 ToastProvider의 큐 정리 유예 240ms 안에 끝나야 한다. */
+.ds-toast { --toast-offset-y: 12px; }
+.ds-toast[data-position^="top"] { --toast-offset-y: -12px; }
+.ds-toast[data-state="open"] {
+  animation: ds-toast-enter 220ms var(--ease-out-quick, ease-out) both;
+}
+.ds-toast[data-state="closed"] {
+  pointer-events: none;
+  animation: ds-toast-exit 180ms ease-in both;
+}
+.ds-toast[data-state="open"][data-swipe="move"] {
+  animation: none;
+  transform: translate3d(var(--radix-toast-swipe-move-x), 0, 0);
+}
+.ds-toast[data-state="open"][data-swipe="cancel"] {
+  animation: none;
+  transform: translate3d(0, 0, 0);
+  transition: transform 180ms var(--ease-out-quick, ease-out);
+}
+.ds-toast[data-swipe="end"] { animation: ds-toast-swipe-exit 180ms ease-out both; }
+
+@keyframes ds-toast-enter {
+  from { opacity: 0; transform: translate3d(0, var(--toast-offset-y), 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes ds-toast-exit {
+  from { opacity: 1; transform: translate3d(0, 0, 0); }
+  to { opacity: 0; transform: translate3d(0, var(--toast-offset-y), 0); }
+}
+@keyframes ds-toast-swipe-exit {
+  from { opacity: 1; transform: translate3d(var(--radix-toast-swipe-end-x, 0px), 0, 0); }
+  to { opacity: 0; transform: translate3d(calc(100% + 16px), 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-toast[data-state], .ds-toast[data-state][data-swipe] { animation: none; transition: none; }
+}
