@@ -9,6 +9,56 @@ function numberInput() {
   return screen.getByRole("spinbutton", { name: "Area" }) as HTMLInputElement;
 }
 
+describe("기본 0 편집", () => {
+  it.each([true, false])("제어 여부 %s에서 편집 진입만으로 값이나 변경 이벤트를 만들지 않는다", controlled => {
+    const focused = vi.fn(), clicked = vi.fn(), changed = vi.fn(), typed = vi.fn();
+    render(<Input type="number" aria-label="Area" {...(controlled ? { value: 0 } : { defaultValue: 0 })}
+      onFocus={event => focused(event.currentTarget.value)} onClick={event => clicked(event.currentTarget.value)}
+      onChange={changed} onInput={typed} />);
+    const input = numberInput();
+    fireEvent.focus(input);
+    fireEvent.click(input);
+    fireEvent.blur(input);
+    expect(input.value).toBe("0");
+    expect(input.valueAsNumber).toBe(0);
+    expect(focused).toHaveBeenCalledExactlyOnceWith("0");
+    expect(clicked).toHaveBeenCalledExactlyOnceWith("0");
+    expect(changed).not.toHaveBeenCalled();
+    expect(typed).not.toHaveBeenCalled();
+  });
+
+  it("소수점·부호의 중간 빈값은 0으로 덮지 않고 입력 종료 시 복원한다", () => {
+    function Example() {
+      const [value, setValue] = useState(0);
+      return <Input type="number" aria-label="Area" value={value}
+        onChange={event => setValue(Number(event.currentTarget.value))} />;
+    }
+    render(<Example />);
+    const input = numberInput();
+    // jsdom은 브라우저의 불완전 숫자 버퍼를 구현하지 않아 그때의 validity만 재현한다.
+    const badInput = vi.spyOn(input.validity, "badInput", "get").mockReturnValue(true);
+    fireEvent.input(input, { target: { value: "" } });
+    expect(input.value).toBe("");
+    fireEvent.blur(input);
+    expect(input.value).toBe("0");
+    badInput.mockReturnValue(false);
+    fireEvent.input(input, { target: { value: "" } });
+    expect(input.value).toBe("0");
+  });
+
+  it("편집 중 외부 값이 바뀌면 이전 숫자 보류 상태를 다시 적용하지 않는다", () => {
+    const { rerender } = render(<Input type="number" aria-label="Area" value={0} onChange={() => {}} />);
+    const input = numberInput();
+    vi.spyOn(input.validity, "badInput", "get").mockReturnValue(true);
+    fireEvent.input(input, { target: { value: "" } });
+    expect(input.value).toBe("");
+    rerender(<Input type="number" aria-label="Area" value={25} onChange={() => {}} />);
+    expect(input.value).toBe("25");
+    rerender(<Input type="number" aria-label="Area" value={0} onChange={() => {}} />);
+    expect(input.value).toBe("0");
+  });
+});
+
 describe("숫자 입력의 불필요한 선행 0", () => {
   it("실제 input 이벤트의 DOM·onInput·onChange 값이 같은 정규화 결과를 전달한다", () => {
     const inputValues = vi.fn(), changeValues = vi.fn();

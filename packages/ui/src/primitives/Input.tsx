@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 
 import { cn, cva, type VariantProps } from "../cn";
 
@@ -52,10 +52,25 @@ function normalizeNumberInput(input: HTMLInputElement) {
   if (input.value !== normalized) input.value = normalized;
 }
 
+function selectZeroForReplacement(input: HTMLInputElement) {
+  // 기본 0 앞에 커서를 놓으면 새 숫자 뒤에 0이 남는다. 값은 유지하고 다음 입력이 0을 대체하게 한다.
+  if (!input.readOnly && !input.disabled && input.value === "0") input.select();
+}
+
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { className, size, invalid, numeric, suffix, type, value, defaultValue, onChange, onInput, ...rest },
+  { className, size, invalid, numeric, suffix, type, value, defaultValue, onChange, onInput, onFocus, onClick, onBlur, ...rest },
   ref,
 ) {
+  const [incompleteNumber, setIncompleteNumber] = useState(false);
+  const controlledZero = type === "number" && (value === 0 || value === "0");
+  // 외부에서 다른 값을 적용하면 이전 편집의 보류 상태가 나중의 0에 다시 적용되지 않게 한다.
+  if (incompleteNumber && !controlledZero) setIncompleteNumber(false);
+  const updateNumberInput = (input: HTMLInputElement) => {
+    normalizeNumberInput(input);
+    // "."·"-"는 브라우저 내부에만 남고 value는 빈 문자열이다. React가 0을 재대입하면 다음 자릿수의 의미가 바뀐다.
+    setIncompleteNumber(value != null && input.value === "" && input.validity.badInput);
+  };
+
   /* 접미사가 있으면 **래퍼가 폭을 갖는다.** 래퍼를 `w-full` 로 두고 입력에만 폭 클래스를 주면
      접미사가 행 끝까지 밀려난다(절대 배치의 기준이 래퍼이기 때문). 그래서 `className` 은
      래퍼로 가고 입력은 그 안을 채운다. 접미사가 없는 래퍼는 레이아웃 상자를 만들지 않는다.
@@ -69,14 +84,27 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         className={cn(fieldVariants({ size, invalid, numeric }), !suffix && className)}
         {...rest}
         type={type}
-        value={type === "number" && typeof value === "string" ? stripLeadingZeros(value) : value}
+        value={controlledZero && incompleteNumber ? "" : type === "number" && typeof value === "string" ? stripLeadingZeros(value) : value}
         defaultValue={type === "number" && typeof defaultValue === "string" ? stripLeadingZeros(defaultValue) : defaultValue}
+        onFocus={type === "number" ? event => {
+          onFocus?.(event);
+          if (!event.defaultPrevented) selectZeroForReplacement(event.currentTarget);
+        } : onFocus}
+        onClick={type === "number" ? event => {
+          onClick?.(event);
+          // 마우스 기본 동작이 포커스 때의 선택을 다시 접을 수 있어 클릭 완료 후에도 적용한다.
+          if (!event.defaultPrevented) selectZeroForReplacement(event.currentTarget);
+        } : onClick}
+        onBlur={type === "number" ? event => {
+          setIncompleteNumber(false);
+          onBlur?.(event);
+        } : onBlur}
         onChange={type === "number" ? event => {
-          normalizeNumberInput(event.currentTarget);
+          updateNumberInput(event.currentTarget);
           onChange?.(event);
         } : onChange}
         onInput={type === "number" ? event => {
-          normalizeNumberInput(event.currentTarget);
+          updateNumberInput(event.currentTarget);
           onInput?.(event);
         } : onInput}
         /* 오른쪽 패딩은 **접미사 길이에 따라** 잡는다. 고정값을 주면 "bays" 처럼 긴 단위가
