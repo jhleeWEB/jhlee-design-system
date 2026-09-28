@@ -42,8 +42,18 @@ export interface InputProps
   suffix?: string;
 }
 
+// Number 변환은 소수부의 0·지수·빈 입력까지 바꾸므로 정수부의 중복 0만 지운다.
+const stripLeadingZeros = (value: string) => value.replace(/^([+-]?)0+(?=\d)/, "$1");
+
+function normalizeNumberInput(input: HTMLInputElement) {
+  const normalized = stripLeadingZeros(input.value);
+  // React는 "01"과 숫자 1을 같은 값으로 보고 DOM을 유지하므로 표시 문자열도 함께 정리한다.
+  // number 입력은 선택 범위 API를 지원하지 않는다. 바뀐 문자열에만 값을 대입한다.
+  if (input.value !== normalized) input.value = normalized;
+}
+
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { className, size, invalid, numeric, suffix, ...rest },
+  { className, size, invalid, numeric, suffix, type, value, defaultValue, onChange, onInput, ...rest },
   ref,
 ) {
   /* 접미사가 있으면 **래퍼가 폭을 갖는다.** 래퍼를 `w-full` 로 두고 입력에만 폭 클래스를 주면
@@ -58,6 +68,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         aria-invalid={invalid || undefined}
         className={cn(fieldVariants({ size, invalid, numeric }), !suffix && className)}
         {...rest}
+        type={type}
+        value={type === "number" && typeof value === "string" ? stripLeadingZeros(value) : value}
+        defaultValue={type === "number" && typeof defaultValue === "string" ? stripLeadingZeros(defaultValue) : defaultValue}
+        onChange={type === "number" ? event => {
+          normalizeNumberInput(event.currentTarget);
+          onChange?.(event);
+        } : onChange}
+        onInput={type === "number" ? event => {
+          normalizeNumberInput(event.currentTarget);
+          onInput?.(event);
+        } : onInput}
         /* 오른쪽 패딩은 **접미사 길이에 따라** 잡는다. 고정값을 주면 "bays" 처럼 긴 단위가
            값 위에 겹친다(실측). `ch` 는 mono 글꼴에서 글자 하나 폭이므로 정확하다.
            `{...rest}` **뒤에** 와야 한다 — 앞에 두면 호출처의 `style` 이 통째로 덮어쓴다. */
