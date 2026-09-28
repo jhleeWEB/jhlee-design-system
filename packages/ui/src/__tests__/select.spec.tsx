@@ -17,6 +17,48 @@ describe("DS 선택 목록", () => {
     expect(onChange).toHaveBeenCalledExactlyOnceWith(2);
   });
 
+  it("네이티브 select는 오류 설명을 연결하고 수정하면 오류 상태를 해제한다", () => {
+    function Example() {
+      const [value, setValue] = useState(0);
+      const invalid = value === 0;
+      return <>
+        <Select label="Count" value={value} options={[{ value: 0, label: "None" }, { value: 2, label: "Two" }]} onChange={setValue} invalid={invalid} aria-describedby={invalid ? "count-error" : undefined} />
+        {invalid && <span id="count-error">Choose a count.</span>}
+      </>;
+    }
+    render(<Example />);
+    const input = screen.getByRole("combobox", { name: "Count", description: "Choose a count." }) as HTMLSelectElement;
+    expect(input.getAttribute("aria-invalid")).toBe("true");
+    expect(input.getAttribute("aria-describedby")).toBe("count-error");
+    fireEvent.change(input, { target: { value: "2" } });
+    expect(input.value).toBe("2");
+    expect(input.hasAttribute("aria-invalid")).toBe(false);
+    expect(input.hasAttribute("aria-describedby")).toBe(false);
+    expect(screen.queryByText("Choose a count.")).toBeNull();
+  });
+
+  it("DS 오류 설명은 선택값 안내를 보존하고 수정하면 선택값만 안내한다", () => {
+    function Example() {
+      const [value, setValue] = useState(0);
+      const invalid = value === 0;
+      return <>
+        <Select label="Count" value={value} options={[{ value: 0, label: "None" }, { value: 2, label: "Two" }]} onChange={setValue} invalid={invalid} aria-describedby={invalid ? "count-hint count-error" : undefined} />
+        {invalid && <><span id="count-hint">Required.</span><span id="count-error">Choose a count.</span></>}
+      </>;
+    }
+    render(<DesignSystemProvider><Example /></DesignSystemProvider>);
+    const trigger = screen.getByRole("button", { name: "Count", description: "None Required. Choose a count." });
+    const valueId = trigger.querySelector(".ds-select-value")!.id;
+    expect(trigger.getAttribute("aria-invalid")).toBe("true");
+    expect(trigger.getAttribute("aria-describedby")).toBe(`${valueId} count-hint count-error`);
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    fireEvent.click(screen.getByRole("menuitemradio", { name: "Two" }));
+    expect(screen.getByRole("button", { name: "Count", description: "Two" })).toBe(trigger);
+    expect(trigger.hasAttribute("aria-invalid")).toBe(false);
+    expect(trigger.getAttribute("aria-describedby")).toBe(valueId);
+    expect(screen.queryByText("Choose a count.")).toBeNull();
+  });
+
   it("선택 목록은 잘리는 부모 밖에 열리고 숫자 0도 선택 표시와 입력에 보존한다", async () => {
     const onChange = vi.fn();
     function Example() {

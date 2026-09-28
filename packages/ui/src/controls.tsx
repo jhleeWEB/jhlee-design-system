@@ -35,6 +35,8 @@ export function Select<T extends string | number>({
   value,
   options,
   disabled = false,
+  invalid,
+  "aria-describedby": describedBy,
   className,
   onChange,
 }: {
@@ -42,6 +44,8 @@ export function Select<T extends string | number>({
   value: T;
   options: readonly Option<T>[];
   disabled?: boolean;
+  invalid?: boolean | undefined;
+  "aria-describedby"?: string | undefined;
   className?: string;
   onChange: (value: T) => void;
 }) {
@@ -53,7 +57,7 @@ export function Select<T extends string | number>({
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild disabled={disabled || options.length === 0}>
-          <Button type="button" size="sm" data-slot="select" className={cn("ds-select", className)} aria-label={label} aria-describedby={valueId} title={selected?.label ?? label} disabled={disabled || options.length === 0}>
+          <Button type="button" size="sm" data-slot="select" className={cn("ds-select", className)} aria-label={label} aria-invalid={invalid || undefined} aria-describedby={[valueId, describedBy].filter(Boolean).join(" ")} title={selected?.label ?? label} disabled={disabled || options.length === 0}>
             <span id={valueId} className="ds-select-value">{selected?.label ?? ""}</span>
             <svg className="ds-select-chevron" viewBox="0 0 16 16" aria-hidden="true" fill="none">
               <path d="m4 6 4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -81,6 +85,8 @@ export function Select<T extends string | number>({
     <select
       className={className}
       aria-label={label}
+      aria-invalid={invalid || undefined}
+      aria-describedby={describedBy}
       value={String(value)}
       disabled={disabled}
       onChange={(event) => {

@@ -126,6 +126,8 @@ button:not([data-slot]):hover, select:not([data-slot]):hover { border-color: var
 button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, input:not([data-slot]):focus-visible {
   outline: 2px solid var(--ink); outline-offset: 1px;
 }
+select:not([data-slot])[aria-invalid="true"] { border-color: var(--danger); }
+select:not([data-slot])[aria-invalid="true"]:focus-visible { outline-color: var(--danger); }
 .btn-row { display: grid; grid-auto-flow: column; gap: var(--gap); }
 .seg { display: grid; grid-auto-flow: column; gap: 0; border: 1px solid var(--line-strong); }
 .seg button:not([data-slot]) { border: 0; border-right: 1px solid var(--line-strong); background: var(--surface); }
@@ -309,6 +311,8 @@ button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, in
 .ds-select[data-slot="select"]:hover { border-color: var(--chrome-ink-2); }
 .ds-slider[data-slot="slider"] { width: 100%; min-width: 0; height: 22px; margin: 0; accent-color: var(--chrome-accent); cursor: pointer; }
 .ds-select[data-slot="select"]:focus-visible, .ds-slider[data-slot="slider"]:focus-visible { outline: 2px solid var(--chrome-focus); outline-offset: 2px; }
+.ds-select[data-slot="select"][aria-invalid="true"] { border-color: var(--chrome-danger); }
+.ds-select[data-slot="select"][aria-invalid="true"]:focus-visible { outline-color: var(--chrome-danger); }
 .ds-select[data-slot="select"]:disabled, .ds-slider[data-slot="slider"]:disabled { opacity: .45; cursor: default; }
 .ds-toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; cursor: pointer; }
 .ds-toggle-icon { display: inline-flex; width: auto; }
