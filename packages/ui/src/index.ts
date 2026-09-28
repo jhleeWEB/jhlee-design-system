@@ -48,6 +48,8 @@ export type { Verdict } from "./shell";
 export { Segmented, Select, Slider, Toggle } from "./controls";
 export type { Option } from "./controls";
 export { DesignSystemProvider } from "./design-system";
+export { CanvasScale, type CanvasScaleProps } from "./CanvasScale";
+export { niceScale, gridPitchM, GRID_TARGET_PX, GRID_MAJOR_EVERY, GRID_MAX_DIVISIONS } from "./canvas-metrics";
 
 /* ── 디자인 시스템(#1198) ─────────────────────────────────────────────────── */
 export { cn, cva, type VariantProps } from "./cn";

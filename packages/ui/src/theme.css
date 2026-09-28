@@ -29,6 +29,7 @@
  */
 
 @import "./tokens.css";
+@import "./canvas.css";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    원시 단계 — 참고 화면에서 **픽셀로 뽑은** 값
@@ -88,6 +89,7 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 :root {
   --canvas-bg: #ffffff;
+  --canvas-plan-bg: #f4f4f2;
   --canvas-surface: #fafafa;    /* 필지 채움처럼 바탕에서 한 단 들어간 면 */
   --canvas-line: #dcdcdc;
   --canvas-line-strong: #bfbfbf;

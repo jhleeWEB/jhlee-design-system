@@ -170,7 +170,8 @@ button:not([data-slot]):focus-visible, select:not([data-slot]):focus-visible, in
   padding: 8px 12px; border-bottom: 1px solid var(--line);
 }
 .viewer { position: relative; min-height: 0; overflow: hidden; background: var(--surface-2); }
-.viewer svg { width: 100%; height: 100%; display: block; }
+/* 도면만 뷰를 채운다. 화면 px 크기를 가진 축척 오버레이의 SVG 속성은 보존한다. */
+.viewer svg:not([data-slot="canvas-scale"]) { width: 100%; height: 100%; display: block; }
 
 /* ── HUD ── Hotel의 hud 패턴. 캔버스 위에 뜨되 캔버스를 가리지 않는다 ── */
 
