@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm typecheck   # 엄격 · app-profile · stories 프로필 셋
+      - run: pnpm lint
   unit:
     runs-on: ubuntu-latest
     steps:

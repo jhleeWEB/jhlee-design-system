@@ -52,6 +52,7 @@
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.app-profile.json && tsc --noEmit -p tsconfig.stories.json",
     "test": "vitest run --project=unit --passWithNoTests",
+    "lint": "cd ../.. && pnpm exec eslint packages/ui --max-warnings 0",
     "test:stories": "vitest run --project=storybook",
     "storybook": "storybook dev -p 6006 --no-open",
     "storybook:build": "storybook build --test -o storybook-static",
