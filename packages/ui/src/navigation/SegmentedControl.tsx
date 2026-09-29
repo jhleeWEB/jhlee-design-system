@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "../cn";
 
 /* 세그먼트 컨트롤 — 배타적 뷰 전환(Plan ↔ Model).

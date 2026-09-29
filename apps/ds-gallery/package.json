@@ -2,7 +2,7 @@
   "name": "@buildos/ds-gallery",
   "version": "0.1.0",
   "private": true,
-  "description": "디자인 시스템 갤러리 — @buildos/ui 의 컴포넌트를 전부 세워 두고 캔버스/크롬 경계와 다크를 눈으로 확인하는 작업대.",
+  "description": "디자인 시스템 갤러리 — @jhleeweb/squircle-design-system 의 컴포넌트를 전부 세워 두고 캔버스/크롬 경계와 다크를 눈으로 확인하는 작업대.",
   "type": "module",
   "scripts": {
     "dev": "vite --port 5186 --strictPort",
@@ -11,7 +11,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@buildos/ui": "workspace:*",
+    "@jhleeweb/squircle-design-system": "workspace:*",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

@@ -1,3 +1,4 @@
+"use client";
 import { forwardRef } from "react";
 import { Checkbox as RadixCheckbox, RadioGroup as RadixRadio, Slot, Switch as RadixSwitch } from "radix-ui";
 

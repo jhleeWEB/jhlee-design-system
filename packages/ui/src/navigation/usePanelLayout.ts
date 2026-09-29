@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useMemo, useState } from "react";
 
 /* 여러 패널의 접힘 상태를 한 곳에서 든다.

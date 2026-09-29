@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { useDesignSystem } from "./design-system";
 import { Card, CardHeader, CardWell, type CardProps } from "./primitives/Card";

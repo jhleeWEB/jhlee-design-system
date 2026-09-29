@@ -1,9 +1,9 @@
+"use client";
 import { Children, Fragment, cloneElement, createContext, isValidElement, useContext, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import { cn, cva, type VariantProps } from "../cn";
 import { PanelToggleButton } from "./PanelToggleButton";
-import "./card-motion.css";
 
 /* 카드 — 이 제품의 기본 구획.
  *

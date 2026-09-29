@@ -1,3 +1,4 @@
+"use client";
 import { cloneElement, forwardRef, isValidElement, type ButtonHTMLAttributes, type HTMLAttributes, type KeyboardEvent, type ReactElement, type SyntheticEvent } from "react";
 import { Slot } from "radix-ui";
 

@@ -1,0 +1,12 @@
+name: Setup workspace
+description: pnpm + Node 24 + frozen install. 레지스트리 매핑은 프로젝트 .npmrc 가 맡고, 인증은 호출 쪽 단계가 ~/.npmrc 에 쓴다.
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v4 # packageManager 필드(pnpm@10.11.0)를 읽는다
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
+        cache: pnpm
+    - shell: bash
+      run: pnpm install --frozen-lockfile

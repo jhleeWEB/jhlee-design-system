@@ -1,10 +1,10 @@
+"use client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Toast as RadixToast } from "radix-ui";
 import { LuX } from "react-icons/lu";
 
 import { cn, cva, type VariantProps } from "../cn";
 import { Button } from "../primitives/Button";
-import "./toast.css";
 
 /* 토스트 — 지나가는 알림. 흐름에 남아야 하면 `Alert` 다.
  *

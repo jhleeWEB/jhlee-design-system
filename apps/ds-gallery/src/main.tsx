@@ -73,7 +73,7 @@ import {
   Tr,
   usePanelLayout,
   useToast,
-} from "@buildos/ui";
+} from "@jhleeweb/squircle-design-system";
 
 import "./ds.css";
 

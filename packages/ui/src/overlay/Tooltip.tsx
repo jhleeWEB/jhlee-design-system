@@ -1,3 +1,4 @@
+"use client";
 import { Tooltip as Radix } from "radix-ui";
 
 import { cn } from "../cn";

@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ds-gallery",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "pnpm --dir apps/ds-gallery exec vite --port ${PORT:-5186} --strictPort"],
+      "port": 5186,
+      "autoPort": true
+    }
+  ]
+}

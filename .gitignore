@@ -1,0 +1,8 @@
+node_modules/
+dist/
+storybook-static/
+*.tsbuildinfo
+.DS_Store
+.turbo/
+# 에이전트 스크래치 — 저장소에 들어갈 물건이 아니다.
+.agents/
