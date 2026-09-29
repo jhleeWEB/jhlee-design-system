@@ -1,0 +1,16 @@
+{
+  "extends": "@buildos/typescript-config/base.json",
+  "compilerOptions": {
+    // 규칙은 JS + JSDoc 이다(src/index.js 의 «왜»). checkJs 로 같은 엄격도를 받는다.
+    "allowJs": true,
+    "checkJs": true,
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": ["src", "vitest.config.ts"],
+  "exclude": ["src/__tests__/fixtures"]
+}

@@ -30,6 +30,7 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   tsdown.config.ts           unbundle ESM + d.ts + CSS 복사. banner 로 "use client" 를 붙이지 않는다 — 파일 첫 줄에 직접 둔다
 packages/typescript-config/  tsconfig 프리셋(@buildos/typescript-config, 발행 안 함)
 scripts/vrt-update.sh        VRT 기준선 갱신 — CI 와 같은 playwright:v1.63.0-noble 이미지 안에서만(macOS PNG 는 기준선이 아니다)
+packages/eslint-rules/       로컬 ESLint 규칙 ds/*(@buildos/eslint-rules, 발행 안 함) + RuleTester 스펙. JS + JSDoc(checkJs)
 docs/architecture/design-system-patterns.md   React 합성·접근성 계약(원 저장소 #1246)
 docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진행은 이 레포 이슈로 관리한다
 ```
@@ -66,13 +67,20 @@ pnpm install           # pnpm 10, Node 24
 pnpm storybook         # 카탈로그 (6006) — Pages/Workbench · Pages/Gallery 로 캔버스/크롬 경계와 다크를 눈으로 확인
 pnpm storybook:build   # storybook-static (--test) — VRT 와 CI storybook job 의 입력
 pnpm typecheck         # 엄격 프로필 + app 프로필 + stories 프로필
-pnpm test              # vitest unit 프로젝트(jsdom)
+pnpm lint              # ESLint 10 — 기준선(eslint-suppressions.json) 밖 신규 위반만 실패
+pnpm test              # vitest unit 프로젝트(jsdom) + packages/eslint-rules 의 RuleTester
 pnpm build             # tsdown → packages/ui/dist
-pnpm verify            # typecheck + test + build — PR 전 한 번
+pnpm verify            # typecheck + lint + test + build — PR 전 한 번
 pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(Phase A 는 'todo')
 pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
 cd packages/ui && pnpm exec publint --strict && pnpm exec attw --pack . --profile esm-only   # 패키지 계약
 ```
+
+**린트 기준선.** 루트 `eslint.config.js`(플러그인 + 로컬 규칙 `ds/*`, `packages/eslint-rules/`)의 모든 규칙은 error 이고,
+첫 실행의 위반은 `eslint-suppressions.json`(ESLint bulk suppressions)이 덮는다 — 계획의 «warn + 기준선» 은 suppressions 가
+error 만 덮기 때문에 이 모양이 됐다. **기준선을 늘리는 PR 은 받지 않는다**(`--suppress-all` 재실행 금지). 위반을 고쳐 줄이면
+같은 PR 에서 `pnpm exec eslint . --prune-suppressions` 로 기준선을 낮춘다. legacy 경로(shell.tsx·controls.tsx·design-system.tsx)는
+ignores 가 아니라 기준선으로 덮여 있다 — `./legacy` 로 격리될 때 ignores 로 바꾼다.
 
 **발행**은 `main` 머지 시 자동이다(AGENTS.md «릴리스»). 로컬에서 발행하려면 `~/.npmrc` 에
 `//npm.pkg.github.com/:_authToken=<classic PAT: read:packages + write:packages>` 를 두고

@@ -1,0 +1,476 @@
+{
+  "packages/ui/src/CanvasScale.tsx": {
+    "jsdoc/require-jsdoc": {
+      "count": 3
+    }
+  },
+  "packages/ui/src/__tests__/accordion.spec.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "packages/ui/src/__tests__/collapse.spec.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 1
+    },
+    "ds/no-literal-style-value": {
+      "count": 1
+    }
+  },
+  "packages/ui/src/__tests__/control-patterns.spec.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 3
+    },
+    "ds/no-forward-ref": {
+      "count": 1
+    }
+  },
+  "packages/ui/src/__tests__/navigation-data-accessibility.spec.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/__tests__/numeric-input.spec.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/__tests__/overlay.spec.tsx": {
+    "import-x/no-duplicates": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/__tests__/scroll-consumers.spec.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 1
+    }
+  },
+  "packages/ui/src/__tests__/select.spec.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/__tests__/shell-migration.spec.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 1
+    }
+  },
+  "packages/ui/src/__tests__/stories-contract.spec.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 3
+    }
+  },
+  "packages/ui/src/__tests__/toast-queue.spec.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/__tests__/tokens.spec.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 4
+    }
+  },
+  "packages/ui/src/cn.ts": {
+    "jsdoc/require-jsdoc": {
+      "count": 1
+    }
+  },
+  "packages/ui/src/controls.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 6
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 19
+    },
+    "jsx-a11y/interactive-supports-focus": {
+      "count": 1
+    },
+    "react-hooks/exhaustive-deps": {
+      "count": 1
+    }
+  },
+  "packages/ui/src/data/DataTable.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 3
+    },
+    "ds/no-boolean-string-data-attr": {
+      "count": 1
+    },
+    "ds/no-literal-style-value": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 10
+    }
+  },
+  "packages/ui/src/data/DescriptionList.tsx": {
+    "jsdoc/require-jsdoc": {
+      "count": 5
+    }
+  },
+  "packages/ui/src/data/Table.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 9
+    }
+  },
+  "packages/ui/src/design-system.tsx": {
+    "jsdoc/require-jsdoc": {
+      "count": 3
+    }
+  },
+  "packages/ui/src/feedback/Alert.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 2
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 3
+    }
+  },
+  "packages/ui/src/feedback/EmptyState.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 2
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 6
+    }
+  },
+  "packages/ui/src/feedback/Progress.tsx": {
+    "ds/no-literal-style-value": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/feedback/Skeleton.tsx": {
+    "ds/no-literal-style-value": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 4
+    }
+  },
+  "packages/ui/src/feedback/Spinner.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/feedback/Toast.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 2
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 2
+    },
+    "ds/no-literal-style-value": {
+      "count": 3
+    },
+    "ds/no-magic-ms": {
+      "count": 2
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 10
+    }
+  },
+  "packages/ui/src/navigation/Accordion.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    },
+    "ds/no-forward-ref": {
+      "count": 5
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 3
+    },
+    "react-hooks/immutability": {
+      "count": 3
+    }
+  },
+  "packages/ui/src/navigation/BackButton.tsx": {
+    "ds/no-forward-ref": {
+      "count": 1
+    }
+  },
+  "packages/ui/src/navigation/Breadcrumb.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 2
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 6
+    }
+  },
+  "packages/ui/src/navigation/ScrollArea.tsx": {
+    "ds/no-magic-ms": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 7
+    }
+  },
+  "packages/ui/src/navigation/SegmentedControl.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 1
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 2
+    },
+    "ds/no-literal-style-value": {
+      "count": 2
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 11
+    },
+    "jsx-a11y/interactive-supports-focus": {
+      "count": 1
+    }
+  },
+  "packages/ui/src/navigation/Sidebar.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 1
+    },
+    "ds/no-literal-style-value": {
+      "count": 2
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 12
+    }
+  },
+  "packages/ui/src/navigation/Toolbar.tsx": {
+    "jsdoc/require-jsdoc": {
+      "count": 5
+    }
+  },
+  "packages/ui/src/navigation/usePanelLayout.ts": {
+    "jsdoc/require-jsdoc": {
+      "count": 13
+    }
+  },
+  "packages/ui/src/overlay/AlertDialog.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 3
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 3
+    },
+    "ds/no-literal-style-value": {
+      "count": 5
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 12
+    }
+  },
+  "packages/ui/src/overlay/Drawer.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 8
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 3
+    },
+    "ds/no-literal-style-value": {
+      "count": 10
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/overlay/DropdownMenu.tsx": {
+    "jsdoc/require-jsdoc": {
+      "count": 9
+    }
+  },
+  "packages/ui/src/overlay/Modal.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 7
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 3
+    },
+    "ds/no-literal-style-value": {
+      "count": 9
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 3
+    }
+  },
+  "packages/ui/src/overlay/Popover.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 2
+    },
+    "ds/no-literal-style-value": {
+      "count": 3
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/overlay/Tooltip.tsx": {
+    "ds/no-literal-style-value": {
+      "count": 1
+    },
+    "ds/no-magic-ms": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 7
+    }
+  },
+  "packages/ui/src/primitives/Badge.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 8
+    }
+  },
+  "packages/ui/src/primitives/Button.tsx": {
+    "ds/no-forward-ref": {
+      "count": 1
+    },
+    "ds/no-literal-style-value": {
+      "count": 2
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 4
+    }
+  },
+  "packages/ui/src/primitives/Card.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 4
+    },
+    "ds/no-literal-style-value": {
+      "count": 2
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 12
+    },
+    "react-hooks/refs": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/primitives/Choice.tsx": {
+    "ds/no-forward-ref": {
+      "count": 3
+    },
+    "ds/no-literal-style-value": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/primitives/Editorial.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 1
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 2
+    },
+    "ds/no-literal-style-value": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 5
+    }
+  },
+  "packages/ui/src/primitives/Input.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 1
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 1
+    },
+    "ds/no-forward-ref": {
+      "count": 2
+    },
+    "ds/no-literal-style-value": {
+      "count": 2
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 2
+    }
+  },
+  "packages/ui/src/primitives/MediaCard.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 1
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 3
+    },
+    "ds/no-literal-style-value": {
+      "count": 3
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 7
+    }
+  },
+  "packages/ui/src/primitives/Misc.tsx": {
+    "ds/no-literal-style-value": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 3
+    }
+  },
+  "packages/ui/src/primitives/PanelToggleButton.tsx": {
+    "ds/no-forward-ref": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 4
+    }
+  },
+  "packages/ui/src/shell.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 35
+    },
+    "ds/no-boolean-string-data-attr": {
+      "count": 1
+    },
+    "jsdoc/require-jsdoc": {
+      "count": 8
+    },
+    "jsx-a11y/interactive-supports-focus": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "packages/ui/stories/gallery/Gallery.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 26
+    },
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 6
+    },
+    "ds/no-literal-style-value": {
+      "count": 26
+    },
+    "ds/no-magic-ms": {
+      "count": 1
+    },
+    "jsx-a11y/label-has-associated-control": {
+      "count": 10
+    }
+  },
+  "packages/ui/stories/helpers/Matrix.tsx": {
+    "better-tailwindcss/no-unknown-classes": {
+      "count": 3
+    }
+  }
+}
