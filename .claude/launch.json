@@ -2,10 +2,13 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "ds-gallery",
+      "name": "storybook",
       "runtimeExecutable": "sh",
-      "runtimeArgs": ["-c", "pnpm --dir apps/ds-gallery exec vite --port ${PORT:-5186} --strictPort"],
-      "port": 5186,
+      "runtimeArgs": [
+        "-c",
+        "pnpm --filter @jhleeweb/squircle-design-system exec storybook dev -p ${PORT:-6006} --no-open"
+      ],
+      "port": 6006,
       "autoPort": true
     }
   ]

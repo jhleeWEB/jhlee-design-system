@@ -1,0 +1,16 @@
+/* Storybook 의 Tailwind 진입. 소비 앱의 `ds.css` 와 같은 세 줄이고 이유도 같다 — 이 화면이 다른 앱과 **같은 기준선**에서
+   서야 카탈로그가 대표성을 갖는다. preflight 를 빼는 이유는 theme.css 머리 주석에 있다(tokens.css 의 요소 규칙이 레이어 안 규칙을 이긴다). */
+@import "tailwindcss/theme.css" layer(theme);
+@import "../src/theme.css"; /* `@source "./"` 로 src/ 를 자기 등록한다 */
+@import "tailwindcss/utilities.css" source(none);
+
+/* 페이지 스토리(옛 갤러리)와 이 디렉터리의 데코레이터가 쓰는 클래스도 굽는다. */
+@source "../stories";
+@source "./";
+
+/* 스토리 바깥의 바닥 — 제품에서 카드가 떠 있는 면(`--chrome-bg`)이다. Storybook 기본 흰 바닥이면 다크에서 크롬만 검고
+   바닥은 희어서 소비 앱과 다른 그림이 된다. 캔버스는 여기 없다(캔버스는 스토리 안 웰이 자기 색을 가진다). */
+body {
+  background: var(--chrome-bg);
+  color: var(--chrome-ink);
+}
