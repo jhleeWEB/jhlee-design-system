@@ -1,3 +1,4 @@
+"use client";
 import { Children, cloneElement, createContext, forwardRef, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState, type ComponentPropsWithoutRef, type ReactElement, type ReactNode, type Ref, type RefObject } from "react";
 import { Accordion as Radix } from "radix-ui";
 

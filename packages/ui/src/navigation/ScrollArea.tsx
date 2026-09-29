@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useEffect, useRef, useState, type ComponentPropsWithoutRef, type ComponentPropsWithRef, type PointerEvent, type Ref } from "react";
 import { ScrollArea as Radix } from "radix-ui";
 

@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { cn } from "./cn";
 import { useDesignSystem } from "./design-system";

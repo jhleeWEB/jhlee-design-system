@@ -1,3 +1,4 @@
+"use client";
 import { cn, cva, type VariantProps } from "../cn";
 
 /* 내용 카드 — 썸네일 + 제목 + 메타 + 조치.

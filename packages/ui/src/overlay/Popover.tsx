@@ -1,3 +1,4 @@
+"use client";
 import { Popover as Radix, Slot } from "radix-ui";
 
 import { cn } from "../cn";

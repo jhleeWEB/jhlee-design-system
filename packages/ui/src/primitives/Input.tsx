@@ -1,3 +1,4 @@
+"use client";
 import { forwardRef, useState } from "react";
 
 import { cn, cva, type VariantProps } from "../cn";

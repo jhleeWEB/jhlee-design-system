@@ -1,0 +1,49 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm typecheck
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm test
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm build
+      - name: 패키지 계약 — publint · attw · pack 내용
+        working-directory: packages/ui
+        run: |
+          pnpm exec publint --strict
+          # attw --pack 은 npm pack 을 써서 pnpm 의 publishConfig.exports 치환을 못 받는다 — pnpm 이 만든 tarball 을 직접 검사한다
+          pnpm pack --pack-destination /tmp/pack
+          pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics   # CSS 서브패스는 타입 해석 대상이 아니다
+          tar -tzf /tmp/pack/*.tgz | tee /tmp/pack/list.txt
+          for f in package/dist/index.js package/dist/index.d.ts package/dist/canvas-metrics.js package/dist/theme.css package/dist/tokens.css package/dist/shell.css package/dist/canvas.css; do
+            grep -qx "$f" /tmp/pack/list.txt || { echo "missing $f"; exit 1; }
+          done
+          ! grep -q '__tests__' /tmp/pack/list.txt
+          ! grep -q 'package/src/' /tmp/pack/list.txt
+  pr-title:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR 제목 = squash 커밋 제목 = 버전 입력 (Conventional Commits)
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "$TITLE" | grep -Eq '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9-]+\))?!?: .+' \
+            || { echo "PR 제목이 Conventional Commits 형식(type(scope)!: 한글 설명)이 아니다: $TITLE"; exit 1; }

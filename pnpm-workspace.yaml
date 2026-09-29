@@ -1,0 +1,4 @@
+# 워크스페이스 선언. 패키지는 packages/*, 갤러리(작업대)는 apps/*.
+packages:
+  - "apps/*"
+  - "packages/*"

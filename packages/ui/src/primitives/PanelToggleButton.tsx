@@ -1,3 +1,4 @@
+"use client";
 import { forwardRef } from "react";
 import { LuMaximize2, LuMinimize2 } from "react-icons/lu";
 import { cn } from "../cn";

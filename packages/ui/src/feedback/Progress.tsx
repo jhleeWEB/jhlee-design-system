@@ -1,3 +1,4 @@
+"use client";
 import { Progress as RadixProgress } from "radix-ui";
 
 import { cn, cva, type VariantProps } from "../cn";

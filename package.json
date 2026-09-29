@@ -1,0 +1,27 @@
+{
+  "name": "squircle-design-system",
+  "version": "0.0.0-managed",
+  "private": true,
+  "type": "module",
+  "description": "Squircle Design System 워크스페이스 루트 — 패키지 @jhleeweb/squircle-design-system 과 갤러리. 버전은 semantic-release 가 관리한다.",
+  "packageManager": "pnpm@10.11.0",
+  "engines": {
+    "node": ">=24",
+    "pnpm": ">=10"
+  },
+  "scripts": {
+    "build": "pnpm --filter @jhleeweb/squircle-design-system build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "verify": "pnpm typecheck && pnpm test && pnpm build",
+    "gallery": "pnpm --filter @buildos/ds-gallery dev",
+    "release": "semantic-release"
+  },
+  "devDependencies": {
+    "@semantic-release/exec": "^7.1.0",
+    "conventional-changelog-conventionalcommits": "^10.4.0",
+    "semantic-release": "^25.0.9",
+    "typescript": "^5",
+    "vite": "^8.0.16"
+  }
+}

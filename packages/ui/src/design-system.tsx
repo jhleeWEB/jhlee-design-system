@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useContext, type ReactNode } from "react";
 
 /* Tailwind를 아직 쓰지 않는 스튜디오는 기존 셸을 유지한다. 제품이 명시적으로 선택하면
