@@ -8,5 +8,7 @@
     "allowJs": false,
     "esModuleInterop": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  // 스토리는 tsconfig.stories.json 이 엄격 프로필로 검사한다 — 여기 섞이면 느슨한 프로필에 storybook 타입까지 끌려 들어온다.
+  "exclude": ["src/**/*.stories.tsx"]
 }

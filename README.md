@@ -32,8 +32,10 @@ import { Button, Card, ToastProvider } from "@jhleeweb/squircle-design-system";
 ## 개발
 
 ```bash
-pnpm install && pnpm gallery     # 작업대 http://localhost:5186
+pnpm install && pnpm storybook   # 카탈로그 http://localhost:6006 (Pages/Workbench 가 제품 화면 복제, Pages/Gallery 가 컴포넌트 명세)
 pnpm verify                      # typecheck + test + build
+pnpm --filter @jhleeweb/squircle-design-system test:stories   # 스토리를 Chromium 에서 play + axe
+pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 기준선 갱신은 vrt:update(도커)만
 ```
 
 ## 발행

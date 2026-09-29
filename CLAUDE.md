@@ -21,10 +21,15 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              @source "./" 자기 등록, 컴포넌트 CSS(@import)
   src/{primitives,overlay,feedback,navigation,data}/   DS 컴포넌트(Tailwind 유틸 + cva + Radix)
   src/{shell,controls,design-system}.tsx               레거시 3열 작업대 셸·컨트롤(향후 ./legacy 서브패스로 격리)
-  src/__tests__/             vitest + jsdom 동작·계약 테스트(15 스펙 104 it)
+  src/**/*.stories.tsx       컴포넌트 옆 스토리 — 3스토리 계약(Default · Variants · ThemeContrast, `stories-contract.spec` 이 검사, 본보기 Button)
+  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트, 16 스펙)
+  .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
+  stories/                   페이지 스토리 — `Pages/Gallery`(옛 apps/ds-gallery 통째, Light·Dark) · `Pages/Workbench`(제품 화면 복제) · ThemePair · Matrix
+  vrt/                       Playwright 시각 회귀 — storybook-static/index.json 의 `vrt` 태그 스토리 × 라이트/다크. 기준선은 도커로만(scripts/vrt-update.sh)
+  tsconfig.stories.json      stories·.storybook·vrt 의 엄격 검사. 빌드·app-profile 밖에 두어 d.ts 로 새지 않게 한다
   tsdown.config.ts           unbundle ESM + d.ts + CSS 복사. banner 로 "use client" 를 붙이지 않는다 — 파일 첫 줄에 직접 둔다
 packages/typescript-config/  tsconfig 프리셋(@buildos/typescript-config, 발행 안 함)
-apps/ds-gallery/             작업대 — 컴포넌트 전부를 세워 두고 캔버스/크롬 경계와 다크를 눈으로 확인(포트 5186). Storybook 으로 이관 예정
+scripts/vrt-update.sh        VRT 기준선 갱신 — CI 와 같은 playwright:v1.63.0-noble 이미지 안에서만(macOS PNG 는 기준선이 아니다)
 docs/architecture/design-system-patterns.md   React 합성·접근성 계약(원 저장소 #1246)
 docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진행은 이 레포 이슈로 관리한다
 ```
@@ -58,11 +63,14 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 
 ```bash
 pnpm install           # pnpm 10, Node 24
-pnpm gallery           # 작업대 (5186)
-pnpm typecheck         # 엄격 프로필 + app 프로필
-pnpm test              # vitest (jsdom)
+pnpm storybook         # 카탈로그 (6006) — Pages/Workbench · Pages/Gallery 로 캔버스/크롬 경계와 다크를 눈으로 확인
+pnpm storybook:build   # storybook-static (--test) — VRT 와 CI storybook job 의 입력
+pnpm typecheck         # 엄격 프로필 + app 프로필 + stories 프로필
+pnpm test              # vitest unit 프로젝트(jsdom)
 pnpm build             # tsdown → packages/ui/dist
 pnpm verify            # typecheck + test + build — PR 전 한 번
+pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(Phase A 는 'todo')
+pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
 cd packages/ui && pnpm exec publint --strict && pnpm exec attw --pack . --profile esm-only   # 패키지 계약
 ```
 
@@ -72,5 +80,5 @@ cd packages/ui && pnpm exec publint --strict && pnpm exec attw --pack . --profil
 
 ## 공유 패키지 — 워크스페이스는 소스, 소비자는 dist
 
-`packages/ui/package.json` 의 `exports` 는 `src/*.ts` 를 가리키고(갤러리·Storybook 이 HMR 로 소스를 본다),
+`packages/ui/package.json` 의 `exports` 는 `src/*.ts` 를 가리키고(Storybook 이 HMR 로 소스를 본다),
 `publishConfig.exports` 가 `dist/*` 를 가리킨다 — pnpm 이 발행 시 바꿔 끼운다. `"./*"` 와일드카드는 없다: 서브패스는 명시된 것뿐이다.

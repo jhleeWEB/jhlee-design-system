@@ -1,5 +1,4 @@
-import { StrictMode, useState } from "react";
-import { createRoot } from "react-dom/client";
+import { useState } from "react";
 
 import {
   Accordion,
@@ -73,11 +72,13 @@ import {
   Tr,
   usePanelLayout,
   useToast,
-} from "@jhleeweb/squircle-design-system";
+} from "../../src";
 
-import "./ds.css";
-
-/* 디자인 시스템 갤러리 (#1198).
+/* 디자인 시스템 갤러리 (#1198) — `apps/ds-gallery/src/main.tsx` 를 통째 옮긴 것(계획 §2.5-e, #6).
+ * 화면 내용·문자열은 그대로다. 달라진 것은 셋뿐: 진입점(createRoot)·CSS import 가 빠지고 Storybook preview 가 맡는다,
+ * `document.documentElement` 를 직접 만지던 다크 토글이 addon-themes 툴바 전역으로 대체됐다(그래서 맥락 줄의 Dark 버튼이 없다),
+ * 작업대 패널 접힘의 `storageKey` 를 뺐다 — 스토리는 결정론적이어야 VRT 기준선이 성립하고, 브라우저에 남은 상태가 스크린샷을 바꾸면 안 된다.
+ * Phase D 에서 아래 `<Spec>` 17개를 컴포넌트별 stories 로 나누고 나면 `Pages/Gallery` 는 지운다(`Pages/Workbench` 는 영구).
  *
  * 맨 위는 **제품 화면의 복제**다 — 토큰과 컴포넌트가 실제 배치에서 어떻게 서는지가
  * 컴포넌트 목록보다 먼저 보여야 한다. 그 아래가 개별 컴포넌트 명세다.
@@ -208,12 +209,11 @@ function MassingView() {
 }
 
 /* ── 제품 화면 복제 ────────────────────────────────────────────────────────── */
-function Workbench({ dark, onTheme }: { dark: boolean; onTheme: (v: boolean) => void }) {
+export function Workbench() {
   const [view, setView] = useState<"plan" | "model">("plan");
   const [deck, setDeck] = useState(true);
-  /* 접힘 상태는 화면 편의이지 데이터가 아니다 — localStorage 에 남기고, 읽기/쓰기 실패는
-     훅이 삼킨다(사생활 보호 창에서는 접근 자체가 던진다). */
-  const panels = usePanelLayout(PANELS, { storageKey: "buildos.ds-gallery.panels" });
+  /* 제품에서는 접힘 상태를 localStorage 에 남기지만(`storageKey`), 스토리에서는 뺀다 — 머리 주석 참조. */
+  const panels = usePanelLayout(PANELS);
 
   return (
     <div className="flex h-[640px] min-h-0 flex-col bg-chrome">
@@ -259,9 +259,6 @@ function Workbench({ dark, onTheme }: { dark: boolean; onTheme: (v: boolean) => 
               Focus canvas
             </Button>
           )}
-          <Button variant="ghost" size="sm" aria-pressed={dark} onClick={() => onTheme(!dark)}>
-            {dark ? "Light" : "Dark"}
-          </Button>
         </span>
       </div>
 
@@ -489,8 +486,7 @@ function ToastRow() {
   );
 }
 
-function Gallery() {
-  const [dark, setDark] = useState(false);
+export function Gallery() {
   const [loading, setLoading] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [drawer, setDrawer] = useState(false);
@@ -499,14 +495,9 @@ function Gallery() {
   const [picked, setPicked] = useState<string | undefined>("B");
   const stack = usePanelLayout(STACK_PANELS, { initial: { notes: true } });
 
-  function setTheme(next: boolean) {
-    setDark(next);
-    document.documentElement.setAttribute("data-theme", next ? "dark" : "light");
-  }
-
   return (
     <div className="min-h-dvh bg-chrome font-sans text-body text-ink">
-      <Workbench dark={dark} onTheme={setTheme} />
+      <Workbench />
 
       <div className="mx-auto max-w-[1180px] px-4 pb-16">
         <Card className="mt-6">
@@ -898,15 +889,11 @@ function Gallery() {
   );
 }
 
-const root = document.getElementById("root");
-if (root) {
-  createRoot(root).render(
-    <StrictMode>
-      <TooltipProvider>
-        <ToastProvider position="bottom-right">
-          <Gallery />
-        </ToastProvider>
-      </TooltipProvider>
-    </StrictMode>,
+/* 원 갤러리의 루트 — 툴팁·토스트 프로바이더는 앱 최상단에 한 번 있어야 하고, 스토리마다 그 자리를 이것이 맡는다. */
+export function GalleryProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <TooltipProvider>
+      <ToastProvider position="bottom-right">{children}</ToastProvider>
+    </TooltipProvider>
   );
 }
