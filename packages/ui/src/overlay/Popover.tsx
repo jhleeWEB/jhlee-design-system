@@ -34,16 +34,16 @@ export function PopoverContent({
         data-slot="popover"
         sideOffset={sideOffset}
         className={cn(
-          "z-popover w-(--radix-popover-trigger-width) min-w-[180px] max-w-[min(360px,calc(100vw-24px))]",
-          "rounded-float border border-line p-5 shadow-pop",
-          "text-body text-ink animate-in-pop focus-visible:outline-none",
-          onCanvas ? "on-canvas" : "bg-surface",
+          "z-popover w-(--radix-popover-trigger-width) min-w-popover-min max-w-popover-fluid",
+          "rounded-lg border border-border p-5 shadow-pop",
+          "text-body text-foreground animate-in-pop focus-visible:outline-none",
+          onCanvas ? "on-canvas" : "bg-card",
           className,
         )}
         {...rest}
       >
         {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : children}
-        {arrow ? <Radix.Arrow className="fill-surface stroke-line" width={10} height={5} /> : null}
+        {arrow ? <Radix.Arrow className="fill-card stroke-border" width={10} height={5} /> : null}
       </Radix.Content>
     </Radix.Portal>
   );

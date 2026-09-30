@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/* 토큰 생성기(계획 §2.2, #15) — `tokens/**\/*.json`(DTCG) → `src/generated/{tokens.css, theme.tailwind.css, legacy.css, tokens.ts, ladders.ts}`.
+/* 토큰 생성기(계획 §2.2, #15) — `tokens/**\/*.json`(DTCG) → `src/generated/{tokens.css, theme.tailwind.css, legacy.css, tokens.ts, ladders.ts}`
+ * + `eslint/legacy-classes.json`(옛 유틸 이름 → 새 이름 코드모드 표, B5 #22 — 루트 eslint.config.js 가 no-restricted-classes 의 restrict 로 읽는다).
  *
  *   node tokens/build.mjs           생성물을 쓴다
  *   node tokens/build.mjs --check   쓰지 않고 «커밋된 생성물이 최신인가» 만 본다 — CI 와 pnpm verify 가 이것을 돈다
@@ -15,6 +16,7 @@ import { fileURLToPath } from "node:url";
 import StyleDictionary from "style-dictionary";
 
 import { cssVars } from "./formats/css-vars.mjs";
+import { legacyClassRestrictions, legacyRenames } from "./legacy-map.mjs";
 import { declarations } from "./formats/shared.mjs";
 import { tailwindTheme } from "./formats/tailwind-theme.mjs";
 import { tsConsts } from "./formats/ts-consts.mjs";
@@ -22,10 +24,11 @@ import { readTokenSources, validateTokenSources } from "./schema.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = join(here, "..", "src", "generated");
+const ESLINT_OUT = join(here, "..", "eslint", "legacy-classes.json");
 const check = process.argv.includes("--check");
 
 const sources = readTokenSources(here);
-const { errors, tokens: flat, dark } = validateTokenSources(sources);
+const { errors, tokens: flat, dark, renames } = validateTokenSources(sources);
 if (errors.length) {
   console.error(`tokens: 정본 검사 실패 ${errors.length}건\n${errors.map(e => ` - ${e}`).join("\n")}`);
   process.exit(1);
@@ -37,7 +40,8 @@ function nest(list) {
   for (const t of list) {
     let node = root;
     for (const key of t.path.slice(0, -1)) node = node[key] ??= {};
-    node[t.path.at(-1)] = { $type: t.type, $value: t.value, $extensions: { sds: { ...t.sds, file: t.file, order: t.order } } };
+    // $deprecated 도 싣는다 — 포맷이 `/* @deprecated */`·JSDoc @deprecated 를 낼 근거다(#22 에서 빠져 있던 것을 실측으로 잡았다).
+    node[t.path.at(-1)] = { $type: t.type, $value: t.value, $extensions: { sds: { ...t.sds, file: t.file, order: t.order } }, ...(t.deprecated !== undefined ? { $deprecated: t.deprecated } : {}) };
   }
   return root;
 }
@@ -70,17 +74,20 @@ const sd = new StyleDictionary({
 });
 await sd.hasInitialized;
 // formatPlatform 은 쓰지 않고 문자열만 돌려준다(4.4 실측: destination 에 buildPath 가 이미 붙어 온다) — --check 가 그것을 커밋본과 비교한다.
-const outputs = (await sd.formatPlatform("generated")).map(({ destination, output }) => ({ path: destination, name: relative(OUT_DIR, destination), output }));
+const outputs = (await sd.formatPlatform("generated")).map(({ destination, output }) => ({ path: destination, name: `src/generated/${relative(OUT_DIR, destination)}`, output }));
+// 코드모드 표는 SD 를 거치지 않는다 — 편 토큰과 renames 만 있으면 된다. JSON 은 사람이 diff 로 읽으므로 2칸 들여쓰기로.
+outputs.push({ path: ESLINT_OUT, name: "eslint/legacy-classes.json", output: `${JSON.stringify(legacyClassRestrictions(legacyRenames(flat, renames)), null, 2)}\n` });
 
 if (check) {
   const stale = outputs.filter(({ path, output }) => !existsSync(path) || readFileSync(path, "utf8") !== output).map(o => o.name);
   if (stale.length) {
-    console.error(`tokens: 생성물이 정본과 다르다 — pnpm tokens:build 로 다시 만들고 함께 커밋한다\n${stale.map(s => ` - src/generated/${s}`).join("\n")}`);
+    console.error(`tokens: 생성물이 정본과 다르다 — pnpm tokens:build 로 다시 만들고 함께 커밋한다\n${stale.map(s => ` - ${s}`).join("\n")}`);
     process.exit(1);
   }
   console.log(`tokens: 생성물 ${outputs.length}개가 최신이다`);
 } else {
   mkdirSync(OUT_DIR, { recursive: true });
+  mkdirSync(dirname(ESLINT_OUT), { recursive: true });
   for (const { path, output } of outputs) writeFileSync(path, output);
-  console.log(`tokens: ${outputs.map(o => `src/generated/${o.name}`).join(" · ")}`);
+  console.log(`tokens: ${outputs.map(o => o.name).join(" · ")}`);
 }

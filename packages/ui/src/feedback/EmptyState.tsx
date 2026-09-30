@@ -31,12 +31,12 @@ export function EmptyState({
       )}
       {...rest}
     >
-      {icon ? <div className="text-disabled [&_svg]:size-16">{icon}</div> : null}
-      <div className={cn("font-semibold text-ink", size === "compact" ? "text-body" : "text-title")}>
+      {icon ? <div className="text-foreground-disabled [&_svg]:size-16">{icon}</div> : null}
+      <div className={cn("font-semibold text-foreground", size === "compact" ? "text-body" : "text-title")}>
         {title}
       </div>
       {description ? (
-        <p className="max-w-[46ch] text-body leading-relaxed text-muted">{description}</p>
+        <p className="max-w-[46ch] text-body leading-relaxed text-muted-foreground">{description}</p>
       ) : null}
       {action ? <div className="mt-2">{action}</div> : null}
     </div>

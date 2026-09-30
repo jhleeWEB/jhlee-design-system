@@ -4,7 +4,8 @@ import { Toast as RadixToast } from "radix-ui";
 import { LuX } from "react-icons/lu";
 
 import { cn, type VariantProps } from "../cn";
-import { toastVariants } from "./Toast.variants";
+import { normalizeTone, type ToneInput } from "../lib/tone";
+import { toastVariants, type ToastTone } from "./Toast.variants";
 import { Button } from "../primitives/Button";
 import { MOTION } from "../generated/tokens";
 
@@ -20,7 +21,12 @@ import { MOTION } from "../generated/tokens";
  * 때문이다. 우리가 얹는 것은 큐와 외형뿐이다. */
 
 
-export interface ToastOptions extends VariantProps<typeof toastVariants> {
+export interface ToastOptions extends Omit<VariantProps<typeof toastVariants>, "tone"> {
+  /**
+   * 톤 — `neutral`(기본) · `success` · `warning` · `destructive`.
+   * @deprecated 옛 키 `ok` · `warn` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
+   */
+  tone?: ToneInput<ToastTone> | null | undefined;
   title: React.ReactNode;
   description?: React.ReactNode;
   /** 본문 아래의 되돌리기 등. `altText` 는 스크린리더가 읽는 대체 문구다. */
@@ -130,12 +136,12 @@ export function ToastProvider({
               if (open) return;
               dismiss(item.id);
             }}
-            className={cn(toastVariants({ tone: item.tone }))}
+            className={cn(toastVariants({ tone: normalizeTone(item.tone) }))}
           >
             <div className="min-w-0 flex-1 self-center [overflow-wrap:anywhere]">
               <RadixToast.Title className="font-semibold">{item.title}</RadixToast.Title>
               {item.description ? (
-                <RadixToast.Description className="m-0 mt-1 leading-relaxed text-muted">
+                <RadixToast.Description className="m-0 mt-1 leading-relaxed text-muted-foreground">
                   {item.description}
                 </RadixToast.Description>
               ) : null}

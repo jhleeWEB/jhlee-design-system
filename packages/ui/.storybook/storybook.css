@@ -11,6 +11,6 @@
 /* 스토리 바깥의 바닥 — 제품에서 카드가 떠 있는 면(`--chrome-bg`)이다. Storybook 기본 흰 바닥이면 다크에서 크롬만 검고
    바닥은 희어서 소비 앱과 다른 그림이 된다. 캔버스는 여기 없다(캔버스는 스토리 안 웰이 자기 색을 가진다). */
 body {
-  background: var(--chrome-bg);
-  color: var(--chrome-ink);
+  background: var(--chrome-background);
+  color: var(--chrome-foreground);
 }

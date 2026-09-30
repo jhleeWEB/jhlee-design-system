@@ -19,7 +19,7 @@ export interface ConfirmDialogProps extends Omit<React.ComponentPropsWithRef<typ
   /** 실행 버튼의 문구. 「OK」가 아니라 **무슨 일이 일어나는지**를 적는다 — "Delete parcel". */
   confirmLabel: string;
   cancelLabel?: string;
-  /** 파괴적이면 `danger`. 기본값이 그것인 이유는 이 컴포넌트의 용도 자체가 그렇기 때문이다. */
+  /** 파괴적이면 `destructive`. 기본값이 그것인 이유는 이 컴포넌트의 용도 자체가 그렇기 때문이다. */
   tone?: ButtonProps["tone"];
   busy?: boolean | undefined;
   /**
@@ -43,7 +43,7 @@ export function ConfirmDialog({
   description,
   confirmLabel,
   cancelLabel = "Cancel",
-  tone = "danger",
+  tone = "destructive",
   busy,
   secondaryAction,
   onConfirm,
@@ -63,20 +63,21 @@ export function ConfirmDialog({
           data-slot="confirm-dialog"
           className={cn(
             "fixed left-1/2 top-1/2 z-modal -translate-x-1/2 -translate-y-1/2",
-            "flex max-h-[calc(100dvh-32px)] flex-col overflow-hidden [overflow-wrap:anywhere]",
-            // 세 갈래 확인은 일반 모달 폭을 쓰고, 좁은 화면의 줄바꿈은 공용 바닥이 맡는다.
-            secondaryAction ? "w-[min(560px,calc(100vw-24px))]" : "w-[min(380px,calc(100vw-24px))]",
-            "rounded-modal border border-line bg-surface shadow-modal",
-            "text-body text-ink animate-in-pop focus-visible:outline-none",
+            "flex max-h-dialog-fluid flex-col overflow-hidden [overflow-wrap:anywhere]",
+            // 세 갈래 확인은 일반 모달 폭을 쓰고, 좁은 화면의 줄바꿈은 공용 바닥이 맡는다. 유동 폭 + 상한 = 옛 min(폭, 100vw-24px).
+            "w-dialog-fluid",
+            secondaryAction ? "max-w-dialog-md" : "max-w-dialog-sm",
+            "rounded-xl border border-border bg-card shadow-modal",
+            "text-body text-foreground animate-in-pop focus-visible:outline-none",
             className,
           )}
         >
           <ModalBody className="pb-4 pt-5">
-            <Radix.Title className="text-title font-semibold leading-snug text-ink">
+            <Radix.Title className="text-title font-semibold leading-snug text-foreground">
               {title}
             </Radix.Title>
             {description ? (
-              <Radix.Description id={descriptionId} className="mt-2 leading-relaxed text-muted">
+              <Radix.Description id={descriptionId} className="mt-2 leading-relaxed text-muted-foreground">
                 {description}
               </Radix.Description>
             ) : null}

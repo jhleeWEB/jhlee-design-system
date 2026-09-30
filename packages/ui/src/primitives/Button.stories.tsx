@@ -10,7 +10,7 @@ import { Button } from "./Button";
  *  - Variants: 전 조합 격자. 매니페스트 입력이 아니다(`!manifest`).
  *  - ThemeContrast: 같은 args 를 라이트·다크 서브트리에 나란히. */
 const variantValues = ["solid", "outline", "ghost", "link"] as const;
-const toneValues = ["neutral", "accent", "danger"] as const;
+const toneValues = ["neutral", "primary", "destructive"] as const;
 const sizeValues = ["sm", "md", "lg"] as const;
 
 const meta = {
@@ -28,7 +28,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: { variant: "solid", tone: "accent" },
+  args: { variant: "solid", tone: "primary" },
   play: async ({ canvas }) => {
     const button = canvas.getByRole("button", { name: "Generate" });
     await expect(button).toBeEnabled();
@@ -58,12 +58,12 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  args: { variant: "solid", tone: "accent" },
+  args: { variant: "solid", tone: "primary" },
   render: args => (
     <ThemePair>
       <Button {...args} />
       <Button {...args} variant="outline" tone="neutral" />
-      <Button {...args} variant="ghost" tone="danger" />
+      <Button {...args} variant="ghost" tone="destructive" />
     </ThemePair>
   ),
 };

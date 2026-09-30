@@ -1,0 +1,182 @@
+[
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-accent-hover((?:/\\d+)?)$",
+    "fix": "$1$2-primary-hover$3",
+    "message": "`accent-hover` was renamed to `primary-hover` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-accent-track((?:/\\d+)?)$",
+    "fix": "$1$2-primary-track$3",
+    "message": "`accent-track` was renamed to `primary-track` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-danger-hover((?:/\\d+)?)$",
+    "fix": "$1$2-destructive-hover$3",
+    "message": "`danger-hover` was renamed to `destructive-hover` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-accent-soft((?:/\\d+)?)$",
+    "fix": "$1$2-accent$3",
+    "message": "`accent-soft` was renamed to `accent` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-danger-line((?:/\\d+)?)$",
+    "fix": "$1$2-destructive-line$3",
+    "message": "`danger-line` was renamed to `destructive-line` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-danger-soft((?:/\\d+)?)$",
+    "fix": "$1$2-destructive-soft$3",
+    "message": "`danger-soft` was renamed to `destructive-soft` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-line-strong((?:/\\d+)?)$",
+    "fix": "$1$2-border-strong$3",
+    "message": "`line-strong` was renamed to `border-strong` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-tooltip-ink((?:/\\d+)?)$",
+    "fix": "$1$2-tooltip-foreground$3",
+    "message": "`tooltip-ink` was renamed to `tooltip-foreground` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-accent-ink((?:/\\d+)?)$",
+    "fix": "$1$2-primary-foreground$3",
+    "message": "`accent-ink` was renamed to `primary-foreground` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-danger-ink((?:/\\d+)?)$",
+    "fix": "$1$2-destructive-foreground$3",
+    "message": "`danger-ink` was renamed to `destructive-foreground` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-warn-hover((?:/\\d+)?)$",
+    "fix": "$1$2-warning-hover$3",
+    "message": "`warn-hover` was renamed to `warning-hover` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-surface-2((?:/\\d+)?)$",
+    "fix": "$1$2-muted$3",
+    "message": "`surface-2` was renamed to `muted` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-surface-3((?:/\\d+)?)$",
+    "fix": "$1$2-secondary$3",
+    "message": "`surface-3` was renamed to `secondary` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-warn-line((?:/\\d+)?)$",
+    "fix": "$1$2-warning-line$3",
+    "message": "`warn-line` was renamed to `warning-line` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-warn-soft((?:/\\d+)?)$",
+    "fix": "$1$2-warning-soft$3",
+    "message": "`warn-soft` was renamed to `warning-soft` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-disabled((?:/\\d+)?)$",
+    "fix": "$1$2-foreground-disabled$3",
+    "message": "`disabled` was renamed to `foreground-disabled` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-ok-hover((?:/\\d+)?)$",
+    "fix": "$1$2-success-hover$3",
+    "message": "`ok-hover` was renamed to `success-hover` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-warn-ink((?:/\\d+)?)$",
+    "fix": "$1$2-warning-foreground$3",
+    "message": "`warn-ink` was renamed to `warning-foreground` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-ok-line((?:/\\d+)?)$",
+    "fix": "$1$2-success-line$3",
+    "message": "`ok-line` was renamed to `success-line` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-ok-soft((?:/\\d+)?)$",
+    "fix": "$1$2-success-soft$3",
+    "message": "`ok-soft` was renamed to `success-soft` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-overlay((?:/\\d+)?)$",
+    "fix": "$1$2-popover$3",
+    "message": "`overlay` was renamed to `popover` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-surface((?:/\\d+)?)$",
+    "fix": "$1$2-card$3",
+    "message": "`surface` was renamed to `card` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-chrome((?:/\\d+)?)$",
+    "fix": "$1$2-background$3",
+    "message": "`chrome` was renamed to `background` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-danger((?:/\\d+)?)$",
+    "fix": "$1$2-destructive$3",
+    "message": "`danger` was renamed to `destructive` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-ok-ink((?:/\\d+)?)$",
+    "fix": "$1$2-success-foreground$3",
+    "message": "`ok-ink` was renamed to `success-foreground` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-focus((?:/\\d+)?)$",
+    "fix": "$1$2-ring$3",
+    "message": "`focus` was renamed to `ring` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-ink-2((?:/\\d+)?)$",
+    "fix": "$1$2-foreground-2$3",
+    "message": "`ink-2` was renamed to `foreground-2` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-line((?:/\\d+)?)$",
+    "fix": "$1$2-border$3",
+    "message": "`line` was renamed to `border` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-warn((?:/\\d+)?)$",
+    "fix": "$1$2-warning$3",
+    "message": "`warn` was renamed to `warning` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-ink((?:/\\d+)?)$",
+    "fix": "$1$2-foreground$3",
+    "message": "`ink` was renamed to `foreground` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow)-ok((?:/\\d+)?)$",
+    "fix": "$1$2-success$3",
+    "message": "`ok` was renamed to `success` — shadcn vocabulary (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(rounded(?:-(?:t|r|b|l|s|e|tl|tr|bl|br|ss|se|es|ee))?)-control$",
+    "fix": "$1$2-md",
+    "message": "`rounded-control` was renamed to `rounded-md` — radius is sm/md/lg/xl (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(rounded(?:-(?:t|r|b|l|s|e|tl|tr|bl|br|ss|se|es|ee))?)-float$",
+    "fix": "$1$2-lg",
+    "message": "`rounded-float` was renamed to `rounded-lg` — radius is sm/md/lg/xl (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(rounded(?:-(?:t|r|b|l|s|e|tl|tr|bl|br|ss|se|es|ee))?)-modal$",
+    "fix": "$1$2-xl",
+    "message": "`rounded-modal` was renamed to `rounded-xl` — radius is sm/md/lg/xl (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(rounded(?:-(?:t|r|b|l|s|e|tl|tr|bl|br|ss|se|es|ee))?)-card$",
+    "fix": "$1$2-lg",
+    "message": "`rounded-card` was renamed to `rounded-lg` — radius is sm/md/lg/xl (#22); run eslint --fix."
+  },
+  {
+    "pattern": "^((?:[^\\s:]+:)*)(rounded(?:-(?:t|r|b|l|s|e|tl|tr|bl|br|ss|se|es|ee))?)-chip$",
+    "fix": "$1$2-sm",
+    "message": "`rounded-chip` was renamed to `rounded-sm` — radius is sm/md/lg/xl (#22); run eslint --fix."
+  }
+]

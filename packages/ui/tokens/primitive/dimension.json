@@ -28,6 +28,8 @@
     "hairline": { "$value": "1px", "$description": "패널 사이 — 여백이 아니라 선이 구조를 만든다(옛 --gap)." },
     "card-gap": { "$value": "12px", "$description": "카드 사이 — 참고 화면 실측(옛 --size-gap)." },
     "panel-inset": { "$value": "12px", "$description": "패널 안쪽 여백." },
-    "card-inset": { "$value": "16px", "$description": "카드 안쪽 여백 — 참고 화면 16–20px." }
+    "card-inset": { "$value": "16px", "$description": "카드 안쪽 여백 — 참고 화면 16–20px." },
+    "dialog-gutter-x": { "$value": "12px", "$description": "모달 · 팝오버가 뷰포트 좌우 가장자리에서 띄우는 여백 — 옛 w-[min(…,calc(100vw-24px))] 의 24 = 2 × 12(#22, theme.css 의 w-dialog-fluid)." },
+    "dialog-gutter-y": { "$value": "16px", "$description": "모달이 뷰포트 상하 가장자리에서 띄우는 여백 — 옛 max-h-[calc(100dvh-32px)] 의 32 = 2 × 16." }
   }
 }

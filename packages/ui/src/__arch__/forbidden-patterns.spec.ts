@@ -63,14 +63,11 @@ const PATTERNS: readonly Pattern[] = [
     kinds: ["ts", "tsx"],
     // 한 줄 안의 `[…]` 만 본다 — 여러 줄에 걸친 배열 리터럴을 클래스 대괄호로 오인하지 않게.
     find: file => matches(file.code, /\[[^\]\n]*\d+(?:\.\d+)?(?:px|rem|ms|s)\b[^\]\n]*\]/g),
+    // #22 가 오버레이의 `w-[min(560px,calc(100vw-24px))]` 류를 `w-dialog-fluid max-w-dialog-md`(손 @utility + --container-*)로 흡수해 24 → 5.
+    // 남은 다섯은 같은 값의 토큰이 없다(토스트 352px · 30px · 텍스트영역 56px · 아래쪽 서랍 280/460px) — Phase D 의 몫.
     baseline: {
       "feedback/Toast.tsx": 2,
-      "navigation/SegmentedControl.tsx": 1,
-      "overlay/AlertDialog.tsx": 3,
-      "overlay/Drawer.variants.ts": 8,
-      "overlay/DropdownMenu.tsx": 1,
-      "overlay/Modal.variants.ts": 7,
-      "overlay/Popover.tsx": 2,
+      "overlay/Drawer.variants.ts": 2,
       "primitives/Input.tsx": 1,
     },
   },
@@ -80,9 +77,8 @@ const PATTERNS: readonly Pattern[] = [
     kinds: ["ts", "tsx"],
     find: file => matches(file.code, /\b(?:duration|z|leading|font|tracking)-\d+\b|\brounded-\[/g),
     // #18 이 z-50 → z-scrim/z-modal/z-popover/z-toast/z-tooltip, z-1 → z-raised, duration-100/150/200 → duration-fast/base/slow 로 바꿔 24파일 → 3건.
-    // 남은 셋은 같은 값의 토큰이 없다(rounded-[6px] · duration-120 · leading-5) — Phase D 의 몫.
+    // #22 가 rounded-[6px] → rounded-sm(같은 6px). 남은 둘은 같은 값의 토큰이 없다(duration-120 · leading-5) — Phase D 의 몫.
     baseline: {
-      "navigation/SegmentedControl.tsx": 1,
       "primitives/MediaCard.variants.ts": 1,
       "primitives/Misc.tsx": 1,
     },
@@ -162,8 +158,8 @@ const PATTERNS: readonly Pattern[] = [
     why: "size/tone/variant/elevation 축을 삼항으로 가르면 축의 값 목록이 cva 정의와 따로 자란다 — 축은 `*.variants.ts` 의 cva 하나가 소유한다(계획 §2.3)",
     kinds: ["ts", "tsx"],
     find: file => matches(file.code, /\b(?:size|tone|variant|elevation)\s*===\s*["'][^"'\n]*["']\s*\?/g),
+    // Alert 의 `tone === "danger" ?` 는 #22 가 normalizeTone() 결과를 쓰면서 사라졌다.
     baseline: {
-      "feedback/Alert.tsx": 1,
       "feedback/EmptyState.tsx": 2,
       "navigation/SegmentedControl.tsx": 1,
       "primitives/Card.tsx": 1,
@@ -193,7 +189,8 @@ const PATTERNS: readonly Pattern[] = [
     why: "var(--ink) · var(--gap) · var(--size-gap) · var(--color-cool-500) 같은 옛 이름은 legacy.json 의 $deprecated alias 다 — 새 정본 이름(--chrome-* · --canvas-* · --palette-* · --space-* · --font-stack-*)을 쓴다. 옛 이름 제거는 major 이고 그때 이 기준선이 0 이어야 한다(#18)",
     kinds: ["ts", "tsx", "css"],
     find: file => matches(file.code, LEGACY_ALIAS_USE),
-    // tokens.css 의 body 바닥·글자색은 같은 값의 새 이름이 없다(chrome.bg · chrome.ink 는 값이 다르다) — B5 의 결정. canvas.css 는 폴백 사슬의 첫 고리다.
+    // tokens.css 의 body 바닥·글자색은 같은 값의 새 이름이 없다(chrome.background · chrome.foreground 는 값이 다르다) — B5(#22)는 값 불변이라 남겼고
+    // 크롬으로 옮기는 것(시각 변경)은 별도 결정이다. canvas.css 는 폴백 사슬의 첫 고리다.
     baseline: {
       "canvas.css": 2,
       "navigation/Sidebar.tsx": 1,
@@ -208,7 +205,7 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
     path: "primitives/__probe__.tsx",
     source: [
       'const a = cn("h-[36px] w-full", "duration-[140ms]");',
-      'const b = cva("min-w-[12rem] rounded-control");',
+      'const b = cva("min-w-[12rem] rounded-md");',
       "const c = [1, 2].map(n => n * 3);",
       'const d = "delay-[1.5s]";',
       "// h-[8px] 는 h-ctl 로 바꿨다",
@@ -220,7 +217,7 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
     source: [
       'const a = "transition duration-150 z-50 leading-5";',
       'const b = "font-600 tracking-1 rounded-[6px]";',
-      'const c = "duration-fast z-toast rounded-control font-semibold";',
+      'const c = "duration-fast z-toast rounded-md font-semibold";',
       "// z-50 은 z-toast 로",
     ].join("\n"),
     hits: ["duration-150", "z-50", "leading-5", "font-600", "tracking-1", "rounded-["],
@@ -230,7 +227,7 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
     source: [
       ":root { --radius-chip: 6px; --shadow-pop: 0 2px 6px rgb(0 0 0 / 0.1),",
       "  0 12px 28px rgb(0 0 0 / 0.1); }",
-      ".ds-x { padding: 10px 12px; border: 1px solid var(--chrome-line); width: 0px; gap: 0.5px; }",
+      ".ds-x { padding: 10px 12px; border: 1px solid var(--chrome-border); width: 0px; gap: 0.5px; }",
       "/* 16px 은 토큰으로 */",
       ".ds-y { width: calc(100% + 16px); }",
     ].join("\n"),
@@ -292,7 +289,7 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
     path: "primitives/__probe__.css",
     source: [
       ".ds-x { color: var(--ink); gap: var( --gap , 1px); background: var(--color-cool-500); }",
-      ".ds-y { color: var(--chrome-ink); border-color: var(--inkwell); width: var(--size-gap-2); }",
+      ".ds-y { color: var(--chrome-foreground); border-color: var(--inkwell); width: var(--size-gap-2); }",
       "/* var(--muted) 는 chrome-muted 로 */",
     ].join("\n"),
     hits: ["var(--ink)", "var( --gap ,", "var(--color-cool-500)"],

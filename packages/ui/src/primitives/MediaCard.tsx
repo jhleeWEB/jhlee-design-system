@@ -85,11 +85,11 @@ export function MediaCard({
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 p-4">
         {eyebrow ? (
-          <div className="font-mono text-micro uppercase tracking-caps text-muted">{eyebrow}</div>
+          <div className="font-mono text-micro uppercase tracking-caps text-muted-foreground">{eyebrow}</div>
         ) : null}
 
         <div className="min-w-0">
-          <h3 className="truncate text-control font-semibold text-ink">
+          <h3 className="truncate text-control font-semibold text-foreground">
             {onSelect ? (
               <button
                 data-slot="media-card-select"
@@ -100,7 +100,7 @@ export function MediaCard({
                   "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
                   "cursor-pointer text-left after:absolute after:inset-0 after:content-['']",
                   "focus-visible:outline-none",
-                  "focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-focus",
+                  "focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ring",
                 )}
               >
                 {title}
@@ -110,7 +110,7 @@ export function MediaCard({
             )}
           </h3>
           {description ? (
-            <p className="mt-1 line-clamp-2 text-body leading-relaxed text-muted">{description}</p>
+            <p className="mt-1 line-clamp-2 text-body leading-relaxed text-muted-foreground">{description}</p>
           ) : null}
         </div>
 

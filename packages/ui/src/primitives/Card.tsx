@@ -230,7 +230,7 @@ export function Card({
               className={cn(
                 "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
                 "ds-card-strip flex cursor-pointer flex-col items-center gap-2 py-2.5",
-                "text-muted hover:bg-surface-2 hover:text-ink",
+                "text-muted-foreground hover:bg-muted hover:text-foreground",
                 "focus-visible:focus-ring focus-visible:outline-none",
               )}
             >
@@ -300,16 +300,16 @@ export function CardHeader({
       className={cn(
         "group/head flex min-w-0 shrink-0 items-center gap-3",
         variant === "panel"
-          ? "box-border min-h-12 border-b border-line bg-surface px-3 py-2"
+          ? "box-border min-h-12 border-b border-border bg-card px-3 py-2"
           : "px-4 py-3",
         className,
       )}
       {...rest}
     >
       {leading ? <div className="flex shrink-0 items-center">{leading}</div> : null}
-      {title ? <Heading data-slot="card-title" className="m-0 min-w-0 truncate text-control font-semibold text-ink">{title}</Heading> : null}
+      {title ? <Heading data-slot="card-title" className="m-0 min-w-0 truncate text-control font-semibold text-foreground">{title}</Heading> : null}
       {children}
-      {meta ? <div className="ml-auto shrink-0 tnum text-label text-muted">{meta}</div> : null}
+      {meta ? <div className="ml-auto shrink-0 tnum text-label text-muted-foreground">{meta}</div> : null}
       {ctx?.collapsible && collapseButton ? ctx.collapseTo === "strip" ? (
         <PanelToggleButton
           data-slot="card-collapse"
@@ -329,9 +329,9 @@ export function CardHeader({
           title={`${ctx.collapsed ? "Expand" : "Collapse"} ${ctx.label}`}
           className={cn(
             "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
-            "grid size-6 shrink-0 cursor-pointer place-items-center rounded-control text-muted",
+            "grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-muted-foreground",
             !meta && "ml-auto",
-            "hover:bg-surface-2 hover:text-ink focus-visible:focus-ring focus-visible:outline-none",
+            "hover:bg-muted hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
             /* 평소에는 흐리다 — 상시 진한 작은 크롬이 카드마다 붙으면 화면이 시끄럽다.
                접혀 있을 때는 그것이 유일한 되돌리는 길이므로 항상 진하다. */
             ctx.collapsed
@@ -365,8 +365,8 @@ export function CardCollapse({ className, onClick, ...rest }: React.ComponentPro
       title={`${ctx.collapsed ? "Expand" : "Collapse"} ${ctx.label}`}
       className={cn(
         "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
-        "grid size-6 shrink-0 cursor-pointer place-items-center rounded-control text-muted",
-        "hover:bg-surface-2 hover:text-ink focus-visible:focus-ring focus-visible:outline-none",
+        "grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-muted-foreground",
+        "hover:bg-muted hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
         ctx.collapsed
           ? "opacity-100"
           : "opacity-0 transition-opacity duration-fast focus-visible:opacity-100 group-hover/card:opacity-100",
@@ -386,7 +386,7 @@ export function CardWell({ className, ...rest }: React.ComponentPropsWithRef<"di
   return (
     <div
       data-slot="card-well"
-      className={cn("relative min-h-0 flex-1 overflow-hidden rounded-b-card bg-surface-2", className)}
+      className={cn("relative min-h-0 flex-1 overflow-hidden rounded-b-lg bg-muted", className)}
       {...rest}
     />
   );

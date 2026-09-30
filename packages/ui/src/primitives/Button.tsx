@@ -3,7 +3,8 @@ import { cloneElement, forwardRef, isValidElement, type ButtonHTMLAttributes, ty
 import { Slot } from "radix-ui";
 
 import { cn, type VariantProps } from "../cn";
-import { buttonVariants } from "./Button.variants";
+import { normalizeTone, type ToneInput } from "../lib/tone";
+import { buttonVariants, type ButtonTone } from "./Button.variants";
 import { Spinner } from "../feedback/Spinner";
 
 /* 버튼 — 크롬이다. 캔버스에는 버튼이 없다(도면 위 조작은 기즈모가 맡는다).
@@ -14,7 +15,12 @@ import { Spinner } from "../feedback/Spinner";
 
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+    Omit<VariantProps<typeof buttonVariants>, "tone"> {
+  /**
+   * 톤 — `neutral`(기본) · `primary`(주된 동작) · `destructive`(파괴적 동작).
+   * @deprecated 옛 키 `accent` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
+   */
+  tone?: ToneInput<ButtonTone> | null | undefined;
   /** 래퍼를 만들지 않고 자식 요소에 버튼 스타일을 입힌다 — 링크를 버튼으로 보이게 할 때. */
   asChild?: boolean;
   /** 진행 중. 스피너로 라벨을 **대체하지 않는다** — 폭이 흔들리면 옆 버튼이 밀린다. */
@@ -73,7 +79,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       data-slot="button"
       data-loading={loading || undefined}
-      className={cn(buttonVariants({ variant, tone, size }), className)}
+      className={cn(buttonVariants({ variant, tone: normalizeTone(tone), size }), className)}
       disabled={blocked}
       aria-busy={loading || undefined}
       {...rest}
@@ -99,7 +105,7 @@ export function ButtonGroup({
       data-slot="button-group"
       className={cn(
         "inline-flex [&>*]:rounded-none",
-        "[&>*:first-child]:rounded-l-control [&>*:last-child]:rounded-r-control",
+        "[&>*:first-child]:rounded-l-md [&>*:last-child]:rounded-r-md",
         "[&>*+*]:-ml-px [&>*:focus-visible]:relative [&>*:focus-visible]:z-raised",
         className,
       )}

@@ -19,6 +19,10 @@ import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
+/* 옛 유틸 이름 → 새 shadcn 이름(B5, #22) — legacy.json 이 원천이고 tokens/build.mjs 가 굽는다(`pnpm tokens:check` 가 최신성을 본다).
+ * `no-restricted-classes` 의 {pattern, fix} 라 **`eslint --fix` 가 곧 코드모드**다. 긴 이름이 앞에 온다. */
+import legacyClasses from "./packages/ui/eslint/legacy-classes.json" with { type: "json" };
+
 /** 모든 규칙을 error 로 정규화한다 — bulk suppressions 가 덮는 유일한 severity 라서(파일 머리의 «왜»). */
 const asError = configs =>
   configs.map(config =>
@@ -57,6 +61,11 @@ const TYPED = {
   },
 };
 const TEST_FILES = ["**/__tests__/**", "**/__arch__/**", "**/*.spec.{ts,tsx}", "**/*.test.{ts,tsx}"];
+
+/* 간격 규칙(계획 §2.5-d)의 어휘. 실측: 이 패키지의 최다 간격은 12px(gap-3)이고 shadcn 자체가 h-9·px-3·gap-1.5 를 쓰므로 8 의 배수만 허용하면
+ * 위반이 51% 다 — 4px 기반에 스텝 화이트리스트가 맞다. */
+const SPACING_UTILITIES = "p|px|py|pt|pr|pb|pl|ps|pe|m|mx|my|mt|mr|mb|ml|ms|me|gap|gap-x|gap-y|space-x|space-y|inset|inset-x|inset-y|top|right|bottom|left|start|end";
+const SPACING_STEPS = "0|1|2|3|4|5|6|8|10|12|16|20|24";
 
 export default tseslint.config(
   {
@@ -163,6 +172,8 @@ export default tseslint.config(
         "error",
         {
           publicOnly: true,
+          // --fix 가 빈 `/** */` 를 끼워 넣지 않게 — 첫 코드모드 실행(#22)에서 172개 빈 블록이 생겼다. 설명 없는 JSDoc 은 계약이 아니다.
+          enableFixer: false,
           require: { FunctionDeclaration: true, ArrowFunctionExpression: true, FunctionExpression: true, ClassDeclaration: true },
           contexts: ["TSInterfaceDeclaration", "TSTypeAliasDeclaration", "TSPropertySignature"],
         },
@@ -186,8 +197,19 @@ export default tseslint.config(
         "error",
         {
           restrict: [
+            // ① 옛 이름(코드모드) — 앞에 두어 개명이 다른 진단보다 먼저 보이게.
+            ...legacyClasses,
+            // ② raw 색 — hex 와 색 함수. 크롬의 색은 토큰 유틸뿐이다(계획 §2.5-d).
             { pattern: "^.*\\[#[0-9a-fA-F]{3,8}\\]$", message: "Hex colour in a class — use a colour token." },
+            { pattern: "^.*\\[(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\\(.*\\]$", message: "Raw colour function in a class — use a colour token." },
+            // ③ 임의 단위 — px·rem·em·ms 는 토큰 밖 값이다.
             { pattern: "^.*\\[[^\\]]*\\d+(?:\\.\\d+)?(?:px|rem|em|ms)[^\\]]*\\]$", message: "Unit literal in a class — use a token utility." },
+            // ④ 간격 격자 — 4px 기반, 허용 스텝 화이트리스트(0 1 2 3 4 5 6 8 10 12 16 20 24 = 0~96px). 반스텝(1.5)·7·9·11·14… 는 밖이다.
+            //    간격 계열(p/m/gap/space/inset/top…)에만 — w/h/size 는 치수라 다른 사다리다. 초기 위반은 기준선(eslint-suppressions.json)이 든다.
+            {
+              pattern: `^(?:[^\\s:]+:)*-?(?:${SPACING_UTILITIES})-(?!(?:${SPACING_STEPS})$)\\d+(?:\\.\\d+)?$`,
+              message: "Spacing step off the 4px grid — allowed steps are 0 1 2 3 4 5 6 8 10 12 16 20 24 (px = 4 × step).",
+            },
           ],
         },
       ],
@@ -203,6 +225,7 @@ export default tseslint.config(
       "ds/no-magic-ms": "error",
       "ds/no-forward-ref": "error",
       "ds/no-boolean-string-data-attr": "error",
+      "ds/legacy-tone": "error",
     },
   },
 

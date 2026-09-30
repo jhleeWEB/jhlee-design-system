@@ -2,8 +2,10 @@
 import { useId, useMemo, useState } from "react";
 
 import { cn } from "../cn";
+import { normalizeTone, type ToneInput } from "../lib/tone";
 import { Skeleton } from "../feedback/Skeleton";
 import { ScrollArea } from "../navigation/ScrollArea";
+import type { CellTone } from "./Table";
 
 /* 데이터 표 — 이 제품에서 표는 대부분 **명세서**다.
  * FSI 원장 · 세대 믹스 · 주차 명세 · 층별 집계. 그래서 일반 데이터 그리드와 요구가 다르다:
@@ -28,8 +30,8 @@ export interface Column<Row> {
   numeric?: boolean;
   /** 정렬에 쓸 값. 주면 그 열의 머리가 정렬 버튼이 된다. */
   sortValue?: (row: Row) => number | string;
-  /** 판정색. 셀 단위로 다르면 함수로 준다. */
-  tone?: (row: Row) => "ok" | "warn" | "danger" | undefined;
+  /** 판정색. 셀 단위로 다르면 함수로 준다. 옛 키 ok · warn · danger 는 한 마이너 동안 옮겨 준다. */
+  tone?: (row: Row) => ToneInput<CellTone> | undefined;
   /** 고정 폭. 넘치면 표가 가로 스크롤된다. */
   width?: string;
   /** 합계 줄의 이 열 값. 없으면 빈 칸. */
@@ -119,18 +121,18 @@ export function DataTable<Row>({
       className={cn("flex min-h-0 min-w-0 w-full max-w-full flex-col overflow-hidden", className)}
     >
       <ScrollArea className="min-h-0 flex-auto" orientation="both">
-      <table className="w-full border-collapse text-body text-ink">
+      <table className="w-full border-collapse text-body text-foreground">
         <caption
           className={cn(
             "text-left",
             captionVisible
-              ? "px-3 pb-2 text-label text-muted"
+              ? "px-3 pb-2 text-label text-muted-foreground"
               : "sr-only absolute size-px overflow-hidden",
           )}
         >
           {caption}
         </caption>
-        <thead className={cn("bg-surface-2", stickyHeader && "sticky top-0 z-raised")}>
+        <thead className={cn("bg-muted", stickyHeader && "sticky top-0 z-raised")}>
           <tr>
             {columns.map(column => {
               const active = sort?.key === column.key;
@@ -148,8 +150,8 @@ export function DataTable<Row>({
                   aria-sort={ariaSort}
                   style={column.width === undefined ? undefined : { width: column.width }}
                   className={cn(
-                    "border-b border-line align-bottom",
-                    "font-mono text-micro font-normal uppercase tracking-caps text-muted",
+                    "border-b border-border align-bottom",
+                    "font-mono text-micro font-normal uppercase tracking-caps text-muted-foreground",
                     column.numeric ? "text-right" : "text-left",
                     column.sortValue ? "p-0" : cellPad,
                   )}
@@ -165,8 +167,8 @@ export function DataTable<Row>({
                         "flex w-full cursor-pointer items-end gap-1",
                         cellPad,
                         column.numeric ? "justify-end" : "justify-start",
-                        "hover:text-ink focus-visible:focus-ring focus-visible:outline-none",
-                        active && "text-ink",
+                        "hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
+                        active && "text-foreground",
                       )}
                     >
                       {column.header}
@@ -193,7 +195,7 @@ export function DataTable<Row>({
         <tbody>
           {loading
             ? Array.from({ length: loadingRows }, (_, i) => (
-                <tr key={`sk-${i}`} className="border-b border-line last:border-b-0">
+                <tr key={`sk-${i}`} className="border-b border-border last:border-b-0">
                   {columns.map(column => (
                     <td key={column.key} className={cellPad}>
                       {/* 값이 올 자리와 **같은 높이**. 다르면 도착하는 순간 표가 뛴다. */}
@@ -214,13 +216,13 @@ export function DataTable<Row>({
                       onSelect(key, row);
                     } : undefined}
                     className={cn(
-                      "border-b border-line last:border-b-0",
-                      onSelect && "cursor-pointer hover:bg-surface-2",
-                      selected && "bg-accent-soft hover:bg-accent-soft",
+                      "border-b border-border last:border-b-0",
+                      onSelect && "cursor-pointer hover:bg-muted",
+                      selected && "bg-accent hover:bg-accent",
                     )}
                   >
                     {columns.map((column, columnIndex) => {
-                      const tone = column.tone?.(row);
+                      const tone = normalizeTone(column.tone?.(row));
                       const content = column.cell
                         ? column.cell(row, index)
                         : ((row as Record<string, unknown>)[column.key] as React.ReactNode);
@@ -231,9 +233,9 @@ export function DataTable<Row>({
                             cellPad,
                             "align-middle",
                             column.numeric && "tnum text-right",
-                            tone === "ok" && "text-ok",
-                            tone === "warn" && "text-warn",
-                            tone === "danger" && "text-danger",
+                            tone === "success" && "text-success",
+                            tone === "warning" && "text-warning",
+                            tone === "destructive" && "text-destructive",
                           )}
                         >
                           {onSelect && columnIndex === 0 ? (
@@ -247,7 +249,7 @@ export function DataTable<Row>({
                                 checked={selected}
                                 aria-label={`Select row ${key}`}
                                 onChange={() => onSelect(key, row)}
-                                className="m-0 size-4 shrink-0 cursor-pointer accent-accent focus-visible:focus-ring focus-visible:outline-none"
+                                className="m-0 size-4 shrink-0 cursor-pointer accent-primary focus-visible:focus-ring focus-visible:outline-none"
                               />
                               {content}
                             </div>
@@ -263,7 +265,7 @@ export function DataTable<Row>({
             <tr>
               <td colSpan={columns.length} className="p-0">
                 {empty ?? (
-                  <div className="px-3 py-8 text-center text-body text-muted">No rows.</div>
+                  <div className="px-3 py-8 text-center text-body text-muted-foreground">No rows.</div>
                 )}
               </td>
             </tr>
@@ -272,7 +274,7 @@ export function DataTable<Row>({
 
         {hasTotals && !loading && sorted.length > 0 ? (
           <tfoot>
-            <tr className="border-t-2 border-line-strong bg-surface-2 font-medium">
+            <tr className="border-t-2 border-border-strong bg-muted font-medium">
               {columns.map((column, i) => (
                 <td
                   key={column.key}

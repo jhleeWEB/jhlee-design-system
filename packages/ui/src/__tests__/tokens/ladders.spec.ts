@@ -10,7 +10,7 @@
  */
 import { describe, expect, it } from "vitest";
 
-import { cn } from "../../cn";
+import { cn, TW_MERGE_CONFIG } from "../../cn";
 import { LADDERS } from "../../generated/ladders";
 import { loadTokenModel, type TokenScope } from "./model";
 
@@ -18,6 +18,9 @@ const model = loadTokenModel();
 
 const namesIn = (scope: TokenScope, prefix: string): string[] =>
   [...new Set(model.tokens.filter(t => t.scope === scope && t.name.startsWith(prefix)).map(t => t.name))].sort();
+/** 정본 크롬 토큰만 — legacy.css 의 `--chrome-<옛>: var(--chrome-<새>)` alias(#22)는 :root 에 살지만 다크 블록에 짝이 없는 것이 정상이다. */
+const chromeNamesIn = (scope: TokenScope): string[] =>
+  [...new Set(model.tokens.filter(t => t.scope === scope && t.file === "generated/tokens.css" && t.name.startsWith("--chrome-")).map(t => t.name))].sort();
 
 /** `@theme` 의 `--<ns>-<name>` 에서 `<name>` 만 — `--text-body--line-height` 같은 부속 키는 사다리가 아니다. */
 const ladder = (ns: string): string[] =>
@@ -39,9 +42,20 @@ describe("방향 C — 캔버스와 크롬의 분리", () => {
 
   it("다크 블록 둘이 같은 크롬 토큰 집합을 정의하고 라이트의 크롬 토큰마다 다크 값이 있다", () => {
     /* 생성기가 chrome.dark.json 을 두 블록에 찍는다 — 여기서 갈리면 생성기가 깨진 것이다. 빠진 토큰은 다크에서 라이트 색으로 남는다. */
-    expect(namesIn("dark-attr", "--chrome-")).toEqual(namesIn("dark-media", "--chrome-"));
-    expect(namesIn("dark-attr", "--chrome-")).toEqual(namesIn("root", "--chrome-"));
-    expect(namesIn("dark-attr", "--chrome-").length).toBeGreaterThan(20);
+    expect(chromeNamesIn("dark-attr")).toEqual(chromeNamesIn("dark-media"));
+    expect(chromeNamesIn("dark-attr")).toEqual(chromeNamesIn("root"));
+    expect(chromeNamesIn("dark-attr").length).toBeGreaterThan(20);
+  });
+
+  it("legacy.css 의 옛 크롬 이름은 전부 정본 크롬 토큰을 가리킨다 — 다크도 그 참조를 따라 갈린다(#22)", () => {
+    const aliases = model.tokens.filter(t => t.file === "generated/legacy.css" && t.name.startsWith("--chrome-"));
+    expect(aliases.length).toBeGreaterThan(20);
+    const canonical = new Set(chromeNamesIn("root"));
+    for (const t of aliases) {
+      expect(t.refs, t.name).toHaveLength(1);
+      expect(canonical.has(t.refs[0]!), `${t.name} → ${t.refs[0]}`).toBe(true);
+      expect(canonical.has(t.name), `${t.name} 은 옛 이름이어야 한다`).toBe(false);
+    }
   });
 
   it("캔버스 토큰은 :root 한 곳에서만 한 번씩 정의된다", () => {
@@ -86,14 +100,29 @@ describe("사다리", () => {
         "h-ctl",
         "h-ctl-lg",
         "h-ctl-sm",
+        "h-dialog-fluid",
+        "max-h-dialog-fluid",
+        "max-w-popover-fluid",
         "on-canvas",
         "tnum",
         "w-ctl",
         "w-ctl-lg",
         "w-ctl-sm",
+        "w-dialog-fluid",
         "w-rail",
       ]
     `);
+  });
+
+  it("@theme 이 initial 로 지운 네임스페이스 집합 == cn.ts 의 override 집합 — 하나가 빠지면 그 사다리의 충돌 해소가 조용히 꺼진다(#22)", () => {
+    /* `--color-*: initial` 은 @theme inline 의 것이고 twMerge 는 색 클래스를 이름과 무관하게 같은 그룹으로 보므로 override 대상이 아니다. */
+    const resets = model.resets.filter(r => r.scope === "theme").map(r => r.namespace.slice(2)).sort();
+    expect(resets).toEqual(Object.keys(TW_MERGE_CONFIG.override.theme).filter(ns => resets.includes(ns)).sort());
+    expect(Object.keys(TW_MERGE_CONFIG.override.theme).sort()).toEqual([...new Set([...resets, "animate", "ease"])].sort());
+    /* 생성물 LADDERS 의 네임스페이스는 전부 어딘가(override · extend.theme · classGroups)에 실려 있다 — height 는 h/w 로, layer 는 z 로, duration 은 duration 으로. */
+    const covered = new Set([...Object.keys(TW_MERGE_CONFIG.override.theme), ...Object.keys(TW_MERGE_CONFIG.extend.theme), "height", "layer", "duration"]);
+    for (const ns of Object.keys(LADDERS)) expect(covered.has(ns), ns).toBe(true);
+    for (const ns of Object.keys(TW_MERGE_CONFIG.override.theme) as (keyof typeof LADDERS)[]) expect([...TW_MERGE_CONFIG.override.theme[ns as keyof typeof TW_MERGE_CONFIG.override.theme]], ns).toEqual([...LADDERS[ns]]);
   });
 });
 

@@ -55,8 +55,8 @@ export function Tooltip({
           align={align}
           sideOffset={sideOffset}
           className={cn(
-            "z-tooltip flex items-center gap-3 rounded-float bg-tooltip px-3 py-2",
-            "text-label text-tooltip-ink shadow-pop animate-in-pop",
+            "z-tooltip flex items-center gap-3 rounded-lg bg-tooltip px-3 py-2",
+            "text-label text-tooltip-foreground shadow-pop animate-in-pop",
             "select-none",
           )}
         >

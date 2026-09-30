@@ -58,20 +58,27 @@
 
 /* 포커스 링은 한 벌이다. 컴포넌트마다 다시 쓰면 굵기와 색이 갈린다. */
 @utility focus-ring {
-  outline: 2px solid var(--chrome-focus);
+  outline: 2px solid var(--chrome-ring);
   outline-offset: 1px;
 }
 
 /* 캔버스 위에 얹히는 패널 — 배경이 비쳐야 도면이 가려지지 않는다. */
 @utility on-canvas {
-  background: var(--chrome-overlay);
+  background: var(--chrome-popover);
   backdrop-filter: blur(6px);
 }
 
 /* 컨트롤 높이와 셸 치수. `--height-*`·`--size-*` 는 Tailwind 네임스페이스가 아니라 유틸리티가 자동으로 나오지 않는다 —
-   몇 개뿐이므로 손으로 낸다. 아이콘 전용 버튼이 정사각이 되도록 w- 도 함께 둔다. */
+   몇 개뿐이므로 손으로 낸다. 아이콘 전용 버튼이 정사각이 되도록 w- 도 함께 둔다. 이름 목록은 cn.ts 의 HAND_UTILITIES 와 같아야 한다(ladders.spec). */
 @utility w-rail { width: var(--size-rail); }
 @utility gap-shell { gap: var(--space-card-gap); }
+
+/* 오버레이의 유동 치수 — 뷰포트에서 여백(--space-dialog-gutter-*)만큼 물러난다. 상한은 Tailwind 의 max-w-dialog-* · max-w-drawer-*(--container-*)가
+   맡으므로 «유동 폭 + 상한» 이 옛 `w-[min(560px,calc(100vw-24px))]` 와 같은 결과다(#22). 폭·높이 토큰이 아니라 «규칙» 이라 손으로 낸다. */
+@utility w-dialog-fluid { width: calc(100vw - 2 * var(--space-dialog-gutter-x)); }
+@utility h-dialog-fluid { height: calc(100dvh - 2 * var(--space-dialog-gutter-y)); }
+@utility max-h-dialog-fluid { max-height: calc(100dvh - 2 * var(--space-dialog-gutter-y)); }
+@utility max-w-popover-fluid { max-width: min(var(--container-popover-max), calc(100vw - 2 * var(--space-dialog-gutter-x))); }
 
 @utility h-ctl-sm { height: var(--height-ctl-sm); }
 @utility h-ctl { height: var(--height-ctl); }
@@ -83,15 +90,15 @@
 /* ── 컴포넌트 규칙 ─────────────────────────────────────────────────────────────
    접기 모션은 카드·아코디언·뷰 패널이 같은 길이와 곡선(--motion-collapse-*)을 읽는다. */
 .ds-accordion { min-width: 0; }
-.ds-accordion-item { min-width: 0; border: 1px solid var(--chrome-line); border-radius: var(--radius-card); background: var(--chrome-surface); color: var(--chrome-ink); }
+.ds-accordion-item { min-width: 0; border: 1px solid var(--chrome-border); border-radius: var(--radius-lg); background: var(--chrome-card); color: var(--chrome-foreground); }
 .ds-accordion-header { display: flex; margin: 0; }
 .ds-accordion-trigger {
   display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0;
-  border: 0; border-radius: var(--radius-card); padding: 10px 12px;
+  border: 0; border-radius: var(--radius-lg); padding: 10px 12px;
   background: transparent; color: inherit; font: inherit; font-size: var(--text-control); font-weight: 600;
   text-align: left; cursor: pointer;
 }
-.ds-accordion-trigger:focus-visible { outline: 2px solid var(--chrome-focus); outline-offset: 2px; }
+.ds-accordion-trigger:focus-visible { outline: 2px solid var(--chrome-ring); outline-offset: 2px; }
 .ds-accordion-trigger:disabled { cursor: default; opacity: .45; }
 .ds-accordion-trigger-label { display: flex; flex: 1; min-width: 0; align-items: center; gap: 8px; }
 .ds-accordion-chevron { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); transition: rotate var(--motion-collapse-duration) var(--motion-collapse-easing); }
@@ -125,7 +132,7 @@
 .ds-scroll-area[data-scroll-active="true"] > .ds-scroll-area-scrollbar:has([data-slot="scroll-area-thumb"]) {
   opacity: 1; pointer-events: auto; transition: none;
 }
-.ds-scroll-area-thumb { position: relative; flex: 1; border-radius: 999px; background: var(--chrome-line-strong); }
+.ds-scroll-area-thumb { position: relative; flex: 1; border-radius: 999px; background: var(--chrome-border-strong); }
 @media (prefers-reduced-motion: reduce) {
   .ds-scroll-area-scrollbar { transition: none; }
 }

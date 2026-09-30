@@ -1,5 +1,6 @@
 import { cn, type VariantProps } from "../cn";
-import { spinnerVariants } from "./Spinner.variants";
+import { normalizeTone, type ToneInput } from "../lib/tone";
+import { spinnerVariants, type SpinnerTone } from "./Spinner.variants";
 
 /* 스피너 — «돌고 있다» 만 말한다. 얼마나 남았는지는 `Progress` 가 맡는다.
  *
@@ -8,7 +9,12 @@ import { spinnerVariants } from "./Spinner.variants";
 
 export interface SpinnerProps
   extends React.SVGAttributes<SVGSVGElement>,
-    VariantProps<typeof spinnerVariants> {
+    Omit<VariantProps<typeof spinnerVariants>, "tone"> {
+  /**
+   * 톤 — `neutral`(기본, 글자색을 따른다) · `primary` · `muted`.
+   * @deprecated 옛 키 `current` · `accent` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
+   */
+  tone?: ToneInput<SpinnerTone> | null | undefined;
   /** 스크린리더에 읽히는 문구. 버튼 안처럼 이미 `aria-busy` 가 있는 자리에서는 비운다. */
   label?: string;
 }
@@ -17,7 +23,7 @@ export function Spinner({ className, size, tone, label, ...rest }: SpinnerProps)
   return (
     <svg
       data-slot="spinner"
-      className={cn(spinnerVariants({ size, tone }), className)}
+      className={cn(spinnerVariants({ size, tone: normalizeTone(tone) }), className)}
       viewBox="0 0 16 16"
       fill="none"
       role={label ? "status" : undefined}

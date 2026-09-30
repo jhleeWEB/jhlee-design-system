@@ -7,9 +7,9 @@ import { cva } from "../cn";
 /** 입력 필드의 변형 — `size` · `invalid` · `numeric`(mono + tabular-nums). */
 export const inputVariants = cva(
   [
-    "w-full min-w-0 border bg-surface-2 text-ink",
-    "rounded-control transition-colors duration-fast",
-    "placeholder:text-disabled",
+    "w-full min-w-0 border bg-muted text-foreground",
+    "rounded-md transition-colors duration-fast",
+    "placeholder:text-foreground-disabled",
     "focus-visible:focus-ring focus-visible:outline-none",
     "disabled:pointer-events-none disabled:opacity-45",
     /* 숫자 입력의 스피너는 24px 높이에서 잡을 수 없는 크기가 된다 — 드래그와 키보드로 바꾼다. */
@@ -25,8 +25,8 @@ export const inputVariants = cva(
         lg: "h-ctl-lg px-4 text-control",
       },
       invalid: {
-        true: "border-danger focus-visible:outline-danger",
-        false: "border-line-strong hover:border-ink-2",
+        true: "border-destructive focus-visible:outline-destructive",
+        false: "border-border-strong hover:border-foreground-2",
       },
       numeric: { true: "tnum text-right", false: "" },
     },

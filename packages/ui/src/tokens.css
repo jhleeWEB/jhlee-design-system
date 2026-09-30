@@ -2,7 +2,7 @@
  *
  * 토큰 값은 여기 없다. 정본은 `packages/ui/tokens/` 의 DTCG JSON 이고 생성기(`tokens/build.mjs`)가 아래 두 파일을 쓴다:
  *   generated/tokens.css   :root 원시(--palette-*) · 캔버스(--canvas-*) · 치수·간격·시간·층위 · 크롬 라이트/다크(--chrome-*) · reduced-motion
- *   generated/legacy.css   옛 이름(--ink · --line · --ok-pale · --gap · --size-gap · --color-{hue}-*) → 새 정본 alias. 값은 옛 것과 같다. 제거는 major
+ *   generated/legacy.css   옛 이름(--ink · --line · --ok-pale · --gap · --size-gap · --color-{hue}-* · --chrome-ink · --chrome-line …) → 새 정본 alias. 값은 옛 것과 같다. 제거는 major
  * 손 CSS 로 값을 적던 때(#15 이전)의 원칙 세 개는 그대로다 — 1. 도면 면은 radius 0 · 그림자 없음 · 무채색 · 다크 없음(캔버스),
  * 2. 유채색은 판정에만, 3. 수치는 mono + tabular-nums. 아래 요소 규칙이 그 원칙의 직접 결과이고, 값이 아니라 «규칙» 이라 손으로 남는다.
  *
@@ -16,8 +16,9 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-/* body 의 바닥·글자색은 옛 base 이름을 읽는다 — 새 정본에 같은 값의 이름이 없다(chrome.bg 는 #eff1f7, chrome.ink 는 #191f28 로 값이 다르다).
-   여기서 크롬으로 바꾸면 카탈로그의 body 바탕이 바뀐다 — 그 결정은 B5 의 몫이고 그때까지 legacy-alias-use 래칫이 이 두 줄을 센다. */
+/* body 의 바닥·글자색은 옛 base 이름을 읽는다 — 새 정본에 같은 값의 이름이 없다(chrome.background 는 #eff1f7, chrome.foreground 는 #191f28 로 값이 다르다).
+   B5(#22)는 «값 불변» 이 원칙이라 여기를 크롬으로 옮기지 않았다 — 옮기면 카탈로그의 body 바탕이 바뀌고 다크를 따르게 된다(시각 변경). 그 결정은
+   별도 이슈이고 그때까지 legacy-alias-use 래칫이 이 두 줄을 센다. */
 body {
   margin: 0;
   background: var(--bg);

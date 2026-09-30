@@ -19,7 +19,8 @@ function themeLines(tokens, outputReferences) {
   for (const [ns, group] of groupBy(tokens, t => t.path[0])) {
     if (lines.length) lines.push("");
     if (group.some(t => sds(t).reset)) lines.push(`--${ns}-*: initial;`);
-    for (const t of group) lines.push(...tokenDeclarations(t, outputReferences).map(decl));
+    // legacy.json 의 옛 유틸 이름 alias 는 같은 네임스페이스 끝에 붙는다(정본 순서상 legacy 가 마지막) — 읽는 사람을 위해 표시한다.
+    for (const t of group) lines.push(...tokenDeclarations(t, outputReferences).map(decl).map(l => (t.$deprecated ? `${l} /* @deprecated */` : l)));
   }
   return lines;
 }

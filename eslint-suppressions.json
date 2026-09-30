@@ -35,11 +35,6 @@
       "count": 2
     }
   },
-  "packages/ui/src/__tests__/overlay.spec.tsx": {
-    "import-x/no-duplicates": {
-      "count": 2
-    }
-  },
   "packages/ui/src/__tests__/scroll-consumers.spec.tsx": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
@@ -186,9 +181,6 @@
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
     },
-    "ds/no-literal-style-value": {
-      "count": 1
-    },
     "jsdoc/require-jsdoc": {
       "count": 11
     },
@@ -215,14 +207,8 @@
     }
   },
   "packages/ui/src/overlay/AlertDialog.tsx": {
-    "better-tailwindcss/no-restricted-classes": {
-      "count": 3
-    },
     "better-tailwindcss/no-unknown-classes": {
       "count": 2
-    },
-    "ds/no-literal-style-value": {
-      "count": 3
     },
     "jsdoc/require-jsdoc": {
       "count": 12
@@ -238,15 +224,15 @@
   },
   "packages/ui/src/overlay/Drawer.variants.ts": {
     "better-tailwindcss/no-restricted-classes": {
-      "count": 8
+      "count": 2
     },
     "ds/no-literal-style-value": {
-      "count": 8
+      "count": 2
     }
   },
   "packages/ui/src/overlay/DropdownMenu.tsx": {
     "jsdoc/require-jsdoc": {
-      "count": 9
+      "count": 8
     }
   },
   "packages/ui/src/overlay/Modal.tsx": {
@@ -257,21 +243,7 @@
       "count": 3
     }
   },
-  "packages/ui/src/overlay/Modal.variants.ts": {
-    "better-tailwindcss/no-restricted-classes": {
-      "count": 7
-    },
-    "ds/no-literal-style-value": {
-      "count": 7
-    }
-  },
   "packages/ui/src/overlay/Popover.tsx": {
-    "better-tailwindcss/no-restricted-classes": {
-      "count": 2
-    },
-    "ds/no-literal-style-value": {
-      "count": 2
-    },
     "jsdoc/require-jsdoc": {
       "count": 2
     }
@@ -283,7 +255,7 @@
   },
   "packages/ui/src/primitives/Badge.tsx": {
     "jsdoc/require-jsdoc": {
-      "count": 8
+      "count": 7
     }
   },
   "packages/ui/src/primitives/Badge.variants.ts": {
@@ -300,6 +272,9 @@
     }
   },
   "packages/ui/src/primitives/Card.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 1
+    },
     "better-tailwindcss/no-unknown-classes": {
       "count": 3
     },
@@ -347,6 +322,9 @@
     }
   },
   "packages/ui/src/primitives/MediaCard.tsx": {
+    "better-tailwindcss/no-restricted-classes": {
+      "count": 1
+    },
     "better-tailwindcss/no-unknown-classes": {
       "count": 2
     },
@@ -379,11 +357,8 @@
     }
   },
   "packages/ui/stories/gallery/Gallery.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "better-tailwindcss/no-restricted-classes": {
-      "count": 26
+      "count": 36
     },
     "better-tailwindcss/no-unknown-classes": {
       "count": 2

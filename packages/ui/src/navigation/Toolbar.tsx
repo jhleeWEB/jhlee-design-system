@@ -14,8 +14,8 @@ export function Toolbar({
       className={cn(
         "flex min-w-0 items-center gap-3",
         onCanvas
-          ? "on-canvas rounded-float border border-line p-2 shadow-pop"
-          : "border-b border-line bg-surface px-4 py-3",
+          ? "on-canvas rounded-lg border border-border p-2 shadow-pop"
+          : "border-b border-border bg-card px-4 py-3",
         className,
       )}
       {...rest}
@@ -25,7 +25,7 @@ export function Toolbar({
 
 /* 툴바 안의 시각적 구분. `role="separator"` 를 주면 스크린리더가 툴바 항목 수를 잘못 센다. */
 export function ToolbarDivider({ className }: { className?: string }) {
-  return <span aria-hidden="true" className={cn("mx-1 h-8 w-px shrink-0 bg-line", className)} />;
+  return <span aria-hidden="true" className={cn("mx-1 h-8 w-px shrink-0 bg-border", className)} />;
 }
 
 export function ToolbarSpacer() {

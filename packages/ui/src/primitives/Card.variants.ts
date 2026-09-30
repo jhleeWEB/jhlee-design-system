@@ -5,14 +5,14 @@ import { cva } from "../cn";
  * 이 파일에는 지시문·훅·Radix 가 없어야 한다. */
 
 /** 카드(구획)의 변형 — `elevation` 과 `pad`. */
-export const cardVariants = cva("relative flex min-h-0 min-w-0 flex-col bg-surface", {
+export const cardVariants = cva("relative flex min-h-0 min-w-0 flex-col bg-card", {
   variants: {
     elevation: {
-      raised: "rounded-card shadow-card",
+      raised: "rounded-lg shadow-card",
       /* 테두리만. 카드 안에 다시 칸을 나눌 때 — 그림자를 겹쳐 쓰면 층위가 흐려진다. */
-      flat: "rounded-card border border-line",
+      flat: "rounded-lg border border-border",
       /* 격자에 붙는 칸. 옛 셸과 섞어 쓸 때. */
-      flush: "rounded-none border border-line",
+      flush: "rounded-none border border-border",
     },
     pad: { none: "", sm: "p-3", md: "p-4", lg: "p-5" },
   },

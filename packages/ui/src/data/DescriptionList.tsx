@@ -24,10 +24,10 @@ export function DescriptionList({
     >
       {rows.map((row, i) => (
         <div key={i} className="contents">
-          <dt className="min-w-0 truncate text-muted">{row.k}</dt>
+          <dt className="min-w-0 truncate text-muted-foreground">{row.k}</dt>
           <dd
             className={cn(
-              "m-0 min-w-0 text-right text-ink",
+              "m-0 min-w-0 text-right text-foreground",
               row.numeric && "tnum",
               row.provisional && "underline decoration-dashed decoration-from-font underline-offset-2",
             )}
