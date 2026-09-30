@@ -18,6 +18,9 @@ import {
   type ContractSubject,
   type Probe,
 } from "../__arch__/component-contract";
+import * as DataTableStories from "../data/DataTable.stories";
+import * as DescriptionListStories from "../data/DescriptionList.stories";
+import * as TableStories from "../data/Table.stories";
 import * as barrel from "../index";
 import * as legacy from "../legacy/index";
 import * as ButtonStories from "../primitives/Button.stories";
@@ -37,8 +40,6 @@ const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
   CardHeader: ["slot-locked"],
   CardWell: ["slot-locked"],
   Checkbox: ["slot-locked"],
-  DataTable: ["ref", "rest"],
-  DescriptionList: ["slot-locked"],
   DisplayHeading: ["slot-locked"],
   Drawer: ["className", "ref", "rest"],
   DrawerBody: ["slot-locked"],
@@ -92,19 +93,13 @@ const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
   Spinner: ["axes", "slot-locked"],
   StatusDot: ["ref", "rest"],
   Switch: ["slot-locked"],
-  Table: ["slot-locked"],
-  Tbody: ["className", "slot", "slot-locked"],
-  Td: ["slot", "slot-locked"],
   Textarea: ["slot-locked"],
-  Th: ["slot", "slot-locked"],
-  Thead: ["slot", "slot-locked"],
   ToastProvider: ["className", "ref", "rest"],
   Toolbar: ["slot-locked"],
   ToolbarDivider: ["ref", "rest", "slot", "slot-locked"],
   ToolbarSpacer: ["className", "ref", "rest", "slot", "slot-locked"],
   Tooltip: ["className", "ref", "rest"],
   TooltipProvider: ["className", "ref", "rest"],
-  Tr: ["slot", "slot-locked"],
 };
 
 const {
@@ -126,8 +121,6 @@ const {
   CardWell,
   Checkbox,
   ConfirmDialog,
-  DataTable,
-  DescriptionList,
   DisplayHeading,
   Drawer,
   DrawerBody,
@@ -200,6 +193,9 @@ const {
 /** 스토리가 있는 컴포넌트 — `Default` 가 픽스처다. */
 const STORY_SUBJECTS: Readonly<Record<string, ContractSubject>> = {
   Button: storySubject(ButtonStories, { slot: "button", axes: ["variant", "tone", "size"] }),
+  DataTable: storySubject(DataTableStories, { slot: "data-table" }),
+  DescriptionList: storySubject(DescriptionListStories, { slot: "description-list" }),
+  Table: storySubject(TableStories, { slot: "table" }),
 };
 
 /* 최소 props 픽스처. 부품(Content·Item…)은 열린 부모 안에 두어 포털까지 렌더한다. 탐침(p)은 검사 대상 컴포넌트에만 펼친다. */
@@ -244,7 +240,6 @@ const inAccordion =
       {child(p)}
     </Accordion>
   );
-const rows = [{ id: "a", name: "Alpha", n: 1 }];
 
 const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   Accordion: {
@@ -397,25 +392,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
         {...p}
       />
     ),
-  },
-  DataTable: {
-    slot: "data-table",
-    render: (p) => (
-      <DataTable
-        columns={[
-          { key: "name", header: "Name" },
-          { key: "n", header: "N", numeric: true },
-        ]}
-        rows={rows}
-        rowKey={(r) => r.id}
-        caption="Rows"
-        {...p}
-      />
-    ),
-  },
-  DescriptionList: {
-    slot: "description-list",
-    render: (p) => <DescriptionList rows={[{ k: "Area", v: "120 m²", numeric: true }]} {...p} />,
   },
   DisplayHeading: { slot: "display-heading", render: (p) => <DisplayHeading {...p}>Heading</DisplayHeading> },
   Drawer: {
@@ -750,25 +726,8 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   },
   StatusDot: { slot: "status-dot", render: (p) => <StatusDot tone="success" label="Pass" {...p} /> },
   Switch: { slot: "switch", render: (p) => <Switch aria-label="Dark" {...p} /> },
-  Table: {
-    slot: "table",
-    render: (p) => (
-      <Table {...p}>
-        <Thead>
-          <Tr>
-            <Th>Name</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>Alpha</Td>
-          </Tr>
-        </Tbody>
-      </Table>
-    ),
-  },
   Tbody: {
-    slot: "tbody",
+    slot: "table-body",
     render: (p) => (
       <Table>
         <Tbody {...p}>
@@ -780,7 +739,8 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   Td: {
-    slot: "td",
+    slot: "table-cell",
+    axes: ["tone"],
     render: (p) => (
       <Table>
         <Tbody>
@@ -793,7 +753,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   },
   Textarea: { slot: "textarea", render: (p) => <Textarea aria-label="Notes" {...p} /> },
   Th: {
-    slot: "th",
+    slot: "table-head",
     render: (p) => (
       <Table>
         <Thead>
@@ -805,7 +765,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   Thead: {
-    slot: "thead",
+    slot: "table-header",
     render: (p) => (
       <Table>
         <Thead {...p}>
@@ -874,7 +834,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   Tr: {
-    slot: "tr",
+    slot: "table-row",
     render: (p) => (
       <Table>
         <Tbody>

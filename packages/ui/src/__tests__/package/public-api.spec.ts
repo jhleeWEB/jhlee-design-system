@@ -144,6 +144,7 @@ describe("공개 API", () => {
         "normalizeTone",
         "progressVariants",
         "spinnerVariants",
+        "tableCellVariants",
         "toastVariants",
         "toneValues",
         "usePanelLayout",

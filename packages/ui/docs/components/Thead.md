@@ -8,4 +8,8 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 서버에서도 렌더 가능(지시문 없음) · 원본 `src/data/Table.tsx`
 
+표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다.
+
+물려받는 props: `ClassAttributes<HTMLTableSectionElement>`, `HTMLAttributes<HTMLTableSectionElement>`
+
 _(DS 가 더하는 prop 없음 — 물려받는 속성만)_

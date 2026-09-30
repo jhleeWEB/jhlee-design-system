@@ -66,27 +66,6 @@
       "count": 1
     }
   },
-  "packages/ui/src/data/DataTable.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    },
-    "ds/no-boolean-string-data-attr": {
-      "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 10
-    }
-  },
-  "packages/ui/src/data/DescriptionList.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 5
-    }
-  },
-  "packages/ui/src/data/Table.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 9
-    }
-  },
   "packages/ui/src/feedback/Alert.tsx": {
     "jsdoc/require-jsdoc": {
       "count": 3

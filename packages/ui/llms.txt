@@ -75,8 +75,8 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [CardGrid](docs/components/CardGrid.md): (설명 없음 — JSDoc 대기) — "use client"
 - [Checkbox](docs/components/Checkbox.md): (설명 없음 — JSDoc 대기) — "use client"
 - [ConfirmDialog](docs/components/ConfirmDialog.md): (설명 없음 — JSDoc 대기) — "use client"
-- [DataTable](docs/components/DataTable.md): (설명 없음 — JSDoc 대기) — "use client"
-- [DescriptionList](docs/components/DescriptionList.md): (설명 없음 — JSDoc 대기)
+- [DataTable](docs/components/DataTable.md): 명세서 표 — 한 열 정렬 · 행 선택 · 합계 줄 · 줄 높이를 지키는 로딩 — "use client"
+- [DescriptionList](docs/components/DescriptionList.md): 이름-값 목록(`<dl>` 격자) — 이름은 왼쪽에서 말줄임, 값은 오른쪽 정렬.
 - [DesignSystemProvider](docs/components/DesignSystemProvider.md): 레거시 셸·컨트롤을 DS 프리미티브로 그리게 하는 Provider `DesignSystemProvider`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [DisplayHeading](docs/components/DisplayHeading.md): (설명 없음 — JSDoc 대기)
 - [Drawer](docs/components/Drawer.md): (설명 없음 — JSDoc 대기) — 부품: DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger — "use client"
@@ -110,19 +110,19 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [StatusBadge](docs/components/StatusBadge.md): 레거시 셸 `StatusBadge`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [StatusDot](docs/components/StatusDot.md): (설명 없음 — JSDoc 대기)
 - [Switch](docs/components/Switch.md): (설명 없음 — JSDoc 대기) — "use client"
-- [Table](docs/components/Table.md): (설명 없음 — JSDoc 대기)
+- [Table](docs/components/Table.md): 수치 표의 뿌리 — 가로 스크롤 영역 안의 `<table>`
 - [Tabs](docs/components/Tabs.md): 레거시 셸 `Tabs`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
-- [Tbody](docs/components/Tbody.md): (설명 없음 — JSDoc 대기)
-- [Td](docs/components/Td.md): (설명 없음 — JSDoc 대기)
+- [Tbody](docs/components/Tbody.md): 표 본문 구역(`<tbody>`) — 행의 호버 면이 붙는 범위다.
+- [Td](docs/components/Td.md): 표 본문 칸(`<td>`) — `numeric` · `tone` 축은 `tableCellVariants` 가 소유하고 `data-tone`(해석된 값)으로 찍힌다.
 - [Textarea](docs/components/Textarea.md): (설명 없음 — JSDoc 대기) — "use client"
-- [Th](docs/components/Th.md): (설명 없음 — JSDoc 대기)
-- [Thead](docs/components/Thead.md): (설명 없음 — JSDoc 대기)
+- [Th](docs/components/Th.md): 열 머리 칸(`<th>`) — mono 대문자 라벨
+- [Thead](docs/components/Thead.md): 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다.
 - [ToastProvider](docs/components/ToastProvider.md): (설명 없음 — JSDoc 대기) — "use client"
 - [Toggle](docs/components/Toggle.md): 레거시 컨트롤 `Toggle`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Toolbar](docs/components/Toolbar.md): (설명 없음 — JSDoc 대기) — 부품: ToolbarDivider, ToolbarSpacer
 - [Tooltip](docs/components/Tooltip.md): (설명 없음 — JSDoc 대기) — 부품: TooltipProvider — "use client"
 - [TopBar](docs/components/TopBar.md): 레거시 셸 `TopBar`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
-- [Tr](docs/components/Tr.md): (설명 없음 — JSDoc 대기)
+- [Tr](docs/components/Tr.md): 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다.
 - [ViewerPanel](docs/components/ViewerPanel.md): 레거시 셸 `ViewerPanel`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 
 ## 훅
@@ -144,6 +144,7 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - `modalVariants`: cva — 축 size(sm | md | lg | xl | full); 기본 size=md. 서버에서 호출 가능.
 - `progressVariants`: cva — 축 tone(primary | success | warning | destructive | neutral); 기본 tone=primary. 서버에서 호출 가능.
 - `spinnerVariants`: cva — 축 size(sm | md | lg) · tone(neutral | muted | primary); 기본 size=md, tone=neutral. 서버에서 호출 가능.
+- `tableCellVariants`: cva — 축 numeric(true | false) · tone(neutral | success | warning | destructive); 기본 numeric=false, tone=neutral. 서버에서 호출 가능.
 - `toastVariants`: cva — 축 tone(neutral | success | warning | destructive); 기본 tone=neutral. 서버에서 호출 가능.
 - `cn`: function
 - `cva`: function

@@ -5,10 +5,10 @@ import { cn } from "../cn";
 import { normalizeTone, type ToneInput } from "../lib/tone";
 import { Skeleton } from "../feedback/Skeleton";
 import { ScrollArea } from "../navigation/ScrollArea";
-import type { CellTone } from "./Table";
+import { tableCellVariants, type CellTone } from "./Table.variants";
 
 /* 데이터 표 — 이 제품에서 표는 대부분 **명세서**다.
- * FSI 원장 · 세대 믹스 · 주차 명세 · 층별 집계. 그래서 일반 데이터 그리드와 요구가 다르다:
+ * 원장 · 세대 믹스 · 주차 명세 · 층별 집계. 그래서 일반 데이터 그리드와 요구가 다르다:
  *
  *   1. **합계 줄이 1급이다.** 명세서는 합계가 맞는지 보려고 읽는다. 그 줄이 본문과 같은
  *      모양이면 눈이 못 찾으므로 위 테두리를 두껍게 주고 배경을 바꾼다.
@@ -20,9 +20,11 @@ import type { CellTone } from "./Table";
  * 정렬은 한 열만 잡는다. 다중 정렬은 이 화면들에 필요했던 적이 없고, 있으면 「지금 무엇으로
  * 정렬돼 있나」를 사용자가 추적해야 한다. */
 
+/** `DataTable` 의 열 하나 — 머리 · 셀 · 정렬 · 판정색 · 합계를 한자리에 적는다. */
 export interface Column<Row> {
   /** 이 열의 안정적인 키. 정렬 상태와 React key 에 쓴다. */
   key: string;
+  /** 열 머리. 아이콘뿐이면 `label` 로 이름을 준다. */
   header: React.ReactNode;
   /** 셀 내용. 없으면 `row[key]` 를 그대로 쓴다. */
   cell?: (row: Row, index: number) => React.ReactNode;
@@ -40,26 +42,60 @@ export interface Column<Row> {
   label?: string;
 }
 
-export interface DataTableProps<Row> {
+/** `DataTable` 의 props — 바깥 `<div>` 의 속성(`ref` 포함)도 받는다. `onSelect` 는 행 선택 콜백이라 DOM 의 같은 이름을 가린다. */
+export interface DataTableProps<Row> extends Omit<React.ComponentProps<"div">, "onSelect" | "children"> {
+  /** 열 정의. 순서대로 그린다. */
   columns: readonly Column<Row>[];
+  /** 행 데이터. 정렬해도 이 배열은 바꾸지 않는다. */
   rows: readonly Row[];
   /** 각 행의 안정적인 키. */
   rowKey: (row: Row, index: number) => string;
   /** 표의 이름. 스크린리더가 읽고, `captionVisible` 이면 화면에도 보인다. */
   caption: string;
+  /**
+   * 캡션을 화면에도 보인다. 끄면 스크린리더만 읽는다.
+   * @default false
+   */
   captionVisible?: boolean;
-  /** 선택된 행의 키. 캔버스 선택과 연동하는 자리다. */
+  /**
+   * 선택된 행의 키. 캔버스 선택과 연동하는 자리다.
+   * @default undefined
+   */
   selectedKey?: string | undefined;
+  /**
+   * 행을 골랐을 때 — 주면 첫 칸에 선택 radio 가 붙고 행 클릭이 선택이 된다. 없으면 표는 읽기 전용이다.
+   * @default undefined
+   */
   onSelect?: ((key: string, row: Row) => void) | undefined;
-  /** 합계 줄을 그린다 — `columns[].total` 이 하나라도 있으면 자동으로 켜진다. */
+  /**
+   * 합계 줄 첫 칸의 라벨 — 합계 줄은 `columns[].total` 이 하나라도 있으면 자동으로 켜진다.
+   * @default "Total"
+   */
   totalLabel?: string;
-  /** 값이 아직 없다. 줄 높이를 유지한 스켈레톤을 그린다. */
+  /**
+   * 값이 아직 없다. 줄 높이를 유지한 스켈레톤을 그린다.
+   * @default false
+   */
   loading?: boolean;
+  /**
+   * 로딩 중 스켈레톤 줄 수.
+   * @default 4
+   */
   loadingRows?: number;
-  /** 행이 없을 때. 「없다」가 아니라 「무엇을 하면 채워지는가」를 적는다. */
+  /**
+   * 행이 없을 때. 「없다」가 아니라 「무엇을 하면 채워지는가」를 적는다.
+   * @default "No rows."
+   */
   empty?: React.ReactNode;
-  /** 머리를 스크롤 위에 고정한다. 긴 명세서에서 열 이름을 잃지 않는다. */
+  /**
+   * 머리를 스크롤 위에 고정한다. 긴 명세서에서 열 이름을 잃지 않는다.
+   * @default false
+   */
   stickyHeader?: boolean;
+  /**
+   * 바깥 `<div>` 에 합쳐지는 클래스(tailwind-merge).
+   * @default undefined
+   */
   className?: string;
 }
 
@@ -69,6 +105,7 @@ type SortState = { key: string; dir: "asc" | "desc" } | null;
 const ROW_CONTROL =
   'a[href], button, input, label, select, textarea, summary, [role="button"], [role="link"], [role="checkbox"], [role="radio"], [role="switch"], [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
 
+/** 명세서 표 — 한 열 정렬 · 행 선택 · 합계 줄 · 줄 높이를 지키는 로딩. 수치 열은 우측 정렬 + mono + tabular-nums. */
 export function DataTable<Row>({
   columns,
   rows,
@@ -83,6 +120,7 @@ export function DataTable<Row>({
   empty,
   stickyHeader,
   className,
+  ...rest
 }: DataTableProps<Row>) {
   const [sort, setSort] = useState<SortState>(null);
   const selectionGroup = useId();
@@ -118,8 +156,9 @@ export function DataTable<Row>({
 
   return (
     <div
-      data-slot="data-table"
       className={cn("flex min-h-0 w-full max-w-full min-w-0 flex-col overflow-hidden", className)}
+      {...rest}
+      data-slot="data-table"
     >
       <ScrollArea className="min-h-0 flex-auto" orientation="both">
         <table className="w-full border-collapse text-body text-foreground">
@@ -164,7 +203,7 @@ export function DataTable<Row>({
                         onClick={() => toggleSort(column.key)}
                         aria-label={column.label ?? undefined}
                         className={cn(
-                          "font-inherit appearance-none border-0 bg-transparent text-inherit",
+                          "appearance-none border-0 bg-transparent text-inherit",
                           "flex w-full cursor-pointer items-end gap-1",
                           cellPad,
                           column.numeric ? "justify-end" : "justify-start",
@@ -215,7 +254,7 @@ export function DataTable<Row>({
                   return (
                     <tr
                       key={key}
-                      data-selected={onSelect ? selected : undefined}
+                      data-selected={(onSelect && selected) || undefined}
                       onClick={
                         onSelect
                           ? (event) => {
@@ -242,14 +281,7 @@ export function DataTable<Row>({
                         return (
                           <td
                             key={column.key}
-                            className={cn(
-                              cellPad,
-                              "align-middle",
-                              column.numeric && "text-right tnum",
-                              tone === "success" && "text-success",
-                              tone === "warning" && "text-warning",
-                              tone === "destructive" && "text-destructive",
-                            )}
+                            className={cn(cellPad, tableCellVariants({ numeric: column.numeric, tone }))}
                           >
                             {onSelect && columnIndex === 0 ? (
                               <div className={cn("flex items-center gap-2", column.numeric && "justify-end")}>

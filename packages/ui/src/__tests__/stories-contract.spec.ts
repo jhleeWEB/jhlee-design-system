@@ -21,9 +21,6 @@ const SRC = resolve(dirname(fileURLToPath(import.meta.url)), "..");
  *  스캐너(`export … from`)에 잡히지 않고, 격리·동결된 코드라 스토리 계약 밖이다(#10). */
 const STORIES_MISSING: readonly string[] = [
   "CanvasScale",
-  "data/DataTable",
-  "data/DescriptionList",
-  "data/Table",
   "feedback/Alert",
   "feedback/EmptyState",
   "feedback/Progress",
@@ -64,6 +61,14 @@ const PKG = resolve(SRC, "..");
  * 메타(파일 머리)에서 규칙을 끄는 것은 금지다 — 파일의 모든 스토리가 한꺼번에 빠져나가기 때문이다.
  */
 const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
+  "src/data/DataTable.stories.tsx#Default": ["color-contrast"],
+  "src/data/DataTable.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/data/DataTable.stories.tsx#Variants": ["color-contrast"],
+  "src/data/DescriptionList.stories.tsx#Default": ["color-contrast"],
+  "src/data/DescriptionList.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/data/DescriptionList.stories.tsx#Variants": ["color-contrast"],
+  "src/data/Table.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/data/Table.stories.tsx#Variants": ["color-contrast"],
   "src/primitives/Button.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/primitives/Button.stories.tsx#Variants": ["color-contrast"],
   "stories/Gallery.stories.tsx#Dark": ["aria-progressbar-name", "color-contrast", "label"],
