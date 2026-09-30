@@ -1,0 +1,15 @@
+# 생성물·설치물·산출물 — 사람이 쓰지 않는 파일은 포맷하지 않는다(tokens:check 가 생성물의 바이트 동일성을 본다).
+node_modules/
+dist/
+storybook-static/
+pnpm-lock.yaml
+packages/ui/src/generated/
+packages/ui/eslint/legacy-classes.json
+packages/ui/vrt/__snapshots__/
+packages/ui/vrt/results/
+packages/ui/vrt/report/
+packages/ui/coverage/
+CHANGELOG.md
+# 문서는 표·인용 부호가 많아 Prettier 의 마크다운 재배치가 뜻을 흐린다 — 코드만 포맷한다.
+*.md
+.claude/

@@ -25,8 +25,9 @@ const preview: Preview = {
     }),
   ],
   parameters: {
-    /* Phase A 는 'todo' — 위반을 보고만 하고 실패시키지 않는다. Phase C 에서 'error' + KNOWN_A11Y_FAILURES 래칫. */
-    a11y: { test: "todo" },
+    /* 'error' — addon-vitest 가 Chromium 에서 axe 를 돌려 위반이 있으면 스토리가 실패한다(C2). 알려진 위반은 그 스토리의
+       `parameters.a11y.config.rules` 로만 끄고, 끈 스토리는 `stories-contract.spec` 의 KNOWN_A11Y_FAILURES 래칫에 있어야 한다. */
+    a11y: { test: "error" },
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     backgrounds: { disable: true },
   },

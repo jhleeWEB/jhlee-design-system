@@ -8,3 +8,4 @@ storybook-static/
 .agents/
 packages/ui/vrt/results/
 packages/ui/vrt/report/
+packages/ui/coverage/

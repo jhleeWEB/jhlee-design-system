@@ -56,19 +56,28 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   src/legacy/                `./legacy` 서브패스 — 3열 작업대 셸·컨트롤·DesignSystemProvider·shell.css(#10). 격리·동결: ESLint ignores,
                              래칫 제외. 루트 배럴은 같은 이름을 지정자별 @deprecated 로 한 마이너 재export 하고 다음 마이너에 `feat!:` 로 지운다
   src/**/*.stories.tsx       컴포넌트 옆 스토리 — 3스토리 계약(Default · Variants · ThemeContrast, `stories-contract.spec` 이 검사, 본보기 Button)
-  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트, 15 스펙). `tokens/`(배포 CSS 다섯 파일의 postcss 토큰 모델 + 사다리·cn 동작 ·
-                             참조 무결성·미참조 원시 · MOTION↔CSS 대조 · 정본 스키마, #15 · #18)과
+  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트). `render-all.spec`(배럴의 공개 컴포넌트 전부에 공통 계약 — 스토리 `Default` 또는
+                             최소 props 픽스처, `KNOWN_CONTRACT_FAILURES` 래칫) · `documented-contracts.spec`(CLAUDE.md 의 약속을 user-event 로: Input 선행 0 ·
+                             0 전체선택 · PanelToggleButton 아이콘) · `stories-contract.spec`(3스토리 + a11y `KNOWN_A11Y_FAILURES` 래칫) · `axe.ts`(axe-core 15줄
+                             헬퍼, jsdom 이라 color-contrast·region 은 끈다). `setup.ts` 가 jest-dom 매처를 붙인다. `tokens/`(배포 CSS 의 postcss 토큰 모델 +
+                             사다리·cn 동작 · 참조 무결성·미참조 원시 · MOTION↔CSS 대조 · 정본 스키마 · **WCAG 대비 래칫** `contrast.spec`+`contrast-pairs.ts`, #15 · #18 · C2)과
                              `package/`(exports · "use client" 집합 · 공개 API 목록)는 `arch` 프로젝트(node)가 돈다(#11)
-  src/__arch__/              금지 패턴 래칫(`forbidden-patterns.spec` — 파일별 횟수 기준선, 늘면 실패·줄면 낮춰야 통과) + 소스 그래프. `arch` 프로젝트(#11)
+  src/__arch__/              금지 패턴 래칫(`forbidden-patterns.spec` — 파일별 횟수 기준선, 늘면 실패·줄면 낮춰야 통과) + 소스 그래프. `arch` 프로젝트(#11).
+                             `component-contract.tsx` 는 공통 계약의 검사기(`describeComponentContract(storiesModule, {slot, axes})` · `runContract`) — slot 존재·못 덮음 ·
+                             className twMerge · ref DOM 도달 · rest 전달 · 축마다 data-* · axe 0. 폴더별 spec(Phase D)이 스토리를 넘겨 부른다(C3)
   .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
   stories/                   페이지 스토리 — `Pages/Gallery`(옛 apps/ds-gallery 통째, Light·Dark) · `Pages/Workbench`(제품 화면 복제) · ThemePair · Matrix
-  vrt/                       Playwright 시각 회귀 — storybook-static/index.json 의 `vrt` 태그 스토리 × 라이트/다크. 기준선은 도커로만(scripts/vrt-update.sh).
+  vrt/                       Playwright 시각 회귀 — storybook-static/index.json 의 `vrt` 태그 스토리 × 라이트/다크, `maxDiffPixels: 0`(C1). 기준선은 도커로만(scripts/vrt-update.sh).
   tsconfig.json              엄격 프로필 한 벌(src 전량, 스펙·스토리 제외) — tsdown dts 가 읽는다. app-profile(느슨한 2차 검사)은 하는 일이 없어 지웠다(#11)
   tsconfig.test.json         스펙·__arch__ 를 같은 엄격도로 검사. `exclude` 가 래칫(줄어들기만 한다, 오늘 비어 있다)
   tsconfig.stories.json      stories·.storybook·vrt 의 엄격 검사. 빌드 tsconfig 밖에 두어 d.ts 로 새지 않게 한다
   tsdown.config.ts           unbundle ESM + d.ts + CSS 복사. banner 로 "use client" 를 붙이지 않는다 — 파일 첫 줄에 직접 둔다
 packages/typescript-config/  tsconfig 프리셋(@buildos/typescript-config, 발행 안 함)
-scripts/vrt-update.sh        VRT 기준선 갱신 — CI 와 같은 playwright:v1.63.0-noble 이미지 안에서만(macOS PNG 는 기준선이 아니다)
+scripts/vrt-update.sh        VRT 기준선 갱신 — CI 와 같은 playwright:v1.63.0-noble 이미지 안에서만(macOS PNG 는 기준선이 아니다). `VRT_CHECK=1` 이면 갱신 없이
+                             같은 컨테이너에서 0 diff 만 검사한다(시각이 바뀌면 안 되는 PR 의 머지 전 확인)
+stylelint.config.js          손 CSS 의 리터럴 금지(색·반경·글자·모션은 var(--…)만 · 간격·치수 px 금지 · hex 금지 · kebab-case). generated/·canvas.css·corner.css 예외,
+                             legacy/shell.css 는 warning + `--max-warnings` 실측값(래칫, C4)
+prettier.config.js           Prettier 3 + prettier-plugin-tailwindcss(printWidth 110 · theme.css 기준 클래스 정렬 · cn/cva). 첫 적용은 포맷 전용 커밋(.git-blame-ignore-revs)
 scripts/codemod-classes.mjs  옛 유틸 이름 → 새 이름을 **한 번에**(#22). 소비 레포는 이것을 먼저 한 번 돌리고 그 다음부터 린트가 잡는다 — accent·muted 는 린트 표에 없다
 scripts/codemod-css-vars.mjs `var(--chrome-<옛>)`·`var(--radius-<옛>)` → 새 이름을 한 번에(#22). 둘 다 두 번 돌리면 새 accent·muted 가 다시 바뀐다 — 한 번만
 packages/eslint-rules/       로컬 ESLint 규칙 ds/*(@buildos/eslint-rules, 발행 안 함) + RuleTester 스펙. JS + JSDoc(checkJs)
@@ -119,16 +128,20 @@ pnpm storybook         # 카탈로그 (6006) — Pages/Workbench · Pages/Galler
 pnpm storybook:build   # storybook-static (--test) — VRT 와 CI storybook job 의 입력
 pnpm typecheck         # 엄격 프로필(src) + test 프로필(스펙·__arch__) + stories 프로필
 pnpm lint              # ESLint 10 — 기준선(eslint-suppressions.json) 밖 신규 위반만 실패
-pnpm test              # vitest unit(jsdom) + arch(node: 래칫·토큰·패키지 계약) 프로젝트 + packages/eslint-rules 의 RuleTester
+pnpm lint:css          # stylelint — 손 CSS 의 리터럴. shell.css 의 warning 은 --max-warnings 실측값(줄이기만 한다)
+pnpm format:check      # Prettier --check (CI). 고치기는 pnpm format
+pnpm test              # vitest unit(jsdom) + arch(node: 래칫·토큰·패키지 계약) 프로젝트 + 커버리지 문턱(coverage-v8, 실측 floor−2) + packages/eslint-rules 의 RuleTester
 pnpm build             # tsdown → packages/ui/dist
 pnpm tokens:build      # tokens/*.json → src/generated/* (Style Dictionary). 정본을 고치면 돌리고 생성물을 함께 커밋한다
-pnpm tokens:check      # 생성물이 정본과 같은가 — 다르면 exit 1 (CI unit job · verify)
+pnpm tokens:check      # 생성물이 정본과 같은가 — 다르면 exit 1 (CI tokens job · verify)
 pnpm manifest:build    # index.ts export + JSDoc → dist/components.manifest.json · llms.txt · docs/components/*.md (#31). JSDoc 을 고치면 돌리고 문서를 함께 커밋한다
-pnpm manifest:check    # 커밋된 llms.txt · docs/components 가 매니페스트와 같은가 — 다르면 exit 1 (CI unit job · verify)
-pnpm verify            # typecheck + lint + tokens:check + manifest:check + test + build — PR 전 한 번
+pnpm manifest:check    # 커밋된 llms.txt · docs/components 가 매니페스트와 같은가 — 다르면 exit 1 (CI tokens job · verify)
+pnpm verify            # typecheck + lint + lint:css + format:check + tokens:check + manifest:check + test + build — PR 전 한 번
 bash scripts/smoke-next.sh   # Next App Router 스모크(tarball → 최소 앱 next build). 야간 workflow smoke-next.yml 이 돌린다(비필수)
-pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(Phase A 는 'todo')
+pnpm --filter @jhleeweb/squircle-design-system test:tokens    # arch 프로젝트의 토큰 스펙만(CI tokens job) — 대비 래칫 contrast.spec 포함
+pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(a11y test 'error', C2)
 pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
+VRT_CHECK=1 sh scripts/vrt-update.sh                           # 도커 컨테이너에서 갱신 없이 0 diff 검사 — 시각이 바뀌면 안 되는 PR 의 머지 전 확인
 cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics legacy testing eslint   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
 ```
 
@@ -137,7 +150,11 @@ cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tm
 늘면 새 위반이고, 줄이면 같은 PR 에서 기준선을 낮춘다(0 이면 줄을 지운다). `legacy-alias-use`(옛 이름 `var(--ink)` 등의 사용, 목록은 legacy.json 에서 읽는다)도
 같은 래칫이다(#18). 토큰 쪽도 같은 모양이다: `references.spec` 의 `KNOWN_INLINE_LITERALS`(`@theme inline` 의 리터럴 — #18 에서 0)와 미참조 원시 17개 스냅샷,
 `rsc-directives.spec` 의 `"use client"` 파일 목록, `public-api.spec` 의 배럴 export 목록, `manifest.spec` 의 `KNOWN_GAPS`(optional prop 의 `@default` 빈자리 ·
-유니언 값의 설명 빈자리 — JSDoc 을 채우면 같은 PR 에서 줄인다, Phase D 끝 0).
+유니언 값의 설명 빈자리 — JSDoc 을 채우면 같은 PR 에서 줄인다, Phase D 끝 0). Phase C 의 래칫 셋(C2·C3, 전부 «없는 실패는 새 위반, 목록에 있는데
+통과하면 지워라»): `contrast.spec` 의 `KNOWN_FAILURES`(WCAG 2.x 미달 쌍, 첫 실측 7 — light 5 · dark 2, 값을 고치는 것은 #20·#24 의 몫) ·
+`render-all.spec` 의 `KNOWN_CONTRACT_FAILURES`(컴포넌트 → 깨지는 검사 id, 첫 실측 81 컴포넌트 — 대부분 `data-slot` 이 `{...rest}` 뒤에 와서 덮이는 slot-locked 와
+cva 축의 `data-*` 미표기, Phase D 가 컴포넌트마다 지운다) · `stories-contract.spec` 의 `KNOWN_A11Y_FAILURES`(axe 규칙을 스토리 단위 `parameters.a11y.config.rules` 로
+끈 스토리, 첫 실측 7 — 메타에서 끄는 것은 금지) · `vitest.config.ts` 의 coverage thresholds(첫 실측 floor−2 — statements 84 · branches 78 · functions 82 · lines 89).
 토큰은 **JSON 정본만** 고치고 `pnpm tokens:build` 를 돌려 생성물을 함께 커밋한다 — `tokens:check` 가 생성물의 최신성을, VRT 가 픽셀을 지킨다.
 새 토큰은 값·출처·대비 근거를 `$description` 에 적는다.
 
@@ -146,6 +163,14 @@ cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tm
 error 만 덮기 때문에 이 모양이 됐다. **기준선을 늘리는 PR 은 받지 않는다**(`--suppress-all` 재실행 금지). 위반을 고쳐 줄이면
 같은 PR 에서 `pnpm exec eslint . --prune-suppressions` 로 기준선을 낮춘다. `src/legacy/` 는
 기준선이 아니라 ignores 다(#10) — 동결된 코드는 래칫에 태우지 않는다.
+기준선의 실측(2026-09-30, C4 프루닝 뒤 — 죽은 항목 0): 49 파일 350 건, 규칙 14개 — `jsdoc/require-jsdoc` 190 · `better-tailwindcss/no-restricted-classes` 47 ·
+`ds/no-literal-style-value` 36 · `better-tailwindcss/no-unknown-classes` 28 · `ds/no-forward-ref` 14 · `@typescript-eslint/no-unnecessary-type-assertion` 13 ·
+`jsx-a11y/label-has-associated-control` 10 · `react-hooks/immutability` 3 · `@typescript-eslint/no-floating-promises` 2 · `@typescript-eslint/no-unused-vars` 2 ·
+`react-hooks/refs` 2 · `ds/no-boolean-string-data-attr` 1 · `ds/no-magic-ms` 1 · `jsx-a11y/interactive-supports-focus` 1.
+**그 밖의 모든 규칙은 기준선 없이 통과한다** — `ds/legacy-tone`, `jsdoc/require-description`·`check-tag-names`, `import-x/no-cycle`·`no-self-import`·`no-duplicates`,
+`no-restricted-imports`(배럴·테스트 import 금지), 위 둘을 뺀 `jsx-a11y/*`, 위 둘을 뺀 `react-hooks/*`, 위 넷을 뺀 `@typescript-eslint/*`(recommendedTypeChecked), `js.recommended` 전부.
+이 규칙들은 새 위반이 곧 실패이므로 승격할 것이 없다. **stylelint** 는 기준선 파일이 없다 — 손 CSS 의 위반은 0 이고(C4 에서 theme.css 의 6건을 같은 값의 토큰으로 옮겼다)
+`legacy/shell.css` 만 warning 122건을 `--max-warnings` 로 붙든다(줄이기만 한다). **Prettier** 는 CI 가 `--check` 만 한다 — 첫 적용 커밋은 `.git-blame-ignore-revs` 에 있다.
 
 **발행**은 `main` 머지 시 자동이다(AGENTS.md «릴리스»). 로컬에서 발행하려면 `~/.npmrc` 에
 `//npm.pkg.github.com/:_authToken=<classic PAT: read:packages + write:packages>` 를 두고

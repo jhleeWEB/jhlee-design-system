@@ -91,19 +91,20 @@
 @utility w-ctl-lg { width: var(--height-ctl-lg); }
 
 /* ── 컴포넌트 규칙 ─────────────────────────────────────────────────────────────
-   접기 모션은 카드·아코디언·뷰 패널이 같은 길이와 곡선(--motion-collapse-*)을 읽는다. */
+   접기 모션은 카드·아코디언·뷰 패널이 같은 길이와 곡선(--motion-collapse-*)을 읽는다.
+   간격은 Tailwind 사다리(--spacing 4px)의 배수로 적는다 — 유틸리티(gap-2 · px-3)와 같은 값이고 stylelint 가 px 리터럴을 막는다(C4). */
 .ds-accordion { min-width: 0; }
 .ds-accordion-item { min-width: 0; border: 1px solid var(--chrome-border); border-radius: var(--radius-lg); background: var(--chrome-card); color: var(--chrome-foreground); }
 .ds-accordion-header { display: flex; margin: 0; }
 .ds-accordion-trigger {
-  display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0;
-  border: 0; border-radius: var(--radius-lg); padding: 10px 12px;
-  background: transparent; color: inherit; font: inherit; font-size: var(--text-control); font-weight: 600;
+  display: flex; align-items: center; gap: calc(var(--spacing) * 2); width: 100%; min-width: 0;
+  border: 0; border-radius: var(--radius-lg); padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 3);
+  background: transparent; color: inherit; font: inherit; font-size: var(--text-control); font-weight: var(--font-weight-semibold);
   text-align: left; cursor: pointer;
 }
 .ds-accordion-trigger:focus-visible { outline: 2px solid var(--chrome-ring); outline-offset: 2px; }
 .ds-accordion-trigger:disabled { cursor: default; opacity: .45; }
-.ds-accordion-trigger-label { display: flex; flex: 1; min-width: 0; align-items: center; gap: 8px; }
+.ds-accordion-trigger-label { display: flex; flex: 1; min-width: 0; align-items: center; gap: calc(var(--spacing) * 2); }
 .ds-accordion-chevron { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); transition: rotate var(--motion-collapse-duration) var(--motion-collapse-easing); }
 .ds-accordion-trigger[data-state="open"] .ds-accordion-chevron { rotate: 180deg; }
 .ds-accordion-content { min-width: 0; }
@@ -116,7 +117,7 @@
   transition-delay: 0s, 0s, var(--motion-collapse-duration);
 }
 .ds-accordion-content-clip { min-height: 0; min-width: 0; overflow: hidden; }
-.ds-accordion-content-body { min-width: 0; padding: 4px 12px 12px; }
+.ds-accordion-content-body { min-width: 0; padding: var(--spacing) calc(var(--spacing) * 3) calc(var(--spacing) * 3); }
 
 /* 스크롤 크롬은 내용 위에만 겹친다. 너비를 예약하지 않고 실제 활동이 끝난 뒤 사라진다 — 지연은 JS(MOTION.scrollHideDelayMs), 페이드는 여기. */
 .ds-scroll-area { min-width: 0; min-height: 0; }
@@ -135,7 +136,7 @@
 .ds-scroll-area[data-scroll-active="true"] > .ds-scroll-area-scrollbar:has([data-slot="scroll-area-thumb"]) {
   opacity: 1; pointer-events: auto; transition: none;
 }
-.ds-scroll-area-thumb { position: relative; flex: 1; border-radius: 999px; background: var(--chrome-border-strong); }
+.ds-scroll-area-thumb { position: relative; flex: 1; border-radius: var(--radius-full); background: var(--chrome-border-strong); }
 @media (prefers-reduced-motion: reduce) {
   .ds-scroll-area-scrollbar { transition: none; }
 }

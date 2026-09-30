@@ -71,6 +71,8 @@ export default tseslint.config(
   {
     ignores: [
       "**/node_modules/", "**/dist/", "**/storybook-static/", "**/*.tsbuildinfo", ".claude/", "packages/eslint-rules/src/__tests__/fixtures/",
+      // 산출물 — Playwright 리포트(번들 JS)·결과·커버리지는 gitignore 지만 ESLint 는 gitignore 를 읽지 않는다(C4 실측: report/ 하나로 3,422건).
+      "**/vrt/report/", "**/vrt/results/", "**/coverage/",
       // ./legacy 는 격리·동결이다(#10) — 기준선(suppressions)으로 덮던 것을 계획대로 ignores 로 바꿨다. 새 위반이 생길 일도, 고칠 일도 없는 코드라
       // 래칫에 태우지 않는다. 다음 마이너에서 루트 배럴 재export 와 함께 지운다.
       "packages/ui/src/legacy/",

@@ -65,11 +65,12 @@ describe("반경 사다리", () => {
     expect(model.tokens.filter(t => t.name.startsWith("--radius-") && t.value.includes("--corner-k"))).toEqual([]);
   });
 
-  it("border-radius 원시값 래칫 — theme.css 의 스크롤 썸 1 · legacy shell.css 의 스위치 2 뿐이다", () => {
-    /* 원형(999px · 50%)이라 토큰(--radius-full)으로 바꿔도 그림은 같다 — 옮기면 여기서 줄인다. 줄어들기만 한다. */
+  it("border-radius 원시값 래칫 — legacy shell.css 의 스위치 2 뿐이다", () => {
+    /* 원형(999px · 50%)이라 토큰(--radius-full)으로 바꿔도 그림은 같다 — 옮기면 여기서 줄인다. 줄어들기만 한다.
+     * theme.css 의 스크롤 썸(999px)은 C4 에서 var(--radius-full) 로 옮겼다(stylelint 가 반경 리터럴을 막는다). */
     const raw = auditCorners(sources).filter(f => f.rule === "raw-radius");
-    expect(countByFile(raw)).toEqual({ "legacy/shell.css": 2, "theme.css": 1 });
-    expect(raw.map(f => f.text).sort()).toEqual(["border-radius: 50%", "border-radius: 999px", "border-radius: 999px"]);
+    expect(countByFile(raw)).toEqual({ "legacy/shell.css": 2 });
+    expect(raw.map(f => f.text).sort()).toEqual(["border-radius: 50%", "border-radius: 999px"]);
   });
 
   it("TSX 의 rounded-[…] 는 동심원 calc(var(--radius-…) − 패딩) 뿐이다", () => {

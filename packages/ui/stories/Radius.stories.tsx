@@ -281,8 +281,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** 사다리 견본 · 동심원 · 표. */
-export const Ladder: Story = {};
+export const Ladder: Story = {
+  // color-contrast: 사다리 견본의 캡션 text-muted-foreground(4.33:1) — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #20 · #24)
+  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
+};
 /** 실컴포넌트 — 포커스 링 · 카드 · 캔버스 위 툴바 · 선택된 MediaCard · Alert · 토스트 면 · 열린 드롭다운. */
-export const Components: Story = { render: () => <CornerComponents /> };
+export const Components: Story = {
+  render: () => <CornerComponents />,
+  // color-contrast: 위와 같다. aria-hidden-focus: 열린 드롭다운의 Radix 포커스 가드(aria-hidden 트리 안 tabindex 0)는 Radix 의 것이다
+  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }, { id: "aria-hidden-focus", enabled: false }] } } },
+};
 /** 열린 모달 — xl 반경 + shadow-modal 헤어라인. */
 export const ModalOpen: Story = { render: () => <CornerModal />, parameters: { layout: "fullscreen" } };

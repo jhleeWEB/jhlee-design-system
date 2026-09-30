@@ -10,7 +10,8 @@ const here = dirname(fileURLToPath(import.meta.url));
  *  - 기준선 PNG 는 리눅스 Chromium 한 벌만 커밋한다. macOS 는 폰트 래스터라이즈가 달라 로컬 PNG 를 기준선으로 쓰지 않는다 —
  *    갱신은 `scripts/vrt-update.sh`(도커 `mcr.microsoft.com/playwright:v1.63.0-noble`, CI 의 vrt job 과 같은 이미지)만.
  *  - snapshotPathTemplate 에 플랫폼 접미를 두지 않는 이유가 그것이다: 한 벌이 곧 기준선이다.
- *  - maxDiffPixels 50 은 Phase A 값. self-host 폰트·reducedMotion 이 자리잡는 Phase C 에 0 으로 내린다.
+ *  - maxDiffPixels 0(C1, 계획 §2.5-f) — Phase A 의 50 은 self-host 폰트·reducedMotion 이 자리잡기 전의 여유였다. 같은 이미지에서 같은 입력은
+ *    같은 픽셀이어야 한다: 도커 컨테이너에서 전 스냅샷 0 diff 를 확인하고 내렸다(2026-09-30). 흔들리는 스토리는 여유로 덮지 않고 원인을 고친다.
  *
  * 모서리 전용 프로젝트(#26 의 corners.spec · DPR 2 · 3엔진 골든)는 스쿼클 폐기(#36)와 함께 지웠다 — 반경은 일반 스토리 스냅샷이 본다. */
 const STORIES = /stories\.vrt\.spec\.ts$/;
@@ -27,7 +28,7 @@ export default defineConfig({
   ...(process.env.CI ? { workers: 2 } : {}),
   reporter: process.env.CI ? [["list"], ["html", { open: "never", outputFolder: "./report" }]] : [["list"]],
   expect: {
-    toHaveScreenshot: { animations: "disabled", caret: "hide", maxDiffPixels: 50, scale: "css" },
+    toHaveScreenshot: { animations: "disabled", caret: "hide", maxDiffPixels: 0, scale: "css" },
   },
   use: {
     ...devices["Desktop Chrome"],

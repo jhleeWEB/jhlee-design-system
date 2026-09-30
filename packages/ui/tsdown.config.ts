@@ -34,9 +34,12 @@ export default defineConfig({
   ],
   // 파일 단위 "use client" 는 unbundle 에서 보존된다(dist 25파일 실측). rolldown 의 «번들에서 의미가 안 지켜질 수 있다» 경고만 끈다.
   inputOptions: { checks: { moduleLevelDirective: false } },
-  external: [
-    /^react($|\/)/, /^react-dom($|\/)/, /^radix-ui($|\/)/, /^react-icons($|\/)/, "class-variance-authority", "clsx", "tailwind-merge",
-    // 프리셋의 optional peer — 소비자가 설치한 것을 쓴다(#31). bin(agent/cli)의 node 내장 모듈은 platform neutral 이라 명시해야 경고가 없다.
-    /^eslint($|\/)/, /^eslint-plugin-react($|\/)/, /^eslint-plugin-better-tailwindcss($|\/)/, /^node:/,
-  ],
+  // peer·dependencies 는 번들하지 않는다 — `external` 은 0.23 에서 폐기됐고 `deps.neverBundle` 이 정식 이름이다(#13).
+  deps: {
+    neverBundle: [
+      /^react($|\/)/, /^react-dom($|\/)/, /^radix-ui($|\/)/, /^react-icons($|\/)/, "class-variance-authority", "clsx", "tailwind-merge",
+      // 프리셋의 optional peer — 소비자가 설치한 것을 쓴다(#31). bin(agent/cli)의 node 내장 모듈은 platform neutral 이라 명시해야 경고가 없다.
+      /^eslint($|\/)/, /^eslint-plugin-react($|\/)/, /^eslint-plugin-better-tailwindcss($|\/)/, /^node:/,
+    ],
+  },
 });

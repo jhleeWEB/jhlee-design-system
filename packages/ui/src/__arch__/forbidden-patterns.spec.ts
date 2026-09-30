@@ -92,7 +92,7 @@ const PATTERNS: readonly Pattern[] = [
     baseline: {
       "canvas.css": 1,
       "feedback/toast.css": 1,
-      "theme.css": 14,
+      "theme.css": 6,
     },
   },
   {

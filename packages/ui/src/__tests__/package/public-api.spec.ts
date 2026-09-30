@@ -4,11 +4,20 @@
  * 배럴이 내보내는 이름의 목록이 곧 semver 의 대상이다 — 이름이 사라지면 major, 생기면 minor. 스냅샷으로 고정해 두면 그 변화가 PR diff 에
  * 보이고, 리뷰어가 PR 제목의 type(= 버전 입력, AGENTS.md «릴리스»)과 맞춰 볼 수 있다. 갱신은 의도한 변경일 때만 `-u` 로.
  */
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
+
+/* 배럴의 첫 로드는 radix-ui · react-icons 전량을 끌어온다 — unit(jsdom)·arch 워커가 함께 도는 전체 `pnpm test` 에서 그 비용이
+ * vitest 기본 5초를 넘겨 간헐 실패했다(#17, 실측 5024ms). 로드를 beforeAll 로 빼 테스트 시간에서 제외하고, 그 훅에만 넉넉한 시간을 준다. */
+const BARREL_LOAD_TIMEOUT_MS = 30_000;
 
 describe("공개 API", () => {
-  it("배럴이 내보내는 이름은 이것이 전부다", async () => {
-    const names = Object.keys(await import("../../index")).sort();
+  let names: readonly string[] = [];
+
+  beforeAll(async () => {
+    names = Object.keys(await import("../../index")).sort();
+  }, BARREL_LOAD_TIMEOUT_MS);
+
+  it("배럴이 내보내는 이름은 이것이 전부다", () => {
     expect(names).toMatchInlineSnapshot(`
       [
         "Accordion",

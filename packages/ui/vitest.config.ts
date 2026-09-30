@@ -20,6 +20,15 @@ const here = dirname(fileURLToPath(import.meta.url));
 const ARCH_SPECS = ["src/__arch__/**/*.spec.ts", "src/__tests__/tokens/**/*.spec.ts", "src/__tests__/package/**/*.spec.ts", "src/__tests__/corner.spec.ts"];
 export default defineConfig({
   test: {
+    /* 커버리지(C3) — unit + arch 를 함께 돌린 첫 실측(2026-09-30)의 floor − 2 를 문턱으로 고정한다. 문턱은 «떨어지지 않는다» 를 지키는
+     * 래칫이지 목표가 아니다 — 올릴 때는 실측이 오른 뒤 같은 PR 에서 올린다. 대상은 제품 소스뿐: 스펙·스토리·생성물·동결된 legacy 는 뺀다. */
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/**/*.stories.tsx", "src/__tests__/**", "src/__arch__/**", "src/generated/**", "src/legacy/**", "src/testing/**", "src/**/index.ts"],
+      reporter: ["text-summary"],
+      thresholds: { statements: 84, branches: 78, functions: 82, lines: 89 },
+    },
     projects: [
       {
         test: {
