@@ -7,7 +7,9 @@
  * 기준선을 걷어내는 승격·소비자 프리셋은 Phase C(C4)의 몫이다.
  *
  * 플러그인 버전은 2026-09-30 `npm view` 실측이다. eslint-plugin-jsx-a11y 6.10.2 만 peer 에 ESLint 10 이 없다 —
- * 소스에 제거된 context API(getSourceCode/getFilename/getScope…)가 없어 실제로 동작하므로 peer 경고를 감수하고 둔다(#3).
+ * 소스에 제거된 context API(getSourceCode/getFilename/getScope…)가 없어 실제로 동작한다(#3) — 그래서 루트 package.json 의
+ * `pnpm.peerDependencyRules.allowedVersions` 가 `eslint-plugin-jsx-a11y>eslint: 10` 을 허용해 설치 경고를 지운다(#8). 업스트림이 ESLint 10 을
+ * peer 에 올리면 그 줄을 지운다. 10.x 마이너에서 플러그인이 깨지면 빼고, 같은 규칙군은 Storybook addon-a11y(axe, test 'error')가 브라우저에서 맡는다.
  */
 import js from "@eslint/js";
 import ds from "@buildos/eslint-rules";

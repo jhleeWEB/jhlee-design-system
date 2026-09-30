@@ -35,7 +35,7 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   src/generated/legacy-classes.json 생성물 — 루트 eslint.config.js 와 소비자 프리셋(src/eslint)의 `no-restricted-classes` 가 `{pattern, fix}` 로 읽는다 = **`eslint --fix` 가 곧 코드모드**.
                              프리셋이 import 해 배포물에 실어야 해서 src/generated/ 에 있다(#31)
   src/eslint/                **소비자 린트 프리셋** `@jhleeweb/squircle-design-system/eslint`(#31) — `squircleDesignSystem({ entryPoint })` 가 flat config 조각을 낸다:
-                             `react/forbid-elements`(button input select textarea dialog table) · `better-tailwindcss/no-unknown-classes`(entryPoint = 소비자 진입 CSS) ·
+                             `no-restricted-syntax`(raw button input select textarea dialog table — #33 에서 react/forbid-elements 대체) · `better-tailwindcss/no-unknown-classes`(entryPoint = 소비자 진입 CSS) ·
                              `no-restricted-classes`(옛 이름 개명 + hex·색 함수·단위·격자 밖 간격 — `restrictedClassPatterns()`, 루트 eslint.config.js 와 한 벌) ·
                              `no-restricted-syntax`(style={{color|background|border}}, `styleIgnores`) · `ds/legacy-tone`(정본 `rules/legacy-tone.ts`, packages/eslint-rules 는 재수출).
                              `spacing.ts` 가 간격 어휘의 한 벌. 상대 import 는 `.ts` 확장자(루트 config 가 Node 24 로 빌드 없이 읽는다). peer 셋은 optional

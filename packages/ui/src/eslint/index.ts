@@ -3,7 +3,8 @@
  *
  * «인라인 CSS 덮어쓰기 금지·토큰 밖 값 금지» 는 문서가 아니라 린트가 고정한다 — 문서는 LLM 이 읽고도 잊지만 린트는 커밋마다 돈다.
  * 조각이 잡는 것 다섯:
- *  1. `react/forbid-elements` — raw `button input select textarea dialog table` 대신 DS 컴포넌트.
+ *  1. `no-restricted-syntax`(요소) — raw `button input select textarea dialog table` 대신 DS 컴포넌트. `react/forbid-elements` 와 같은 일을
+ *     코어 규칙으로 한다 — eslint-plugin-react 7.37.5 의 peer 가 ESLint 10 을 빼 npm 소비자의 설치가 ERESOLVE 로 죽었다(#33).
  *  2. `better-tailwindcss/no-unknown-classes` — theme.css 밖의 클래스. Tailwind 기본 사다리는 `initial` 로 지웠으므로 LLM 이 쓴
  *     `text-sm`·`bg-gray-100` 은 **CSS 없이 조용히 무시된다** — 여기서 즉시 오류로 바꾼다. `entryPoint` 는 소비자의 진입 CSS 다.
  *  3. `better-tailwindcss/no-restricted-classes` — hex·색 함수·단위 리터럴·격자 밖 간격 + 옛 이름 개명(`{pattern, fix}` = `--fix` 가 곧 코드모드).
@@ -12,7 +13,7 @@
  *
  * 루트 eslint.config.js 도 같은 패턴(`restrictedClassPatterns` · `SPACING_*`)을 여기서 가져간다 — 두 곳에 적으면 하나가 뒤처진다. 그래서 이 디렉터리의
  * 상대 import 는 `.ts` 확장자를 단다: Node 24 가 빌드 없이 이 파일을 읽을 때(type stripping) 확장자 없는 지정자를 풀지 못한다. tsdown 은 출력에서 `.js` 로 바꾼다.
- * 플러그인 셋(eslint-plugin-react · eslint-plugin-better-tailwindcss · eslint)은 optional peer 다 — 프리셋을 import 하는 소비자만 설치한다.
+ * 플러그인 둘(eslint-plugin-better-tailwindcss · eslint)은 optional peer 다 — 프리셋을 import 하는 소비자만 설치한다.
  *
  * @example
  * // eslint.config.js (소비 레포)
@@ -21,7 +22,6 @@
  */
 import type { ESLint, Linter } from "eslint";
 import betterTailwindcss from "eslint-plugin-better-tailwindcss";
-import react from "eslint-plugin-react";
 
 import legacyClasses from "../generated/legacy-classes.json" with { type: "json" };
 import legacyTone, { LEGACY_TONES } from "./rules/legacy-tone.ts";
@@ -90,6 +90,19 @@ const FORBIDDEN_ELEMENTS: readonly { element: string; message: string }[] = [
   },
 ];
 
+/**
+ * raw 요소 선택자 — JSX 의 소문자 태그(`<button>`)와 `createElement("button")` 을 잡는다. `<Button>`(대문자)·`<ui.button>`(멤버)은 JSXIdentifier 이름이
+ * 다르거나 모양이 달라 걸리지 않는다 — `react/forbid-elements` 와 같은 범위다.
+ */
+const elementSelectors = (): { selector: string; message: string }[] =>
+  FORBIDDEN_ELEMENTS.flatMap(({ element, message }) => [
+    { selector: `JSXOpeningElement > JSXIdentifier.name[name="${element}"]`, message },
+    {
+      selector: `CallExpression[callee.property.name="createElement"] > Literal.arguments:first-child[value="${element}"]`,
+      message,
+    },
+  ]);
+
 /** `style={{ … }}` 에서 막는 키 — 색·면·테두리·그림자. 치수(width·transform)는 캔버스 계산에 쓰이므로 두지 않는다. */
 const STYLE_KEYS =
   "color|background|backgroundColor|border|borderColor|borderTop|borderRight|borderBottom|borderLeft|outline|outlineColor|boxShadow|fill|stroke";
@@ -138,9 +151,7 @@ export function squircleDesignSystem(options: SquircleDesignSystemOptions): Lint
     {
       name: "squircle-design-system/elements",
       files,
-      plugins: { react },
-      settings: { react: { version: "19.0" } },
-      rules: { "react/forbid-elements": [severity, { forbid: [...FORBIDDEN_ELEMENTS] }] },
+      rules: { "no-restricted-syntax": [severity, ...elementSelectors()] },
     },
     {
       name: "squircle-design-system/classes",
@@ -161,8 +172,10 @@ export function squircleDesignSystem(options: SquircleDesignSystemOptions): Lint
       files,
       ignores: styleIgnores,
       rules: {
+        // 같은 규칙의 옵션은 뒤 설정이 통째로 덮으므로 요소 선택자를 다시 싣는다 — styleIgnores 안의 파일은 위 elements 만 받는다.
         "no-restricted-syntax": [
           severity,
+          ...elementSelectors(),
           {
             selector: `JSXAttribute[name.name="style"] > JSXExpressionContainer > ObjectExpression > Property[key.name=/^(?:${STYLE_KEYS})$/]`,
             message:

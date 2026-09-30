@@ -47,9 +47,13 @@ describe("eslint 프리셋", { timeout: 60_000 }, () => {
     expect(rules).toEqual([]);
   });
 
-  it("raw <button> 은 react/forbid-elements", async () => {
-    const { rules } = await lint("export const A = () => <button>x</button>;");
-    expect(rules).toContain("react/forbid-elements");
+  it('raw 요소(<button> · createElement("table"))는 no-restricted-syntax — scene/ 안에서도, <Button> 은 통과', async () => {
+    const code =
+      'export const A = () => <><button>x</button><Button>y</Button><ui.button /></>;\nexport const B = () => React.createElement("table");';
+    expect((await lint(code)).rules.filter((r) => r === "no-restricted-syntax")).toHaveLength(2);
+    expect(
+      (await lint(code, "src/scene/Canvas.jsx")).rules.filter((r) => r === "no-restricted-syntax"),
+    ).toHaveLength(2);
   });
 
   it("Tailwind 기본 사다리(text-sm · bg-gray-100)는 no-unknown-classes — CSS 없이 조용히 무시되는 클래스", async () => {

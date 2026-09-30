@@ -37,7 +37,7 @@ description: Squircle Design System({{name}})으로 화면을 조립할 때 — 
    import { squircleDesignSystem } from "{{name}}/eslint";
    export default [...squircleDesignSystem({ entryPoint: new URL("./src/app/globals.css", import.meta.url).pathname })];
    ```
-   `pnpm exec eslint <바꾼 파일>` — `no-unknown-classes`(토큰 밖 클래스) · `no-restricted-classes`(옛 이름·hex·임의값·격자 밖 간격, `--fix` 가 개명) · `react/forbid-elements` · `no-restricted-syntax`(인라인 색) · `ds/legacy-tone` 이 0 이어야 한다.
+   `pnpm exec eslint <바꾼 파일>` — `no-unknown-classes`(토큰 밖 클래스) · `no-restricted-classes`(옛 이름·hex·임의값·격자 밖 간격, `--fix` 가 개명) · `no-restricted-syntax`(raw 요소 · 인라인 색) · `ds/legacy-tone` 이 0 이어야 한다.
 2. 타입 — `pnpm exec tsc --noEmit` 0. 매니페스트에 없는 prop 은 여기서도 잡힌다.
 3. 다크 — `html[data-theme="dark"]` 에서 크롬만 바뀌고 `canvas-*` 는 불변인지 스토리·화면으로 확인한다.
 4. 보고 — 바꾼 파일, 쓴 부품, «DS 확장 필요» 목록, 린트·타입 결과를 한 번에 적는다.
