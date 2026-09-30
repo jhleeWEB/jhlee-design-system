@@ -1,9 +1,9 @@
 /* 일반 Card의 배치는 건드리지 않고 접기 모드가 있는 카드만 전환을 소유한다. */
 [data-slot="card"][data-collapse-to] {
-  --card-strip-width: 36px;
+  --card-strip-width: var(--size-strip);
   transition-property: width, flex-basis, flex-grow, row-gap;
-  transition-duration: var(--motion-collapse-duration, 200ms);
-  transition-timing-function: var(--motion-collapse-easing, ease-out);
+  transition-duration: var(--duration-collapse);
+  transition-timing-function: var(--ease-out-quick);
 }
 
 .ds-card-header-content {
@@ -12,7 +12,7 @@
   gap: inherit;
   min-height: 0;
   transition:
-    grid-template-rows var(--motion-collapse-duration, 200ms) var(--motion-collapse-easing, ease-out),
+    grid-template-rows var(--duration-collapse) var(--ease-out-quick),
     visibility 0s;
 }
 .ds-card-header-inner {
@@ -31,7 +31,7 @@
 }
 .ds-card-header-content[aria-hidden="true"] {
   visibility: hidden;
-  transition-delay: 0s, var(--motion-collapse-duration, 200ms);
+  transition-delay: 0s, var(--duration-collapse);
 }
 
 [data-collapse-to="strip"] {
@@ -56,7 +56,7 @@
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--motion-collapse-duration, 200ms) var(--motion-collapse-easing, ease-out);
+  transition: opacity var(--duration-collapse) var(--ease-out-quick);
 }
 [data-collapse-to="strip"][data-collapsed="true"]:not([data-card-measuring]) {
   width: var(--card-strip-width) !important;
@@ -80,8 +80,4 @@
   pointer-events: auto;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  [data-slot="card"][data-collapse-to] {
-    --motion-collapse-duration: 0ms;
-  }
-}
+/* reduced-motion 은 토큰이 맡는다 — generated/tokens.css 가 --duration-collapse 를 0ms 로 바꾼다(#21 전에는 여기서 옛 이름을 0 으로 덮었다). */

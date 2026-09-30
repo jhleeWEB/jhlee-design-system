@@ -156,7 +156,7 @@ export const Textarea = forwardRef<
       aria-invalid={invalid || undefined}
       className={cn(
         inputVariants({ size: "md", invalid: invalid ?? false }),
-        "leading-relaxed h-auto min-h-[56px] resize-y py-3",
+        "leading-relaxed h-auto min-h-(--size-textarea) resize-y py-3",
         className,
       )}
       {...rest}

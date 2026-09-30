@@ -157,7 +157,7 @@ export function ToastProvider({
                   <Button
                     data-slot="toast-action"
                     size="sm"
-                    className="mt-3 h-auto min-h-[30px] max-w-full py-1 whitespace-normal"
+                    className="mt-3 h-auto min-h-(--size-control-sm) max-w-full py-1 whitespace-normal"
                   >
                     {item.action.label}
                   </Button>
@@ -180,7 +180,7 @@ export function ToastProvider({
         <RadixToast.Viewport
           data-slot="toast-viewport"
           className={cn(
-            "pointer-events-none fixed z-toast m-0 flex max-h-screen w-[min(352px,100vw)] list-none flex-col gap-3 p-4 outline-none",
+            "pointer-events-none fixed z-toast m-0 flex max-h-screen w-[min(var(--size-toast),100vw)] list-none flex-col gap-3 p-4 outline-none",
             VIEWPORT_POSITION[position],
           )}
         />

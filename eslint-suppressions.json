@@ -129,14 +129,11 @@
     }
   },
   "packages/ui/src/feedback/Toast.tsx": {
-    "better-tailwindcss/no-restricted-classes": {
-      "count": 2
-    },
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
     },
     "ds/no-literal-style-value": {
-      "count": 2
+      "count": 1
     },
     "jsdoc/require-jsdoc": {
       "count": 10
@@ -222,14 +219,6 @@
       "count": 2
     }
   },
-  "packages/ui/src/overlay/Drawer.variants.ts": {
-    "better-tailwindcss/no-restricted-classes": {
-      "count": 2
-    },
-    "ds/no-literal-style-value": {
-      "count": 2
-    }
-  },
   "packages/ui/src/overlay/DropdownMenu.tsx": {
     "jsdoc/require-jsdoc": {
       "count": 8
@@ -305,17 +294,11 @@
     }
   },
   "packages/ui/src/primitives/Input.tsx": {
-    "better-tailwindcss/no-restricted-classes": {
-      "count": 1
-    },
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
     },
     "ds/no-forward-ref": {
       "count": 2
-    },
-    "ds/no-literal-style-value": {
-      "count": 1
     },
     "jsdoc/require-jsdoc": {
       "count": 2
@@ -335,15 +318,9 @@
   "packages/ui/src/primitives/MediaCard.variants.ts": {
     "better-tailwindcss/no-restricted-classes": {
       "count": 1
-    },
-    "ds/no-literal-style-value": {
-      "count": 1
     }
   },
   "packages/ui/src/primitives/Misc.tsx": {
-    "ds/no-literal-style-value": {
-      "count": 1
-    },
     "jsdoc/require-jsdoc": {
       "count": 3
     }
