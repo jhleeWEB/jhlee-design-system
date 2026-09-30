@@ -28,7 +28,7 @@
   --ok-pale: var(--palette-moss-50);
   --warn-pale: var(--palette-amber-50);
   --danger-pale: var(--palette-rust-50);
-  --panel-w: 300px;
+  --panel-w: var(--size-panel);
   --inspect-w: 340px;
   --topbar-h: 56px;
   --gap: var(--space-hairline);

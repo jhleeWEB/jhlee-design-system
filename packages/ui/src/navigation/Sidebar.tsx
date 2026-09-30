@@ -44,7 +44,7 @@ export function Sidebar({
           "flex shrink-0 flex-col gap-2 bg-card p-3",
           "transition-[width] duration-base motion-reduce:transition-none",
           side === "left" ? "border-r border-border" : "border-l border-border",
-          collapsed ? "w-rail items-center" : "w-[var(--panel-w)]",
+          collapsed ? "w-rail items-center" : "w-(--size-panel)",
           className,
         )}
         {...rest}

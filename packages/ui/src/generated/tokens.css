@@ -84,6 +84,12 @@
   --size-rail: 64px;
   --size-strip: 36px;
   --size-scrollbar: 6px;
+  --size-panel: 300px;
+  --size-sheet-sm: 280px;
+  --size-sheet-md: 460px;
+  --size-toast: 352px;
+  --size-textarea: 56px;
+  --size-kbd: 20px;
   --space-hairline: 1px;
   --space-card-gap: 12px;
   --space-panel-inset: 12px;

@@ -70,12 +70,8 @@ const PATTERNS: readonly Pattern[] = [
     // 한 줄 안의 `[…]` 만 본다 — 여러 줄에 걸친 배열 리터럴을 클래스 대괄호로 오인하지 않게.
     find: (file) => matches(file.code, /\[[^\]\n]*\d+(?:\.\d+)?(?:px|rem|ms|s)\b[^\]\n]*\]/g),
     // #22 가 오버레이의 `w-[min(560px,calc(100vw-24px))]` 류를 `w-dialog-fluid max-w-dialog-md`(손 @utility + --container-*)로 흡수해 24 → 5.
-    // 남은 다섯은 같은 값의 토큰이 없다(토스트 352px · 30px · 텍스트영역 56px · 아래쪽 서랍 280/460px) — Phase D 의 몫.
-    baseline: {
-      "feedback/Toast.tsx": 2,
-      "overlay/Drawer.variants.ts": 2,
-      "primitives/Input.tsx": 1,
-    },
+    // 남은 다섯은 #21 이 --size-{toast,textarea,sheet-*} 신설과 --size-control-sm 로 옮겨 0 이다.
+    baseline: {},
   },
   {
     id: "tsx-tailwind-default-scale",
@@ -88,11 +84,8 @@ const PATTERNS: readonly Pattern[] = [
         /\b(?:duration|z|leading|font|tracking)-\d+\b|\brounded-\[(?!calc\(var\(--radius-)/g,
       ),
     // #18 이 z-50 → z-scrim/z-modal/z-popover/z-toast/z-tooltip, z-1 → z-raised, duration-100/150/200 → duration-fast/base/slow 로 바꿔 24파일 → 3건.
-    // #22 가 rounded-[6px] → rounded-sm(같은 6px). 남은 둘은 같은 값의 토큰이 없다(duration-120 · leading-5) — Phase D 의 몫.
-    baseline: {
-      "primitives/MediaCard.variants.ts": 1,
-      "primitives/Misc.tsx": 1,
-    },
+    // #22 가 rounded-[6px] → rounded-sm(같은 6px). 남은 둘은 #21 이 duration-fast(120 → 100ms) · leading-(--size-kbd)(20px) 로 옮겨 0 이다.
+    baseline: {},
   },
   {
     id: "css-px-literal",
@@ -110,19 +103,15 @@ const PATTERNS: readonly Pattern[] = [
     why: "`.ds-*` CSS 의 hex 색은 토큰 밖 색이다 — 크롬은 `var(--chrome-*)`, 캔버스는 `var(--canvas-*)` 만 쓴다(혼용 규칙 ②). 토큰 정의 자리는 세지 않는다",
     kinds: ["css"],
     find: (file) => cssValues(file, /#[0-9a-fA-F]{3,8}\b/g),
-    baseline: {
-      "canvas.css": 1,
-    },
+    baseline: {},
   },
   {
     id: "css-ms-literal",
     why: "`.ds-*` CSS 의 ms 는 모션 토큰(`--motion-*`·`--duration-*`)이어야 한다 — 값이 흩어지면 접기·토스트·스크롤바가 서로 다른 박자로 움직인다. 0 과 토큰 정의 자리는 세지 않는다",
     kinds: ["css"],
     find: (file) => cssValues(file, /(?<![\w.-])(?!0ms\b)\d+(?:\.\d+)?ms\b/g),
-    // toast.css 4 · theme.css 1 은 #18 이 --duration-* 참조로 바꿨다. card-motion.css 의 넷은 var() 의 폴백값이다.
-    baseline: {
-      "primitives/card-motion.css": 4,
-    },
+    // toast.css 4 · theme.css 1 은 #18 이 --duration-* 참조로 바꿨다. card-motion.css 의 넷(var() 폴백)은 #21 이 지워 0 이다.
+    baseline: {},
   },
   {
     id: "js-ms-literal",
@@ -204,11 +193,8 @@ const PATTERNS: readonly Pattern[] = [
     why: "var(--ink) · var(--gap) · var(--size-gap) · var(--color-cool-500) 같은 옛 이름은 legacy.json 의 $deprecated alias 다 — 새 정본 이름(--chrome-* · --canvas-* · --palette-* · --space-* · --font-stack-*)을 쓴다. 옛 이름 제거는 major 이고 그때 이 기준선이 0 이어야 한다(#18)",
     kinds: ["ts", "tsx", "css"],
     find: (file) => matches(file.code, LEGACY_ALIAS_USE),
-    // tokens.css 의 body 는 #20 · #24 에서 크롬(background · foreground)으로 옮겨 0 이다. canvas.css 는 폴백 사슬의 첫 고리다.
-    baseline: {
-      "canvas.css": 2,
-      "navigation/Sidebar.tsx": 1,
-    },
+    // tokens.css 의 body 는 #20 · #24 에서 크롬(background · foreground)으로 옮겨 0 이다. canvas.css(--muted · --mono 폴백)와 Sidebar(--panel-w)는 #21 이 --canvas-muted · --font-stack-mono · --size-panel 로 옮겨 0 이다.
+    baseline: {},
   },
 ];
 

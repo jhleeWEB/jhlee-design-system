@@ -8,7 +8,7 @@ import { cva } from "../cn";
 export const mediaCardVariants = cva(
   [
     "group relative flex min-w-0 bg-card text-left",
-    "transition-[box-shadow,border-color] duration-120 motion-reduce:transition-none",
+    "transition-[box-shadow,border-color] duration-fast motion-reduce:transition-none",
   ],
   {
     variants: {

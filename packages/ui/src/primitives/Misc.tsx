@@ -10,7 +10,7 @@ export function Kbd({ className, ...rest }: React.HTMLAttributes<HTMLElement>) {
       data-slot="kbd"
       className={cn(
         "inline-flex min-w-7 items-center justify-center rounded-sm border border-border-strong",
-        "bg-muted px-2 font-mono text-micro leading-5 text-muted-foreground",
+        "bg-muted px-2 font-mono text-micro leading-(--size-kbd) text-muted-foreground",
         className,
       )}
       {...rest}

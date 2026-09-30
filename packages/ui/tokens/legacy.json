@@ -85,8 +85,8 @@
   "danger-pale": { "$type": "color", "$value": "{palette.rust.50}", "$deprecated": "chrome.danger-soft." },
   "panel-w": {
     "$type": "dimension",
-    "$value": "300px",
-    "$deprecated": "legacy shell.css 의 3열 셸 전용 — 새 이름 없음."
+    "$value": "{size.panel}",
+    "$deprecated": "size.panel(--size-panel, 같은 300px, #21)."
   },
   "inspect-w": {
     "$type": "dimension",

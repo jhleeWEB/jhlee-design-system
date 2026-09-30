@@ -29,6 +29,27 @@
     "scrollbar": {
       "$value": "6px",
       "$description": "겹치는 스크롤바 두께 — 공간을 차지하지 않고 내용 위에만 겹친다(ScrollArea 계약)."
+    },
+    "panel": {
+      "$value": "300px",
+      "$description": "펼친 사이드바·3열 셸 패널 폭 — 옛 --panel-w 값 그대로(#21). Sidebar 가 w-(--size-panel) 로 읽는다."
+    },
+    "sheet": {
+      "$description": "아래에서 올라오는 Drawer(side=bottom)의 높이 — 뷰포트 90dvh 와 min() 으로 겹친다. 값은 Drawer.variants 의 옛 대괄호 리터럴 그대로(#21).",
+      "sm": { "$value": "280px" },
+      "md": { "$value": "460px" }
+    },
+    "toast": {
+      "$value": "352px",
+      "$description": "토스트 뷰포트 폭 — 100vw 와 min() 으로 겹친다(Toast.tsx 의 옛 리터럴, #21)."
+    },
+    "textarea": {
+      "$value": "56px",
+      "$description": "Textarea 최소 높이 — 두 줄(13px · leading-relaxed)과 py-3 을 담는 실측 값(Input.tsx 의 옛 리터럴, #21)."
+    },
+    "kbd": {
+      "$value": "20px",
+      "$description": "단축키 표기(Kbd)의 줄높이 — 10px 글자를 20px 줄에 앉혀 높이를 control 과 무관하게 고정한다(옛 leading-5, #21)."
     }
   },
   "space": {
