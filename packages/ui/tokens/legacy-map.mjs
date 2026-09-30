@@ -2,7 +2,7 @@
  *
  * 표의 출처는 둘이다: ① legacy.json 의 alias 토큰 가운데 값이 참조 하나(`{chrome.card}`)인 것 — 옛 경로가 새 경로를 가리키므로 «개명» 이고,
  * ② 파일 머리 `renames` — 옛 이름이 새 정본의 다른 토큰과 글자가 같아 alias 토큰을 둘 수 없는 개명(chrome.accent · chrome.muted).
- * build.mjs 가 이것으로 `eslint/legacy-classes.json`(유틸 코드모드 = no-restricted-classes 의 {pattern, fix})을 만들고,
+ * build.mjs 가 이것으로 `src/generated/legacy-classes.json`(유틸 코드모드 = no-restricted-classes 의 {pattern, fix})을 만들고,
  * scripts/codemod-css-vars.mjs 가 `var(--chrome-*)`·`var(--radius-*)` 를 바꾼다. 표를 두 곳에 손으로 적으면 하나가 뒤처진다. */
 import { LEGACY_FILE } from "./schema.ts";
 

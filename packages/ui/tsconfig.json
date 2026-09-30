@@ -13,7 +13,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "exactOptionalPropertyTypes": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    // src/eslint/ 는 루트 eslint.config.js 가 Node 24 로 빌드 없이 읽는다(type stripping) — 확장자 없는 지정자를 못 풀어 `.ts` 를 단다(#31).
+    // noEmit(base) 이라 허용되고, tsdown(rolldown) 은 출력에서 `.js` 로 바꾼다.
+    "allowImportingTsExtensions": true
   },
   "include": ["src"],
   // 테스트·아키텍처 가드는 tsconfig.test.json 이, 스토리는 tsconfig.stories.json 이 같은 엄격도로 검사한다.

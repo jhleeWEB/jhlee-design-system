@@ -16,7 +16,9 @@
     "lint": "eslint . --max-warnings 0",
     "tokens:build": "pnpm --filter @jhleeweb/squircle-design-system tokens:build",
     "tokens:check": "pnpm --filter @jhleeweb/squircle-design-system tokens:check",
-    "verify": "pnpm typecheck && pnpm lint && pnpm tokens:check && pnpm test && pnpm build",
+    "manifest:build": "pnpm --filter @jhleeweb/squircle-design-system manifest:build",
+    "manifest:check": "pnpm --filter @jhleeweb/squircle-design-system manifest:check",
+    "verify": "pnpm typecheck && pnpm lint && pnpm tokens:check && pnpm manifest:check && pnpm test && pnpm build",
     "storybook": "pnpm --filter @jhleeweb/squircle-design-system storybook",
     "storybook:build": "pnpm --filter @jhleeweb/squircle-design-system storybook:build",
     "release": "semantic-release"
