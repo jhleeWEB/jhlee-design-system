@@ -184,9 +184,8 @@ const PATTERNS: readonly Pattern[] = [
     why: "parcel · FSI · TBV · verdict · 필지 · 법규 는 원 저장소(인도 주거 컨피규레이터)의 도메인 어휘다 — 디자인 시스템은 도메인을 모른다. legacy 격리(`./legacy`)와 함께 앱으로 돌려보낸다",
     kinds: ["ts", "tsx"],
     find: (file) => matches(file.code, /\b(?:parcel|FSI|TBV|verdict)\b|To be verified|필지|법규/g),
-    baseline: {
-      "data/DescriptionList.tsx": 1,
-    },
+    // DescriptionList 의 잠정 값 툴팁 «To be verified» 는 #46 이 `provisionalLabel`(기본 "Provisional")로 앱에 넘겨 0 이다.
+    baseline: {},
   },
   {
     id: "legacy-alias-use",
