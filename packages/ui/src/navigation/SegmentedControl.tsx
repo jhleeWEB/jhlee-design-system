@@ -1,5 +1,8 @@
 "use client";
+import type { HTMLAttributes, ReactNode, RefAttributes } from "react";
+
 import { cn } from "../cn";
+import { segmentedControlItemVariants } from "./SegmentedControl.variants";
 
 /* 세그먼트 컨트롤 — 배타적 뷰 전환(Plan ↔ Model).
  *
@@ -9,39 +12,69 @@ import { cn } from "../cn";
  * 무엇이 현재 상태인가» 가 흐려진다. 트랙+pill 은 상태를, 채움은 동작을 말한다.
  *
  * `controls.tsx`의 기존 Segmented도 DS를 선택한 앱에서는 이 구현을 쓴다. */
+
+/** 세그먼트 한 칸. */
 export interface SegmentedOption<T extends string | number> {
+  /** 칸이 고르는 값 — `onChange` 로 돌아온다. */
   value: T;
-  label: React.ReactNode;
+  /** 칸에 보일 이름. */
+  label: ReactNode;
+  /**
+   * 이 칸만 고를 수 없게 한다 — 키보드 이동에서도 건너뛴다.
+   * @default false
+   */
   disabled?: boolean;
 }
 
+/** `SegmentedControl` 의 props — `<div>` 속성(ref 는 radiogroup 뿌리에 닿는다)에 값·선택지를 더한다. */
+export interface SegmentedControlProps<T extends string | number>
+  extends
+    Omit<HTMLAttributes<HTMLDivElement>, "onChange" | "defaultValue" | "role">,
+    RefAttributes<HTMLDivElement> {
+  /** 고를 수 있는 값들 — 왼쪽부터 이 순서로 놓인다. */
+  options: readonly SegmentedOption<T>[];
+  /** 지금 고른 값(제어). */
+  value: T;
+  /** 칸을 누르거나 화살표·Home·End 로 옮겼을 때 새 값을 받는다. */
+  onChange: (value: T) => void;
+  /** 스크린리더가 읽는 이 컨트롤의 이름 — "View mode" 처럼. */
+  label: string;
+  /**
+   * 칸 높이 — `sm` — 24px, 라벨 글자 · `md` — 28px, 컨트롤 글자
+   * @default "md"
+   */
+  size?: "sm" | "md";
+  /**
+   * 컨트롤 전체를 고를 수 없게 한다 — 탭 순서에서도 빠진다.
+   * @default false
+   */
+  disabled?: boolean;
+}
+
+/** 배타적 뷰 전환 — 트랙 위의 흰 pill 이 지금 고른 값이다(radiogroup · roving tabindex). */
 export function SegmentedControl<T extends string | number>({
   options,
   value,
   onChange,
   label,
-  size = "md",
+  size,
   className,
   disabled = false,
-}: {
-  options: readonly SegmentedOption<T>[];
-  value: T;
-  onChange: (value: T) => void;
-  /** 스크린리더가 읽는 이 컨트롤의 이름 — "View mode" 처럼. */
-  label: string;
-  size?: "sm" | "md";
-  className?: string;
-  disabled?: boolean;
-}) {
+  onKeyDown,
+  ...rest
+}: SegmentedControlProps<T>) {
   const enabled = options.filter((option) => !option.disabled);
   const tabStop = disabled ? undefined : (enabled.find((option) => option.value === value) ?? enabled[0]);
   return (
     <div
-      data-slot="segmented"
       role="radiogroup"
       aria-label={label}
       aria-disabled={disabled || undefined}
+      {...rest}
+      data-slot="segmented"
+      data-size={size ?? "md"}
       onKeyDown={(event) => {
+        onKeyDown?.(event);
         if (
           disabled ||
           event.defaultPrevented ||
@@ -89,13 +122,10 @@ export function SegmentedControl<T extends string | number>({
             tabIndex={option === tabStop ? 0 : -1}
             onClick={() => onChange(option.value)}
             className={cn(
-              "font-inherit appearance-none border-0 bg-transparent",
+              segmentedControlItemVariants({ size }),
               /* 동심원 — 안쪽 반경 = 바깥(rounded-md) − 패딩(p-0.5) = 8 − 2 = 6px(#26). 스쿼클 폐기(#36) 뒤에도 값이 옛 rounded-sm 과 같아 그대로 둔다 —
                  바깥 토큰이 바뀌면 안쪽이 따라가는 것이 임의값 6px 보다 낫다. */
-              "cursor-pointer rounded-[calc(var(--radius-md)-var(--spacing)*0.5)] px-3 font-medium transition-colors duration-fast",
-              "focus-visible:focus-ring focus-visible:outline-none",
-              "disabled:pointer-events-none disabled:opacity-45",
-              size === "sm" ? "h-6 text-label" : "h-7 text-control",
+              "rounded-[calc(var(--radius-md)-var(--spacing)*0.5)]",
               active ? "bg-card text-primary shadow-chip" : "text-muted-foreground hover:text-foreground-2",
             )}
           >

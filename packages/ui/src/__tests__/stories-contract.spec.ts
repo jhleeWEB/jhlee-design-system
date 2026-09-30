@@ -19,15 +19,7 @@ const SRC = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 /** 배럴 기준 모듈 경로(`src/` 상대, 확장자 없음). Phase D 가 소비처 많은 순으로 지운다.
  *  `legacy/*`(shell·controls·design-system)는 여기 없다 — 루트 배럴이 `@deprecated` const 별칭으로만 내보내
  *  스캐너(`export … from`)에 잡히지 않고, 격리·동결된 코드라 스토리 계약 밖이다(#10). */
-const STORIES_MISSING: readonly string[] = [
-  "navigation/Accordion",
-  "navigation/BackButton",
-  "navigation/Breadcrumb",
-  "navigation/ScrollArea",
-  "navigation/SegmentedControl",
-  "navigation/Sidebar",
-  "navigation/Toolbar",
-];
+const STORIES_MISSING: readonly string[] = [];
 
 const REQUIRED_EXPORTS = ["Default", "Variants", "ThemeContrast"] as const;
 
@@ -57,6 +49,21 @@ const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
   "src/feedback/Spinner.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/feedback/Spinner.stories.tsx#Variants": ["color-contrast"],
   "src/feedback/Toast.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/navigation/Accordion.stories.tsx#ThemeContrast": ["color-contrast", "landmark-unique"],
+  "src/navigation/BackButton.stories.tsx#Default": ["color-contrast"],
+  "src/navigation/BackButton.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/navigation/BackButton.stories.tsx#Variants": ["color-contrast"],
+  "src/navigation/Breadcrumb.stories.tsx#Default": ["color-contrast"],
+  "src/navigation/Breadcrumb.stories.tsx#ThemeContrast": ["color-contrast", "landmark-unique"],
+  "src/navigation/Breadcrumb.stories.tsx#Variants": ["color-contrast"],
+  "src/navigation/ScrollArea.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/navigation/SegmentedControl.stories.tsx#Default": ["color-contrast"],
+  "src/navigation/SegmentedControl.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/navigation/SegmentedControl.stories.tsx#Variants": ["color-contrast"],
+  "src/navigation/Sidebar.stories.tsx#Default": ["color-contrast"],
+  "src/navigation/Sidebar.stories.tsx#ThemeContrast": ["color-contrast", "landmark-unique"],
+  "src/navigation/Sidebar.stories.tsx#Variants": ["color-contrast"],
+  "src/navigation/Toolbar.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/overlay/AlertDialog.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/overlay/Drawer.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/overlay/DropdownMenu.stories.tsx#ThemeContrast": ["color-contrast"],

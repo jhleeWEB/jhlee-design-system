@@ -131,19 +131,14 @@ const PATTERNS: readonly Pattern[] = [
     why: "JSX 의 size={16} · width={12} · strokeWidth={2} 는 아이콘·치수 토큰 밖 숫자다 — `lib/icons.ts` 한 곳(16px · strokeWidth 2)과 `--size-*` 토큰으로 모은다",
     kinds: ["tsx"],
     find: (file) => matches(file.code, /\b(?:size|width|height|strokeWidth)=\{\s*\d+(?:\.\d+)?\s*\}/g),
-    baseline: {
-      "navigation/BackButton.tsx": 2,
-    },
+    baseline: {},
   },
   {
     id: "forward-ref",
     why: "React 19 는 ref 가 일반 prop 이다 — forwardRef 는 displayName·제네릭·docgen 을 흐리는 옛 형태라 컴포넌트별 PR 로 걷어낸다(계획 §2.3 규칙 · Phase D)",
     kinds: ["ts", "tsx"],
     find: (file) => matches(file.code, /\bforwardRef\b/g),
-    baseline: {
-      "navigation/Accordion.tsx": 6,
-      "navigation/BackButton.tsx": 2,
-    },
+    baseline: {},
   },
   {
     id: "non-cva-variant-ternary",
@@ -151,9 +146,7 @@ const PATTERNS: readonly Pattern[] = [
     kinds: ["ts", "tsx"],
     find: (file) => matches(file.code, /\b(?:size|tone|variant|elevation)\s*===\s*["'][^"'\n]*["']\s*\?/g),
     // Alert 의 `tone === "danger" ?` 는 #22 가 normalizeTone() 결과를 쓰면서 사라졌다.
-    baseline: {
-      "navigation/SegmentedControl.tsx": 1,
-    },
+    baseline: {},
   },
   {
     id: "boolean-string-data-attr",
