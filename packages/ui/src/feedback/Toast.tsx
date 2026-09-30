@@ -6,6 +6,7 @@ import { LuX } from "react-icons/lu";
 import { cn, type VariantProps } from "../cn";
 import { toastVariants } from "./Toast.variants";
 import { Button } from "../primitives/Button";
+import { MOTION } from "../tokens/motion";
 
 /* 토스트 — 지나가는 알림. 흐름에 남아야 하면 `Alert` 다.
  *
@@ -66,7 +67,7 @@ const VIEWPORT_POSITION: Record<NonNullable<ToastProviderProps["position"]>, str
 export function ToastProvider({
   children,
   limit = 3,
-  duration = 4200,
+  duration = MOTION.toastDefaultMs,
   position = "bottom-right",
 }: ToastProviderProps) {
   const [queue, setQueue] = useState<readonly QueuedToast[]>([]);
@@ -81,7 +82,7 @@ export function ToastProvider({
       removalTimers.current.set(item.id, setTimeout(() => {
         removalTimers.current.delete(item.id);
         setQueue(prev => prev.filter(toast => toast.id !== item.id));
-      }, 240));
+      }, MOTION.toastQueueGraceMs));
     }
   }, [queue]);
   useEffect(() => () => {

@@ -2,6 +2,7 @@
 import { Tooltip as Radix } from "radix-ui";
 
 import { cn } from "../cn";
+import { MOTION } from "../tokens/motion";
 
 /* 툴팁 — **면을 뒤집는다**(밝은 UI 위의 어두운 팝). 「일시적이고 내 것이 아니다」를 그것이 말한다.
  * shipped 캔버스 툴들이 공통으로 쓰는 관행이라 토큰(`--chrome-tooltip-*`)으로 못 박아 뒀다.
@@ -34,7 +35,7 @@ export function Tooltip({
   side = "top",
   align = "center",
   sideOffset = 6,
-  delayDuration = 350,
+  delayDuration = MOTION.tooltipDelayMs,
   open,
   onOpenChange,
 }: TooltipProps) {

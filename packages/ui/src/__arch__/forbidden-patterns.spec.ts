@@ -124,15 +124,12 @@ const PATTERNS: readonly Pattern[] = [
   },
   {
     id: "js-ms-literal",
-    why: "setTimeout 의 지연과 duration/delayDuration 기본값을 숫자로 적으면 CSS 의 모션 토큰과 JS 상수가 따로 논다(토스트 퇴장 180ms 는 큐 유예 240ms 안에 끝나야 한다) — Phase B 의 `tokens/motion.ts` 상수를 쓴다",
+    why: "setTimeout 의 지연과 duration/delayDuration 기본값을 숫자로 적으면 CSS 의 모션 토큰과 JS 상수가 따로 논다(토스트 퇴장 180ms 는 큐 유예 240ms 안에 끝나야 한다) — `tokens/motion.ts` 의 `MOTION` 상수를 쓴다(B1, #15)",
     kinds: ["ts", "tsx"],
     // `setTimeout(` 부터 처음 만나는 `, <숫자>)` 까지 — 콜백이 여러 줄이어도 지연 인자는 그 뒤에 온다.
     find: file => matches(file.code, /\bsetTimeout\([\s\S]*?,\s*\d+\s*\)|\b(?:delayDuration|skipDelayDuration|duration)\s*=\s*\{?\s*\d+\b/g),
-    baseline: {
-      "feedback/Toast.tsx": 2,
-      "navigation/ScrollArea.tsx": 1,
-      "overlay/Tooltip.tsx": 1,
-    },
+    // B1(#15)이 세 파일 4건을 `tokens/motion.ts` 의 상수로 바꿔 0 이 됐다 — 기준선이 비어도 검출기 검증(DETECTOR_CASES)은 남는다.
+    baseline: {},
   },
   {
     id: "jsx-size-number",

@@ -157,9 +157,6 @@
     "ds/no-literal-style-value": {
       "count": 3
     },
-    "ds/no-magic-ms": {
-      "count": 2
-    },
     "jsdoc/require-jsdoc": {
       "count": 10
     }
@@ -192,9 +189,6 @@
     }
   },
   "packages/ui/src/navigation/ScrollArea.tsx": {
-    "ds/no-magic-ms": {
-      "count": 1
-    },
     "jsdoc/require-jsdoc": {
       "count": 7
     }
@@ -307,9 +301,6 @@
   },
   "packages/ui/src/overlay/Tooltip.tsx": {
     "ds/no-literal-style-value": {
-      "count": 1
-    },
-    "ds/no-magic-ms": {
       "count": 1
     },
     "jsdoc/require-jsdoc": {
