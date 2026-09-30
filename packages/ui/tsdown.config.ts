@@ -53,7 +53,6 @@ export default defineConfig({
       "tailwind-merge",
       // 프리셋의 optional peer — 소비자가 설치한 것을 쓴다(#31). bin(agent/cli)의 node 내장 모듈은 platform neutral 이라 명시해야 경고가 없다.
       /^eslint($|\/)/,
-      /^eslint-plugin-react($|\/)/,
       /^eslint-plugin-better-tailwindcss($|\/)/,
       /^node:/,
     ],

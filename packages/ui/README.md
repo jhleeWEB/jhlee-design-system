@@ -7,7 +7,7 @@ Squircle Design System 의 발행 패키지. 사용법·토큰·컴포넌트 계
 - 검사: `…/testing` — 소비 레포의 `__arch__` 래칫이 부르는 순수 함수(`auditCorners` · `countByFile`). 모서리는 일반 `border-radius` 사다리(6/8/12/16px)라 원시 반경·`corner-shape` 선언·임의값 `rounded-[…]` 를 잡는다(스쿼클은 2026-09-30 폐기, #36).
   값의 정본은 `tokens/*.json`(DTCG)이고 CSS 는 생성물이다. 크롬 이름은 shadcn 어휘(`bg-background` `text-muted-foreground` `bg-primary` …, `tokens/README.md`)이고
   옛 이름(`text-ink` `bg-surface` `var(--chrome-line)` …)은 한 마이너 동안 alias 다 — 단 `accent`·`muted` 는 뜻이 바뀌었으니 `scripts/codemod-*.mjs` 를 한 번 돌린다
-- 린트 프리셋: `…/eslint` — `squircleDesignSystem({ entryPoint })` 를 소비 레포 flat config 에 펼친다(raw `<button>` · 토큰 밖 클래스 · 옛 이름(--fix) · hex/임의값/격자 밖 간격 · 인라인 색 · 옛 tone(--fix)). optional peer `eslint ^10` · `eslint-plugin-react` · `eslint-plugin-better-tailwindcss`.
+- 린트 프리셋: `…/eslint` — `squircleDesignSystem({ entryPoint })` 를 소비 레포 flat config 에 펼친다(raw `<button>` · 토큰 밖 클래스 · 옛 이름(--fix) · hex/임의값/격자 밖 간격 · 인라인 색 · 옛 tone(--fix)). optional peer `eslint ^10` · `eslint-plugin-better-tailwindcss`.
 - peer: react ^19, react-dom ^19, tailwindcss ^4.3(선택)
 
 ## AGENTS

@@ -102,7 +102,6 @@
     "@types/react": "^19",
     "eslint": "^10",
     "eslint-plugin-better-tailwindcss": "^4.7",
-    "eslint-plugin-react": "^7.37",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.3.0"
@@ -115,9 +114,6 @@
       "optional": true
     },
     "eslint-plugin-better-tailwindcss": {
-      "optional": true
-    },
-    "eslint-plugin-react": {
       "optional": true
     },
     "tailwindcss": {
@@ -149,7 +145,6 @@
     "@vitest/browser-playwright": "4.1.11",
     "eslint": "^10.11.0",
     "eslint-plugin-better-tailwindcss": "^4.7.0",
-    "eslint-plugin-react": "^7.37.5",
     "@vitest/coverage-v8": "4.1.11",
     "apca-w3": "^0.1.9",
     "axe-core": "^4.13.0",
