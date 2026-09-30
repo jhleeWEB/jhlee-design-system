@@ -39,6 +39,11 @@ export const TW_MERGE_CONFIG = {
       tracking: [...LADDERS.tracking],
       "font-weight": [...LADDERS["font-weight"]],
     },
+    /* twMerge 기본은 «font-size 가 뒤에 오면 앞의 leading-* 을 지운다»(v3 의 text-lg 가 line-height 를 함께 넣던 시절의 가정). Tailwind v4 의
+       text-* 는 `line-height: var(--tw-leading, …)` 이라 leading-* 이 클래스 순서와 무관하게 이긴다 — 그러니 지우면 안 된다. prettier-plugin-tailwindcss 가
+       leading-* 을 text-* 앞으로 정렬하자 `cn("leading-snug text-title")` 이 leading 을 잃어 VRT 가 −3px·−11px 로 잡았다(C4 실측). 두 키 다 비운다. */
+    conflictingClassGroups: { "font-size": [] },
+    conflictingClassGroupModifiers: { "font-size": [] },
   },
   extend: {
     // container 는 리셋하지 않았다 — Tailwind 의 max-w-xs 같은 기본 이름이 살아 있으므로 override 가 아니라 extend 다.

@@ -171,6 +171,9 @@ error 만 덮기 때문에 이 모양이 됐다. **기준선을 늘리는 PR 은
 `no-restricted-imports`(배럴·테스트 import 금지), 위 둘을 뺀 `jsx-a11y/*`, 위 둘을 뺀 `react-hooks/*`, 위 넷을 뺀 `@typescript-eslint/*`(recommendedTypeChecked), `js.recommended` 전부.
 이 규칙들은 새 위반이 곧 실패이므로 승격할 것이 없다. **stylelint** 는 기준선 파일이 없다 — 손 CSS 의 위반은 0 이고(C4 에서 theme.css 의 6건을 같은 값의 토큰으로 옮겼다)
 `legacy/shell.css` 만 warning 122건을 `--max-warnings` 로 붙든다(줄이기만 한다). **Prettier** 는 CI 가 `--check` 만 한다 — 첫 적용 커밋은 `.git-blame-ignore-revs` 에 있다.
+Prettier 의 tailwind 플러그인은 클래스를 **정렬**한다 — 정렬이 뜻을 바꾸는 두 곳을 실측으로 막았다: `src/legacy/` 는 포맷하지 않고(템플릿 리터럴 `" inspect-closed"` 의
+앞 공백을 지운다), `cn.ts` 는 twMerge 의 «font-size 가 앞의 leading-* 을 지운다» 를 비웠다(v4 의 text-* 는 `--tw-leading` 을 읽어 leading 이 순서와 무관하게 이기는데,
+정렬이 leading 을 앞으로 보내자 twMerge 가 지워 VRT 가 −3px·−11px 를 잡았다). 새 클래스 문자열에 같은 유틸의 충돌 쌍(`p-0 p-8`)을 두지 않는다 — 정렬이 승자를 바꾼다.
 
 **발행**은 `main` 머지 시 자동이다(AGENTS.md «릴리스»). 로컬에서 발행하려면 `~/.npmrc` 에
 `//npm.pkg.github.com/:_authToken=<classic PAT: read:packages + write:packages>` 를 두고

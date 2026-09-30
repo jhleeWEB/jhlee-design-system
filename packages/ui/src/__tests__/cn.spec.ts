@@ -23,6 +23,19 @@ describe("cn — 사다리가 충돌을 해소한다", () => {
     expect(cn("w-ctl-sm", "w-ctl-lg")).toBe("w-ctl-lg");
   });
 
+  it("leading-* 은 text-* 사다리 앞에 와도 살아남는다 — v4 의 --tw-leading 이 순서와 무관하게 이기므로 지우면 그림이 바뀐다(C4)", () => {
+    /* twMerge 는 남긴 클래스의 순서를 약속하지 않는다 — 집합으로 비교한다.
+       leading-* 은 Tailwind 기본 테마의 사다리라 theme.css 만 보는 린트 진입점은 모른다(소비자는 tailwindcss/theme.css 를 먼저 싣는다). */
+    /* eslint-disable better-tailwindcss/no-unknown-classes */
+    const set = (s: string) => s.split(" ").sort();
+    expect(set(cn("leading-snug text-title"))).toEqual(["leading-snug", "text-title"]);
+    expect(set(cn("leading-snug text-title"))).toEqual(["leading-snug", "text-title"]);
+    expect(set(cn("leading-relaxed", "text-body"))).toEqual(["leading-relaxed", "text-body"]);
+    /* leading 끼리는 여전히 뒤엣것이 이긴다. */
+    expect(cn("leading-snug", "leading-relaxed")).toBe("leading-relaxed");
+    /* eslint-enable better-tailwindcss/no-unknown-classes */
+  });
+
   it("역할 이름 사다리(radius · shadow · text)가 해소된다", () => {
     expect(cn("rounded-md", "rounded-xl")).toBe("rounded-xl");
     expect(cn("shadow-card", "shadow-pop")).toBe("shadow-pop");
