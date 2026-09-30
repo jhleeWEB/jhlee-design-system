@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { Select } from "../controls";
-import { DesignSystemProvider } from "../design-system";
+import { Select } from "../legacy/controls";
+import { DesignSystemProvider } from "../legacy/design-system";
 
 afterEach(cleanup);
 

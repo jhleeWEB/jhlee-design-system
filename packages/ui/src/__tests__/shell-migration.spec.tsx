@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { AppShell, Panel, PanelGroup, Tabs, ViewerPanel } from "../shell";
-import { Select, Slider, Toggle } from "../controls";
-import { DesignSystemProvider } from "../design-system";
+import { AppShell, Panel, PanelGroup, Tabs, ViewerPanel } from "../legacy/shell";
+import { Select, Slider, Toggle } from "../legacy/controls";
+import { DesignSystemProvider } from "../legacy/design-system";
 import { SegmentedControl } from "../navigation/SegmentedControl";
 
 afterEach(cleanup);

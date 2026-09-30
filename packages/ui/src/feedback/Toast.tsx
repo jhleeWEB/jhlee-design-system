@@ -3,7 +3,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { Toast as RadixToast } from "radix-ui";
 import { LuX } from "react-icons/lu";
 
-import { cn, cva, type VariantProps } from "../cn";
+import { cn, type VariantProps } from "../cn";
+import { toastVariants } from "./Toast.variants";
 import { Button } from "../primitives/Button";
 
 /* 토스트 — 지나가는 알림. 흐름에 남아야 하면 `Alert` 다.
@@ -17,24 +18,6 @@ import { Button } from "../primitives/Button";
  * Radix 의 `Toast` 를 쓰는 이유는 스와이프 해제·포커스 복귀·`aria-live` 처리가 이미 옳기
  * 때문이다. 우리가 얹는 것은 큐와 외형뿐이다. */
 
-const toastVariants = cva(
-  [
-    "ds-toast group pointer-events-auto relative flex w-full items-start gap-3",
-    "rounded-float border border-solid border-l-3 bg-surface p-4 shadow-pop",
-    "text-body text-ink",
-  ],
-  {
-    variants: {
-      tone: {
-        neutral: "border-line border-l-ink-2",
-        ok: "border-line border-l-ok",
-        warn: "border-line border-l-warn",
-        danger: "border-line border-l-danger",
-      },
-    },
-    defaultVariants: { tone: "neutral" },
-  },
-);
 
 export interface ToastOptions extends VariantProps<typeof toastVariants> {
   title: React.ReactNode;

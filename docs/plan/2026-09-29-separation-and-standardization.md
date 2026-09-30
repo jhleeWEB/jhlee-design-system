@@ -229,8 +229,8 @@ squircle-design-system/
 4. 레포는 이미 있다(비공개·빈 상태·ADMIN). 첫 push 뒤 `gh repo edit jhleeWEB/squircle-design-system --default-branch main --enable-squash-merge
    --enable-merge-commit=false --enable-rebase-merge=false --delete-branch-on-merge` → aaro-harness 체크아웃의 `node policy/scripts/apply-ruleset.mjs
    --repo jhleeWEB/squircle-design-system --dry-run` 뒤 실제 적용(개인 레포에도 admin 이면 된다; 스크립트가 조직을 전제하면 `gh api` 로 같은 규칙을 직접) →
-   필수 체크(static·unit·tokens·storybook·vrt·package·pr-title)는 job 이 생기는 Phase A 에 등록. semantic-release 라 Actions PR 생성 허용은 불필요.
-- 완료 조건: `npm whoami` 가 계정명 반환 · 레포 존재·ruleset 적용 · Actions PR 생성 허용.
+   필수 체크(static·unit·tokens·storybook·vrt·package·pr-title)는 job 이 생기는 Phase A 에 등록 → **정정(#10)**: ruleset 불가(무료 플랜) — CI 필수 체크 대신 규약. semantic-release 라 Actions PR 생성 허용은 불필요.
+- 완료 조건: `npm whoami` 가 계정명 반환 · 레포 존재 · ~~ruleset 적용~~(무료 개인 플랜 비공개 레포는 ruleset 불가 — 규약으로 대신, #10) · Actions PR 생성 허용.
 
 **Phase 1 — 이식·첫 배포(새 레포)**
 1. 이력 보존(별도 클론, 원 저장소 무변경):
@@ -394,7 +394,7 @@ Slottable 헬퍼·아이콘 단일 출처·오버레이 폭/시간 리터럴→�
 | 3 단위·a11y | 동작 계약·ARIA·공통 계약·컴파운드 계약·스토리 계약·커버리지 | vitest 4 jsdom(`unit` 프로젝트) · RTL · user-event · `composeStories` · axe-core(`color-contrast` 는 4층에 위임) · coverage-v8 | `unit` |
 | 4 브라우저·시각 | play·**실측 대비 4.5:1**·라이트/다크 픽셀·캔버스 불변 | `@storybook/addon-vitest`(Chromium, `storybook` 프로젝트) + addon-a11y `test: 'error'`(C) · Playwright × `storybook-static`(도커, git 스냅샷) | `storybook` · `vrt` |
 | 5 패키지 | exports·타입 해석·크기·RSC 지시문·매니페스트·소비 가능 | publint `--strict` · attw `--pack . --profile esm-only` · `exports.spec` · size-limit · `rsc-directives.spec` · `manifest.spec` · `scripts/smoke-consumer.sh`(pack → 워크스페이스 밖 Vite+Tailwind 앱 build → CSS 에 `.rounded-md`·JS 에 `Button` grep) | `package` |
-| 6 CI | 여섯 job + `pr-title` 을 PR 필수 체크(squircle-design-system 레포 ruleset 에 직접 등록), `release` 는 main push | GitHub Actions | — |
+| 6 CI | 여섯 job + `pr-title` 을 PR 필수 체크 — ruleset 불가(무료 플랜) — CI 필수 체크 대신 규약(AGENTS.md: 전부 초록일 때만 머지), `release` 는 main push | GitHub Actions | — |
 
 **래칫 스펙**(`src/__arch__/forbidden-patterns.spec.ts`, 제품 앱 선례 이식; 실제 횟수 === 기준선, 늘면 위반·줄면 같은 PR 에서 낮춤;
 `generated/`·`__tests__/`·`legacy/` 제외; 기준선은 첫 실행 실측):
@@ -579,7 +579,7 @@ JSDoc 계약 · `*.variants.ts`·`"use client"` · 3스토리 · 검증 명령(`
 
 | Phase | 추가 | 게이트 |
 |---|---|---|
-| A | 개명·publishConfig·exports 명시·`files: dist`·tsdown unbundle · `"use client"` 24 + `*.variants.ts` + CSS import 제거 + `rsc-directives.spec` · ESLint 10 부트스트랩(warn + baseline, 로컬 규칙 골격) · 릴리스(Q4)·pr-title·ruleset 필수 체크 · Storybook 골격 + vitest projects + `tsconfig.stories.json` · ds-gallery → `Pages/Gallery`·`Workbench` 이식 + 앱 삭제 · `stories-contract.spec`(`STORIES_MISSING` = 전 컴포넌트) · VRT 크롤러 + 워크플로 6 job + 기준선 · `./legacy` 신설 | publint·attw·rsc 통과, VRT 기준선 커밋, `a11y: 'todo'` |
+| A | 개명·publishConfig·exports 명시·`files: dist`·tsdown unbundle · `"use client"` 24 + `*.variants.ts` + CSS import 제거 + `rsc-directives.spec` · ESLint 10 부트스트랩(warn + baseline, 로컬 규칙 골격) · 릴리스(Q4)·pr-title·~~ruleset 필수 체크~~(ruleset 불가(무료 플랜) — CI 필수 체크 대신 규약) · Storybook 골격 + vitest projects + `tsconfig.stories.json` · ds-gallery → `Pages/Gallery`·`Workbench` 이식 + 앱 삭제 · `stories-contract.spec`(`STORIES_MISSING` = 전 컴포넌트) · VRT 크롤러 + 워크플로 6 job + 기준선 · `./legacy` 신설 | publint·attw·rsc 통과, VRT 기준선 커밋, `a11y: 'todo'` |
 | B | DTCG semantic 을 shadcn 이름으로 + `legacy.json` → 3 출력 · **원자 코드모드 PR**(eslint --fix UI 256+앱 57 · css-vars 69+138 · cn.ts 동치 테스트 · tone shim) · 간격 화이트리스트·hex·arbitrary 규칙 + baseline · 서브트리 다크·폰트 self-host·ThemePair/Matrix | 코드모드 PR 은 VRT **0px** |
 | C | `@jhleeweb/squircle-design-system/eslint` 프리셋 배포 + forbid-elements 래칫 + no-unknown-classes · `build-manifest`·`manifest.spec`(KNOWN_GAPS)·`llms.txt`·docs 생성 · `agent/` 블록·스킬 + `sds-agent sync` · `a11y: 'error'` + `KNOWN_A11Y_FAILURES` · VRT `maxDiffPixels: 0` · Next 스모크(비필수) | 린트 error 승격, `--max-warnings=0` |
 | D | 부품 1차(Select/Field/Tabs/Tooltip/AlertDialog/Table) + `compound.contract` · 2차(Sidebar/Toolbar/Breadcrumb/DescriptionList/Toast/MediaCard) + 설탕 @deprecated + `aaro/legacy-api` · Spec 17 → stories 31, `__tests__` 16 → 폴더 spec(composeStories), `Pages/Gallery` 삭제 · JSDoc 전수(`@default` 0→전수)·KNOWN_GAPS 0·앱 tone 93건 · (선택) `componentsManifest: true` + addon-mcp | STORIES_MISSING 0 · KNOWN_GAPS 0 · 다음 마이너 `feat!:` 로 legacy 제거 |

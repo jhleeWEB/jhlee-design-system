@@ -39,7 +39,7 @@ describe("cn — 사다리가 충돌을 해소한다", () => {
 
 describe("Button — link 변형은 상자가 없다", () => {
   it("size 가 주는 높이·가로 패딩을 되돌린다", async () => {
-    const { buttonVariants } = await import("../primitives/Button");
+    const { buttonVariants } = await import("../primitives/Button.variants");
     const cls = buttonVariants({ variant: "link", size: "sm" });
     /* `size="sm"` 의 `h-ctl-sm px-3` 이 살아 있으면 글자여야 할 것이 칩이 된다. */
     expect(cls).toContain("h-auto");

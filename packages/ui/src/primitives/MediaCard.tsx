@@ -1,5 +1,6 @@
 "use client";
-import { cn, cva, type VariantProps } from "../cn";
+import { cn, type VariantProps } from "../cn";
+import { mediaCardVariants, mediaCardMediaVariants } from "./MediaCard.variants";
 
 /* 내용 카드 — 썸네일 + 제목 + 메타 + 조치.
  *
@@ -17,67 +18,18 @@ import { cn, cva, type VariantProps } from "../cn";
  * 자리를 회색 네모로 채우지 않는다. 빈 썸네일은 「아직 안 불러왔다」로 읽혀서
  * 「원래 없다」와 구별되지 않는다. `media` 가 없으면 그 칸 자체가 사라진다. */
 
-const cardVariants = cva(
-  [
-    "group relative flex min-w-0 bg-surface text-left",
-    "transition-[box-shadow,border-color] duration-120 motion-reduce:transition-none",
-  ],
-  {
-    variants: {
-      orientation: {
-        vertical: "flex-col",
-        horizontal: "flex-row items-stretch",
-      },
-      elevation: {
-        raised: "rounded-card shadow-card hover:shadow-pop",
-        flat: "rounded-card border border-line hover:border-line-strong",
-        flush: "rounded-none border border-line",
-      },
-      selected: {
-        true: "",
-        false: "",
-      },
-      interactive: { true: "cursor-pointer", false: "" },
-    },
-    compoundVariants: [
-      /* 선택은 **테두리 두께가 아니라 색**으로 말한다. 두께를 바꾸면 선택될 때 카드가
-         1px 씩 움직여 격자 전체가 흔들린다. */
-      { elevation: "raised", selected: true, class: "shadow-[0_0_0_2px_var(--chrome-accent),var(--shadow-card)]" },
-      { elevation: "flat", selected: true, class: "border-accent ring-1 ring-accent" },
-      { elevation: "flush", selected: true, class: "border-accent ring-1 ring-accent" },
-    ],
-    defaultVariants: { orientation: "vertical", elevation: "raised", selected: false, interactive: false },
-  },
-);
 
-const mediaVariants = cva("relative shrink-0 overflow-hidden bg-surface-2", {
-  variants: {
-    orientation: {
-      vertical: "w-full rounded-t-card",
-      horizontal: "rounded-l-card",
-    },
-    ratio: {
-      "16/9": "aspect-[16/9]",
-      "4/3": "aspect-[4/3]",
-      "1/1": "aspect-square",
-      /* 도면 썸네일. 필지는 대개 가로로 길다. */
-      plan: "aspect-[3/2]",
-      none: "",
-    },
-  },
-  defaultVariants: { orientation: "vertical", ratio: "plan" },
-});
 
 export interface MediaCardProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "title" | "onSelect">,
-    VariantProps<typeof cardVariants> {
+    VariantProps<typeof mediaCardVariants> {
   title: React.ReactNode;
   /** 제목 위 작은 라벨 — "Candidate 03" · "Dahisar". */
   eyebrow?: React.ReactNode;
   description?: React.ReactNode;
   /** 썸네일. 없으면 그 칸 자체가 사라진다. */
   media?: React.ReactNode;
-  mediaRatio?: VariantProps<typeof mediaVariants>["ratio"];
+  mediaRatio?: VariantProps<typeof mediaCardMediaVariants>["ratio"];
   /** 가로 배치일 때 썸네일 폭. 세로 배치에서는 무시된다. */
   mediaWidth?: string;
   /** 썸네일 위 좌상단에 얹히는 것 — 순번 · 상태 점. */
@@ -113,7 +65,7 @@ export function MediaCard({
       data-slot="media-card"
       data-selected={selected || undefined}
       className={cn(
-        cardVariants({ orientation, elevation, selected: selected ?? false, interactive: !!onSelect }),
+        mediaCardVariants({ orientation, elevation, selected: selected ?? false, interactive: !!onSelect }),
         className,
       )}
       {...rest}
@@ -121,7 +73,7 @@ export function MediaCard({
       {media ? (
         <div
           className={cn(
-            mediaVariants({ orientation, ratio: horizontal ? "none" : (mediaRatio ?? "plan") }),
+            mediaCardMediaVariants({ orientation, ratio: horizontal ? "none" : (mediaRatio ?? "plan") }),
             horizontal && "self-stretch",
           )}
           style={horizontal ? { width: mediaWidth } : undefined}
@@ -180,14 +132,17 @@ export function MediaCard({
 export function CardGrid({
   min = "240px",
   className,
+  style,
   ...rest
 }: { min?: string } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       data-slot="card-grid"
       className={cn("grid gap-3", className)}
-      style={{ gridTemplateColumns: `repeat(auto-fit, minmax(${min}, 1fr))` }}
       {...rest}
+      /* 소비자 `style` 은 열 정의에 **병합**한다. 예전에는 `style` 이 `{...rest}` 앞에 있어 소비자가
+         `style={{ marginTop }}` 만 줘도 열 정의가 통째로 지워져 카드가 한 줄로 쌓였다(#10). */
+      style={{ gridTemplateColumns: `repeat(auto-fit, minmax(${min}, 1fr))`, ...style }}
     />
   );
 }
