@@ -43,6 +43,20 @@ export interface ContractSubject {
   readonly axes?: readonly string[];
   /** 이 컴포넌트에서만 끄는 axe 규칙(이유를 옆 주석에). */
   readonly axeOff?: readonly string[];
+  /**
+   * 자기 DOM 을 그리지 않는 컴포넌트 — Radix 의 Root·Sub·Provider(`Modal` · `Popover` · `DropdownMenu` · `TooltipProvider` …)는 상태·컨텍스트만
+   * 들고 자식을 그대로 돌려준다. 탐침이 닿을 요소가 없으므로 `NO_DOM_SKIPS`(className · ref · rest)는 검사하지 않는다 — 실패로 적어 두면
+   * «고칠 수 없는 실패» 가 래칫에 영영 남는다(D3, #44). slot · slot-locked · axe 는 자식 트리(열린 Content)로 그대로 본다.
+   */
+  readonly noDom?: boolean;
+}
+
+/** `noDom` 컴포넌트가 건너뛰는 검사. */
+export const NO_DOM_SKIPS: readonly CheckId[] = ["className", "ref", "rest"];
+
+/** 이 대상에 적용되는 검사 — `noDom` 이면 `NO_DOM_SKIPS` 를 뺀다. */
+export function applicableChecks(subject: Pick<ContractSubject, "noDom">): readonly CheckId[] {
+  return subject.noDom ? CONTRACT_CHECKS.filter((id) => !NO_DOM_SKIPS.includes(id)) : CONTRACT_CHECKS;
 }
 
 export interface ContractFailure {
@@ -65,7 +79,7 @@ export async function runContract(subject: ContractSubject): Promise<ContractFai
     render(subject.render({ className: CLASS_PROBE, ref, "data-testid": TESTID_PROBE }));
   } catch (error) {
     cleanup();
-    for (const id of CONTRACT_CHECKS)
+    for (const id of applicableChecks(subject))
       fail(id, `render threw: ${error instanceof Error ? error.message : String(error)}`);
     return failed;
   }
@@ -73,15 +87,17 @@ export async function runContract(subject: ContractSubject): Promise<ContractFai
   if (!body.querySelector(`[data-slot="${subject.slot}"]`))
     fail("slot", `[data-slot="${subject.slot}"] not in DOM`);
 
-  const withProbe = [...body.querySelectorAll<HTMLElement>(".p-8")];
-  if (withProbe.length === 0) fail("className", "className did not reach any element");
-  else if (withProbe.some((el) => el.classList.contains("p-0")))
-    fail("className", "className is concatenated, not merged (p-0 survived next to p-8)");
+  if (!subject.noDom) {
+    const withProbe = [...body.querySelectorAll<HTMLElement>(".p-8")];
+    if (withProbe.length === 0) fail("className", "className did not reach any element");
+    else if (withProbe.some((el) => el.classList.contains("p-0")))
+      fail("className", "className is concatenated, not merged (p-0 survived next to p-8)");
 
-  // SVG 컴포넌트(Spinner · CanvasScale)의 ref 는 SVGElement 다 — DOM 요소이면 된다.
-  if (!(ref.current instanceof Element)) fail("ref", "ref.current is not a DOM element");
-  if (!body.querySelector(`[data-testid="${TESTID_PROBE}"]`))
-    fail("rest", "data-testid did not reach the DOM");
+    // SVG 컴포넌트(Spinner · CanvasScale)의 ref 는 SVGElement 다 — DOM 요소이면 된다.
+    if (!(ref.current instanceof Element)) fail("ref", "ref.current is not a DOM element");
+    if (!body.querySelector(`[data-testid="${TESTID_PROBE}"]`))
+      fail("rest", "data-testid did not reach the DOM");
+  }
 
   for (const axis of subject.axes ?? []) {
     if (!body.querySelector(`[data-${axis}]`)) fail("axes", `data-${axis} not stamped`);
@@ -125,7 +141,7 @@ export function describeComponentContract(
   describe(`component contract · ${options.slot}`, () => {
     let failures: ContractFailure[] | undefined;
     const failuresOf = async () => (failures ??= await runContract(subject));
-    for (const id of CONTRACT_CHECKS) {
+    for (const id of applicableChecks(options)) {
       it(id, async () => {
         const mine = (await failuresOf()).filter((f) => f.id === id).map((f) => f.reason);
         expect(mine).toEqual([]);

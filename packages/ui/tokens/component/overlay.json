@@ -19,5 +19,22 @@
       "min": { "$value": "180px" },
       "max": { "$value": "360px" }
     }
+  },
+  "size": {
+    "$type": "dimension",
+    "$extensions": { "sds": { "scope": "root" } },
+    "$description": "오버레이 꼬리(Radix Arrow) 치수 — 컴포넌트가 JSX 숫자(width={10})로 들던 것을 이름으로 옮겼다(D3, #44). `--size-*` 는 :root 커스텀 프로퍼티라 `w-(--size-arrow-…)` 로 읽는다. Radix 의 width/height 속성보다 CSS 가 이긴다.",
+    "arrow": {
+      "popover": {
+        "$description": "팝오버 꼬리 — Radix 기본값과 같은 10×5.",
+        "width": { "$value": "10px" },
+        "height": { "$value": "5px" }
+      },
+      "tooltip": {
+        "$description": "툴팁 꼬리 — 작은 말풍선(text-label)에 맞춰 팝오버보다 한 치 작은 9×4.",
+        "width": { "$value": "9px" },
+        "height": { "$value": "4px" }
+      }
+    }
   }
 }

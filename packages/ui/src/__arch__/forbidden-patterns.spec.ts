@@ -134,10 +134,6 @@ const PATTERNS: readonly Pattern[] = [
     baseline: {
       "CanvasScale.tsx": 3,
       "navigation/BackButton.tsx": 2,
-      "overlay/Drawer.tsx": 2,
-      "overlay/Modal.tsx": 2,
-      "overlay/Popover.tsx": 2,
-      "overlay/Tooltip.tsx": 2,
       "primitives/Card.tsx": 3,
       "primitives/PanelToggleButton.tsx": 2,
     },

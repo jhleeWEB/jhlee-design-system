@@ -135,6 +135,7 @@ describe("공개 API", () => {
         "cn",
         "cva",
         "drawerVariants",
+        "dropdownMenuItemVariants",
         "emptyStateVariants",
         "gridPitchM",
         "inputVariants",
