@@ -66,10 +66,10 @@ const PKG = resolve(SRC, "..");
 const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
   "src/primitives/Button.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/primitives/Button.stories.tsx#Variants": ["color-contrast"],
-  "stories/Corners.stories.tsx#Components": ["aria-hidden-focus", "color-contrast"],
-  "stories/Corners.stories.tsx#Ladder": ["color-contrast"],
   "stories/Gallery.stories.tsx#Dark": ["aria-progressbar-name", "color-contrast", "label"],
   "stories/Gallery.stories.tsx#Light": ["aria-progressbar-name", "color-contrast", "label"],
+  "stories/Radius.stories.tsx#Components": ["aria-hidden-focus", "color-contrast"],
+  "stories/Radius.stories.tsx#Ladder": ["color-contrast"],
   "stories/Workbench.stories.tsx#Default": ["aria-progressbar-name", "color-contrast"],
 };
 
