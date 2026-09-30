@@ -18,13 +18,12 @@
   box-sizing: border-box;
 }
 
-/* body 의 바닥·글자색은 옛 base 이름을 읽는다 — 새 정본에 같은 값의 이름이 없다(chrome.background 는 #eff1f7, chrome.foreground 는 #191f28 로 값이 다르다).
-   B5(#22)는 «값 불변» 이 원칙이라 여기를 크롬으로 옮기지 않았다 — 옮기면 카탈로그의 body 바탕이 바뀌고 다크를 따르게 된다(시각 변경). 그 결정은
-   별도 이슈이고 그때까지 legacy-alias-use 래칫이 이 두 줄을 센다. */
+/* body 의 바닥·글자색은 크롬이다 — 다크를 따른다(#20 · #24 결정, 2026-09-30). 옛 base 이름(--bg #f4f4f4 · --ink #1a1a1a)은 값을 보존하는
+   legacy alias 로 남고(재매핑은 소비자 픽셀을 바꾸는 major 라 하지 않는다) 여기서는 더 읽지 않는다. */
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--ink);
+  background: var(--chrome-background);
+  color: var(--chrome-foreground);
   font-family: var(--font-stack-sans);
   -webkit-font-smoothing: antialiased;
 }

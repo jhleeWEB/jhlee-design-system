@@ -204,12 +204,10 @@ const PATTERNS: readonly Pattern[] = [
     why: "var(--ink) · var(--gap) · var(--size-gap) · var(--color-cool-500) 같은 옛 이름은 legacy.json 의 $deprecated alias 다 — 새 정본 이름(--chrome-* · --canvas-* · --palette-* · --space-* · --font-stack-*)을 쓴다. 옛 이름 제거는 major 이고 그때 이 기준선이 0 이어야 한다(#18)",
     kinds: ["ts", "tsx", "css"],
     find: (file) => matches(file.code, LEGACY_ALIAS_USE),
-    // tokens.css 의 body 바닥·글자색은 같은 값의 새 이름이 없다(chrome.background · chrome.foreground 는 값이 다르다) — B5(#22)는 값 불변이라 남겼고
-    // 크롬으로 옮기는 것(시각 변경)은 별도 결정이다. canvas.css 는 폴백 사슬의 첫 고리다.
+    // tokens.css 의 body 는 #20 · #24 에서 크롬(background · foreground)으로 옮겨 0 이다. canvas.css 는 폴백 사슬의 첫 고리다.
     baseline: {
       "canvas.css": 2,
       "navigation/Sidebar.tsx": 1,
-      "tokens.css": 2,
     },
   },
 ];

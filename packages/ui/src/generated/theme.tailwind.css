@@ -101,6 +101,7 @@
   --color-primary-hover: var(--chrome-primary-hover);
   --color-primary-foreground: var(--chrome-primary-foreground);
   --color-primary-track: var(--chrome-primary-track);
+  --color-primary-line: var(--chrome-primary-line);
   --color-accent: var(--chrome-accent);
   --color-accent-foreground: var(--chrome-accent-foreground);
   --color-selection-fill: var(--chrome-selection-fill);

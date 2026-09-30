@@ -11,10 +11,10 @@ export const badgeVariants = cva(
     variants: {
       tone: {
         neutral: "border-border-strong bg-muted text-foreground-2",
-        primary: "border-primary/40 bg-accent text-primary",
-        success: "border-success/40 bg-success-soft text-success",
-        warning: "border-warning/40 bg-warning-soft text-warning",
-        destructive: "border-destructive/40 bg-destructive-soft text-destructive",
+        primary: "border-primary-line bg-accent text-primary",
+        success: "border-success-line bg-success-soft text-success",
+        warning: "border-warning-line bg-warning-soft text-warning",
+        destructive: "border-destructive-line bg-destructive-soft text-destructive",
       },
       /* TBV(검증 대기)처럼 «아직 확정이 아니다» 를 말하는 자리. 점선이 그 뜻을 맡는다. */
       provisional: { true: "border-dashed", false: "" },

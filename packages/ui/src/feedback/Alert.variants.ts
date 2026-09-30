@@ -10,11 +10,11 @@ export const alertVariants = cva(
   {
     variants: {
       tone: {
-        /* info 는 옅은 azure 면이 아니라 중립 면 + azure 왼쪽 띠다 — 값 불변(B5). info-soft 로 옮기는 것은 시각 변경이라 별도 PR. */
-        info: "border-border border-l-primary bg-muted text-foreground-2",
-        success: "border-success/35 border-l-success bg-success-soft text-foreground-2",
-        warning: "border-warning/35 border-l-warning bg-warning-soft text-foreground-2",
-        destructive: "border-destructive/35 border-l-destructive bg-destructive-soft text-foreground-2",
+        /* 네 톤이 같은 모양 — {tone}-line 테두리(면 위 3:1) · {tone} 왼쪽 띠 · {tone}-soft 면(#24). info 도 중립 면이 아니라 info-soft 다. */
+        info: "border-info-line border-l-info bg-info-soft text-foreground-2",
+        success: "border-success-line border-l-success bg-success-soft text-foreground-2",
+        warning: "border-warning-line border-l-warning bg-warning-soft text-foreground-2",
+        destructive: "border-destructive-line border-l-destructive bg-destructive-soft text-foreground-2",
       },
     },
     defaultVariants: { tone: "info" },

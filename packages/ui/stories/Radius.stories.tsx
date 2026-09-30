@@ -251,7 +251,7 @@ function CornerComponents() {
           A 3px left band on a curved corner — drawn in one stroke.
         </Alert>
         <Alert tone="success" title="Saved">
-          Border colour at 35% alpha over the soft surface.
+          Border is success-line — 3:1 against the soft surface.
         </Alert>
         <div className={toastVariants({ tone: "success" })}>
           <div className="min-w-0 flex-1">
