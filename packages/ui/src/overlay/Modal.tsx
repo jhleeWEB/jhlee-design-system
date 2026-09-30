@@ -4,7 +4,8 @@ import { LuX } from "react-icons/lu";
 
 import { Button } from "../primitives/Button";
 
-import { cn, cva, type VariantProps } from "../cn";
+import { cn, type VariantProps } from "../cn";
+import { modalVariants } from "./Modal.variants";
 import { ScrollArea } from "../navigation/ScrollArea";
 
 /* 모달 — 이 저장소에 손으로 쓴 백드롭이 **다섯 계열** 있었고(#1198 게이트 실측),
@@ -17,30 +18,6 @@ import { ScrollArea } from "../navigation/ScrollArea";
  * 포커스 트랩 · 스크롤 락 · Escape · 포커스 복귀는 Radix 가 맡는다. 이 저장소에는 그중 어느
  * 것도 없었다(`createPortal` 호출 0건, Escape 는 다이얼로그마다 손으로, 갤러리는 아예 없음). */
 
-const contentVariants = cva(
-  [
-    "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
-    "flex max-h-[calc(100dvh-32px)] flex-col overflow-hidden",
-    "rounded-modal border border-line bg-surface shadow-modal",
-    "text-body text-ink animate-in-pop",
-    "focus-visible:outline-none",
-  ],
-  {
-    variants: {
-      size: {
-        /* 확인 대화 — 문장 하나와 버튼 둘. 이 저장소의 `.confirm` 이 380px 였다. */
-        sm: "w-[min(380px,calc(100vw-24px))]",
-        md: "w-[min(560px,calc(100vw-24px))]",
-        /* 설정 — `.setup` 이 1240px 였다. */
-        lg: "w-[min(880px,calc(100vw-24px))]",
-        /* 갤러리처럼 화면을 거의 채우는 것. `.gallery` 가 1180px 였다. */
-        xl: "w-[min(1180px,calc(100vw-24px))]",
-        full: "h-[calc(100dvh-32px)] w-[calc(100vw-24px)]",
-      },
-    },
-    defaultVariants: { size: "md" },
-  },
-);
 
 type ContentProps = Omit<React.ComponentPropsWithRef<typeof Dialog.Content>, "forceMount">;
 
@@ -51,7 +28,7 @@ export const ModalClose = Dialog.Close;
 /** 포털의 열림·닫힘 수명은 DS가 소유한다. forceMount로 닫힌 모달의 포커스·스크롤 잠금을 남기지 않는다. */
 export interface ModalContentProps
   extends ContentProps,
-    VariantProps<typeof contentVariants> {
+    VariantProps<typeof modalVariants> {
   /** 스크림을 눌러도 닫히지 않게 한다 — 되돌릴 수 없는 작업의 확인창에 쓴다. */
   dismissible?: boolean;
 }
@@ -73,7 +50,7 @@ export function ModalContent({
       />
       <Dialog.Content
         data-slot="modal"
-        className={cn(contentVariants({ size }), className)}
+        className={cn(modalVariants({ size }), className)}
         {...rest}
         // 호출자의 관찰·취소 핸들러는 유지하되 닫기 금지 계약을 덮어쓰지는 못하게 한다.
         onPointerDownOutside={event => {

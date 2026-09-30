@@ -16,14 +16,14 @@ import { describe, expect, it } from "vitest";
 
 const SRC = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-/** 배럴 기준 모듈 경로(`src/` 상대, 확장자 없음). Phase D 가 소비처 많은 순으로 지운다. */
+/** 배럴 기준 모듈 경로(`src/` 상대, 확장자 없음). Phase D 가 소비처 많은 순으로 지운다.
+ *  `legacy/*`(shell·controls·design-system)는 여기 없다 — 루트 배럴이 `@deprecated` const 별칭으로만 내보내
+ *  스캐너(`export … from`)에 잡히지 않고, 격리·동결된 코드라 스토리 계약 밖이다(#10). */
 const STORIES_MISSING: readonly string[] = [
   "CanvasScale",
-  "controls",
   "data/DataTable",
   "data/DescriptionList",
   "data/Table",
-  "design-system",
   "feedback/Alert",
   "feedback/EmptyState",
   "feedback/Progress",
@@ -51,7 +51,6 @@ const STORIES_MISSING: readonly string[] = [
   "primitives/MediaCard",
   "primitives/Misc",
   "primitives/PanelToggleButton",
-  "shell",
 ];
 
 const REQUIRED_EXPORTS = ["Default", "Variants", "ThemeContrast"] as const;

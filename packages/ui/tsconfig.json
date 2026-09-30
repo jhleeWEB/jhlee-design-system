@@ -21,5 +21,5 @@
   // 설정에서 자랐고(noUncheckedIndexedAccess 위반 151건), 전용 단위 테스트 없이 기계적으로
   // 뜯는 것은 파이프라인 스펙으로만 간접 검증되는 코드에 낼 위험이 아니다.
   // 하나씩 손보면서 이 목록으로 옮긴다. 옮기기 전에는 엄격한 앱이 배럴을 import하면 안 된다.
-  "include": ["src/shell.tsx", "src/controls.tsx", "src/index.ts"]
+  "include": ["src/legacy/shell.tsx", "src/legacy/controls.tsx", "src/index.ts"]
 }

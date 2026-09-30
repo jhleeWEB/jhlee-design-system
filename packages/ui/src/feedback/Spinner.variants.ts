@@ -1,0 +1,14 @@
+import { cva } from "../cn";
+
+/* `*.variants.ts` 는 컴포넌트와 분리된 **서버에서도 호출 가능한** 모듈이다 — 컴포넌트 파일은 `"use client"` 라
+ * 거기서 export 한 cva 는 Next App Router 의 서버 컴포넌트가 className 을 얻으려 부를 수 없었다(계획 §2.5-g, #10).
+ * 이 파일에는 지시문·훅·Radix 가 없어야 한다. */
+
+/** 스피너의 변형 — `size` 와 `tone`(current 는 글자색을 따른다). */
+export const spinnerVariants = cva("shrink-0 animate-spin motion-reduce:animate-none", {
+  variants: {
+    size: { sm: "size-6", md: "size-8", lg: "size-12" },
+    tone: { current: "text-current", muted: "text-muted", accent: "text-accent" },
+  },
+  defaultVariants: { size: "md", tone: "current" },
+});

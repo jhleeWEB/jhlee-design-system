@@ -1,27 +1,11 @@
-import { cn, cva, type VariantProps } from "../cn";
+import { cn, type VariantProps } from "../cn";
+import { badgeVariants } from "./Badge.variants";
 
 /* 배지 — 상태를 **글자와 함께** 말한다.
  *
  * base 의 원칙 2 가 「상태는 항상 텍스트와 병기한다」인데, 색 점만 있는 배지는 그 원칙을
  * 어기는 가장 흔한 방법이다. 그래서 `children` 이 필수이고, 점만 필요한 자리에는 `StatusDot`
  * 을 따로 두되 그쪽은 `aria-label` 을 요구한다. */
-export const badgeVariants = cva(
-  "inline-flex items-center gap-2 whitespace-nowrap rounded-chip border px-3 py-px text-label leading-normal",
-  {
-    variants: {
-      tone: {
-        neutral: "border-line-strong bg-surface-2 text-ink-2",
-        accent: "border-accent/40 bg-accent-soft text-accent",
-        ok: "border-ok/40 bg-ok-soft text-ok",
-        warn: "border-warn/40 bg-warn-soft text-warn",
-        danger: "border-danger/40 bg-danger-soft text-danger",
-      },
-      /* TBV(검증 대기)처럼 «아직 확정이 아니다» 를 말하는 자리. 점선이 그 뜻을 맡는다. */
-      provisional: { true: "border-dashed", false: "" },
-    },
-    defaultVariants: { tone: "neutral", provisional: false },
-  },
-);
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,

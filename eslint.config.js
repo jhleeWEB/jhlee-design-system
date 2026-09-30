@@ -58,7 +58,12 @@ const TEST_FILES = ["**/__tests__/**", "**/*.spec.{ts,tsx}", "**/*.test.{ts,tsx}
 
 export default tseslint.config(
   {
-    ignores: ["**/node_modules/", "**/dist/", "**/storybook-static/", "**/*.tsbuildinfo", ".claude/", "packages/eslint-rules/src/__tests__/fixtures/"],
+    ignores: [
+      "**/node_modules/", "**/dist/", "**/storybook-static/", "**/*.tsbuildinfo", ".claude/", "packages/eslint-rules/src/__tests__/fixtures/",
+      // ./legacy 는 격리·동결이다(#10) — 기준선(suppressions)으로 덮던 것을 계획대로 ignores 로 바꿨다. 새 위반이 생길 일도, 고칠 일도 없는 코드라
+      // 래칫에 태우지 않는다. 다음 마이너에서 루트 배럴 재export 와 함께 지운다.
+      "packages/ui/src/legacy/",
+    ],
   },
 
   // ── 기본: JS 권장 + TS 권장(타입 검사 없음) ──
@@ -169,7 +174,7 @@ export default tseslint.config(
     settings: { "better-tailwindcss": { cwd: "packages/ui", entryPoint: `${import.meta.dirname}/packages/ui/src/theme.css` } },
     rules: {
       // `ds-*` 는 theme.css 가 @import 하는 컴포넌트 CSS 의 클래스다 — 토큰 밖 유틸리티가 아니라 DS 자신의 훅이다.
-      // shell.css 의 legacy 클래스(panel·hud …)는 일부러 무시하지 않고 기준선으로 덮는다 — ./legacy 격리 때 ignores 로 바꾼다.
+      // shell.css 의 legacy 클래스(panel·hud …)를 쓰는 src/legacy/ 는 전역 ignores 다(#10).
       "better-tailwindcss/no-unknown-classes": ["error", { ignore: ["^ds-"], detectComponentClasses: true }],
       "better-tailwindcss/no-restricted-classes": [
         "error",

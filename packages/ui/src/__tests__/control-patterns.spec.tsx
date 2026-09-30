@@ -5,8 +5,8 @@ import { Button } from "../primitives/Button";
 import { Input } from "../primitives/Input";
 import { Checkbox, RadioGroup, RadioGroupItem, Switch } from "../primitives/Choice";
 import { SegmentedControl } from "../navigation/SegmentedControl";
-import { Toggle } from "../controls";
-import { DesignSystemProvider } from "../design-system";
+import { Toggle } from "../legacy/controls";
+import { DesignSystemProvider } from "../legacy/design-system";
 
 afterEach(cleanup);
 

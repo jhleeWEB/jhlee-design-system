@@ -71,9 +71,9 @@ jobs:
           pnpm exec publint --strict
           # attw --pack 은 npm pack 을 써서 pnpm 의 publishConfig.exports 치환을 못 받는다 — pnpm 이 만든 tarball 을 직접 검사한다
           pnpm pack --pack-destination /tmp/pack
-          pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics   # CSS 서브패스는 타입 해석 대상이 아니다
+          pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics legacy   # CSS 서브패스는 타입 해석 대상이 아니다
           tar -tzf /tmp/pack/*.tgz | tee /tmp/pack/list.txt
-          for f in package/dist/index.js package/dist/index.d.ts package/dist/canvas-metrics.js package/dist/theme.css package/dist/tokens.css package/dist/shell.css package/dist/canvas.css; do
+          for f in package/dist/index.js package/dist/index.d.ts package/dist/canvas-metrics.js package/dist/legacy/index.js package/dist/legacy/index.d.ts package/dist/theme.css package/dist/tokens.css package/dist/legacy/shell.css package/dist/canvas.css; do
             grep -qx "$f" /tmp/pack/list.txt || { echo "missing $f"; exit 1; }
           done
           ! grep -q '__tests__' /tmp/pack/list.txt

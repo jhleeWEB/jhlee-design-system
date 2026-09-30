@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { useDesignSystem } from "./design-system";
-import { Card, CardHeader, CardWell, type CardProps } from "./primitives/Card";
-import { Badge } from "./primitives/Badge";
-import { Button } from "./primitives/Button";
-import { ScrollArea } from "./navigation/ScrollArea";
-import { Accordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionContent } from "./navigation/Accordion";
+import { Card, CardHeader, CardWell, type CardProps } from "../primitives/Card";
+import { Badge } from "../primitives/Badge";
+import { Button } from "../primitives/Button";
+import { ScrollArea } from "../navigation/ScrollArea";
+import { Accordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionContent } from "../navigation/Accordion";
 
 function canRestorePanelFocus(element: HTMLElement) {
   if (element.closest('[inert], [hidden], [aria-hidden="true"]') || element.matches(':disabled')) return false;

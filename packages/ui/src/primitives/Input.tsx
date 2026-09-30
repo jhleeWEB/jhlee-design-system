@@ -1,44 +1,17 @@
 "use client";
 import { forwardRef, useState } from "react";
 
-import { cn, cva, type VariantProps } from "../cn";
+import { cn, type VariantProps } from "../cn";
+import { inputVariants } from "./Input.variants";
 
 /* 입력 — 수치와 글자를 나눈다.
  *
  * `numeric` 이 별도 prop 인 이유는 base 의 원칙 3 때문이다: 수치는 mono + tabular-nums 여야
  * 슬라이더를 움직일 때 자릿수가 흔들리지 않는다. 호출처가 매번 클래스를 적게 두면 반드시 빠진다. */
-const fieldVariants = cva(
-  [
-    "w-full min-w-0 border bg-surface-2 text-ink",
-    "rounded-control transition-colors duration-100",
-    "placeholder:text-disabled",
-    "focus-visible:focus-ring focus-visible:outline-none",
-    "disabled:pointer-events-none disabled:opacity-45",
-    /* 숫자 입력의 스피너는 24px 높이에서 잡을 수 없는 크기가 된다 — 드래그와 키보드로 바꾼다. */
-    "[&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none",
-    "[&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none",
-    "[-moz-appearance:textfield]",
-  ],
-  {
-    variants: {
-      size: {
-        sm: "h-ctl-sm px-3 text-body",
-        md: "h-ctl px-3 text-control",
-        lg: "h-ctl-lg px-4 text-control",
-      },
-      invalid: {
-        true: "border-danger focus-visible:outline-danger",
-        false: "border-line-strong hover:border-ink-2",
-      },
-      numeric: { true: "tnum text-right", false: "" },
-    },
-    defaultVariants: { size: "md", invalid: false, numeric: false },
-  },
-);
 
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
-    VariantProps<typeof fieldVariants> {
+    VariantProps<typeof inputVariants> {
   /** 값 뒤에 붙는 단위 — "m", "m²", "%". 입력 안에 겹쳐 그리므로 값이 가려지지 않게 패딩을 준다. */
   suffix?: string;
 }
@@ -82,7 +55,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         ref={ref}
         data-slot="input"
         aria-invalid={invalid || undefined}
-        className={cn(fieldVariants({ size, invalid, numeric }), !suffix && className)}
+        className={cn(inputVariants({ size, invalid, numeric }), !suffix && className)}
         {...rest}
         type={type}
         value={controlledZero && incompleteNumber ? "" : type === "number" && typeof value === "string" ? stripLeadingZeros(value) : value}
@@ -133,7 +106,7 @@ export const Textarea = forwardRef<
       data-slot="textarea"
       aria-invalid={invalid || undefined}
       className={cn(
-        fieldVariants({ size: "md", invalid: invalid ?? false }),
+        inputVariants({ size: "md", invalid: invalid ?? false }),
         "h-auto min-h-[56px] resize-y py-3 leading-relaxed",
         className,
       )}

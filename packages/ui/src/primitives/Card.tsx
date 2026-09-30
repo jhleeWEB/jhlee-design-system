@@ -2,7 +2,8 @@
 import { Children, Fragment, cloneElement, createContext, isValidElement, useContext, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
-import { cn, cva, type VariantProps } from "../cn";
+import { cn, type VariantProps } from "../cn";
+import { cardVariants } from "./Card.variants";
 import { PanelToggleButton } from "./PanelToggleButton";
 
 /* 카드 — 이 제품의 기본 구획.
@@ -34,19 +35,6 @@ interface CardCtx {
 }
 const Ctx = createContext<CardCtx | null>(null);
 
-export const cardVariants = cva("relative flex min-h-0 min-w-0 flex-col bg-surface", {
-  variants: {
-    elevation: {
-      raised: "rounded-card shadow-card",
-      /* 테두리만. 카드 안에 다시 칸을 나눌 때 — 그림자를 겹쳐 쓰면 층위가 흐려진다. */
-      flat: "rounded-card border border-line",
-      /* 격자에 붙는 칸. 옛 셸과 섞어 쓸 때. */
-      flush: "rounded-none border border-line",
-    },
-    pad: { none: "", sm: "p-3", md: "p-4", lg: "p-5" },
-  },
-  defaultVariants: { elevation: "raised", pad: "none" },
-});
 
 export interface CardProps
   extends React.ComponentPropsWithRef<"div">,

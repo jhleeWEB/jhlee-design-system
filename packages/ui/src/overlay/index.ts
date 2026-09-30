@@ -8,6 +8,7 @@ export {
   DrawerTrigger,
   type DrawerContentProps,
 } from "./Drawer";
+export { drawerVariants } from "./Drawer.variants";
 export {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -33,6 +34,7 @@ export {
   ModalTrigger,
   type ModalContentProps,
 } from "./Modal";
+export { modalVariants } from "./Modal.variants";
 export {
   Popover,
   PopoverAnchor,

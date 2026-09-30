@@ -20,7 +20,9 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   src/theme.css              방향 C — --canvas-*(라이트 고정·radius 0·무채색) / --chrome-*(듀얼 테마), Tailwind v4 @theme 매핑,
                              @source "./" 자기 등록, 컴포넌트 CSS(@import)
   src/{primitives,overlay,feedback,navigation,data}/   DS 컴포넌트(Tailwind 유틸 + cva + Radix)
-  src/{shell,controls,design-system}.tsx               레거시 3열 작업대 셸·컨트롤(향후 ./legacy 서브패스로 격리)
+  src/**/Name.variants.ts    컴포넌트의 cva 한 벌 — `"use client"` 없음(서버에서 호출 가능). 컴포넌트가 import 하고 층 배럴이 `*Variants` 를 export
+  src/legacy/                `./legacy` 서브패스 — 3열 작업대 셸·컨트롤·DesignSystemProvider·shell.css(#10). 격리·동결: ESLint ignores,
+                             래칫 제외. 루트 배럴은 같은 이름을 지정자별 @deprecated 로 한 마이너 재export 하고 다음 마이너에 `feat!:` 로 지운다
   src/**/*.stories.tsx       컴포넌트 옆 스토리 — 3스토리 계약(Default · Variants · ThemeContrast, `stories-contract.spec` 이 검사, 본보기 Button)
   src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트, 16 스펙)
   .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
@@ -73,14 +75,14 @@ pnpm build             # tsdown → packages/ui/dist
 pnpm verify            # typecheck + lint + test + build — PR 전 한 번
 pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(Phase A 는 'todo')
 pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
-cd packages/ui && pnpm exec publint --strict && pnpm exec attw --pack . --profile esm-only   # 패키지 계약
+cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics legacy   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
 ```
 
 **린트 기준선.** 루트 `eslint.config.js`(플러그인 + 로컬 규칙 `ds/*`, `packages/eslint-rules/`)의 모든 규칙은 error 이고,
 첫 실행의 위반은 `eslint-suppressions.json`(ESLint bulk suppressions)이 덮는다 — 계획의 «warn + 기준선» 은 suppressions 가
 error 만 덮기 때문에 이 모양이 됐다. **기준선을 늘리는 PR 은 받지 않는다**(`--suppress-all` 재실행 금지). 위반을 고쳐 줄이면
-같은 PR 에서 `pnpm exec eslint . --prune-suppressions` 로 기준선을 낮춘다. legacy 경로(shell.tsx·controls.tsx·design-system.tsx)는
-ignores 가 아니라 기준선으로 덮여 있다 — `./legacy` 로 격리될 때 ignores 로 바꾼다.
+같은 PR 에서 `pnpm exec eslint . --prune-suppressions` 로 기준선을 낮춘다. `src/legacy/` 는
+기준선이 아니라 ignores 다(#10) — 동결된 코드는 래칫에 태우지 않는다.
 
 **발행**은 `main` 머지 시 자동이다(AGENTS.md «릴리스»). 로컬에서 발행하려면 `~/.npmrc` 에
 `//npm.pkg.github.com/:_authToken=<classic PAT: read:packages + write:packages>` 를 두고

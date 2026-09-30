@@ -1,16 +1,10 @@
-import { cn, cva, type VariantProps } from "../cn";
+import { cn, type VariantProps } from "../cn";
+import { spinnerVariants } from "./Spinner.variants";
 
 /* 스피너 — «돌고 있다» 만 말한다. 얼마나 남았는지는 `Progress` 가 맡는다.
  *
  * SVG 한 장으로 그린다. CSS 테두리 트릭(`border-t-transparent` + `animate-spin`)은 반올림 때문에
  * 작은 크기에서 링이 찌그러지는데, 이 제품의 기본 크기는 12–16px 라 그게 그대로 보인다. */
-const spinnerVariants = cva("shrink-0 animate-spin motion-reduce:animate-none", {
-  variants: {
-    size: { sm: "size-6", md: "size-8", lg: "size-12" },
-    tone: { current: "text-current", muted: "text-muted", accent: "text-accent" },
-  },
-  defaultVariants: { size: "md", tone: "current" },
-});
 
 export interface SpinnerProps
   extends React.SVGAttributes<SVGSVGElement>,

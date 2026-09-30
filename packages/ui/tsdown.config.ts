@@ -6,7 +6,8 @@ import { defineConfig } from "tsdown";
  *  - CSS 는 빌드 파이프라인을 태우지 않고 그대로 복사한다 — @theme·@utility·@source 원문이 소비자 Tailwind 에 닿아야 한다.
  *  - 소비자는 publishConfig.exports(dist) 를, 워크스페이스(갤러리·Storybook)는 exports(src) 를 본다 — pnpm 이 발행 시 바꿔 끼운다. */
 export default defineConfig({
-  entry: ["src/index.ts", "src/canvas-metrics.ts"],
+  // legacy/index 는 별도 entry 다 — 루트 배럴의 @deprecated 재export 와 같은 파일을 가리키므로 unbundle 에서 중복 없이 dist/legacy/ 에 놓인다(#10).
+  entry: ["src/index.ts", "src/legacy/index.ts", "src/canvas-metrics.ts"],
   format: "esm",
   platform: "neutral",
   unbundle: true,
@@ -17,7 +18,8 @@ export default defineConfig({
   copy: [
     { from: "src/theme.css", to: "dist" },
     { from: "src/tokens.css", to: "dist" },
-    { from: "src/shell.css", to: "dist" },
+    // shell.css 는 `@import "../tokens.css"` 로 dist/tokens.css 를 본다 — 디렉터리 깊이를 소스와 같게 유지해야 상대경로가 산다.
+    { from: "src/legacy/shell.css", to: "dist/legacy" },
     { from: "src/canvas.css", to: "dist" },
     { from: "src/feedback/toast.css", to: "dist/feedback" },
     { from: "src/primitives/card-motion.css", to: "dist/primitives" },

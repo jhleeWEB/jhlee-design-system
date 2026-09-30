@@ -20,9 +20,10 @@
   "exports": {
     ".": "./src/index.ts",
     "./canvas-metrics": "./src/canvas-metrics.ts",
+    "./legacy": "./src/legacy/index.ts",
     "./theme.css": "./src/theme.css",
     "./tokens.css": "./src/tokens.css",
-    "./shell.css": "./src/shell.css",
+    "./shell.css": "./src/legacy/shell.css",
     "./canvas.css": "./src/canvas.css",
     "./package.json": "./package.json"
   },
@@ -40,9 +41,14 @@
         "import": "./dist/canvas-metrics.js",
         "default": "./dist/canvas-metrics.js"
       },
+      "./legacy": {
+        "types": "./dist/legacy/index.d.ts",
+        "import": "./dist/legacy/index.js",
+        "default": "./dist/legacy/index.js"
+      },
       "./theme.css": "./dist/theme.css",
       "./tokens.css": "./dist/tokens.css",
-      "./shell.css": "./dist/shell.css",
+      "./shell.css": "./dist/legacy/shell.css",
       "./canvas.css": "./dist/canvas.css",
       "./package.json": "./package.json"
     }

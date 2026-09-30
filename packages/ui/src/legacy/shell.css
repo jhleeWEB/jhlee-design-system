@@ -10,7 +10,7 @@
  * 도메인 색(배치 객체 종류 등)은 여기 없다. 앱이 자기 CSS 에서 얹는다.
  */
 
-@import "./tokens.css";
+@import "../tokens.css";
 
 /* ── 앱 셸 · Modularization 3열 ────────────────────────────── */
 

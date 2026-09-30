@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
-import { cn } from "./cn";
+import { cn } from "../cn";
 import { useDesignSystem } from "./design-system";
-import { Switch } from "./primitives/Choice";
-import { Button } from "./primitives/Button";
-import { SegmentedControl } from "./navigation/SegmentedControl";
-import { ScrollArea } from "./navigation/ScrollArea";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "./overlay/DropdownMenu";
+import { Switch } from "../primitives/Choice";
+import { Button } from "../primitives/Button";
+import { SegmentedControl } from "../navigation/SegmentedControl";
+import { ScrollArea } from "../navigation/ScrollArea";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "../overlay/DropdownMenu";
 
 /**
  * 폼 컨트롤.
