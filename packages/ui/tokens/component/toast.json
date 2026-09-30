@@ -1,0 +1,11 @@
+{
+  "$description": "토스트 시간 — 오늘은 TS 상수(MOTION)로만 나간다. toast.css 의 220/180ms 는 B3 가 이 토큰을 참조하게 바꾼다. 퇴장(exit)은 큐 유예(queue-grace)보다 짧아야 한다(motion.spec).",
+  "$extensions": { "sds": { "scope": "ts" } },
+  "toast": {
+    "$type": "duration",
+    "enter": { "$value": "220ms", "$extensions": { "sds": { "ts": "toastEnterMs" } } },
+    "exit": { "$value": "180ms", "$extensions": { "sds": { "ts": "toastExitMs" } } },
+    "queue-grace": { "$value": "240ms", "$extensions": { "sds": { "ts": "toastQueueGraceMs" } } },
+    "default": { "$value": "4200ms", "$extensions": { "sds": { "ts": "toastDefaultMs" } } }
+  }
+}

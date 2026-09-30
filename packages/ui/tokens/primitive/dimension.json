@@ -1,0 +1,10 @@
+{
+  "$description": "간격과 셸 치수 — Tailwind @theme 의 정적 값. 카드 사이 12px · 레일 64px 은 참고 화면 실측(theme.css 주석).",
+  "$extensions": { "sds": { "scope": "theme" } },
+  "spacing": { "$type": "dimension", "$value": "4px", "$description": "Tailwind 기본 4px 유지 — gap-3=12px · p-4=16px 이 그대로 나온다." },
+  "size": {
+    "$type": "dimension",
+    "rail": { "$value": "64px" },
+    "gap": { "$value": "12px" }
+  }
+}

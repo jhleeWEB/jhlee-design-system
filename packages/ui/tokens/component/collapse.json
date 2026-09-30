@@ -1,0 +1,10 @@
+{
+  "$description": "접기 모션 — 카드 · 아코디언 · 뷰 패널이 같은 길이와 곡선을 읽는다. reduced-motion 에서 0ms. CSS(--motion-collapse-*)와 TS(MOTION.collapseMs) 둘 다로 나간다.",
+  "$extensions": { "sds": { "scope": "root" } },
+  "motion": {
+    "collapse": {
+      "duration": { "$type": "duration", "$value": "200ms", "$extensions": { "sds": { "ts": "collapseMs", "reducedMotion": "0ms" } } },
+      "easing": { "$type": "cubicBezier", "$value": "{ease.out-quick}" }
+    }
+  }
+}

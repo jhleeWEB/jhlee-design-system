@@ -1,0 +1,16 @@
+{
+  "$description": "캔버스 — 도면이 사는 면. 흰 바탕 고정 · radius 0 · 무채색. 다크 파일이 없다는 것이 곧 계약이다(schema 가 canvas.dark.json 을 거부). 9개 hex 의 회색 참조 복원은 B4.",
+  "$extensions": { "sds": { "scope": "root" } },
+  "canvas": {
+    "$type": "color",
+    "bg": { "$value": "#ffffff" },
+    "plan-bg": { "$value": "#f4f4f2" },
+    "surface": { "$value": "#fafafa", "$description": "필지 채움처럼 바탕에서 한 단 들어간 면." },
+    "line": { "$value": "#dcdcdc" },
+    "line-strong": { "$value": "#bfbfbf" },
+    "ink": { "$value": "#1a1a1a" },
+    "ink-2": { "$value": "#3a3a3a" },
+    "muted": { "$value": "#6b6b6b" },
+    "grid": { "$value": "#ebebeb" }
+  }
+}

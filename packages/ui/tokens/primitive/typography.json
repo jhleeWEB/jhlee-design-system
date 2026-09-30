@@ -1,0 +1,19 @@
+{
+  "$description": "글자 계단 7단 + 자간. 본문 13px · 제목 26px 은 참고 화면 실측(theme.css 주석). 줄 높이는 Tailwind 의 --text-*--line-height 로 나간다.",
+  "$extensions": { "sds": { "scope": "theme" } },
+  "text": {
+    "$type": "typography",
+    "$extensions": { "sds": { "reset": true } },
+    "micro": { "$value": { "fontSize": "10px", "lineHeight": 1.4 } },
+    "label": { "$value": { "fontSize": "11px", "lineHeight": 1.45 } },
+    "body": { "$value": { "fontSize": "13px", "lineHeight": 1.55 } },
+    "control": { "$value": { "fontSize": "13.5px", "lineHeight": 1.4 } },
+    "title": { "$value": { "fontSize": "15px", "lineHeight": 1.4 } },
+    "readout": { "$value": { "fontSize": "22px", "lineHeight": 1.2 } },
+    "display": { "$value": { "fontSize": "26px", "lineHeight": 1.16 } }
+  },
+  "tracking": {
+    "$type": "dimension",
+    "caps": { "$value": "0.09em", "$description": "대문자 미세라벨 전용 — eyebrow · 섹션 라벨." }
+  }
+}
