@@ -14,6 +14,7 @@ import { describe, expect, it } from "vitest";
 const PKG_DIR = fileURLToPath(new URL("../../../", import.meta.url));
 const pkg = JSON.parse(readFileSync(`${PKG_DIR}package.json`, "utf8")) as {
   files: string[];
+  bin: Record<string, string>;
   exports: Record<string, string>;
   publishConfig: { exports: Record<string, string | Record<string, string>> };
 };
@@ -28,6 +29,7 @@ describe("exports", () => {
         "./canvas-metrics",
         "./legacy",
         "./testing",
+        "./eslint",
         "./theme.css",
         "./corner.css",
         "./tokens.css",
@@ -57,6 +59,11 @@ describe("exports", () => {
         },
         "./canvas.css": "./dist/canvas.css",
         "./corner.css": "./dist/corner.css",
+        "./eslint": {
+          "default": "./dist/eslint/index.js",
+          "import": "./dist/eslint/index.js",
+          "types": "./dist/eslint/index.d.ts",
+        },
         "./legacy": {
           "default": "./dist/legacy/index.js",
           "import": "./dist/legacy/index.js",
@@ -94,8 +101,12 @@ describe("exports", () => {
       for (const path of flatten(target)) expect(existsSync(`${PKG_DIR}${path}`), `${key} → ${path} (dist 가 낡았으면 pnpm build)`).toBe(true);
   });
 
-  it("files 는 dist 와 문서뿐이다", () => {
-    expect(pkg.files).toEqual(["dist", "README.md", "CHANGELOG.md"]);
+  it("files 는 dist · 에이전트 산출물(agent · docs · llms.txt) · 문서뿐이다", () => {
+    expect(pkg.files).toEqual(["dist", "agent", "docs", "llms.txt", "README.md", "CHANGELOG.md"]);
+  });
+
+  it("bin 은 sds-agent 하나이고 dist 의 별도 entry 다(#31)", () => {
+    expect(pkg.bin).toEqual({ "sds-agent": "./dist/agent/cli.js" });
   });
 });
 
@@ -112,6 +123,20 @@ describe("pack 내용", () => {
   it("package.json 과 README 는 실린다", () => {
     expect(files).toContain("package.json");
     expect(files).toContain("README.md");
+  });
+
+  it("에이전트 산출물이 실린다 — AGENTS 블록 · 스킬 · llms.txt · 컴포넌트 문서(#31)", () => {
+    expect(files).toContain("agent/AGENTS.block.md");
+    expect(files).toContain("agent/skills/squircle-ds/SKILL.md");
+    expect(files).toContain("llms.txt");
+    expect(files).toContain("docs/components/README.md");
+    expect(files).toContain("docs/components/Button.md");
+  });
+
+  it("dist 가 있으면 bin · 매니페스트도 실린다", () => {
+    if (!existsSync(`${PKG_DIR}dist/index.js`)) return;
+    expect(files).toContain("dist/agent/cli.js");
+    expect(files).toContain("dist/components.manifest.json");
   });
 
   it("dist 가 있으면 publishConfig.exports 대상이 전부 실린다", () => {

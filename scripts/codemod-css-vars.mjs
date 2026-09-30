@@ -5,7 +5,7 @@
  *   node scripts/codemod-css-vars.mjs --dry <경로>…             바꿀 자리만 센다
  *
  * 표는 손으로 적지 않는다 — `packages/ui/tokens/legacy.json`(alias 토큰 + 파일 머리 renames)에서 `legacy-map.mjs` 가 뽑는다. 유틸 클래스
- * 쪽 코드모드(`text-ink` → `text-foreground`)는 같은 표에서 나온 `eslint/legacy-classes.json` 을 ESLint `--fix` 가 적용한다 — 둘이 한 정본이다.
+ * 쪽 코드모드(`text-ink` → `text-foreground`)는 같은 표에서 나온 `src/generated/legacy-classes.json` 을 ESLint `--fix` 가 적용한다 — 둘이 한 정본이다.
  * 옛 이름 대부분은 generated/legacy.css 의 alias 로 그대로 동작하지만 `--chrome-accent`(옛 azure → 새 옅은 면)·`--chrome-muted`(옛 회색 글자 →
  * 새 면)는 새 이름과 글자가 같아 alias 가 없다 — 그 둘은 이 스크립트를 돌려야 뜻이 지켜진다. 소비 레포도 같은 명령으로 옮긴다.
  *

@@ -29,11 +29,18 @@ import { Button, Card, ToastProvider } from "@jhleeweb/squircle-design-system";
 
 토큰 값·이름·컴포넌트 계약은 [`CLAUDE.md`](CLAUDE.md) 「도메인 지침」과 [`docs/architecture/design-system-patterns.md`](docs/architecture/design-system-patterns.md).
 
+## AGENTS
+
+에이전트가 이 패키지를 지어내지 않고 쓰게 하는 산출물이 패키지에 실린다 — `llms.txt`(색인) · `dist/components.manifest.json`(기계 판독 정본) ·
+`docs/components/*.md` · 린트 프리셋 `@jhleeweb/squircle-design-system/eslint` · bin `sds-agent`. 소비 레포 루트에서 `npx sds-agent sync` 를 한 번 돌리면
+`AGENTS.md` 에 «디자인 시스템 계약(에이전트)» 관리 블록이 들어가고 `.claude/skills/squircle-ds/`(Analyze → Compose → Audit)가 생긴다(멱등, 갱신 때마다 다시).
+자세한 것은 [`packages/ui/README.md`](packages/ui/README.md) «AGENTS».
+
 ## 개발
 
 ```bash
 pnpm install && pnpm storybook   # 카탈로그 http://localhost:6006 (Pages/Workbench 가 제품 화면 복제, Pages/Gallery 가 컴포넌트 명세)
-pnpm verify                      # typecheck + lint + tokens:check + test + build
+pnpm verify                      # typecheck + lint + tokens:check + manifest:check + test + build
 pnpm --filter @jhleeweb/squircle-design-system test:stories   # 스토리를 Chromium 에서 play + axe
 pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 기준선 갱신은 vrt:update(도커)만
 ```

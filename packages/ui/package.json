@@ -14,14 +14,21 @@
   ],
   "files": [
     "dist",
+    "agent",
+    "docs",
+    "llms.txt",
     "README.md",
     "CHANGELOG.md"
   ],
+  "bin": {
+    "sds-agent": "./dist/agent/cli.js"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./canvas-metrics": "./src/canvas-metrics.ts",
     "./legacy": "./src/legacy/index.ts",
     "./testing": "./src/testing/index.ts",
+    "./eslint": "./src/eslint/index.ts",
     "./theme.css": "./src/theme.css",
     "./corner.css": "./src/corner.css",
     "./tokens.css": "./src/tokens.css",
@@ -53,6 +60,11 @@
         "import": "./dist/testing/index.js",
         "default": "./dist/testing/index.js"
       },
+      "./eslint": {
+        "types": "./dist/eslint/index.d.ts",
+        "import": "./dist/eslint/index.js",
+        "default": "./dist/eslint/index.js"
+      },
       "./theme.css": "./dist/theme.css",
       "./corner.css": "./dist/corner.css",
       "./tokens.css": "./dist/tokens.css",
@@ -62,12 +74,14 @@
     }
   },
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && node scripts/build-manifest.ts && node scripts/build-docs.ts",
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p tsconfig.stories.json",
     "test": "vitest run --project=unit --project=arch --passWithNoTests",
     "tokens:build": "node tokens/build.mjs",
     "tokens:check": "node tokens/build.mjs --check",
+    "manifest:build": "node scripts/build-manifest.ts && node scripts/build-docs.ts",
+    "manifest:check": "node scripts/build-docs.ts --check",
     "test:arch": "vitest run --project=arch",
     "lint": "cd ../.. && pnpm exec eslint packages/ui --max-warnings 0",
     "test:stories": "vitest run --project=storybook",
@@ -85,12 +99,24 @@
   },
   "peerDependencies": {
     "@types/react": "^19",
+    "eslint": "^10",
+    "eslint-plugin-better-tailwindcss": "^4.7",
+    "eslint-plugin-react": "^7.37",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.3.0"
   },
   "peerDependenciesMeta": {
     "@types/react": {
+      "optional": true
+    },
+    "eslint": {
+      "optional": true
+    },
+    "eslint-plugin-better-tailwindcss": {
+      "optional": true
+    },
+    "eslint-plugin-react": {
       "optional": true
     },
     "tailwindcss": {
@@ -111,11 +137,15 @@
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
+    "@types/estree": "^1.0.9",
     "@types/node": "^22",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.2.0",
     "@vitest/browser-playwright": "4.1.11",
+    "eslint": "^10.11.0",
+    "eslint-plugin-better-tailwindcss": "^4.7.0",
+    "eslint-plugin-react": "^7.37.5",
     "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
     "playwright": "1.63.0",

@@ -9,7 +9,9 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    // legacy-tone.js 가 ui 의 .ts 정본을 확장자째 재수출한다(#31) — noEmit 이라 허용된다.
+    "allowImportingTsExtensions": true
   },
   "include": ["src", "vitest.config.ts"],
   "exclude": ["src/__tests__/fixtures"]

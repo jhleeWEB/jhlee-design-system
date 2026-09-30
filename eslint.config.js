@@ -19,9 +19,11 @@ import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-/* 옛 유틸 이름 → 새 shadcn 이름(B5, #22) — legacy.json 이 원천이고 tokens/build.mjs 가 굽는다(`pnpm tokens:check` 가 최신성을 본다).
- * `no-restricted-classes` 의 {pattern, fix} 라 **`eslint --fix` 가 곧 코드모드**다. 긴 이름이 앞에 온다. */
-import legacyClasses from "./packages/ui/eslint/legacy-classes.json" with { type: "json" };
+/* `no-restricted-classes` 의 패턴(옛 이름 개명 · hex · 단위 리터럴 · 격자 밖 간격)은 소비자 프리셋(`packages/ui/src/eslint/index.ts`)과 한 벌이다(#31) —
+ * 워크스페이스와 소비 레포가 같은 규칙을 돌려야 «여기서는 통과, 저기서는 실패» 가 없다. Node 24 가 .ts 를 그대로 읽으므로 빌드 없이 import 된다.
+ * 옛 이름 표는 legacy.json 이 원천이고 tokens/build.mjs 가 src/generated/legacy-classes.json 으로 굽는다(`pnpm tokens:check`) — {pattern, fix} 라
+ * **`eslint --fix` 가 곧 코드모드**다. */
+import { restrictedClassPatterns } from "./packages/ui/src/eslint/index.ts";
 
 /** 모든 규칙을 error 로 정규화한다 — bulk suppressions 가 덮는 유일한 severity 라서(파일 머리의 «왜»). */
 const asError = configs =>
@@ -56,16 +58,14 @@ const TYPED = {
       "packages/ui/vrt/**/*.{ts,tsx}",
       "packages/ui/vitest.config.ts",
       "packages/ui/tsdown.config.ts",
+      // 매니페스트·문서 생성기 — Node 가 직접 실행하는 빌드 도구라 stories 프로필이 본다(#31).
+      "packages/ui/scripts/**/*.ts",
     ],
     project: "packages/ui/tsconfig.stories.json",
   },
 };
 const TEST_FILES = ["**/__tests__/**", "**/__arch__/**", "**/*.spec.{ts,tsx}", "**/*.test.{ts,tsx}"];
 
-/* 간격 규칙(계획 §2.5-d)의 어휘. 실측: 이 패키지의 최다 간격은 12px(gap-3)이고 shadcn 자체가 h-9·px-3·gap-1.5 를 쓰므로 8 의 배수만 허용하면
- * 위반이 51% 다 — 4px 기반에 스텝 화이트리스트가 맞다. */
-const SPACING_UTILITIES = "p|px|py|pt|pr|pb|pl|ps|pe|m|mx|my|mt|mr|mb|ml|ms|me|gap|gap-x|gap-y|space-x|space-y|inset|inset-x|inset-y|top|right|bottom|left|start|end";
-const SPACING_STEPS = "0|1|2|3|4|5|6|8|10|12|16|20|24";
 
 export default tseslint.config(
   {
@@ -195,23 +195,9 @@ export default tseslint.config(
       "better-tailwindcss/no-unknown-classes": ["error", { ignore: ["^ds-"], detectComponentClasses: true }],
       "better-tailwindcss/no-restricted-classes": [
         "error",
-        {
-          restrict: [
-            // ① 옛 이름(코드모드) — 앞에 두어 개명이 다른 진단보다 먼저 보이게.
-            ...legacyClasses,
-            // ② raw 색 — hex 와 색 함수. 크롬의 색은 토큰 유틸뿐이다(계획 §2.5-d).
-            { pattern: "^.*\\[#[0-9a-fA-F]{3,8}\\]$", message: "Hex colour in a class — use a colour token." },
-            { pattern: "^.*\\[(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\\(.*\\]$", message: "Raw colour function in a class — use a colour token." },
-            // ③ 임의 단위 — px·rem·em·ms 는 토큰 밖 값이다.
-            { pattern: "^.*\\[[^\\]]*\\d+(?:\\.\\d+)?(?:px|rem|em|ms)[^\\]]*\\]$", message: "Unit literal in a class — use a token utility." },
-            // ④ 간격 격자 — 4px 기반, 허용 스텝 화이트리스트(0 1 2 3 4 5 6 8 10 12 16 20 24 = 0~96px). 반스텝(1.5)·7·9·11·14… 는 밖이다.
-            //    간격 계열(p/m/gap/space/inset/top…)에만 — w/h/size 는 치수라 다른 사다리다. 초기 위반은 기준선(eslint-suppressions.json)이 든다.
-            {
-              pattern: `^(?:[^\\s:]+:)*-?(?:${SPACING_UTILITIES})-(?!(?:${SPACING_STEPS})$)\\d+(?:\\.\\d+)?$`,
-              message: "Spacing step off the 4px grid — allowed steps are 0 1 2 3 4 5 6 8 10 12 16 20 24 (px = 4 × step).",
-            },
-          ],
-        },
+        // ① 옛 이름(코드모드, 앞에 두어 개명이 먼저 보이게) ② raw 색(hex·색 함수) ③ 임의 단위(px·rem·em·ms) ④ 격자 밖 간격(4px 스텝 화이트리스트,
+        // 간격 계열에만) — 프리셋과 같은 한 벌(src/eslint/index.ts). 초기 위반은 기준선(eslint-suppressions.json)이 든다.
+        { restrict: restrictedClassPatterns() },
       ],
     },
   },

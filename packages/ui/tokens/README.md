@@ -1,6 +1,6 @@
 # tokens/ — DTCG 정본과 조어 규칙
 
-사람이 편집하는 유일한 곳이다. `build.mjs` 가 `src/generated/*` 와 `eslint/legacy-classes.json` 을 만들고 `pnpm tokens:check` 가 최신성을 강제한다.
+사람이 편집하는 유일한 곳이다. `build.mjs` 가 `src/generated/*` 와 `src/generated/legacy-classes.json` 을 만들고 `pnpm tokens:check` 가 최신성을 강제한다.
 스키마(`schema.ts`)가 파일 모양과 파일 사이의 약속을 검사한다 — 정의 없는 alias · 다크에 빠진 크롬 토큰 · legacy 가 아닌 파일의 `$deprecated` 는 생성 전에 실패한다.
 
 ```
@@ -41,7 +41,7 @@ legacy.json 옛 이름 → 새 이름 alias(전부 $deprecated). 세 출력의 �
 |---|---|---|
 | ① CSS 변수 alias | `chrome.<옛>: {chrome.<새>}`(scope legacy) → `--chrome-ink: var(--chrome-foreground)` | `generated/legacy.css` 의 `:root` — 다크도 참조를 따라 갈린다 |
 | ② 유틸 alias | `color.<옛>: {chrome.<새>}`(scope theme-inline) → `--color-ink: var(--chrome-foreground)` · `radius.<옛>: {radius.<새>}`(scope theme) | `generated/theme.tailwind.css` — `text-ink` `rounded-control` 이 한 마이너 동안 산다 |
-| ③ 코드모드 표 | ①·② 의 alias 토큰 + 파일 머리 `renames` → `legacy-map.mjs` | `eslint/legacy-classes.json`(`no-restricted-classes` 의 `{pattern, fix}`) · `scripts/codemod-classes.mjs` · `scripts/codemod-css-vars.mjs` |
+| ③ 코드모드 표 | ①·② 의 alias 토큰 + 파일 머리 `renames` → `legacy-map.mjs` | `src/generated/legacy-classes.json`(`no-restricted-classes` 의 `{pattern, fix}`) · `scripts/codemod-classes.mjs` · `scripts/codemod-css-vars.mjs` |
 
 `renames`(`chrome.accent → chrome.primary` · `chrome.muted → chrome.muted-foreground`)는 alias 토큰을 둘 수 없는 개명이다 — 옛 이름이 새 정본의 **다른**
 토큰과 글자가 같다. 그 둘은 린트 표(③ 의 JSON)에 실리지 않는다: ESLint `--fix` 는 고친 뒤 다시 검사하기를 반복해 `bg-surface-2 → bg-muted → bg-muted-foreground`

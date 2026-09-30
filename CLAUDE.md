@@ -31,8 +31,21 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              tsdown 이 dist/generated/ 로 복사한다(상대 @import 가 tarball 안에서 살아야 한다). 래칫·ESLint jsdoc 대상이 아니다
   src/tokens/motion.ts       `generated/tokens.ts` 의 `MOTION` 재수출 껍데기(@deprecated) — Toast·ScrollArea·Tooltip 은 생성물을 직접 import 한다(B1 #15 → B3 #18)
   tokens/README.md           조어 규칙(면 <role> · 글자 <role>-foreground · 옅은 면 <role>-soft · 사다리 -2/-3)과 legacy.json 이 세 출력의 원천이라는 계약(B5 #22)
-  tokens/legacy-map.mjs      옛 이름 → 새 이름 표 — `eslint/legacy-classes.json`(린트용, 사슬 없음)과 `scripts/codemod-*.mjs`(한 번에, accent·muted 포함)의 공통 계산
-  eslint/legacy-classes.json 생성물 — 루트 eslint.config.js 의 `no-restricted-classes` 가 `{pattern, fix}` 로 읽는다 = **`eslint --fix` 가 곧 코드모드**
+  tokens/legacy-map.mjs      옛 이름 → 새 이름 표 — `src/generated/legacy-classes.json`(린트용, 사슬 없음)과 `scripts/codemod-*.mjs`(한 번에, accent·muted 포함)의 공통 계산
+  src/generated/legacy-classes.json 생성물 — 루트 eslint.config.js 와 소비자 프리셋(src/eslint)의 `no-restricted-classes` 가 `{pattern, fix}` 로 읽는다 = **`eslint --fix` 가 곧 코드모드**.
+                             프리셋이 import 해 배포물에 실어야 해서 src/generated/ 에 있다(#31)
+  src/eslint/                **소비자 린트 프리셋** `@jhleeweb/squircle-design-system/eslint`(#31) — `squircleDesignSystem({ entryPoint })` 가 flat config 조각을 낸다:
+                             `react/forbid-elements`(button input select textarea dialog table) · `better-tailwindcss/no-unknown-classes`(entryPoint = 소비자 진입 CSS) ·
+                             `no-restricted-classes`(옛 이름 개명 + hex·색 함수·단위·격자 밖 간격 — `restrictedClassPatterns()`, 루트 eslint.config.js 와 한 벌) ·
+                             `no-restricted-syntax`(style={{color|background|border}}, `styleIgnores`) · `ds/legacy-tone`(정본 `rules/legacy-tone.ts`, packages/eslint-rules 는 재수출).
+                             `spacing.ts` 가 간격 어휘의 한 벌. 상대 import 는 `.ts` 확장자(루트 config 가 Node 24 로 빌드 없이 읽는다). peer 셋은 optional
+  src/agent/cli.ts           bin `sds-agent`(#31) — `sds-agent sync [--cwd]` 가 소비 레포 AGENTS.md 에 관리 블록(`<!-- sds:begin --> … <!-- sds:end -->`)을 upsert 하고
+                             `.claude/skills/squircle-ds/` 를 복사한다(멱등, 블록 밖 불변). 원문은 `agent/AGENTS.block.md` · `agent/skills/squircle-ds/SKILL.md`(files 에 실린다)
+  scripts/build-manifest.ts  `dist/components.manifest.json` 생성기(#31) — TS 컴파일러 API 로 index.ts export 전수를 순회: kind(component·compound·hook)·client·props(type/required/
+                             default/values{value,doc})·parts·deprecated, cva 축/기본값(AST), 토큰 이름. `default` 는 `@default` → 같은 파일 cva defaultVariants, `values[].doc` 은
+                             «`값` — 설명» 줄. react-docgen-typescript 는 쓰지 않는다. 게이트 `__tests__/package/manifest.spec.ts`(전수 포함 · client 일치 불변식 + KNOWN_GAPS 래칫)
+  scripts/build-docs.ts      같은 매니페스트에서 `llms.txt`(llmstxt.org · «shadcn 과 다른 점» 은 docs/design-tokens.md 복사)와 `docs/components/*.md` 를 만든다. **둘은 커밋하는
+                             생성물**이고 `pnpm manifest:check` 가 최신성을 강제한다(CI unit job · verify). `pnpm build` 가 tsdown 뒤에 둘을 이어 돌린다
   src/lib/tone.ts            톤 어휘 한 벌(`toneValues` · `Tone`) + `normalizeTone()` — 옛 키(accent·ok·warn·danger·default·current) 한 마이너 호환(#22)
   src/tokens.css             `generated/{tokens,legacy}.css` 재수출 + 원칙을 강제하는 요소 규칙(box-sizing · body · 컨트롤 radius 0 · .num). 값은 없다
   src/theme.css              tokens.css + `generated/theme.tailwind.css` 재수출, @source "./" 자기 등록, 컴포넌트 CSS(@import), keyframes,
@@ -112,18 +125,22 @@ pnpm test              # vitest unit(jsdom) + arch(node: 래칫·토큰·패키�
 pnpm build             # tsdown → packages/ui/dist
 pnpm tokens:build      # tokens/*.json → src/generated/* (Style Dictionary). 정본을 고치면 돌리고 생성물을 함께 커밋한다
 pnpm tokens:check      # 생성물이 정본과 같은가 — 다르면 exit 1 (CI unit job · verify)
-pnpm verify            # typecheck + lint + tokens:check + test + build — PR 전 한 번
+pnpm manifest:build    # index.ts export + JSDoc → dist/components.manifest.json · llms.txt · docs/components/*.md (#31). JSDoc 을 고치면 돌리고 문서를 함께 커밋한다
+pnpm manifest:check    # 커밋된 llms.txt · docs/components 가 매니페스트와 같은가 — 다르면 exit 1 (CI unit job · verify)
+pnpm verify            # typecheck + lint + tokens:check + manifest:check + test + build — PR 전 한 번
+bash scripts/smoke-next.sh   # Next App Router 스모크(tarball → 최소 앱 next build). 야간 workflow smoke-next.yml 이 돌린다(비필수)
 pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(Phase A 는 'todo')
 pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
 VRT_ENGINES=1 pnpm --filter @jhleeweb/squircle-design-system vrt --project corners-chromium --project corners-webkit --project corners-firefox   # 모서리 3엔진 골든(로컬 macOS, playwright install webkit firefox 뒤)
-cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics legacy testing   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
+cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics legacy testing eslint   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
 ```
 
 **래칫 스펙.** `src/__arch__/forbidden-patterns.spec.ts` 는 토큰 밖 리터럴(tsx 대괄호 px/ms · Tailwind 기본 사다리 · CSS px/hex/ms · JS ms)·
 `forwardRef`·비-cva 삼항·불리언 data 속성·도메인 어휘를 **파일별 횟수 기준선**으로 붙든다. 실제 횟수가 기준선과 같아야 통과한다 —
 늘면 새 위반이고, 줄이면 같은 PR 에서 기준선을 낮춘다(0 이면 줄을 지운다). `legacy-alias-use`(옛 이름 `var(--ink)` 등의 사용, 목록은 legacy.json 에서 읽는다)도
 같은 래칫이다(#18). 토큰 쪽도 같은 모양이다: `references.spec` 의 `KNOWN_INLINE_LITERALS`(`@theme inline` 의 리터럴 — #18 에서 0)와 미참조 원시 17개 스냅샷,
-`rsc-directives.spec` 의 `"use client"` 파일 목록, `public-api.spec` 의 배럴 export 목록.
+`rsc-directives.spec` 의 `"use client"` 파일 목록, `public-api.spec` 의 배럴 export 목록, `manifest.spec` 의 `KNOWN_GAPS`(optional prop 의 `@default` 빈자리 ·
+유니언 값의 설명 빈자리 — JSDoc 을 채우면 같은 PR 에서 줄인다, Phase D 끝 0).
 토큰은 **JSON 정본만** 고치고 `pnpm tokens:build` 를 돌려 생성물을 함께 커밋한다 — `tokens:check` 가 생성물의 최신성을, VRT 가 픽셀을 지킨다.
 새 토큰은 값·출처·대비 근거를 `$description` 에 적는다.
 

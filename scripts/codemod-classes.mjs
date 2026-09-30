@@ -4,7 +4,7 @@
  *   node scripts/codemod-classes.mjs <파일 또는 디렉터리>…     .ts/.tsx/.mdx/.html 을 제자리에서 고친다
  *   node scripts/codemod-classes.mjs --dry <경로>…             바꿀 자리만 센다
  *
- * ESLint 의 `no-restricted-classes --fix`(eslint/legacy-classes.json)도 같은 표로 같은 일을 하지만 **accent · muted 두 이름은 그쪽에 없다** —
+ * ESLint 의 `no-restricted-classes --fix`(src/generated/legacy-classes.json)도 같은 표로 같은 일을 하지만 **accent · muted 두 이름은 그쪽에 없다** —
  * 옛 `bg-accent`(azure)와 새 `bg-accent`(옅은 면)는 글자가 같아 린트가 «고친 것» 과 «원래 새 것» 을 구분할 수 없고, --fix 가 반복 검사하며
  * `bg-surface-2 → bg-muted → bg-muted-foreground` 로 두 번 고쳐 버린다(tokens/legacy-map.mjs 머리). 이 스크립트는 정규식 한 번으로 끝내므로
  * 그 문제가 없다. 그래서 순서가 있다: 소비 레포는 **이 스크립트를 먼저 한 번** 돌리고(그 뒤로는 옛 이름이 없으니 다시 돌릴 일이 없다),

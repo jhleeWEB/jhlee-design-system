@@ -1,0 +1,20 @@
+# Next App Router 스모크(계획 §2.5-f·g, #31) — 비필수 야간 job. tarball 을 최소 App Router 앱에 설치해 서버 컴포넌트에서 `*Variants` 를 부르고
+# 클라이언트 페이지에서 전 export 를 로드한 뒤 `next build` 가 서는지 본다. `"use client"` 경계가 깨지면(지시문 누락 · 지시문 파일의 export *)
+# 여기서 «useState is not defined in Server Components» 로 드러난다. Next 최신판을 매일 받아오므로 결과가 우리 코드 밖의 이유로도 바뀔 수 있다 —
+# 그래서 필수 체크가 아니고 continue-on-error 다. 실패는 다음 날 사람이 본다.
+name: smoke-next
+on:
+  schedule:
+    - cron: "0 18 * * *"   # 03:00 KST
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke-next:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: bash scripts/smoke-next.sh

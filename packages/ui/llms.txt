@@ -1,0 +1,176 @@
+# Squircle Design System
+
+> `@jhleeweb/squircle-design-system` — Radix + Tailwind v4 디자인 시스템. 크롬(UI) 어휘는 shadcn 이름, 도면 캔버스는 `canvas-*`, 모든 크롬 모서리는 스쿼클(진행형 향상). 이 파일은 `components.manifest.json` 에서 생성된다(`scripts/build-docs.ts`) — 손으로 고치지 않는다.
+
+정본 순서: 이 파일 → `dist/components.manifest.json`(prop·값·기본값·client 의 기계 판독 정본, `jq '.components[]|select(.name=="Button")'`) → `docs/components/*.md` → `dist/**/*.d.ts`.
+매니페스트에 없는 컴포넌트·부품·prop 은 **지어내지 않는다** — «DS 확장 필요» 로 보고한다.
+
+## 사용 규칙
+
+- CSS 진입(소비자 계약) — `@source "./"` 자기 등록이라 소비자 `@source` 는 자기 소스만:
+  ```css
+  @import "tailwindcss/theme.css" layer(theme);
+  @import "@jhleeweb/squircle-design-system/theme.css";
+  @import "tailwindcss/utilities.css" source(none);
+  @source "./";
+  ```
+- import 는 루트 배럴 하나: `import { Button, Card } from "@jhleeweb/squircle-design-system"`. `./legacy` 의 3열 작업대 셸·컨트롤(AppShell · Panel · Select · Tabs …)은 @deprecated 다 — 새 화면에 쓰지 않는다.
+- **className 은 토큰 유틸만.** 색은 shadcn 이름(`bg-card` `text-muted-foreground` `border-border` `bg-primary` `bg-destructive-soft` …), 그 밖은 역할 이름(`text-body` `rounded-md` `shadow-pop` `h-ctl` `z-popover` `duration-fast`). Tailwind 기본 사다리(`text-sm` `bg-gray-100` `rounded` `shadow-md`)는 `initial` 로 지워져 **CSS 없이 조용히 무시된다** — 린트 프리셋이 잡는다. hex·`[12px]`·`style={{ color }}` 금지.
+- 간격은 4px 스텝 화이트리스트 `0 1 2 3 4 5 6 8 10 12 16 20 24`(px = 4 × step) — 간격 계열(p/m/gap/space/inset)에만. 반스텝(`gap-1.5`)·7·9·11·임의 px 는 린트가 막는다.
+- **부품 먼저, 래퍼는 설탕.** 부품은 평탄 이름(`ModalContent`, `DropdownMenuItem`)이고 `data-slot` 으로 자기 이름을 DOM 에 남긴다. `Modal.Content` 같은 정적 속성 컴파운드는 없다.
+- **클라이언트 경계(Next App Router).** 아래 색인의 `"use client"` 표시 컴포넌트는 서버 컴포넌트 트리에서 import 만 하고 렌더는 클라이언트 파일에서 한다. 서버에서 className 만 필요하면 `*Variants`(지시문 없음)를 호출한다: `buttonVariants({ variant: "solid" })`.
+- `tone` 은 한 어휘다: `neutral | primary | success | warning | destructive | info`. 옛 키(`accent` `ok` `warn` `danger`)와 옛 유틸 이름(`text-ink` `bg-surface` `rounded-control`)은 한 마이너 동안만 동작하고 `eslint --fix` 가 새 이름으로 바꾼다.
+- 유채색은 판정에만(`success`·`warning`·`destructive`·`info`), `primary` 는 «지금 고른 것·주된 동작». 상태는 항상 텍스트와 병기한다. 수치는 `font-mono tabular-nums`(`.num`).
+- 다크는 크롬에만(`html[data-theme="dark"]`) — 캔버스(`canvas-*`)는 흰 바탕·radius 0·무채색으로 불변이다. 새 컴포넌트마다 «캔버스인가 크롬인가» 를 먼저 묻는다.
+- 검증: 소비 레포 `eslint.config.js` 에 `squircleDesignSystem({ entryPoint })`(`@jhleeweb/squircle-design-system/eslint`)를 펼치고 `eslint` + `tsc --noEmit` 위반 0. 에이전트 절차는 `npx sds-agent sync` 가 심는 `.claude/skills/squircle-ds/SKILL.md`(Analyze → Compose → Audit).
+
+## shadcn 과 다른 점
+
+### 같은 것(설명 없이 쓴다)
+
+`bg-background` `bg-card` `bg-muted` `bg-secondary` `bg-popover` `bg-accent` `text-foreground` `text-muted-foreground` `text-primary-foreground`
+`text-accent-foreground` `border-border` `border-input` `bg-primary` `hover:bg-primary-hover`(확장) `ring-ring` `bg-destructive` `text-destructive-foreground`
+`rounded-sm/md/lg/xl`(6/8/12/16 — shadcn 의 `--radius` 계산식이 아니라 **고정값**) — 전부 shadcn 과 같은 뜻이다. `tone` prop 도 같은 어휘다:
+`neutral | primary | success | warning | destructive | info`.
+
+### 다른 것
+
+| 자리 | shadcn | 이 시스템 | 왜 |
+|---|---|---|---|
+| 캔버스(도면이 사는 면) | 없음 | `bg-canvas` `text-canvas-ink` `text-canvas-ink-2` `text-canvas-muted` `border-canvas-line` `border-canvas-line-strong` `bg-canvas-surface` `bg-canvas-grid` | 도면은 인쇄되고 색각 이상에서도 읽혀야 한다 — 흰 바탕 고정 · radius 0 · 무채색 · **다크 없음**. 크롬(`--chrome-*`)과 다른 면이다. 새 컴포넌트마다 «캔버스인가 크롬인가» 를 먼저 묻는다 |
+| 글자 사다리 | `text-sm` `text-base`(크기) | `text-micro`(10) `text-label`(11) `text-body`(13) `text-control`(13.5) `text-title`(15) `text-readout`(22) `text-display`(26) — **역할 이름** | 이 제품의 본문은 13px 다. Tailwind 기본 사다리는 `--text-*: initial` 로 지웠으므로 `text-sm` 은 **CSS 없이 조용히 무시된다** — 린트(`no-unknown-classes`)가 잡는다 |
+| 굵기·자간 | `font-bold` `tracking-wide` | `font-normal/medium/semibold/bold`(400/500/600/700) · `tracking-tight` `tracking-caps` 만 | 그 밖(`font-light` `tracking-wide`)은 initial 리셋으로 사라졌다 |
+| 반경·곡률 | `rounded-sm/md/lg/xl/full`(원호) | 같은 이름 `rounded-sm/md/lg/xl/full`(6/8/12/16/9999 체감값) — 모든 크롬 모서리는 **스쿼클**(`corner-shape: squircle`, #26). md/lg/xl 은 지원 엔진에서 × `--corner-k`(1.5) | 진행형 향상 — Chromium 139+ 만 스쿼클이고 나머지는 원호로 떨어지며 그것이 허용된 폴백이다. 임의값은 동심원 `rounded-[calc(var(--radius-…)-…)]` 만, 원형은 `rounded-full` 로만(원호 예외). 킬 스위치 `html[data-corner=round]` |
+| 그림자 | `shadow-sm/md/lg` | `shadow-chip` `shadow-card` `shadow-pop` `shadow-modal` — 부유 층위의 이름 | 3·4단은 inset 헤어라인을 그림자 안에 넣는다(부유 레이어가 테두리를 따로 그리지 않게). 기본 사다리는 지웠다 |
+| 컨트롤 높이 | `h-9` `h-10` | `h-ctl-sm`(30) `h-ctl`(36) `h-ctl-lg`(44) · 정사각은 `w-ctl*` | 세 단만 있다 — 다른 높이는 컨트롤이 아니다 |
+| 판정색 | `destructive` 하나 | `success` `warning` `destructive` `info` 각각 `DEFAULT / -hover / -foreground / -soft / -line` 다섯 역할 | 이 제품의 색은 «판정» 이다(원칙 2: 유채색은 판정에만). `-soft` 는 배지·알림의 옅은 면, `-line` 은 면 위 3:1 테두리, `-foreground` 는 solid 위의 글자(amber 와 다크는 흰색이 4.5:1 을 못 넘어 어두운 글자다) |
+| 액센트 두 가지 | `primary`(채움) · `accent`(옅은 면) | 같다 — 덧붙여 `primary-hover` `primary-track`(슬라이더·진행 바닥) | 옛 이름 `accent`(azure) 는 shadcn 의 `primary` 였다 — B5(#22)에서 개명 |
+| 글자 사다리(크롬) | `foreground` `muted-foreground` | + `foreground-2`(한 단 약한 글자) `foreground-disabled` | 라벨·설명·비활성이 각각 다른 회색이다 |
+| 테두리 | `border` `input` | + `border-strong`(컨트롤 외곽) | 입력·버튼 외곽은 한 단 짙다 |
+| 툴팁 | 없음(popover 재사용) | `bg-tooltip` `text-tooltip-foreground` — 면을 뒤집는다 | 툴팁만 «일시적이고 내 것이 아니다» 를 어두운 면으로 말한다 |
+| 선택 | 없음 | `bg-selection-fill` `border-selection-stroke` | 캔버스 위 선택 상자 |
+| 간격 | 8px 격자 관행 | 4px 기반 + 허용 스텝 `0 1 2 3 4 5 6 8 10 12 16 20 24`(간격 계열 p/m/gap/space/inset 만) | 실측 디자인(12·30/36/44)과 shadcn 자체(`h-9 px-3 gap-1.5`)가 8 의 배수가 아니다. 반스텝·7·9·11·임의 px 는 린트가 막는다 |
+| 오버레이 치수 | 임의 값 | `max-w-dialog-sm/md/lg/xl`(380/560/880/1180) `max-w-drawer-sm/md/lg`(280/400/620) `min-w-menu`(168) `min-w-popover-min` `max-w-popover-max` + 유동 `w-dialog-fluid` `h-dialog-fluid` `max-h-dialog-fluid` `max-w-popover-fluid` | «유동 폭 + 상한» 이 `w-[min(560px,calc(100vw-24px))]` 를 대신한다 |
+| 층위·시간 | `z-50` `duration-200` | `z-raised/sticky/scrim/modal/popover/toast/tooltip`(1/10/40/41/50/60/70) · `duration-instant/fast/base/slow`(0/100/150/200) | 겹침 순서와 박자를 이름이 정한다 |
+| CSS 변수 | `var(--primary)` | `var(--chrome-primary)` · `var(--canvas-ink)` — 면 접두가 있다 | 접두가 곧 «어느 면인가» 이고 다크가 갈리는 집합(chrome)을 이름이 말한다. Tailwind 유틸에서는 접두를 뗀다(`bg-primary`) |
+| 기반 라이브러리 | Base UI(2026-07 부터 기본) | **Radix**(`radix-ui`) | 부품 구조가 다를 수 있다 — 부품 이름은 `components.manifest.json`(Phase C)이 정본 |
+
+### 옛 이름(한 마이너 동안만)
+
+B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `border-line` `rounded-control` … 과 `var(--chrome-ink)` `var(--chrome-line)` …
+새 코드에 쓰지 않는다(ESLint `no-restricted-classes --fix` 가 새 이름으로 바꾼다). **예외 둘**: 옛 `accent`(azure)·`muted`(회색 글자)는 새 이름과
+글자가 같고 뜻이 다르므로 alias 가 없다 — `scripts/codemod-classes.mjs` · `scripts/codemod-css-vars.mjs` 를 **한 번** 돌려 옮긴다. 제거는 다음 마이너.
+
+## 컴포넌트
+
+- [Accordion](docs/components/Accordion.md): (설명 없음 — JSDoc 대기) — 부품: AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger — "use client"
+- [Alert](docs/components/Alert.md): (설명 없음 — JSDoc 대기)
+- [AppShell](docs/components/AppShell.md): 레거시 셸 `AppShell`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [BackButton](docs/components/BackButton.md): 뒤로가기의 동작은 라우터가 소유하고 모양·아이콘은 모든 페이지에서 공유한다.
+- [Badge](docs/components/Badge.md): (설명 없음 — JSDoc 대기)
+- [Breadcrumb](docs/components/Breadcrumb.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Button](docs/components/Button.md): (설명 없음 — JSDoc 대기) — 부품: ButtonGroup — "use client"
+- [CanvasScale](docs/components/CanvasScale.md): SVG 도면 안과 HTML 위 오버레이에서 같은 모양을 쓰며 위치와 현재 축척은 소비자가 정한다.
+- [Card](docs/components/Card.md): (설명 없음 — JSDoc 대기) — 부품: CardCollapse, CardHeader, CardWell — "use client"
+- [CardGrid](docs/components/CardGrid.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Checkbox](docs/components/Checkbox.md): (설명 없음 — JSDoc 대기) — "use client"
+- [ConfirmDialog](docs/components/ConfirmDialog.md): (설명 없음 — JSDoc 대기) — "use client"
+- [DataTable](docs/components/DataTable.md): (설명 없음 — JSDoc 대기) — "use client"
+- [DescriptionList](docs/components/DescriptionList.md): (설명 없음 — JSDoc 대기)
+- [DesignSystemProvider](docs/components/DesignSystemProvider.md): 레거시 셸·컨트롤을 DS 프리미티브로 그리게 하는 Provider `DesignSystemProvider`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [DisplayHeading](docs/components/DisplayHeading.md): (설명 없음 — JSDoc 대기)
+- [Drawer](docs/components/Drawer.md): (설명 없음 — JSDoc 대기) — 부품: DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger — "use client"
+- [DropdownMenu](docs/components/DropdownMenu.md): (설명 없음 — JSDoc 대기) — 부품: DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger — "use client"
+- [EmptyState](docs/components/EmptyState.md): (설명 없음 — JSDoc 대기)
+- [Eyebrow](docs/components/Eyebrow.md): (설명 없음 — JSDoc 대기)
+- [Field](docs/components/Field.md): 레거시 셸 `Field`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [Hud](docs/components/Hud.md): 레거시 셸 `Hud`. — 부품: HudCell — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [Input](docs/components/Input.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Kbd](docs/components/Kbd.md): (설명 없음 — JSDoc 대기) — "use client"
+- [KeyValue](docs/components/KeyValue.md): 레거시 셸 `KeyValue`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [Lede](docs/components/Lede.md): (설명 없음 — JSDoc 대기)
+- [Legend](docs/components/Legend.md): 레거시 셸 `Legend`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [MediaCard](docs/components/MediaCard.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Modal](docs/components/Modal.md): (설명 없음 — JSDoc 대기) — 부품: ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger — "use client"
+- [Panel](docs/components/Panel.md): 레거시 셸 `Panel`. — 부품: PanelGroup — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [PanelToggleButton](docs/components/PanelToggleButton.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Popover](docs/components/Popover.md): (설명 없음 — JSDoc 대기) — 부품: PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger — "use client"
+- [Progress](docs/components/Progress.md): (설명 없음 — JSDoc 대기) — "use client"
+- [RadioGroup](docs/components/RadioGroup.md): (설명 없음 — JSDoc 대기) — 부품: RadioGroupItem — "use client"
+- [ScrollArea](docs/components/ScrollArea.md): (설명 없음 — JSDoc 대기) — "use client"
+- [SectionLabel](docs/components/SectionLabel.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Segmented](docs/components/Segmented.md): 레거시 컨트롤 `Segmented`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [SegmentedControl](docs/components/SegmentedControl.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Select](docs/components/Select.md): 레거시 컨트롤 `Select`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [Separator](docs/components/Separator.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Sidebar](docs/components/Sidebar.md): (설명 없음 — JSDoc 대기) — 부품: SidebarGroup, SidebarItem — "use client"
+- [Skeleton](docs/components/Skeleton.md): (설명 없음 — JSDoc 대기) — 부품: SkeletonText
+- [Slider](docs/components/Slider.md): 레거시 컨트롤 `Slider`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [Spinner](docs/components/Spinner.md): (설명 없음 — JSDoc 대기)
+- [StatusBadge](docs/components/StatusBadge.md): 레거시 셸 `StatusBadge`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [StatusDot](docs/components/StatusDot.md): (설명 없음 — JSDoc 대기)
+- [Switch](docs/components/Switch.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Table](docs/components/Table.md): (설명 없음 — JSDoc 대기)
+- [Tabs](docs/components/Tabs.md): 레거시 셸 `Tabs`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [Tbody](docs/components/Tbody.md): (설명 없음 — JSDoc 대기)
+- [Td](docs/components/Td.md): (설명 없음 — JSDoc 대기)
+- [Textarea](docs/components/Textarea.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Th](docs/components/Th.md): (설명 없음 — JSDoc 대기)
+- [Thead](docs/components/Thead.md): (설명 없음 — JSDoc 대기)
+- [ToastProvider](docs/components/ToastProvider.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Toggle](docs/components/Toggle.md): 레거시 컨트롤 `Toggle`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [Toolbar](docs/components/Toolbar.md): (설명 없음 — JSDoc 대기) — 부품: ToolbarDivider, ToolbarSpacer
+- [Tooltip](docs/components/Tooltip.md): (설명 없음 — JSDoc 대기) — 부품: TooltipProvider — "use client"
+- [TopBar](docs/components/TopBar.md): 레거시 셸 `TopBar`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [Tr](docs/components/Tr.md): (설명 없음 — JSDoc 대기)
+- [ViewerPanel](docs/components/ViewerPanel.md): 레거시 셸 `ViewerPanel`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+
+## 훅
+
+- [usePanelLayout](docs/components/usePanelLayout.md): (설명 없음 — JSDoc 대기) — "use client"
+- [useSidebarCollapse](docs/components/useSidebarCollapse.md): (설명 없음 — JSDoc 대기) — "use client"
+- [useToast](docs/components/useToast.md): (설명 없음 — JSDoc 대기) — "use client"
+
+## 유틸리티
+
+- `alertVariants`: cva — 축 tone(info | success | warning | destructive); 기본 tone=info. 서버에서 호출 가능.
+- `badgeVariants`: cva — 축 tone(neutral | primary | success | warning | destructive) · provisional(true | false); 기본 tone=neutral, provisional=false. 서버에서 호출 가능.
+- `buttonVariants`: cva — 축 variant(solid | outline | ghost | link) · tone(neutral | primary | destructive) · size(sm | md | lg | icon-sm | icon | icon-lg); 기본 variant=outline, tone=neutral, size=md. 서버에서 호출 가능.
+- `cardVariants`: cva — 축 elevation(raised | flat | flush) · pad(none | sm | md | lg); 기본 elevation=raised, pad=none. 서버에서 호출 가능.
+- `drawerVariants`: cva — 축 side(right | left | bottom) · size(sm | md | lg); 기본 side=right, size=md. 서버에서 호출 가능.
+- `inputVariants`: cva — 축 size(sm | md | lg) · invalid(true | false) · numeric(true | false); 기본 size=md, invalid=false, numeric=false. 서버에서 호출 가능.
+- `mediaCardMediaVariants`: cva — 축 orientation(vertical | horizontal) · ratio(16/9 | 4/3 | 1/1 | plan | none); 기본 orientation=vertical, ratio=plan. 서버에서 호출 가능.
+- `mediaCardVariants`: cva — 축 orientation(vertical | horizontal) · elevation(raised | flat | flush) · selected(true | false) · interactive(true | false); 기본 orientation=vertical, elevation=raised, selected=false, interactive=false. 서버에서 호출 가능.
+- `modalVariants`: cva — 축 size(sm | md | lg | xl | full); 기본 size=md. 서버에서 호출 가능.
+- `progressVariants`: cva — 축 tone(primary | success | warning | destructive | neutral); 기본 tone=primary. 서버에서 호출 가능.
+- `spinnerVariants`: cva — 축 size(sm | md | lg) · tone(neutral | muted | primary); 기본 size=md, tone=neutral. 서버에서 호출 가능.
+- `toastVariants`: cva — 축 tone(neutral | success | warning | destructive); 기본 tone=neutral. 서버에서 호출 가능.
+- `cn`: function
+- `cva`: function
+- `GRID_MAJOR_EVERY`: constant
+- `GRID_MAX_DIVISIONS`: constant
+- `GRID_TARGET_PX`: 같은 축척의 SVG·WebGL 도면이 같은 눈금과 축척 막대를 사용하도록 화면 단위 계산을 공유한다.
+- `gridPitchM`: 외접원 반지름을 주면 회전된 시야도 최대 선 수 안에서 덮는다
+- `niceScale`: 목표 화면 폭 안에 드는 1·2·5 계열 길이를 고른다
+- `normalizeTone`: 옛 키를 새 키로
+- `toneValues`: 통일된 톤 — 순서는 Variants 스토리·매니페스트가 그리는 순서다.
+
+## 토큰 유틸리티 어휘
+
+값은 `theme.css`(생성물)에 있고 여기는 이름만이다. 접두는 Tailwind 규칙대로(`bg-` `text-` `border-` `ring-` `fill-` …).
+
+- 색: `white` `black` `canvas` `canvas-surface` `canvas-line` `canvas-line-strong` `canvas-ink` `canvas-ink-2` `canvas-muted` `canvas-grid` `background` `card` `muted` `secondary` `popover` `foreground` `foreground-2` `muted-foreground` `foreground-disabled` `border` `input` `border-strong` `primary` `primary-hover` `primary-foreground` `primary-track` `accent` `accent-foreground` `selection-fill` `selection-stroke` `scrim` `ring` `tooltip` `tooltip-foreground` `success` `success-hover` `success-foreground` `success-soft` `success-line` `warning` `warning-hover` `warning-foreground` `warning-soft` `warning-line` `destructive` `destructive-hover` `destructive-foreground` `destructive-soft` `destructive-line` `info` `info-hover` `info-foreground` `info-soft` `info-line`
+- 반경 `rounded-*`: `none` `sm` `md` `lg` `xl` `full` (6 / 8 / 12 / 16 px 고정 · 지원 엔진에서 스쿼클; 원형은 `rounded-full` 로만)
+- 글자 `text-*`(역할 이름, 크기·행간 포함): `micro` `label` `body` `control` `title` `readout` `display`
+- 그림자 `shadow-*`: `none` `chip` `card` `pop` `modal`
+- 컨트롤 높이 `h-*`(정사각은 `w-ctl*`): `ctl-sm` `ctl` `ctl-lg`
+- 컨테이너 `max-w-*` `min-w-*`: `dialog-sm` `dialog-md` `dialog-lg` `dialog-xl` `drawer-sm` `drawer-md` `drawer-lg` `menu` `popover-min` `popover-max` (+ 유동 `w-dialog-fluid` `h-dialog-fluid` `max-h-dialog-fluid` `max-w-popover-fluid`)
+- 층 `z-*`: `raised` `sticky` `scrim` `modal` `popover` `toast` `tooltip`
+- 시간 `duration-*`: `instant` `fast` `base` `slow` `collapse`
+- 간격 스텝: 0 1 2 3 4 5 6 8 10 12 16 20 24
+
+## 더 읽기
+
+- [컴포넌트 문서 색인](docs/components/README.md)
+- `dist/components.manifest.json` — 기계 판독 정본
+- `agent/AGENTS.block.md` — 소비 레포 AGENTS.md 에 심는 계약(`npx sds-agent sync`)
