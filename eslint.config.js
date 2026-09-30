@@ -37,10 +37,12 @@ const asError = configs =>
   );
 
 const TSX_FILES = ["**/*.tsx"];
-/* 타입 정보로 검사하는 소스. tsconfig 가 파일을 실제로 include 해야 한다 — packages/ui/tsconfig.json 은 3파일 계약 목록이라
- * app-profile(전체 src)을 쓴다. 설정 파일(vite/vitest/tsdown config)은 어느 tsconfig 에도 없어 타입 검사 없이 본다. */
+/* 타입 정보로 검사하는 소스. tsconfig 가 파일을 실제로 include 해야 한다 — tsconfig.json 은 src 전량(스펙·스토리 제외)이고
+ * 스펙·아키텍처 가드는 tsconfig.test.json 이 같은 엄격도로 include 한다(#11). 설정 파일(vite/vitest/tsdown config)은 stories 프로필이 본다. */
 const TYPED = {
-  ui: { files: ["packages/ui/src/**/*.{ts,tsx}"], project: "packages/ui/tsconfig.app-profile.json" },
+  ui: { files: ["packages/ui/src/**/*.{ts,tsx}"], project: "packages/ui/tsconfig.json" },
+  // ui 블록 뒤에 둔다 — src/__tests__/** 는 두 files 에 다 맞고 뒤가 이긴다.
+  tests: { files: ["packages/ui/src/__tests__/**/*.{ts,tsx}", "packages/ui/src/__arch__/**/*.{ts,tsx}"], project: "packages/ui/tsconfig.test.json" },
   // 스토리·Storybook 설정·VRT·패키지 설정 파일은 tsconfig.stories.json 만 include 한다(#7) — src 안의 *.stories.tsx 도 여기다.
   stories: {
     files: [
@@ -54,7 +56,7 @@ const TYPED = {
     project: "packages/ui/tsconfig.stories.json",
   },
 };
-const TEST_FILES = ["**/__tests__/**", "**/*.spec.{ts,tsx}", "**/*.test.{ts,tsx}"];
+const TEST_FILES = ["**/__tests__/**", "**/__arch__/**", "**/*.spec.{ts,tsx}", "**/*.test.{ts,tsx}"];
 
 export default tseslint.config(
   {
@@ -82,11 +84,15 @@ export default tseslint.config(
   //    잡음(non-nullable assertion·template literal 타입 등)이 커서 기준선을 부풀린다. 승격은 Phase C. ──
   ...asError(tseslint.configs.recommendedTypeChecked).map(config => ({
     ...config,
-    files: [...TYPED.ui.files, ...TYPED.stories.files],
+    files: [...TYPED.ui.files, ...TYPED.tests.files, ...TYPED.stories.files],
   })),
   {
     files: TYPED.ui.files,
     languageOptions: { parserOptions: { project: TYPED.ui.project, tsconfigRootDir: import.meta.dirname } },
+  },
+  {
+    files: TYPED.tests.files,
+    languageOptions: { parserOptions: { project: TYPED.tests.project, tsconfigRootDir: import.meta.dirname } },
   },
   {
     // ui 블록 뒤에 둔다 — src/**/*.stories.tsx 는 두 files 에 다 맞고 뒤가 이긴다.
