@@ -10,29 +10,53 @@
  * 규칙 기준선(2026-09-30 첫 실측)은 shell.css 의 warning 뿐이다 — 나머지 손 CSS 의 위반은 같은 PR 에서 토큰으로 옮겼다(픽셀 동일, VRT 0 diff). */
 
 /** 색이 들어가는 프로퍼티 — 값은 토큰 참조이거나 키워드다. 그림자·테두리 shorthand 도 색을 든다. */
-const COLOR_PROPS = /^(color|background|background-color|border|border-(top|right|bottom|left)|border-color|border-(top|right|bottom|left)-color|outline|outline-color|box-shadow|fill|stroke|caret-color|accent-color|text-decoration-color)$/;
+const COLOR_PROPS =
+  /^(color|background|background-color|border|border-(top|right|bottom|left)|border-color|border-(top|right|bottom|left)-color|outline|outline-color|box-shadow|fill|stroke|caret-color|accent-color|text-decoration-color)$/;
 const RADIUS_PROPS = /^border-(top-left-|top-right-|bottom-left-|bottom-right-)?radius$/;
 const FONT_PROPS = /^(font|font-family|font-size|font-weight|line-height|letter-spacing)$/;
-const MOTION_PROPS = /^(transition|transition-duration|transition-delay|animation|animation-duration|animation-delay)$/;
-const SPACING_PROPS = /^(padding|margin|gap|row-gap|column-gap|width|height|min-width|max-width|min-height|max-height|inset|top|right|bottom|left)(-(top|right|bottom|left|inline|block)(-(start|end))?)?$/;
+const MOTION_PROPS =
+  /^(transition|transition-duration|transition-delay|animation|animation-duration|animation-delay)$/;
+const SPACING_PROPS =
+  /^(padding|margin|gap|row-gap|column-gap|width|height|min-width|max-width|min-height|max-height|inset|top|right|bottom|left)(-(top|right|bottom|left|inline|block)(-(start|end))?)?$/;
 
 /** stylelint 는 프로퍼티 키가 `/…/` 로 감싸져 있어야 정규식으로 읽는다(`.source` 만 넘기면 문자 그대로의 이름이 된다 — 첫 실행에서 0건이 나온 이유). */
-const key = re => `/${re.source}/`;
+const key = (re) => `/${re.source}/`;
 /** 토큰 참조 또는 값 없는 키워드만. 0 과 `0s` 는 «없음» 이라 허용한다. */
 const TOKEN_OR_KEYWORD = [/var\(--/, /^(inherit|initial|unset|revert|none|transparent|currentcolor|0|0s)$/i];
 
 export default {
-  ignoreFiles: ["**/node_modules/**", "**/dist/**", "**/storybook-static/**", "packages/ui/src/generated/**", "packages/ui/src/canvas.css", "packages/ui/src/corner.css"],
+  ignoreFiles: [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/storybook-static/**",
+    "**/vrt/report/**",
+    "**/vrt/results/**",
+    "**/coverage/**",
+    "packages/ui/src/generated/**",
+    "packages/ui/src/canvas.css",
+    "packages/ui/src/corner.css",
+  ],
   rules: {
     "color-no-hex": [true, { message: "hex 색 — tokens/ 의 JSON 에 토큰을 더하고 var(--…) 로 쓴다" }],
-    "custom-property-pattern": ["^[a-z][a-z0-9]*(-[a-z0-9]+)*$", { message: "커스텀 프로퍼티는 kebab-case(`--space-card-gap`)" }],
+    "custom-property-pattern": [
+      "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      { message: "커스텀 프로퍼티는 kebab-case(`--space-card-gap`)" },
+    ],
     "declaration-property-value-allowed-list": [
-      { [key(COLOR_PROPS)]: TOKEN_OR_KEYWORD, [key(RADIUS_PROPS)]: TOKEN_OR_KEYWORD, [key(FONT_PROPS)]: TOKEN_OR_KEYWORD, [key(MOTION_PROPS)]: TOKEN_OR_KEYWORD },
+      {
+        [key(COLOR_PROPS)]: TOKEN_OR_KEYWORD,
+        [key(RADIUS_PROPS)]: TOKEN_OR_KEYWORD,
+        [key(FONT_PROPS)]: TOKEN_OR_KEYWORD,
+        [key(MOTION_PROPS)]: TOKEN_OR_KEYWORD,
+      },
       { message: (prop, value) => `${prop}: ${value} — 색·반경·글자·모션은 var(--…) 토큰만` },
     ],
     "declaration-property-value-disallowed-list": [
       { [key(SPACING_PROPS)]: [/(^|[^\w.-])\d*\.?\d+px/] },
-      { message: (prop, value) => `${prop}: ${value} — 간격·치수의 px 리터럴 대신 var(--space-*)·var(--size-*) 토큰을 쓴다` },
+      {
+        message: (prop, value) =>
+          `${prop}: ${value} — 간격·치수의 px 리터럴 대신 var(--space-*)·var(--size-*) 토큰을 쓴다`,
+      },
     ],
   },
   overrides: [
@@ -41,10 +65,18 @@ export default {
       rules: {
         "color-no-hex": [true, { severity: "warning" }],
         "declaration-property-value-allowed-list": [
-          { [key(COLOR_PROPS)]: TOKEN_OR_KEYWORD, [key(RADIUS_PROPS)]: TOKEN_OR_KEYWORD, [key(FONT_PROPS)]: TOKEN_OR_KEYWORD, [key(MOTION_PROPS)]: TOKEN_OR_KEYWORD },
+          {
+            [key(COLOR_PROPS)]: TOKEN_OR_KEYWORD,
+            [key(RADIUS_PROPS)]: TOKEN_OR_KEYWORD,
+            [key(FONT_PROPS)]: TOKEN_OR_KEYWORD,
+            [key(MOTION_PROPS)]: TOKEN_OR_KEYWORD,
+          },
           { severity: "warning" },
         ],
-        "declaration-property-value-disallowed-list": [{ [key(SPACING_PROPS)]: [/(^|[^\w.-])\d*\.?\d+px/] }, { severity: "warning" }],
+        "declaration-property-value-disallowed-list": [
+          { [key(SPACING_PROPS)]: [/(^|[^\w.-])\d*\.?\d+px/] },
+          { severity: "warning" },
+        ],
       },
     },
   ],
