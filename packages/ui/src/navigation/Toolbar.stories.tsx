@@ -1,0 +1,87 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { LuHand, LuMousePointer2, LuRuler, LuZoomIn } from "react-icons/lu";
+import { expect } from "storybook/test";
+
+import { ThemePair } from "../../stories/decorators/ThemePair";
+import { Button } from "../primitives/Button";
+import { Toolbar, ToolbarDivider, ToolbarSpacer } from "./Toolbar";
+
+/* 3스토리 계약(본보기 Button.stories). 축은 없고 자리가 둘이다 — 크롬 한 줄(기본)과 캔버스 위 부유 클러스터(`onCanvas`).
+ * 부유 클러스터는 캔버스 바탕(`bg-canvas`) 위에 둬야 `on-canvas` 의 반투명이 제 모습이다. */
+function Tools() {
+  return (
+    <>
+      <Button variant="ghost" size="icon-sm" aria-label="Select">
+        <LuMousePointer2 aria-hidden="true" />
+      </Button>
+      <Button variant="ghost" size="icon-sm" aria-label="Pan">
+        <LuHand aria-hidden="true" />
+      </Button>
+      <ToolbarDivider />
+      <Button variant="ghost" size="icon-sm" aria-label="Measure">
+        <LuRuler aria-hidden="true" />
+      </Button>
+      <ToolbarSpacer />
+      <Button variant="ghost" size="icon-sm" aria-label="Zoom in">
+        <LuZoomIn aria-hidden="true" />
+      </Button>
+    </>
+  );
+}
+
+const meta = {
+  title: "Navigation/Toolbar",
+  component: Toolbar,
+  args: { "aria-label": "Drawing tools", onCanvas: false },
+  render: (args) => (
+    <div className="w-(--size-panel)">
+      <Toolbar {...args}>
+        <Tools />
+      </Toolbar>
+    </div>
+  ),
+} satisfies Meta<typeof Toolbar>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  play: async ({ canvas }) => {
+    const toolbar = canvas.getByRole("toolbar", { name: "Drawing tools" });
+    await expect(toolbar).toBeInTheDocument();
+    await expect(canvas.getAllByRole("button")).toHaveLength(4);
+  },
+};
+
+export const Variants: Story = {
+  tags: ["!manifest"],
+  render: () => (
+    <div className="flex flex-col gap-6">
+      <Toolbar aria-label="Chrome row" className="w-(--size-panel)">
+        <Tools />
+      </Toolbar>
+      <div className="bg-canvas p-6">
+        <Toolbar aria-label="On canvas" onCanvas className="w-(--size-panel)">
+          <Tools />
+        </Toolbar>
+      </div>
+    </div>
+  ),
+};
+
+export const ThemeContrast: Story = {
+  // color-contrast: ThemePair 의 테마 라벨과 muted 글자 — 토큰 값의 몫(#23)
+  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
+  render: (args) => (
+    <ThemePair>
+      <Toolbar {...args} className="w-(--size-panel)">
+        <Tools />
+      </Toolbar>
+      <div className="bg-canvas p-6">
+        <Toolbar {...args} onCanvas className="w-(--size-panel)">
+          <Tools />
+        </Toolbar>
+      </div>
+    </ThemePair>
+  ),
+};

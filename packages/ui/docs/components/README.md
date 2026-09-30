@@ -4,12 +4,12 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 | 이름 | 종류 | 경계 | 부품 | 설명 |
 |---|---|---|---|---|
-| [Accordion](Accordion.md) | component | client | AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger |  |
+| [Accordion](Accordion.md) | component | client | AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger | 접이식 구획 묶음 — `type="single"` 은 하나만, `"multiple"` 은 여럿을 연다 |
 | [Alert](Alert.md) | component | server ok |  | 인라인 경고 — 흐름 안에 남는 알림 |
 | [AppShell](AppShell.md) | component | client |  | 레거시 셸 `AppShell`. |
 | [BackButton](BackButton.md) | component | server ok |  | 뒤로가기의 동작은 라우터가 소유하고 모양·아이콘은 모든 페이지에서 공유한다. |
 | [Badge](Badge.md) | component | server ok |  | 배지 — 상태를 **글자와 함께** 말한다 |
-| [Breadcrumb](Breadcrumb.md) | component | client |  |  |
+| [Breadcrumb](Breadcrumb.md) | component | client |  | 경로 — 「지금 무엇을 보고 있나」 |
 | [Button](Button.md) | component | client | ButtonGroup | 버튼 — 크롬의 동작 |
 | [CanvasScale](CanvasScale.md) | component | server ok |  | SVG 도면 안과 HTML 위 오버레이에서 같은 모양을 쓰며 위치와 현재 축척은 소비자가 정한다. |
 | [Card](Card.md) | component | client | CardCollapse, CardHeader, CardWell | 카드 — 이 제품의 기본 구획 |
@@ -38,13 +38,13 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Popover](Popover.md) | component | client | PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger | 팝오버의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 |
 | [Progress](Progress.md) | component | client |  | 진행 막대 — 값이 있을 때만 쓴다 |
 | [RadioGroup](RadioGroup.md) | component | client | RadioGroupItem | 라디오 묶음 — 여럿 중 하나를 고른다 |
-| [ScrollArea](ScrollArea.md) | component | client |  |  |
+| [ScrollArea](ScrollArea.md) | component | client |  | 스크롤 영역 — 스크롤하거나 막대를 끄는 동안만 얇은 스크롤바가 보인다. |
 | [SectionLabel](SectionLabel.md) | component | client |  | 미세 라벨 — 구획의 이름(대문자 mono). |
 | [Segmented](Segmented.md) | component | client |  | 레거시 컨트롤 `Segmented`. |
-| [SegmentedControl](SegmentedControl.md) | component | client |  |  |
+| [SegmentedControl](SegmentedControl.md) | component | client |  | 배타적 뷰 전환 — 트랙 위의 흰 pill 이 지금 고른 값이다(radiogroup · roving tabindex). |
 | [Select](Select.md) | component | client |  | 레거시 컨트롤 `Select`. |
 | [Separator](Separator.md) | component | client |  | 구분선 — 크롬의 헤어라인 |
-| [Sidebar](Sidebar.md) | component | client | SidebarGroup, SidebarItem |  |
+| [Sidebar](Sidebar.md) | component | client | SidebarGroup, SidebarItem | 사이드바 — 접힌 rail(아이콘)과 펼친 panel(아이콘 + 라벨) 두 모습을 갖는 내비게이션 랜드마크. |
 | [Skeleton](Skeleton.md) | component | server ok | SkeletonText | 스켈레톤 바 — 곧 올 내용과 같은 높이의 자리 |
 | [Slider](Slider.md) | component | client |  | 레거시 컨트롤 `Slider`. |
 | [Spinner](Spinner.md) | component | server ok |  | 스피너 — «돌고 있다» 만 말한다 |
@@ -60,11 +60,11 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Thead](Thead.md) | component | server ok |  | 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다. |
 | [ToastProvider](ToastProvider.md) | component | client |  | 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 |
 | [Toggle](Toggle.md) | component | client |  | 레거시 컨트롤 `Toggle`. |
-| [Toolbar](Toolbar.md) | component | server ok | ToolbarDivider, ToolbarSpacer |  |
+| [Toolbar](Toolbar.md) | component | server ok | ToolbarDivider, ToolbarSpacer | 툴바 — 캔버스 위 또는 그 바로 위의 한 줄 |
 | [Tooltip](Tooltip.md) | component | client | TooltipProvider | 툴팁 — 트리거(`children`) 위에 말풍선(`label`)을 띄운다 |
 | [TopBar](TopBar.md) | component | client |  | 레거시 셸 `TopBar`. |
 | [Tr](Tr.md) | component | server ok |  | 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다. |
-| [usePanelLayout](usePanelLayout.md) | hook | client |  |  |
-| [useSidebarCollapse](useSidebarCollapse.md) | hook | client |  |  |
+| [usePanelLayout](usePanelLayout.md) | hook | client |  | 여러 패널의 접힘 상태를 한 곳에서 든다 |
+| [useSidebarCollapse](useSidebarCollapse.md) | hook | client |  | 접기/펴기 상태를 쓰는 쪽에서 들고 있기 위한 훅 |
 | [useToast](useToast.md) | hook | client |  | 가장 가까운 `ToastProvider` 의 큐 — 밖에서 부르면 던진다. |
 | [ViewerPanel](ViewerPanel.md) | component | client |  | 레거시 셸 `ViewerPanel`. |

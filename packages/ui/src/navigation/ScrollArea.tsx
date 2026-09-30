@@ -15,18 +15,42 @@ import { cn } from "../cn";
 import { MOTION } from "../generated/tokens";
 
 // 뷰포트와 스크롤바의 고정 구조는 DS가 소유하므로 Root/Viewport의 asChild는 지원하지 않는다.
+/** `ScrollArea` 의 props — Radix Root 속성(ref 는 뿌리에 닿는다)에 뷰포트 손잡이와 스크롤 방향을 더한다. */
 export interface ScrollAreaProps extends Omit<
   ComponentPropsWithRef<typeof Radix.Root>,
   "type" | "scrollHideDelay" | "asChild"
 > {
+  /**
+   * 실제로 스크롤되는 뷰포트 요소의 ref — 스크롤 위치를 읽거나 옮길 때.
+   * @default undefined
+   */
   viewportRef?: Ref<HTMLDivElement>;
+  /**
+   * 뷰포트에 더할 className — 안쪽 패딩·높이 제한은 뿌리가 아니라 여기에 둔다.
+   * @default undefined
+   */
   viewportClassName?: string;
-  viewportProps?: Omit<ComponentPropsWithoutRef<typeof Radix.Viewport>, "asChild"> & { "data-slot"?: string };
+  /**
+   * 뷰포트에 펼칠 나머지 속성(`onScroll` 은 표시 타이머와 합성된다).
+   * @default undefined
+   */
+  viewportProps?: Omit<ComponentPropsWithoutRef<typeof Radix.Viewport>, "asChild"> & {
+    /** 뷰포트의 data-slot — 소비자가 자기 이름을 붙일 때. */
+    "data-slot"?: string;
+  };
+  /**
+   * 스크롤바를 달 방향 — `vertical` — 세로만 · `horizontal` — 가로만 · `both` — 둘 다
+   * @default "both"
+   */
   orientation?: "vertical" | "horizontal" | "both";
 }
 
-/* Radix의 type="scroll"은 종료 판정에 100ms를 더하므로 DS의 500ms 계약과 어긋난다.
- * 스크롤바는 항상 마운트하고 실제 스크롤·드래그 활동만 직접 재서 표시한다. */
+/**
+ * 스크롤 영역 — 스크롤하거나 막대를 끄는 동안만 얇은 스크롤바가 보인다.
+ *
+ * Radix의 type="scroll"은 종료 판정에 100ms를 더하므로 DS의 500ms 계약과 어긋난다.
+ * 스크롤바는 항상 마운트하고 실제 스크롤·드래그 활동만 직접 재서 표시한다.
+ */
 export function ScrollArea({
   className,
   children,

@@ -9,12 +9,20 @@ import { useCallback, useMemo, useState } from "react";
  *
  * localStorage 접근은 전부 try/catch 다. 사생활 보호 창·차단된 사이트 데이터·미리보기에서는
  * 읽기와 쓰기가 **던진다**. 거기서 화면이 통째로 죽으면 안 된다. */
+
+/** `usePanelLayout` 이 돌려주는 접힘 상태와 조작 함수. */
 export interface PanelLayout<K extends string> {
+  /** 패널 id → 접혔는가. */
   collapsed: Readonly<Record<K, boolean>>;
+  /** 이 패널이 접혀 있는가. */
   isCollapsed: (id: K) => boolean;
+  /** 이 패널의 접힘을 정한다. */
   setCollapsed: (id: K, value: boolean) => void;
+  /** 이 패널의 접힘을 뒤집는다. */
   toggle: (id: K) => void;
+  /** 모든 패널을 접는다. */
   collapseAll: () => void;
+  /** 모든 패널을 편다. */
   expandAll: () => void;
   /** 하나라도 접혀 있는가 — 「전부 펼치기」 버튼을 띄울지 판단하는 자리. */
   anyCollapsed: boolean;
@@ -29,9 +37,18 @@ export interface PanelLayout<K extends string> {
   };
 }
 
+/**
+ * 여러 패널의 접힘 상태를 한 곳에서 든다. `storageKey` 를 주면 localStorage 에 남고, 주지 않으면(기본) 저장하지 않는다.
+ * `ids` 는 렌더마다 같은 배열이어야 한다(모듈 상수 권장) — 반환값의 메모가 그것에 기댄다.
+ */
 export function usePanelLayout<K extends string>(
   ids: readonly K[],
-  options?: { storageKey?: string; initial?: Partial<Record<K, boolean>> },
+  options?: {
+    /** 저장 키 — 주면 접힘 상태가 localStorage 에 남는다. 스토리·테스트에서는 주지 않는다(결정적 렌더). */
+    storageKey?: string;
+    /** 처음 접힘 상태 — 없는 id 는 펼침. 저장본이 있으면 저장본이 이긴다. */
+    initial?: Partial<Record<K, boolean>>;
+  },
 ): PanelLayout<K> {
   const storageKey = options?.storageKey;
   const initial = options?.initial;

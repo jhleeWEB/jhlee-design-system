@@ -63,12 +63,12 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 
 ## 컴포넌트
 
-- [Accordion](docs/components/Accordion.md): (설명 없음 — JSDoc 대기) — 부품: AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger — "use client"
+- [Accordion](docs/components/Accordion.md): 접이식 구획 묶음 — `type="single"` 은 하나만, `"multiple"` 은 여럿을 연다 — 부품: AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger — "use client"
 - [Alert](docs/components/Alert.md): 인라인 경고 — 흐름 안에 남는 알림
 - [AppShell](docs/components/AppShell.md): 레거시 셸 `AppShell`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [BackButton](docs/components/BackButton.md): 뒤로가기의 동작은 라우터가 소유하고 모양·아이콘은 모든 페이지에서 공유한다.
 - [Badge](docs/components/Badge.md): 배지 — 상태를 **글자와 함께** 말한다
-- [Breadcrumb](docs/components/Breadcrumb.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Breadcrumb](docs/components/Breadcrumb.md): 경로 — 「지금 무엇을 보고 있나」 — "use client"
 - [Button](docs/components/Button.md): 버튼 — 크롬의 동작 — 부품: ButtonGroup — "use client"
 - [CanvasScale](docs/components/CanvasScale.md): SVG 도면 안과 HTML 위 오버레이에서 같은 모양을 쓰며 위치와 현재 축척은 소비자가 정한다.
 - [Card](docs/components/Card.md): 카드 — 이 제품의 기본 구획 — 부품: CardCollapse, CardHeader, CardWell — "use client"
@@ -97,13 +97,13 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [Popover](docs/components/Popover.md): 팝오버의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 — 부품: PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger — "use client"
 - [Progress](docs/components/Progress.md): 진행 막대 — 값이 있을 때만 쓴다 — "use client"
 - [RadioGroup](docs/components/RadioGroup.md): 라디오 묶음 — 여럿 중 하나를 고른다 — 부품: RadioGroupItem — "use client"
-- [ScrollArea](docs/components/ScrollArea.md): (설명 없음 — JSDoc 대기) — "use client"
+- [ScrollArea](docs/components/ScrollArea.md): 스크롤 영역 — 스크롤하거나 막대를 끄는 동안만 얇은 스크롤바가 보인다. — "use client"
 - [SectionLabel](docs/components/SectionLabel.md): 미세 라벨 — 구획의 이름(대문자 mono). — "use client"
 - [Segmented](docs/components/Segmented.md): 레거시 컨트롤 `Segmented`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
-- [SegmentedControl](docs/components/SegmentedControl.md): (설명 없음 — JSDoc 대기) — "use client"
+- [SegmentedControl](docs/components/SegmentedControl.md): 배타적 뷰 전환 — 트랙 위의 흰 pill 이 지금 고른 값이다(radiogroup · roving tabindex). — "use client"
 - [Select](docs/components/Select.md): 레거시 컨트롤 `Select`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Separator](docs/components/Separator.md): 구분선 — 크롬의 헤어라인 — "use client"
-- [Sidebar](docs/components/Sidebar.md): (설명 없음 — JSDoc 대기) — 부품: SidebarGroup, SidebarItem — "use client"
+- [Sidebar](docs/components/Sidebar.md): 사이드바 — 접힌 rail(아이콘)과 펼친 panel(아이콘 + 라벨) 두 모습을 갖는 내비게이션 랜드마크. — 부품: SidebarGroup, SidebarItem — "use client"
 - [Skeleton](docs/components/Skeleton.md): 스켈레톤 바 — 곧 올 내용과 같은 높이의 자리 — 부품: SkeletonText
 - [Slider](docs/components/Slider.md): 레거시 컨트롤 `Slider`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Spinner](docs/components/Spinner.md): 스피너 — «돌고 있다» 만 말한다
@@ -119,7 +119,7 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [Thead](docs/components/Thead.md): 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다.
 - [ToastProvider](docs/components/ToastProvider.md): 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 — "use client"
 - [Toggle](docs/components/Toggle.md): 레거시 컨트롤 `Toggle`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
-- [Toolbar](docs/components/Toolbar.md): (설명 없음 — JSDoc 대기) — 부품: ToolbarDivider, ToolbarSpacer
+- [Toolbar](docs/components/Toolbar.md): 툴바 — 캔버스 위 또는 그 바로 위의 한 줄 — 부품: ToolbarDivider, ToolbarSpacer
 - [Tooltip](docs/components/Tooltip.md): 툴팁 — 트리거(`children`) 위에 말풍선(`label`)을 띄운다 — 부품: TooltipProvider — "use client"
 - [TopBar](docs/components/TopBar.md): 레거시 셸 `TopBar`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Tr](docs/components/Tr.md): 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다.
@@ -127,8 +127,8 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 
 ## 훅
 
-- [usePanelLayout](docs/components/usePanelLayout.md): (설명 없음 — JSDoc 대기) — "use client"
-- [useSidebarCollapse](docs/components/useSidebarCollapse.md): (설명 없음 — JSDoc 대기) — "use client"
+- [usePanelLayout](docs/components/usePanelLayout.md): 여러 패널의 접힘 상태를 한 곳에서 든다 — "use client"
+- [useSidebarCollapse](docs/components/useSidebarCollapse.md): 접기/펴기 상태를 쓰는 쪽에서 들고 있기 위한 훅 — "use client"
 - [useToast](docs/components/useToast.md): 가장 가까운 `ToastProvider` 의 큐 — 밖에서 부르면 던진다. — "use client"
 
 ## 유틸리티

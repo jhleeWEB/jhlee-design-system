@@ -86,68 +86,12 @@
       "count": 1
     }
   },
-  "packages/ui/src/navigation/Accordion.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    },
-    "ds/no-forward-ref": {
-      "count": 5
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 3
-    },
-    "react-hooks/immutability": {
-      "count": 3
-    }
-  },
-  "packages/ui/src/navigation/BackButton.tsx": {
-    "ds/no-forward-ref": {
-      "count": 1
-    }
-  },
-  "packages/ui/src/navigation/Breadcrumb.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 6
-    }
-  },
-  "packages/ui/src/navigation/ScrollArea.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 7
-    }
-  },
   "packages/ui/src/navigation/SegmentedControl.tsx": {
     "better-tailwindcss/no-restricted-classes": {
       "count": 1
     },
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 11
-    },
     "jsx-a11y/interactive-supports-focus": {
       "count": 1
-    }
-  },
-  "packages/ui/src/navigation/Sidebar.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 12
-    }
-  },
-  "packages/ui/src/navigation/Toolbar.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 5
-    }
-  },
-  "packages/ui/src/navigation/usePanelLayout.ts": {
-    "jsdoc/require-jsdoc": {
-      "count": 13
     }
   },
   "packages/ui/src/overlay/AlertDialog.tsx": {

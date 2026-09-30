@@ -23,8 +23,11 @@ import * as DescriptionListStories from "../data/DescriptionList.stories";
 import * as TableStories from "../data/Table.stories";
 import * as barrel from "../index";
 import * as legacy from "../legacy/index";
+import * as AccordionStories from "../navigation/Accordion.stories";
 import * as AlertStories from "../feedback/Alert.stories";
+import * as BackButtonStories from "../navigation/BackButton.stories";
 import * as BadgeStories from "../primitives/Badge.stories";
+import * as BreadcrumbStories from "../navigation/Breadcrumb.stories";
 import * as CanvasScaleStories from "../CanvasScale.stories";
 import * as ConfirmDialogStories from "../overlay/AlertDialog.stories";
 import * as DrawerStories from "../overlay/Drawer.stories";
@@ -33,9 +36,13 @@ import * as EmptyStateStories from "../feedback/EmptyState.stories";
 import * as ModalStories from "../overlay/Modal.stories";
 import * as PopoverStories from "../overlay/Popover.stories";
 import * as ProgressStories from "../feedback/Progress.stories";
+import * as ScrollAreaStories from "../navigation/ScrollArea.stories";
+import * as SegmentedControlStories from "../navigation/SegmentedControl.stories";
+import * as SidebarStories from "../navigation/Sidebar.stories";
 import * as SkeletonStories from "../feedback/Skeleton.stories";
 import * as SpinnerStories from "../feedback/Spinner.stories";
 import * as ToastStories from "../feedback/Toast.stories";
+import * as ToolbarStories from "../navigation/Toolbar.stories";
 import * as TooltipStories from "../overlay/Tooltip.stories";
 import * as ButtonStories from "../primitives/Button.stories";
 import * as CardStories from "../primitives/Card.stories";
@@ -48,16 +55,7 @@ import * as PanelToggleButtonStories from "../primitives/PanelToggleButton.stori
 
 /** 오늘 깨지는 검사 — 알파벳순, 줄어들기만 한다. */
 const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
-  BackButton: ["slot-locked"],
-  Breadcrumb: ["slot-locked"],
   Button: ["slot-locked"],
-  SegmentedControl: ["ref", "rest"],
-  Sidebar: ["slot-locked"],
-  SidebarGroup: ["slot-locked"],
-  SidebarItem: ["slot-locked"],
-  Toolbar: ["slot-locked"],
-  ToolbarDivider: ["ref", "rest", "slot", "slot-locked"],
-  ToolbarSpacer: ["className", "ref", "rest", "slot", "slot-locked"],
 };
 
 const {
@@ -66,8 +64,6 @@ const {
   AccordionHeader,
   AccordionItem,
   AccordionTrigger,
-  BackButton,
-  Breadcrumb,
   ButtonGroup,
   Card,
   CardCollapse,
@@ -110,9 +106,7 @@ const {
   PopoverTrigger,
   RadioGroup,
   RadioGroupItem,
-  ScrollArea,
   SectionLabel,
-  SegmentedControl,
   Separator,
   Sidebar,
   SidebarGroup,
@@ -136,8 +130,11 @@ const {
 
 /** 스토리가 있는 컴포넌트 — `Default` 가 픽스처다. */
 const STORY_SUBJECTS: Readonly<Record<string, ContractSubject>> = {
+  Accordion: storySubject(AccordionStories, { slot: "accordion" }),
   Alert: storySubject(AlertStories, { slot: "alert", axes: ["tone"] }),
+  BackButton: storySubject(BackButtonStories, { slot: "button" }),
   Badge: storySubject(BadgeStories, { slot: "badge", axes: ["tone"] }),
+  Breadcrumb: storySubject(BreadcrumbStories, { slot: "breadcrumb" }),
   Button: storySubject(ButtonStories, { slot: "button", axes: ["variant", "tone", "size"] }),
   CanvasScale: storySubject(CanvasScaleStories, { slot: "canvas-scale" }),
   Card: storySubject(CardStories, { slot: "card", axes: ["elevation", "pad"] }),
@@ -156,10 +153,14 @@ const STORY_SUBJECTS: Readonly<Record<string, ContractSubject>> = {
   PanelToggleButton: storySubject(PanelToggleButtonStories, { slot: "panel-toggle-button" }),
   PopoverContent: storySubject(PopoverStories, { slot: "popover" }),
   Progress: storySubject(ProgressStories, { slot: "progress", axes: ["tone"] }),
+  ScrollArea: storySubject(ScrollAreaStories, { slot: "scroll-area" }),
+  SegmentedControl: storySubject(SegmentedControlStories, { slot: "segmented", axes: ["size"] }),
+  Sidebar: storySubject(SidebarStories, { slot: "sidebar", axes: ["side"] }),
   Skeleton: storySubject(SkeletonStories, { slot: "skeleton", axes: ["shape"] }),
   Spinner: storySubject(SpinnerStories, { slot: "spinner", axes: ["size", "tone"] }),
   Table: storySubject(TableStories, { slot: "table" }),
   ToastProvider: storySubject(ToastStories, { slot: "toast-viewport", axes: ["position", "tone"] }),
+  Toolbar: storySubject(ToolbarStories, { slot: "toolbar" }),
   Tooltip: storySubject(TooltipStories, { slot: "tooltip" }),
 };
 
@@ -207,19 +208,6 @@ const inAccordion =
   );
 
 const FIXTURES: Readonly<Record<string, ContractSubject>> = {
-  Accordion: {
-    slot: "accordion",
-    render: (p) => (
-      <Accordion type="single" defaultValue="a" {...p}>
-        <AccordionItem value="a">
-          <AccordionHeader>
-            <AccordionTrigger>Section</AccordionTrigger>
-          </AccordionHeader>
-          <AccordionContent>Body</AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    ),
-  },
   AccordionItem: {
     slot: "accordion-item",
     render: inAccordion((p) => (
@@ -263,11 +251,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
         <AccordionContent {...p}>B body</AccordionContent>
       </AccordionItem>
     )),
-  },
-  BackButton: { slot: "button", render: (p) => <BackButton {...p}>Back</BackButton> },
-  Breadcrumb: {
-    slot: "breadcrumb",
-    render: (p) => <Breadcrumb items={[{ label: "Home", href: "#" }, { label: "Here" }]} {...p} />,
   },
   ButtonGroup: {
     slot: "button-group",
@@ -527,39 +510,8 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       </RadioGroup>
     ),
   },
-  ScrollArea: {
-    slot: "scroll-area",
-    render: (p) => (
-      <ScrollArea {...p}>
-        <div>Content</div>
-      </ScrollArea>
-    ),
-  },
   SectionLabel: { slot: "section-label", render: (p) => <SectionLabel {...p}>Section</SectionLabel> },
-  SegmentedControl: {
-    slot: "segmented",
-    render: (p) => (
-      <SegmentedControl
-        options={[
-          { value: "a", label: "A" },
-          { value: "b", label: "B" },
-        ]}
-        value="a"
-        onChange={() => {}}
-        label="View"
-        {...p}
-      />
-    ),
-  },
   Separator: { slot: "separator", render: (p) => <Separator {...p} /> },
-  Sidebar: {
-    slot: "sidebar",
-    render: (p) => (
-      <Sidebar {...p}>
-        <SidebarItem icon={<LuCircle />} label="Home" />
-      </Sidebar>
-    ),
-  },
   SidebarGroup: {
     slot: "sidebar-group",
     render: (p) => (
@@ -629,17 +581,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
           </Tr>
         </Thead>
       </Table>
-    ),
-  },
-  Toolbar: {
-    slot: "toolbar",
-    render: (p) => (
-      <Toolbar aria-label="Tools" {...p}>
-        <barrel.Button>One</barrel.Button>
-        <ToolbarDivider />
-        <ToolbarSpacer />
-        <barrel.Button>Two</barrel.Button>
-      </Toolbar>
     ),
   },
   ToolbarDivider: {
