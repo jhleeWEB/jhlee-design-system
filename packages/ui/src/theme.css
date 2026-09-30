@@ -3,7 +3,7 @@
  * 값은 전부 생성물이다. 이 파일은 «규칙» 만 든다 — keyframes · 손 @utility · `.ds-*` 컴포넌트 규칙 · 컴포넌트 CSS 의 @import · @source 자기 등록.
  *   tokens.css                      토큰(:root · 크롬 라이트/다크 · legacy alias) — generated/ 를 재수출한다
  *   generated/theme.tailwind.css    Tailwind v4 @theme(정적 사다리 + initial 리셋) · @theme inline(모드가 갈리는 --color-* 매핑 · 글꼴) · 생성 @utility(z-* · duration-*)
- *   corner.css                      곡률 규칙(#26) — 지원 엔진(Chromium 139+)은 스쿼클 + 보정 반경, 미지원 엔진은 원호. 원호 강등은 허용된 폴백이다
+ *   corner.css                      비어 있다 — 스쿼클(#26)은 사용자 결정(2026-09-30, #36)으로 폐기했고 서브패스 호환을 위해 파일만 남는다
  *
  * ── 왜 캔버스와 크롬을 가르는가(방향 C) ──────────────────────────────────────
  * 옛 base 가 radius 0 · 그림자 없음 · 무채색 · 다크 없음을 강제하는 근거는 「도면 감성」과 **흑백 인쇄 · 색각 이상**이다. 그 근거는 *도면이 그려지는
@@ -24,7 +24,7 @@
 
 @import "./tokens.css";
 @import "./generated/theme.tailwind.css";
-/* 곡률은 레이어 밖 — 요소 규칙과 같은 층(corner.css 머리). */
+/* 비어 있는 호환 파일(corner.css 머리) — 서브패스 `./corner.css` 를 쓰던 소비자를 위해 @import 만 남긴다. */
 @import "./corner.css";
 @import "./canvas.css";
 /* 컴포넌트 전용 CSS 도 여기서 싣는다. 예전에는 Toast.tsx·Card.tsx 가 JS 에서 side-effect 로 import 했는데,

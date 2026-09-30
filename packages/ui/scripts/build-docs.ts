@@ -91,7 +91,7 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
   const lines: string[] = [
     `# Squircle Design System`,
     ``,
-    `> \`${manifest.package.name}\` — Radix + Tailwind v4 디자인 시스템. 크롬(UI) 어휘는 shadcn 이름, 도면 캔버스는 \`canvas-*\`, 모든 크롬 모서리는 스쿼클(진행형 향상). 이 파일은 \`components.manifest.json\` 에서 생성된다(\`scripts/build-docs.ts\`) — 손으로 고치지 않는다.`,
+    `> \`${manifest.package.name}\` — Radix + Tailwind v4 디자인 시스템. 크롬(UI) 어휘는 shadcn 이름, 도면 캔버스는 \`canvas-*\`, 크롬 모서리는 일반 border-radius 원호 사다리. 이 파일은 \`components.manifest.json\` 에서 생성된다(\`scripts/build-docs.ts\`) — 손으로 고치지 않는다.`,
     ``,
     `정본 순서: 이 파일 → \`dist/components.manifest.json\`(prop·값·기본값·client 의 기계 판독 정본, \`jq '.components[]|select(.name=="Button")'\`) → \`docs/components/*.md\` → \`dist/**/*.d.ts\`.`,
     `매니페스트에 없는 컴포넌트·부품·prop 은 **지어내지 않는다** — «DS 확장 필요» 로 보고한다.`,
@@ -141,7 +141,7 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
     `값은 \`theme.css\`(생성물)에 있고 여기는 이름만이다. 접두는 Tailwind 규칙대로(\`bg-\` \`text-\` \`border-\` \`ring-\` \`fill-\` …).`,
     ``,
     `- 색: ${list(t.colors)}`,
-    `- 반경 \`rounded-*\`: ${list(t.radius)} (6 / 8 / 12 / 16 px 고정 · 지원 엔진에서 스쿼클; 원형은 \`rounded-full\` 로만)`,
+    `- 반경 \`rounded-*\`: ${list(t.radius)} (6 / 8 / 12 / 16 px 고정 원호; 원형은 \`rounded-full\` 로만)`,
     `- 글자 \`text-*\`(역할 이름, 크기·행간 포함): ${list(t.text)}`,
     `- 그림자 \`shadow-*\`: ${list(t.shadow)}`,
     `- 컨트롤 높이 \`h-*\`(정사각은 \`w-ctl*\`): ${list(t.height)}`,

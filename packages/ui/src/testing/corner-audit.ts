@@ -1,18 +1,17 @@
-/* 모서리 검사기 — 소비 레포의 `__arch__` 래칫이 부른다(계획 §3.5-5, #26).
+/* 모서리 검사기 — 소비 레포의 `__arch__` 래칫이 부른다(계획 §3.5-5, #26 → #36).
  *
- * 곡률은 DS 가 전역 규칙(corner.css)으로 정하므로 소비자가 지킬 것은 넷뿐이다. 네 규칙은 «원호 강등이 허용된 폴백» 이라는 계약 안에서
- * 스쿼클이 조용히 빠지거나(원시 반경은 `--corner-k` 를 타지 않는다) 원형이 눌리는(초타원 캡슐) 자리를 잡는다:
- *   raw-radius                border-radius 에 토큰 밖 길이 — `4px` · `50%` · `999px`. 토큰(`var(--radius-*)`)이나 동심원 `calc(var(--radius-…) - …)` 만.
- *   circular-without-round    원형·pill 반경(50% · ≥999px · --radius-full)인데 같은 규칙에 `corner-shape: round` 가 없고 selector 가 예외 목록에도 없다.
- *   corner-shape-outside-ui   `corner-shape` 선언 — DS 의 corner.css 가 유일한 집이다. 소비자는 `round`(원형 예외)만 적을 수 있다.
- *   arbitrary-rounded         TSX 의 `rounded-[…]` · `rounded-(…)` — 허용 임의값은 동심원 `calc(var(--radius-` 로 시작하는 것뿐이다.
+ * 모서리는 일반 `border-radius` 원호 사다리(6/8/12/16px)다 — 스쿼클(`corner-shape`)은 2026-09-30 사용자 결정으로 폐기했다(#36, Chromium 에서
+ * 1px 테두리가 모서리에서 두꺼워 보임). 소비자가 지킬 것은 셋이다:
+ *   raw-radius       border-radius 에 토큰 밖 길이 — `4px` · `50%` · `999px`. 토큰(`var(--radius-*)`)이나 동심원 `calc(var(--radius-…) - …)` 만.
+ *   corner-shape     `corner-shape` 선언 — 값에 관계없이 금지. 폐기한 스쿼클이 앱 CSS 로 되살아나지 않게 한다.
+ *   arbitrary-rounded TSX 의 `rounded-[…]` · `rounded-(…)` — 허용 임의값은 동심원 `calc(var(--radius-` 로 시작하는 것뿐이다.
  *
  * 순수 함수다 — 파일을 읽지 않는다(패키지는 platform neutral). 소비자가 glob 으로 읽어 `{ path, text }` 로 넘기고 `countByFile` 로 기준선을 만든다.
  * CSS 는 정규식이 아니라 중괄호 깊이를 세는 작은 판독기로 읽는다 — `@media`·`@supports` 안의 규칙도 selector 를 안다.
  */
 
 /** 검사 규칙 넷. */
-export type CornerRule = "raw-radius" | "circular-without-round" | "corner-shape-outside-ui" | "arbitrary-rounded";
+export type CornerRule = "raw-radius" | "corner-shape" | "arbitrary-rounded";
 
 /** 검사 입력 하나 — 경로(기준선의 키)와 본문. `.css` 는 CSS 판독기가, 나머지(`.ts` · `.tsx` · `.js` …)는 클래스 문자열 판독기가 본다. */
 export interface CornerSource {
@@ -36,25 +35,12 @@ export interface CornerFinding {
   readonly message: string;
 }
 
-/** 검사 옵션. */
-export interface CornerAuditOptions {
-  /** 원형 반경을 원호로 고정하는 selector — DS 의 corner.css 예외 목록이 기본값이다. 여기 있는 selector 의 규칙은 `corner-shape: round` 를 적지 않아도 된다. */
-  readonly roundSelectors?: readonly string[];
-  /** `corner-shape` 를 값에 관계없이 둘 수 있는 파일(경로 끝 일치) — DS 안에서는 `corner.css` 뿐이고 소비자는 보통 비워 둔다. */
-  readonly cornerShapeFiles?: readonly string[];
-}
-
-/** DS 의 corner.css 가 원호로 고정하는 selector — `corner.spec` 이 corner.css 원문과 같은지 본다. */
-export const DEFAULT_ROUND_SELECTORS: readonly string[] = [".rounded-full", ".ds-scroll-area-thumb", ".switch-track", ".switch-knob", '[data-corner="round"]'];
-
-/** 동심원 임의값의 유일한 허용 형태 — 바깥 토큰에서 패딩을 뺀다. 계수(`--corner-k`)를 따라가므로 양쪽 엔진에서 동심이 유지된다. */
+/** 동심원 임의값의 유일한 허용 형태 — 바깥 토큰에서 패딩을 뺀다. 바깥 토큰이 바뀌면 안쪽이 따라간다. */
 export const CONCENTRIC_PREFIX = "calc(var(--radius-";
 
 const RADIUS_PROP = /^border(?:-(?:top|bottom)-(?:left|right)|-(?:start|end)-(?:start|end))?-radius$/;
 /** 토큰 밖 길이 — 0 은 길이가 아니다(캔버스). */
 const LENGTH_LITERAL = /(?<![\w.-])(?!0(?:px|%|rem|em)?(?![\d.]))\d*\.?\d+(?:px|%|rem|em)/;
-/** 원형·pill — 50% · 999px 이상 · full 토큰. */
-const CIRCULAR = /(?<![\w.-])(?:50%|(?:999|9999)px|var\(\s*--radius-full\b)/;
 const ARBITRARY_ROUNDED = /\brounded(?:-(?:t|r|b|l|tl|tr|br|bl|s|e|ss|se|es|ee))?-(\[[^\]\n]*\]|\([^)\n]*\))/g;
 
 interface CssDeclaration {
@@ -62,8 +48,6 @@ interface CssDeclaration {
   readonly prop: string;
   readonly value: string;
   readonly line: number;
-  /** 같은 블록의 다른 선언 — «같은 규칙에 corner-shape: round 가 있는가» 를 묻는다. */
-  readonly siblings: readonly { readonly prop: string; readonly value: string }[];
 }
 
 /** 주석을 같은 길이의 공백으로 덮는다 — 줄 번호가 원본과 같다. */
@@ -102,7 +86,7 @@ function parseCss(text: string): CssDeclaration[] {
       preludeStart = i + 1;
       if (ch === "}") {
         const block = stack.pop();
-        if (block) for (const d of block.decls) out.push({ selector: block.selector, prop: d.prop, value: d.value, line: d.line, siblings: block.decls });
+        if (block) for (const d of block.decls) out.push({ selector: block.selector, prop: d.prop, value: d.value, line: d.line });
       }
     } else {
       prelude += ch;
@@ -111,31 +95,18 @@ function parseCss(text: string): CssDeclaration[] {
   return out;
 }
 
-const endsWithAny = (path: string, suffixes: readonly string[]): boolean => suffixes.some(s => path === s || path.endsWith(`/${s}`) || path.endsWith(s));
-
-function auditCss(source: CornerSource, options: Required<CornerAuditOptions>): CornerFinding[] {
+function auditCss(source: CornerSource): CornerFinding[] {
   const findings: CornerFinding[] = [];
-  const roundSelectors = new Set(options.roundSelectors.map(s => s.replace(/\s+/g, " ").trim()));
   for (const d of parseCss(source.text)) {
     if (d.prop.startsWith("--")) continue; // 토큰 정의는 리터럴이 사는 유일한 자리다
     if (d.prop === "corner-shape") {
-      if (d.value !== "round" && !endsWithAny(source.path, options.cornerShapeFiles)) {
-        findings.push({ rule: "corner-shape-outside-ui", path: source.path, line: d.line, text: `corner-shape: ${d.value}`, message: "corner-shape is set by the design system's corner.css — outside it only `round` (circular exception) is allowed." });
-      }
+      findings.push({ rule: "corner-shape", path: source.path, line: d.line, text: `corner-shape: ${d.value}`, message: "corner-shape is not used — the design system dropped squircle corners (1px borders look thicker at the corner in Chromium); use plain border-radius tokens." });
       continue;
     }
     if (!RADIUS_PROP.test(d.prop)) continue;
     const value = d.value.replace(/\s+/g, " ");
-    const concentric = value.startsWith(CONCENTRIC_PREFIX);
-    if (!concentric && LENGTH_LITERAL.test(value)) {
-      findings.push({ rule: "raw-radius", path: source.path, line: d.line, text: `${d.prop}: ${value}`, message: "Raw radius — use var(--radius-sm|md|lg|xl|full) or the concentric form calc(var(--radius-…) - padding); raw lengths do not follow --corner-k." });
-    }
-    if (CIRCULAR.test(value)) {
-      const roundHere = d.siblings.some(s => s.prop === "corner-shape" && s.value === "round");
-      const listed = d.selector.split(",").map(s => s.replace(/\s+/g, " ").trim()).every(s => roundSelectors.has(s));
-      if (!roundHere && !listed) {
-        findings.push({ rule: "circular-without-round", path: source.path, line: d.line, text: `${d.selector} { ${d.prop}: ${value} }`, message: "Circular radius without `corner-shape: round` — the global squircle rule would flatten the capsule; add it to the same rule or list the selector in roundSelectors." });
-      }
+    if (!value.startsWith(CONCENTRIC_PREFIX) && LENGTH_LITERAL.test(value)) {
+      findings.push({ rule: "raw-radius", path: source.path, line: d.line, text: `${d.prop}: ${value}`, message: "Raw radius — use var(--radius-sm|md|lg|xl|full) or the concentric form calc(var(--radius-…) - padding)." });
     }
   }
   return findings;
@@ -153,9 +124,8 @@ function auditClasses(source: CornerSource): CornerFinding[] {
 }
 
 /** 파일 묶음을 검사해 위반 목록을 낸다 — 경로 → 줄 순. */
-export function auditCorners(sources: readonly CornerSource[], options: CornerAuditOptions = {}): CornerFinding[] {
-  const resolved: Required<CornerAuditOptions> = { roundSelectors: options.roundSelectors ?? DEFAULT_ROUND_SELECTORS, cornerShapeFiles: options.cornerShapeFiles ?? [] };
-  const findings = sources.flatMap(source => (source.path.endsWith(".css") ? auditCss(source, resolved) : auditClasses(source)));
+export function auditCorners(sources: readonly CornerSource[]): CornerFinding[] {
+  const findings = sources.flatMap(source => (source.path.endsWith(".css") ? auditCss(source) : auditClasses(source)));
   return findings.sort((a, b) => a.path.localeCompare(b.path) || a.line - b.line);
 }
 

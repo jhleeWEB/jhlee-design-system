@@ -1,7 +1,7 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { defineConfig, devices, type Project } from "@playwright/test";
+import { defineConfig, devices } from "@playwright/test";
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -12,23 +12,12 @@ const here = dirname(fileURLToPath(import.meta.url));
  *  - snapshotPathTemplate 에 플랫폼 접미를 두지 않는 이유가 그것이다: 한 벌이 곧 기준선이다.
  *  - maxDiffPixels 50 은 Phase A 값. self-host 폰트·reducedMotion 이 자리잡는 Phase C 에 0 으로 내린다.
  *
- * 모서리(#26, `corners.spec.ts`)는 프로젝트가 따로다 — DPR 2 로 견본 픽셀을 읽고(프로파일), 3엔진 스냅샷은 `{projectName}-{platform}` 접미의
- * 별도 골든이다. CI 는 chromium 만 돈다(`VRT_ENGINES` 없음). 로컬 macOS 절차: `pnpm exec playwright install webkit firefox` 뒤
- * `VRT_ENGINES=1 pnpm vrt --project corners-chromium --project corners-webkit --project corners-firefox`(darwin 골든은 «현재 상태 기록» 이다 —
- * Playwright WebKit 은 trunk 라 Safari 정식판을 대신하지 못한다). */
+ * 모서리 전용 프로젝트(#26 의 corners.spec · DPR 2 · 3엔진 골든)는 스쿼클 폐기(#36)와 함께 지웠다 — 반경은 일반 스토리 스냅샷이 본다. */
 const STORIES = /stories\.vrt\.spec\.ts$/;
-const CORNERS = /corners\.spec\.ts$/;
-const CORNER_SNAPSHOTS = "{testDir}/__snapshots__/corners/{arg}-{projectName}-{platform}{ext}";
-const cornerProject = (name: string, device: (typeof devices)[string]): Project => ({
-  name,
-  testMatch: CORNERS,
-  use: { ...device, deviceScaleFactor: 2 },
-  snapshotPathTemplate: CORNER_SNAPSHOTS,
-});
 
 export default defineConfig({
   testDir: ".",
-  testMatch: [/.*\.vrt\.spec\.ts/, CORNERS],
+  testMatch: /.*\.vrt\.spec\.ts/,
   outputDir: "./results",
   snapshotPathTemplate: "{testDir}/__snapshots__/{arg}{ext}",
   fullyParallel: true,
@@ -61,7 +50,5 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", testMatch: STORIES },
-    cornerProject("corners-chromium", devices["Desktop Chrome"]),
-    ...(process.env.VRT_ENGINES ? [cornerProject("corners-webkit", devices["Desktop Safari"]), cornerProject("corners-firefox", devices["Desktop Firefox"])] : []),
   ],
 });
