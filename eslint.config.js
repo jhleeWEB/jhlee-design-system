@@ -54,8 +54,8 @@ const TYPED = {
     files: [
       "packages/ui/src/__tests__/**/*.{ts,tsx}",
       "packages/ui/src/__arch__/**/*.{ts,tsx}",
-      // 컴포넌트 옆 `Name.spec.tsx`(Phase D 공통 계약, #42) — tsconfig.test.json 이 include 한다.
-      "packages/ui/src/**/*.spec.tsx",
+      // 컴포넌트·훅 옆 `Name.spec.tsx` · `useX.spec.ts`(Phase D 공통 계약, #42 · #48) — tsconfig.test.json 이 include 한다.
+      "packages/ui/src/**/*.spec.{ts,tsx}",
     ],
     project: "packages/ui/tsconfig.test.json",
   },

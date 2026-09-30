@@ -154,21 +154,18 @@
       "count": 1
     }
   },
-  "packages/ui/stories/gallery/Gallery.tsx": {
+  "packages/ui/stories/workbench/Workbench.tsx": {
     "better-tailwindcss/no-restricted-classes": {
-      "count": 36
+      "count": 19
     },
     "better-tailwindcss/no-unknown-classes": {
-      "count": 2
-    },
-    "ds/no-literal-style-value": {
-      "count": 26
-    },
-    "ds/no-magic-ms": {
       "count": 1
     },
+    "ds/no-literal-style-value": {
+      "count": 9
+    },
     "jsx-a11y/label-has-associated-control": {
-      "count": 10
+      "count": 3
     }
   }
 }

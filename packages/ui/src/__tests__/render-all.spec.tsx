@@ -1,62 +1,25 @@
+/// <reference types="node" />
 /*
- * 공개 컴포넌트 전부에 공통 계약(`__arch__/component-contract.tsx`)을 돌린다(계획 §2.4 D-3, C3).
+ * 공개 컴포넌트 전부가 공통 계약(`__arch__/component-contract.tsx`)을 어딘가에서 한 번 돈다(계획 §2.4 D-3, C3 → D7 #48).
  *
- * 대상은 배럴(index.ts)의 PascalCase 값 export 에서 `./legacy` 재export(격리·동결, #10)를 뺀 것이다. 스토리가 있는 컴포넌트는 그 `Default` 가
- * 픽스처이고(STORY_SUBJECTS), 없는 것은 여기 FIXTURES 의 최소 props 다 — Phase D 가 스토리를 만들면 그 컴포넌트는 STORY_SUBJECTS 로 옮긴다.
- *
- * 래칫: 오늘 깨지는 «컴포넌트 → 검사 id» 를 KNOWN_CONTRACT_FAILURES 가 든다. 없는 실패가 나면 새 위반이고, 목록에 있는데 통과하면 «지워라».
- * 첫 실행 실측(2026-09-30). 픽스처가 없는 공개 컴포넌트는 실패다 — 새 컴포넌트는 스토리(권장)나 픽스처와 함께 온다.
+ * 대상은 배럴(index.ts)의 PascalCase 값 export 에서 `./legacy` 재export(격리·동결, #10)를 뺀 것이다. 덮는 길은 둘뿐이고 겹치지 않는다:
+ *  1. 컴포넌트 옆 `Name.spec.tsx` 가 `Name.stories` 를 계약에 넘긴다(`describeComponentContract` · `storySubject`) — 스토리 메타의
+ *     `component` 가 그 spec 이 덮는 컴포넌트다. Phase D(D1–D5)가 스토리를 가진 컴포넌트를 전부 이리로 옮겼다.
+ *  2. 스토리의 `component` 가 아닌 부품(Content·Item·Trigger…)은 여기 FIXTURES 의 최소 props 로 돈다.
+ * 한때 여기 있던 STORY_SUBJECTS(스토리 Default 를 다시 돌리던 것)는 폴더 spec 과 같은 검사를 두 번 돌려 지웠다(#48).
+ * 부품의 실패를 붙들던 KNOWN_CONTRACT_FAILURES 도 0 이 되어 지웠다 — 부품 픽스처는 실패 0 이 계약이다.
+ * 유일한 예외 Button 의 slot-locked 는 `primitives/Button.spec.tsx` 가 그 자리에서 붙든다(legacy Select 가 의존, D8 #49 에서 잠근다).
  */
+import { readdirSync, readFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { LuCircle } from "react-icons/lu";
 import { describe, expect, it } from "vitest";
 
-import {
-  CONTRACT_CHECKS,
-  runContract,
-  storySubject,
-  type CheckId,
-  type ContractSubject,
-  type Probe,
-} from "../__arch__/component-contract";
-import * as DataTableStories from "../data/DataTable.stories";
-import * as DescriptionListStories from "../data/DescriptionList.stories";
-import * as TableStories from "../data/Table.stories";
+import { runContract, type ContractSubject, type Probe } from "../__arch__/component-contract";
 import * as barrel from "../index";
 import * as legacy from "../legacy/index";
-import * as AccordionStories from "../navigation/Accordion.stories";
-import * as AlertStories from "../feedback/Alert.stories";
-import * as BackButtonStories from "../navigation/BackButton.stories";
-import * as BadgeStories from "../primitives/Badge.stories";
-import * as BreadcrumbStories from "../navigation/Breadcrumb.stories";
-import * as CanvasScaleStories from "../CanvasScale.stories";
-import * as ConfirmDialogStories from "../overlay/AlertDialog.stories";
-import * as DrawerStories from "../overlay/Drawer.stories";
-import * as DropdownMenuStories from "../overlay/DropdownMenu.stories";
-import * as EmptyStateStories from "../feedback/EmptyState.stories";
-import * as ModalStories from "../overlay/Modal.stories";
-import * as PopoverStories from "../overlay/Popover.stories";
-import * as ProgressStories from "../feedback/Progress.stories";
-import * as ScrollAreaStories from "../navigation/ScrollArea.stories";
-import * as SegmentedControlStories from "../navigation/SegmentedControl.stories";
-import * as SidebarStories from "../navigation/Sidebar.stories";
-import * as SkeletonStories from "../feedback/Skeleton.stories";
-import * as SpinnerStories from "../feedback/Spinner.stories";
-import * as ToastStories from "../feedback/Toast.stories";
-import * as ToolbarStories from "../navigation/Toolbar.stories";
-import * as TooltipStories from "../overlay/Tooltip.stories";
-import * as ButtonStories from "../primitives/Button.stories";
-import * as CardStories from "../primitives/Card.stories";
-import * as ChoiceStories from "../primitives/Choice.stories";
-import * as EditorialStories from "../primitives/Editorial.stories";
-import * as InputStories from "../primitives/Input.stories";
-import * as MediaCardStories from "../primitives/MediaCard.stories";
-import * as MiscStories from "../primitives/Misc.stories";
-import * as PanelToggleButtonStories from "../primitives/PanelToggleButton.stories";
-
-/** 오늘 깨지는 검사 — 알파벳순, 줄어들기만 한다. */
-const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
-  Button: ["slot-locked"],
-};
 
 const {
   Accordion,
@@ -127,42 +90,6 @@ const {
   TooltipProvider,
   Tr,
 } = barrel;
-
-/** 스토리가 있는 컴포넌트 — `Default` 가 픽스처다. */
-const STORY_SUBJECTS: Readonly<Record<string, ContractSubject>> = {
-  Accordion: storySubject(AccordionStories, { slot: "accordion" }),
-  Alert: storySubject(AlertStories, { slot: "alert", axes: ["tone"] }),
-  BackButton: storySubject(BackButtonStories, { slot: "button" }),
-  Badge: storySubject(BadgeStories, { slot: "badge", axes: ["tone"] }),
-  Breadcrumb: storySubject(BreadcrumbStories, { slot: "breadcrumb" }),
-  Button: storySubject(ButtonStories, { slot: "button", axes: ["variant", "tone", "size"] }),
-  CanvasScale: storySubject(CanvasScaleStories, { slot: "canvas-scale" }),
-  Card: storySubject(CardStories, { slot: "card", axes: ["elevation", "pad"] }),
-  Checkbox: storySubject(ChoiceStories, { slot: "checkbox" }),
-  ConfirmDialog: storySubject(ConfirmDialogStories, { slot: "confirm-dialog" }),
-  DataTable: storySubject(DataTableStories, { slot: "data-table" }),
-  DescriptionList: storySubject(DescriptionListStories, { slot: "description-list" }),
-  DisplayHeading: storySubject(EditorialStories, { slot: "display-heading" }),
-  DrawerContent: storySubject(DrawerStories, { slot: "drawer", axes: ["side", "size"] }),
-  DropdownMenuContent: storySubject(DropdownMenuStories, { slot: "menu" }),
-  EmptyState: storySubject(EmptyStateStories, { slot: "empty-state", axes: ["size"] }),
-  Input: storySubject(InputStories, { slot: "input", axes: ["size"] }),
-  Kbd: storySubject(MiscStories, { slot: "kbd" }),
-  MediaCard: storySubject(MediaCardStories, { slot: "media-card", axes: ["orientation", "elevation"] }),
-  ModalContent: storySubject(ModalStories, { slot: "modal", axes: ["size"] }),
-  PanelToggleButton: storySubject(PanelToggleButtonStories, { slot: "panel-toggle-button" }),
-  PopoverContent: storySubject(PopoverStories, { slot: "popover" }),
-  Progress: storySubject(ProgressStories, { slot: "progress", axes: ["tone"] }),
-  ScrollArea: storySubject(ScrollAreaStories, { slot: "scroll-area" }),
-  SegmentedControl: storySubject(SegmentedControlStories, { slot: "segmented", axes: ["size"] }),
-  Sidebar: storySubject(SidebarStories, { slot: "sidebar", axes: ["side"] }),
-  Skeleton: storySubject(SkeletonStories, { slot: "skeleton", axes: ["shape"] }),
-  Spinner: storySubject(SpinnerStories, { slot: "spinner", axes: ["size", "tone"] }),
-  Table: storySubject(TableStories, { slot: "table" }),
-  ToastProvider: storySubject(ToastStories, { slot: "toast-viewport", axes: ["position", "tone"] }),
-  Toolbar: storySubject(ToolbarStories, { slot: "toolbar" }),
-  Tooltip: storySubject(TooltipStories, { slot: "tooltip" }),
-};
 
 /* 최소 props 픽스처. 부품(Content·Item…)은 열린 부모 안에 두어 포털까지 렌더한다. 탐침(p)은 검사 대상 컴포넌트에만 펼친다. */
 const openMenu =
@@ -637,36 +564,48 @@ const PUBLIC_COMPONENTS = Object.entries(barrel)
   .map(([name]) => name)
   .sort();
 
+const SRC = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
+/** 컴포넌트 옆 spec(`__tests__`·`__arch__` 밖의 `*.spec.tsx`)이 계약에 넘기는 스토리의 메타 `component` → 그 spec 경로. */
+function coveredBySpec(dir = SRC, out = new Map<string, string>()): Map<string, string> {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const p = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name !== "__tests__" && entry.name !== "__arch__") coveredBySpec(p, out);
+      continue;
+    }
+    if (!entry.name.endsWith(".spec.tsx")) continue;
+    const text = readFileSync(p, "utf8");
+    if (!/\b(describeComponentContract|storySubject)\(/.test(text)) continue;
+    for (const m of text.matchAll(/from "\.\/(\w+)\.stories"/g)) {
+      const stories = readFileSync(join(dirname(p), `${m[1]!}.stories.tsx`), "utf8");
+      const component = /^\s*component: (\w+)[<,]/m.exec(stories)?.[1];
+      if (component) out.set(component, relative(SRC, p));
+    }
+  }
+  return out;
+}
+const SPEC_COVERED = coveredBySpec();
+
 describe("공개 컴포넌트 공통 계약(render-all)", () => {
-  it("배럴의 공개 컴포넌트마다 스토리 Default 나 픽스처가 있다", () => {
-    const missing = PUBLIC_COMPONENTS.filter((name) => !(name in STORY_SUBJECTS) && !(name in FIXTURES));
-    expect(missing, "새 컴포넌트는 stories(권장)나 FIXTURES 와 함께 온다").toEqual([]);
-    const stale = [...Object.keys(STORY_SUBJECTS), ...Object.keys(FIXTURES)].filter(
+  it("폴더 spec 을 찾는다", () => {
+    expect(SPEC_COVERED.size).toBeGreaterThan(20);
+    expect(SPEC_COVERED.get("Button")).toBe("primitives/Button.spec.tsx");
+  });
+
+  it("배럴의 공개 컴포넌트마다 폴더 spec 이나 부품 픽스처가 있다 — 둘 다는 아니다", () => {
+    const missing = PUBLIC_COMPONENTS.filter((name) => !SPEC_COVERED.has(name) && !(name in FIXTURES));
+    expect(missing, "새 컴포넌트는 stories + 옆 spec(describeComponentContract)과 함께 온다").toEqual([]);
+    const doubled = Object.keys(FIXTURES).filter((name) => SPEC_COVERED.has(name));
+    expect(doubled, "폴더 spec 이 덮는 컴포넌트의 픽스처는 지운다").toEqual([]);
+    const stale = [...SPEC_COVERED.keys(), ...Object.keys(FIXTURES)].filter(
       (name) => !PUBLIC_COMPONENTS.includes(name),
     );
-    expect(stale, "배럴에 없는 픽스처").toEqual([]);
+    expect(stale, "배럴에 없는 픽스처·스토리 component").toEqual([]);
   });
 
-  it("KNOWN_CONTRACT_FAILURES 는 배럴의 컴포넌트·실제 검사 id 만 담고 알파벳순이다", () => {
-    const names = Object.keys(KNOWN_CONTRACT_FAILURES);
-    expect(names).toEqual([...names].sort());
-    expect(names.filter((n) => !PUBLIC_COMPONENTS.includes(n))).toEqual([]);
-    for (const ids of Object.values(KNOWN_CONTRACT_FAILURES)) {
-      expect(ids.filter((id) => !CONTRACT_CHECKS.includes(id))).toEqual([]);
-      expect([...ids]).toEqual([...ids].sort());
-    }
-  });
-
-  it.each(PUBLIC_COMPONENTS)("%s — 실패한 검사는 KNOWN_CONTRACT_FAILURES 와 정확히 같다", async (name) => {
-    const subject = STORY_SUBJECTS[name] ?? FIXTURES[name];
-    if (!subject) return;
-    const failures = await runContract(subject);
-    if (process.env.CONTRACT_DUMP) console.log("CONTRACT_DUMP " + JSON.stringify({ name, failures }));
-    const failedIds = [...new Set(failures.map((f) => f.id))].sort();
-    const known = [...(KNOWN_CONTRACT_FAILURES[name] ?? [])].sort();
-    const fresh = failures.filter((f) => !known.includes(f.id)).map((f) => `${f.id}: ${f.reason}`);
-    expect(fresh, "새 계약 위반").toEqual([]);
-    const fixed = known.filter((id) => !failedIds.includes(id));
-    expect(fixed, "통과하게 된 검사 — KNOWN_CONTRACT_FAILURES 에서 지워라").toEqual([]);
+  it.each(Object.keys(FIXTURES).sort())("%s — 부품 픽스처가 계약을 전부 통과한다", async (name) => {
+    const failures = await runContract(FIXTURES[name]!);
+    expect(failures.map((f) => `${f.id}: ${f.reason}`)).toEqual([]);
   });
 });

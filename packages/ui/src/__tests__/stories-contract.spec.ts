@@ -11,15 +11,10 @@ import { describe, expect, it } from "vitest";
  *  1. 배럴(index.ts)이 내보내는 컴포넌트 모듈마다 옆에 `Name.stories.tsx` 가 있다.
  *  2. 있는 stories 파일은 `Default` · `Variants` · `ThemeContrast` 세 export 를 가진다 — 이름이 고정이어야
  *     매니페스트·docs·jsdom 계약 테스트·VRT 가 같은 픽스처를 가리킨다.
- * 첫날부터 초록으로 시작하려고 아직 없는 것은 STORIES_MISSING 에 적어 둔다. 이 목록은 **줄어들기만 한다** —
- * 스토리를 만들면 여기서 지워야 통과하고(래칫), 새 컴포넌트는 여기 넣지 말고 stories 를 함께 만든다. */
+ * Phase A 는 아직 없는 것을 `STORIES_MISSING` 래칫에 적어 두고 시작했고, Phase D(#41)가 그 목록을 0 으로 비워 지웠다(#48) —
+ * 이제 1 은 예외 없는 불변식이다. 새 컴포넌트는 stories 와 함께 만든다. */
 
 const SRC = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-
-/** 배럴 기준 모듈 경로(`src/` 상대, 확장자 없음). Phase D 가 소비처 많은 순으로 지운다.
- *  `legacy/*`(shell·controls·design-system)는 여기 없다 — 루트 배럴이 `@deprecated` const 별칭으로만 내보내
- *  스캐너(`export … from`)에 잡히지 않고, 격리·동결된 코드라 스토리 계약 밖이다(#10). */
-const STORIES_MISSING: readonly string[] = [];
 
 const REQUIRED_EXPORTS = ["Default", "Variants", "ThemeContrast"] as const;
 
@@ -90,19 +85,17 @@ const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
   "src/primitives/Misc.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/primitives/Misc.stories.tsx#Variants": ["color-contrast"],
   "src/primitives/PanelToggleButton.stories.tsx#ThemeContrast": ["color-contrast"],
-  "stories/Gallery.stories.tsx#Dark": ["aria-progressbar-name", "color-contrast", "label"],
-  "stories/Gallery.stories.tsx#Light": ["aria-progressbar-name", "color-contrast", "label"],
   "stories/Radius.stories.tsx#Components": ["aria-hidden-focus", "color-contrast"],
   "stories/Radius.stories.tsx#Ladder": ["color-contrast"],
   "stories/Workbench.stories.tsx#Default": ["aria-progressbar-name", "color-contrast"],
 };
 
-/** `{ id: "x", enabled: false }` 로 끈 규칙 id — 규칙 배열이 변수로 빠져 있어도(Gallery 의 knownA11y) 같은 파일 안이면 잡힌다. */
+/** `{ id: "x", enabled: false }` 로 끈 규칙 id — 규칙 배열이 변수로 빠져 있어도 같은 파일 안이면 잡힌다. */
 function disabledRules(block: string): string[] {
   return [...block.matchAll(/\{\s*id:\s*"([a-z0-9-]+)",\s*enabled:\s*false\s*\}/g)].map((m) => m[1]!).sort();
 }
 
-/** 파일을 `export const` 단위로 잘라 스토리마다 끈 규칙을 모은다. 상수로 뺀 규칙 목록(Gallery 의 knownA11y)은 그 상수를 참조하는 스토리에 귀속한다. */
+/** 파일을 `export const` 단위로 잘라 스토리마다 끈 규칙을 모은다. 상수로 뺀 규칙 목록(`const knownA11y = …`)은 그 상수를 참조하는 스토리에 귀속한다. */
 function a11yExemptions(file: string): Record<string, string[]> {
   const text = readFileSync(file, "utf8");
   const parts = text.split(/^(?=export const )/m);
@@ -178,19 +171,11 @@ describe("스토리 계약", () => {
     expect(modules).toContain("primitives/Button");
   });
 
-  it("컴포넌트 모듈마다 stories 가 있거나 STORIES_MISSING 에 적혀 있다", () => {
-    const missing = modules.filter(
-      (m) => !existsSync(join(SRC, `${m}.stories.tsx`)) && !STORIES_MISSING.includes(m),
-    );
+  // `legacy/*`(shell·controls·design-system)는 여기 잡히지 않는다 — 루트 배럴이 `@deprecated` const 별칭으로만 내보내
+  // 스캐너(`export … from`)에 걸리지 않고, 격리·동결된 코드라 스토리 계약 밖이다(#10).
+  it("컴포넌트 모듈마다 옆에 stories 가 있다", () => {
+    const missing = modules.filter((m) => !existsSync(join(SRC, `${m}.stories.tsx`)));
     expect(missing, "새 컴포넌트는 stories 와 함께 만든다").toEqual([]);
-  });
-
-  it("STORIES_MISSING 은 줄어들기만 한다 — stories 가 생긴 항목·배럴에 없는 항목은 지운다", () => {
-    const stale = STORIES_MISSING.filter(
-      (m) => existsSync(join(SRC, `${m}.stories.tsx`)) || !modules.includes(m),
-    );
-    expect(stale).toEqual([]);
-    expect([...STORIES_MISSING]).toEqual([...STORIES_MISSING].sort());
   });
 
   it.each(storyFiles(SRC).map((f) => [relative(SRC, f), f] as const))(

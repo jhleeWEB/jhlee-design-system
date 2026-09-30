@@ -2,8 +2,8 @@
  * 공통 컴포넌트 계약(계획 §2.4 D-3 · §2.5-f, C3).
  *
  * DS 컴포넌트가 «소비자에게 같은 모양으로 열려 있는가» 를 여섯 검사로 묻는다. 스토리가 유일한 픽스처다 — `composeStories` 로 `Default` 를
- * 렌더하므로 jsdom 계약·브라우저 play/axe(addon-vitest)·픽셀(VRT) 세 층이 같은 입력을 본다. 스토리가 아직 없는 컴포넌트는
- * `render-all.spec` 이 최소 props 로 같은 검사를 돌린다.
+ * 렌더하므로 jsdom 계약·브라우저 play/axe(addon-vitest)·픽셀(VRT) 세 층이 같은 입력을 본다. 스토리의 `component` 가 아닌
+ * 부품(Content·Item·Trigger…)은 `render-all.spec` 이 최소 props 로 같은 검사를 돌린다.
  *
  *  slot         선언한 `data-slot` 이 DOM 에 있다 — 소비자 CSS·테스트가 붙잡는 손잡이
  *  slot-locked  소비자가 `data-slot` 을 넘겨도 덮이지 않는다(`{...rest}` 가 data-slot 뒤에 오면 덮인다)
@@ -13,7 +13,8 @@
  *  axes         cva 축마다 `data-<axis>` 가 찍힌다 — 스토리 `Variants` 격자·소비자 선택자·매니페스트가 그 값을 읽는다
  *  axe          axe-core 위반 0(jsdom: color-contrast·region 제외, `src/__tests__/axe.ts`)
  *
- * 실패는 «검사 id + 이유» 로 돌려주고 판정은 부르는 쪽이 한다 — render-all.spec 은 KNOWN_CONTRACT_FAILURES 래칫으로, 폴더별 spec(Phase D)은 0 으로.
+ * 실패는 «검사 id + 이유» 로 돌려주고 판정은 부르는 쪽이 한다 — 폴더별 spec(Phase D)과 render-all.spec 의 부품 픽스처는 0 으로.
+ * 예외는 Button 의 slot-locked 하나이고 `primitives/Button.spec.tsx` 가 그 자리에서 붙든다(D8 #49 에서 잠근다).
  */
 import { composeStories } from "@storybook/react-vite";
 import { cleanup, render } from "@testing-library/react";

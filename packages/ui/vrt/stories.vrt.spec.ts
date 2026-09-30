@@ -4,7 +4,8 @@ import { expect, test } from "@playwright/test";
 
 /* `storybook-static/index.json` 을 순회해 `vrt` 태그 스토리를 라이트·다크로 연다.
  * URL 의 `globals=theme:…` 은 addon-themes 전역이라 preview.tsx 의 `withThemeByDataAttribute` 가 `html[data-theme]` 을 단다.
- * `theme-locked` 스토리(Pages/Gallery 의 Light·Dark)는 스토리 수준 `globals` 가 툴바를 잠가 URL 이 먹지 않는다 — 한 번만 찍는다. */
+ * `theme-locked` 스토리는 스토리 수준 `globals` 가 툴바를 잠가 URL 이 먹지 않는다 — 한 번만 찍는다. 오늘 이 태그를 쓰는 스토리는 없다
+ * (유일한 사용처였던 Pages/Gallery 의 Light·Dark 는 #48 에서 지웠다) — 테마를 고정해야 하는 페이지 스토리가 다시 생기면 쓴다. */
 type Entry = { id: string; type: string; title: string; name: string; tags?: string[] };
 
 const index = JSON.parse(
