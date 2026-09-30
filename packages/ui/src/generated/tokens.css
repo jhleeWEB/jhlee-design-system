@@ -160,6 +160,7 @@
   --chrome-primary-hover: var(--palette-azure-600);
   --chrome-primary-foreground: #ffffff;
   --chrome-primary-track: var(--palette-azure-100);
+  --chrome-primary-line: var(--palette-azure-400);
   --chrome-accent: var(--palette-azure-50);
   --chrome-accent-foreground: var(--palette-azure-500);
   --chrome-selection-fill: rgb(8 105 225 / 0.14);
@@ -209,6 +210,7 @@
     --chrome-primary-hover: #6fb0ff;
     --chrome-primary-foreground: #061018;
     --chrome-primary-track: #1a2b42;
+    --chrome-primary-line: #005fd8;
     --chrome-accent: #14243a;
     --chrome-accent-foreground: #4d9bff;
     --chrome-selection-fill: rgb(77 155 255 / 0.20);
@@ -259,6 +261,7 @@
   --chrome-primary-hover: #6fb0ff;
   --chrome-primary-foreground: #061018;
   --chrome-primary-track: #1a2b42;
+  --chrome-primary-line: #005fd8;
   --chrome-accent: #14243a;
   --chrome-accent-foreground: #4d9bff;
   --chrome-selection-fill: rgb(77 155 255 / 0.20);

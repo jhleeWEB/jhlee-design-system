@@ -60,7 +60,8 @@ export const buttonVariants = cva(
       {
         variant: "solid",
         tone: "destructive",
-        class: "border-destructive bg-destructive text-white hover:brightness-110",
+        class:
+          "border-destructive bg-destructive text-destructive-foreground hover:border-destructive-hover hover:bg-destructive-hover",
       },
       { variant: "outline", tone: "neutral", class: "border-border-strong text-foreground hover:bg-muted" },
       { variant: "outline", tone: "primary", class: "border-primary text-primary hover:bg-accent" },

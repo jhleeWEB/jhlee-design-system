@@ -36,6 +36,7 @@
     "primary-hover": { "$value": "{chrome.primary-hover}" },
     "primary-foreground": { "$value": "{chrome.primary-foreground}" },
     "primary-track": { "$value": "{chrome.primary-track}" },
+    "primary-line": { "$value": "{chrome.primary-line}" },
     "accent": { "$value": "{chrome.accent}" },
     "accent-foreground": { "$value": "{chrome.accent-foreground}" },
     "selection-fill": { "$value": "{chrome.selection-fill}" },

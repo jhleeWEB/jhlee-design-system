@@ -40,7 +40,7 @@
   "ink": {
     "$type": "color",
     "$value": "{palette.gray.900}",
-    "$deprecated": "크롬 글자는 chrome.ink(#191f28 — 값이 다르다), 도면 글자는 canvas.ink."
+    "$deprecated": "크롬 글자는 chrome.foreground(#191f28 — 값이 다르다), 도면 글자는 canvas.ink. 값 보존 alias 로 둔다 — 크롬으로 재매핑하면 소비자 픽셀이 바뀌고 다크를 따르게 되는 major 라 하지 않는다(#20 결정, 2026-09-30). DS 의 body 는 chrome.foreground 를 읽는다."
   },
   "ink-2": {
     "$type": "color",
@@ -65,7 +65,7 @@
   "bg": {
     "$type": "color",
     "$value": "{palette.gray.100}",
-    "$deprecated": "페이지 바닥은 chrome.bg(#eff1f7 — 값이 다르다)."
+    "$deprecated": "페이지 바닥은 chrome.background(#eff1f7 — 값이 다르다). 값 보존 alias(#20 결정, 2026-09-30) — DS 의 body 는 chrome.background 를 읽는다."
   },
   "surface": {
     "$type": "color",

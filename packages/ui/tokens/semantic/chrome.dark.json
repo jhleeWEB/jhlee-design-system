@@ -18,6 +18,10 @@
     "primary-hover": { "$value": "#6fb0ff" },
     "primary-foreground": { "$value": "#061018" },
     "primary-track": { "$value": "#1a2b42" },
+    "primary-line": {
+      "$value": "#005fd8",
+      "$description": "다크 info-line 과 같은 값 — card 위 3.01:1(#24)."
+    },
     "accent": { "$value": "#14243a" },
     "accent-foreground": {
       "$value": "#4d9bff",

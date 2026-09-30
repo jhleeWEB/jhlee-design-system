@@ -45,6 +45,10 @@
       "$value": "{palette.azure.100}",
       "$description": "슬라이더 · 진행 막대의 바닥(옛 accent-track)."
     },
+    "primary-line": {
+      "$value": "{palette.azure.400}",
+      "$description": "primary 테두리 — 흰 면 위 3.01:1(info-line 과 같은 단, 같은 방법). 옛 Badge border-primary/40 을 이것으로(#24)."
+    },
     "accent": {
       "$value": "{palette.azure.50}",
       "$description": "옅은 액센트 면 — 선택된 행 · 배지 바탕(옛 accent-soft). shadcn 의 accent 는 **옅은 면**이다 — 옛 이름 accent(azure)는 primary 가 됐다."
