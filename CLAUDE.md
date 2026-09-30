@@ -86,6 +86,8 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 
 ## 소비자 계약
 
+버전은 1.x 부터다(shadcn 어휘 개명 #25 가 major 를 냈다). 소비 레포는 정확 버전을 고정하고(`"@buildos/ui": "npm:@jhleeweb/squircle-design-system@1.x.y"` 같은 별칭 허용) 갱신은 PR 로 한다.
+
 ```css
 @import "tailwindcss/theme.css" layer(theme);
 @import "@jhleeweb/squircle-design-system/theme.css";   /* @source "./" 자기 등록 — 소비자 @source 불필요 */

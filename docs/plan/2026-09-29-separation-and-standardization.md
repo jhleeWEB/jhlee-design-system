@@ -209,7 +209,7 @@ squircle-design-system/
   → `pnpm exec semantic-release`(env `GITHUB_TOKEN`·`NPM_TOKEN` 둘 다 `secrets.GITHUB_TOKEN`; 발행 레포의 GITHUB_TOKEN 은 패키지 admin 자동).
   `.releaserc.json`: `branches: ["main"]`, `commit-analyzer`·`release-notes-generator`(preset `conventionalcommits`), `@semantic-release/npm`, `@semantic-release/github`.
   `@semantic-release/git` 은 쓰지 않는다(ruleset 이 push 를 막음 — 태그·Release 만, 저장소 `version` 은 `0.0.0-managed`). PR 에서 `--dry-run` 코멘트.
-  파괴적 변경은 `feat!:` 또는 본문 `BREAKING CHANGE:`(한국어 본문만으로는 major 가 오르지 않는다) — AGENTS.md 사본에 추가. `pr-title` job 이 PR 제목 Conventional 검사(= squash 제목 = 버전 입력).
+  파괴적 변경은 `feat!:` 또는 본문 `BREAKING CHANGE:`(한국어 본문만으로는 major 가 오르지 않는다; 반대로 `!` 는 0.x 에서도 major 다 — 실측 v0.2.0 → v1.0.0) — AGENTS.md 사본에 추가. `pr-title` job 이 PR 제목 Conventional 검사(= squash 제목 = 버전 입력).
   (대안으로 남겨 두는 changesets — `aaro-lab/platform` 선례 — 는 `changesets/action@v2` + Actions PR 생성 허용 + 봇 PR CI 승인 클릭이 필요하다.)
 - `ci.yml`: §2.5-f 의 6 job(static·unit·tokens·storybook·vrt·package) + pr-title. 이식 PR 시점에는 `static`(typecheck)·`unit`(vitest)·`package`(pack 계약: tarball 에
   `dist/index.js`·`dist/index.d.ts`·CSS 4개, `__tests__`·stories 없음)만 켜고 나머지는 Phase A 에서 붙인다.
@@ -469,7 +469,7 @@ input select textarea dialog table) · `better-tailwindcss/no-unknown-classes`(�
 | Tooltip · AlertDialog | `Tooltip TooltipTrigger TooltipContent(side,shortcut)` · `AlertDialog …Trigger/Content/Header/Title/Description/Footer/Cancel/Action` | `TooltipHint`(8회) · `ConfirmDialog` 유지 |
 | Table · Toast | `Table TableHeader/Body/Footer/Row/Head/Cell/Caption` · `Toast ToastTitle/Description/Action/Close/Viewport` | `DataTable({columns})` **유지**(TanStack 관행), `Thead/Tbody/Tr/Th/Td` @deprecated · `useToast().toast()` **유지**(sonner 관행) |
 
-deprecated 경로: 옛 flat API 는 한 마이너 동안 `@deprecated` JSDoc + dev `console.warn` 1회 + `./legacy`, 다음 마이너에서 `feat!:` 로 배럴 제거.
+deprecated 경로: 옛 flat API 는 한 마이너 동안 `@deprecated` JSDoc + dev `console.warn` 1회 + `./legacy`, 다음 파괴적 변경(`feat!:`, semantic-release 는 0.x 특례 없이 major → 2.0.0)에서 배럴 제거.
 v1.0 부터 배럴의 `Select`·`Tabs`·`Field`·`Tooltip` 은 부품 Root 를 뜻한다. 계약 테스트 `compound.contract.spec.tsx`: 설탕이 렌더한 `data-slot` 집합 ⊆ 부품 조립.
 
 **c. JSDoc 계약 — 열 줄 규칙의 10번.** 공개 심볼은 `/** */`(`/* */` 는 d.ts 에서 사라져 계약이 아니다). optional prop 은 `@default`, 리터럴 유니언은 값마다
@@ -582,7 +582,7 @@ JSDoc 계약 · `*.variants.ts`·`"use client"` · 3스토리 · 검증 명령(`
 | A | 개명·publishConfig·exports 명시·`files: dist`·tsdown unbundle · `"use client"` 24 + `*.variants.ts` + CSS import 제거 + `rsc-directives.spec` · ESLint 10 부트스트랩(warn + baseline, 로컬 규칙 골격) · 릴리스(Q4)·pr-title·~~ruleset 필수 체크~~(ruleset 불가(무료 플랜) — CI 필수 체크 대신 규약) · Storybook 골격 + vitest projects + `tsconfig.stories.json` · ds-gallery → `Pages/Gallery`·`Workbench` 이식 + 앱 삭제 · `stories-contract.spec`(`STORIES_MISSING` = 전 컴포넌트) · VRT 크롤러 + 워크플로 6 job + 기준선 · `./legacy` 신설 | publint·attw·rsc 통과, VRT 기준선 커밋, `a11y: 'todo'` |
 | B | DTCG semantic 을 shadcn 이름으로 + `legacy.json` → 3 출력 · **원자 코드모드 PR**(eslint --fix UI 256+앱 57 · css-vars 69+138 · cn.ts 동치 테스트 · tone shim) · 간격 화이트리스트·hex·arbitrary 규칙 + baseline · 서브트리 다크·폰트 self-host·ThemePair/Matrix | 코드모드 PR 은 VRT **0px** |
 | C | `@jhleeweb/squircle-design-system/eslint` 프리셋 배포 + forbid-elements 래칫 + no-unknown-classes · `build-manifest`·`manifest.spec`(KNOWN_GAPS)·`llms.txt`·docs 생성 · `agent/` 블록·스킬 + `sds-agent sync` · `a11y: 'error'` + `KNOWN_A11Y_FAILURES` · VRT `maxDiffPixels: 0` · Next 스모크(비필수) | 린트 error 승격, `--max-warnings=0` |
-| D | 부품 1차(Select/Field/Tabs/Tooltip/AlertDialog/Table) + `compound.contract` · 2차(Sidebar/Toolbar/Breadcrumb/DescriptionList/Toast/MediaCard) + 설탕 @deprecated + `aaro/legacy-api` · Spec 17 → stories 31, `__tests__` 16 → 폴더 spec(composeStories), `Pages/Gallery` 삭제 · JSDoc 전수(`@default` 0→전수)·KNOWN_GAPS 0·앱 tone 93건 · (선택) `componentsManifest: true` + addon-mcp | STORIES_MISSING 0 · KNOWN_GAPS 0 · 다음 마이너 `feat!:` 로 legacy 제거 |
+| D | 부품 1차(Select/Field/Tabs/Tooltip/AlertDialog/Table) + `compound.contract` · 2차(Sidebar/Toolbar/Breadcrumb/DescriptionList/Toast/MediaCard) + 설탕 @deprecated + `aaro/legacy-api` · Spec 17 → stories 31, `__tests__` 16 → 폴더 spec(composeStories), `Pages/Gallery` 삭제 · JSDoc 전수(`@default` 0→전수)·KNOWN_GAPS 0·앱 tone 93건 · (선택) `componentsManifest: true` + addon-mcp | STORIES_MISSING 0 · KNOWN_GAPS 0 · 다음 `feat!:`(= 2.0.0) 로 legacy 제거 |
 
 사용자 문서에서 고쳐 넣은 것: 레지스트리 URL · «ESLint 로 implicit any» → tsc · 8px 격자 → 4px 화이트리스트 · `SelectError` → `FieldError` · shadcn `accent`/`muted` 의 뜻 ·
 «1px 즉시 실패» 는 도커 + self-host 폰트가 선행 · test-runner 는 superseded(Vitest addon) · 봇 Version PR 은 이 조직에서 고장 · Radix 유지(shadcn 은 2026-07 부터 Base UI 기본 —
