@@ -51,7 +51,12 @@ const TYPED = {
   ui: { files: ["packages/ui/src/**/*.{ts,tsx}"], project: "packages/ui/tsconfig.json" },
   // ui 블록 뒤에 둔다 — src/__tests__/** 는 두 files 에 다 맞고 뒤가 이긴다.
   tests: {
-    files: ["packages/ui/src/__tests__/**/*.{ts,tsx}", "packages/ui/src/__arch__/**/*.{ts,tsx}"],
+    files: [
+      "packages/ui/src/__tests__/**/*.{ts,tsx}",
+      "packages/ui/src/__arch__/**/*.{ts,tsx}",
+      // 컴포넌트 옆 `Name.spec.tsx`(Phase D 공통 계약, #42) — tsconfig.test.json 이 include 한다.
+      "packages/ui/src/**/*.spec.tsx",
+    ],
     project: "packages/ui/tsconfig.test.json",
   },
   // 스토리·Storybook 설정·VRT·패키지 설정 파일은 tsconfig.stories.json 만 include 한다(#7) — src 안의 *.stories.tsx 도 여기다.

@@ -12,19 +12,32 @@ export const mediaCardVariants = cva(
   ],
   {
     variants: {
+      /**
+       * 배치.
+       * - `vertical` — 썸네일 위, 글 아래. 격자의 기본
+       * - `horizontal` — 썸네일 왼쪽, 글 오른쪽. 목록 한 줄
+       */
       orientation: {
         vertical: "flex-col",
         horizontal: "flex-row items-stretch",
       },
+      /**
+       * 층위 — Card 와 같은 셋.
+       * - `raised` — 그림자로 떠 있다. 기본값
+       * - `flat` — 테두리만
+       * - `flush` — 각진 테두리. 격자에 붙는 칸
+       */
       elevation: {
         raised: "rounded-lg shadow-card hover:shadow-pop",
         flat: "rounded-lg border border-border hover:border-border-strong",
         flush: "rounded-none border border-border",
       },
+      /** 선택됨 — 테두리 두께가 아니라 색(primary 링)으로 말한다. */
       selected: {
         true: "",
         false: "",
       },
+      /** 눌리는 카드 — MediaCard 는 `onSelect` 가 있으면 스스로 켠다. */
       interactive: { true: "cursor-pointer", false: "" },
     },
     compoundVariants: [

@@ -19,15 +19,23 @@ export const inputVariants = cva(
   ],
   {
     variants: {
+      /**
+       * 크기 — 컨트롤 높이 사다리(`h-ctl-*`).
+       * - `sm` — 작은 컨트롤 높이 · 본문 글자
+       * - `md` — 기본 컨트롤 높이
+       * - `lg` — 큰 컨트롤 높이 · 넓은 가로 여백
+       */
       size: {
         sm: "h-ctl-sm px-3 text-body",
         md: "h-ctl px-3 text-control",
         lg: "h-ctl-lg px-4 text-control",
       },
+      /** 검증 실패 — 파괴색 테두리와 `aria-invalid`. */
       invalid: {
         true: "border-destructive focus-visible:outline-destructive",
         false: "border-border-strong hover:border-foreground-2",
       },
+      /** 수치 — 오른쪽 정렬 + mono tabular-nums(원칙 3). */
       numeric: { true: "text-right tnum", false: "" },
     },
     defaultVariants: { size: "md", invalid: false, numeric: false },

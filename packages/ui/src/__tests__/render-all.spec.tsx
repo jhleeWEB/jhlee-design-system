@@ -24,6 +24,8 @@ import * as TableStories from "../data/Table.stories";
 import * as barrel from "../index";
 import * as legacy from "../legacy/index";
 import * as AlertStories from "../feedback/Alert.stories";
+import * as BadgeStories from "../primitives/Badge.stories";
+import * as CanvasScaleStories from "../CanvasScale.stories";
 import * as ConfirmDialogStories from "../overlay/AlertDialog.stories";
 import * as DrawerStories from "../overlay/Drawer.stories";
 import * as DropdownMenuStories from "../overlay/DropdownMenu.stories";
@@ -36,39 +38,23 @@ import * as SpinnerStories from "../feedback/Spinner.stories";
 import * as ToastStories from "../feedback/Toast.stories";
 import * as TooltipStories from "../overlay/Tooltip.stories";
 import * as ButtonStories from "../primitives/Button.stories";
+import * as CardStories from "../primitives/Card.stories";
+import * as ChoiceStories from "../primitives/Choice.stories";
+import * as EditorialStories from "../primitives/Editorial.stories";
+import * as InputStories from "../primitives/Input.stories";
+import * as MediaCardStories from "../primitives/MediaCard.stories";
+import * as MiscStories from "../primitives/Misc.stories";
+import * as PanelToggleButtonStories from "../primitives/PanelToggleButton.stories";
 
 /** 오늘 깨지는 검사 — 알파벳순, 줄어들기만 한다. */
 const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
   BackButton: ["slot-locked"],
-  Badge: ["axes", "slot-locked"],
   Breadcrumb: ["slot-locked"],
-  Button: ["axes", "slot-locked"],
-  ButtonGroup: ["slot-locked"],
-  CanvasScale: ["slot-locked"],
-  Card: ["axes", "slot-locked"],
-  CardCollapse: ["slot-locked"],
-  CardGrid: ["slot-locked"],
-  CardHeader: ["slot-locked"],
-  CardWell: ["slot-locked"],
-  Checkbox: ["slot-locked"],
-  DisplayHeading: ["slot-locked"],
-  Eyebrow: ["slot-locked"],
-  Input: ["axes", "slot-locked"],
-  Kbd: ["slot-locked"],
-  Lede: ["slot-locked"],
-  MediaCard: ["axes", "slot-locked"],
-  PanelToggleButton: ["slot-locked"],
-  RadioGroup: ["className", "slot", "slot-locked"],
-  RadioGroupItem: ["slot-locked"],
-  SectionLabel: ["slot-locked"],
+  Button: ["slot-locked"],
   SegmentedControl: ["ref", "rest"],
-  Separator: ["slot-locked"],
   Sidebar: ["slot-locked"],
   SidebarGroup: ["slot-locked"],
   SidebarItem: ["slot-locked"],
-  StatusDot: ["ref", "rest"],
-  Switch: ["slot-locked"],
-  Textarea: ["slot-locked"],
   Toolbar: ["slot-locked"],
   ToolbarDivider: ["ref", "rest", "slot", "slot-locked"],
   ToolbarSpacer: ["className", "ref", "rest", "slot", "slot-locked"],
@@ -80,18 +66,14 @@ const {
   AccordionHeader,
   AccordionItem,
   AccordionTrigger,
-  Badge,
   BackButton,
   Breadcrumb,
   ButtonGroup,
-  CanvasScale,
   Card,
   CardCollapse,
   CardGrid,
   CardHeader,
   CardWell,
-  Checkbox,
-  DisplayHeading,
   Drawer,
   DrawerBody,
   DrawerClose,
@@ -112,8 +94,6 @@ const {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   Eyebrow,
-  Input,
-  Kbd,
   Lede,
   MediaCard,
   Modal,
@@ -123,7 +103,6 @@ const {
   ModalFooter,
   ModalHeader,
   ModalTrigger,
-  PanelToggleButton,
   Popover,
   PopoverAnchor,
   PopoverClose,
@@ -158,14 +137,23 @@ const {
 /** 스토리가 있는 컴포넌트 — `Default` 가 픽스처다. */
 const STORY_SUBJECTS: Readonly<Record<string, ContractSubject>> = {
   Alert: storySubject(AlertStories, { slot: "alert", axes: ["tone"] }),
+  Badge: storySubject(BadgeStories, { slot: "badge", axes: ["tone"] }),
   Button: storySubject(ButtonStories, { slot: "button", axes: ["variant", "tone", "size"] }),
+  CanvasScale: storySubject(CanvasScaleStories, { slot: "canvas-scale" }),
+  Card: storySubject(CardStories, { slot: "card", axes: ["elevation", "pad"] }),
+  Checkbox: storySubject(ChoiceStories, { slot: "checkbox" }),
   ConfirmDialog: storySubject(ConfirmDialogStories, { slot: "confirm-dialog" }),
   DataTable: storySubject(DataTableStories, { slot: "data-table" }),
   DescriptionList: storySubject(DescriptionListStories, { slot: "description-list" }),
+  DisplayHeading: storySubject(EditorialStories, { slot: "display-heading" }),
   DrawerContent: storySubject(DrawerStories, { slot: "drawer", axes: ["side", "size"] }),
   DropdownMenuContent: storySubject(DropdownMenuStories, { slot: "menu" }),
   EmptyState: storySubject(EmptyStateStories, { slot: "empty-state", axes: ["size"] }),
+  Input: storySubject(InputStories, { slot: "input", axes: ["size"] }),
+  Kbd: storySubject(MiscStories, { slot: "kbd" }),
+  MediaCard: storySubject(MediaCardStories, { slot: "media-card", axes: ["orientation", "elevation"] }),
   ModalContent: storySubject(ModalStories, { slot: "modal", axes: ["size"] }),
+  PanelToggleButton: storySubject(PanelToggleButtonStories, { slot: "panel-toggle-button" }),
   PopoverContent: storySubject(PopoverStories, { slot: "popover" }),
   Progress: storySubject(ProgressStories, { slot: "progress", axes: ["tone"] }),
   Skeleton: storySubject(SkeletonStories, { slot: "skeleton", axes: ["shape"] }),
@@ -277,15 +265,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     )),
   },
   BackButton: { slot: "button", render: (p) => <BackButton {...p}>Back</BackButton> },
-  Badge: {
-    slot: "badge",
-    axes: ["tone"],
-    render: (p) => (
-      <Badge tone="success" {...p}>
-        Pass
-      </Badge>
-    ),
-  },
   Breadcrumb: {
     slot: "breadcrumb",
     render: (p) => <Breadcrumb items={[{ label: "Home", href: "#" }, { label: "Here" }]} {...p} />,
@@ -297,16 +276,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
         <barrel.Button>One</barrel.Button>
         <barrel.Button>Two</barrel.Button>
       </ButtonGroup>
-    ),
-  },
-  CanvasScale: { slot: "canvas-scale", render: (p) => <CanvasScale lengthPx={80} label="10 m" {...p} /> },
-  Card: {
-    slot: "card",
-    axes: ["elevation"],
-    render: (p) => (
-      <Card elevation="raised" header={<CardHeader title="Card" />} {...p}>
-        Body
-      </Card>
     ),
   },
   CardCollapse: {
@@ -346,8 +315,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       </Card>
     ),
   },
-  Checkbox: { slot: "checkbox", render: (p) => <Checkbox aria-label="Agree" {...p} /> },
-  DisplayHeading: { slot: "display-heading", render: (p) => <DisplayHeading {...p}>Heading</DisplayHeading> },
   Drawer: {
     slot: "drawer",
     noDom: true,
@@ -481,14 +448,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   Eyebrow: { slot: "eyebrow", render: (p) => <Eyebrow {...p}>Step</Eyebrow> },
-  Input: { slot: "input", axes: ["size"], render: (p) => <Input aria-label="Area" size="md" {...p} /> },
-  Kbd: { slot: "kbd", render: (p) => <Kbd {...p}>⌘K</Kbd> },
   Lede: { slot: "lede", render: (p) => <Lede {...p}>Lede</Lede> },
-  MediaCard: {
-    slot: "media-card",
-    axes: ["orientation"],
-    render: (p) => <MediaCard title="Site" description="Desc" {...p} />,
-  },
   Modal: {
     slot: "modal",
     noDom: true,
@@ -511,10 +471,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
         <ModalTrigger {...p}>Open</ModalTrigger>
       </Modal>
     ),
-  },
-  PanelToggleButton: {
-    slot: "button",
-    render: (p) => <PanelToggleButton open onOpenChange={() => {}} label="inspector" {...p} />,
   },
   Popover: {
     slot: "popover",

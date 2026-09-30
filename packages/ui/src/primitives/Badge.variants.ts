@@ -17,6 +17,7 @@ export const badgeVariants = cva(
         destructive: "border-destructive-line bg-destructive-soft text-destructive",
       },
       /* TBV(검증 대기)처럼 «아직 확정이 아니다» 를 말하는 자리. 점선이 그 뜻을 맡는다. */
+      /** 잠정 — 점선 테두리로 «아직 확정이 아니다» 를 말한다(검증 대기). */
       provisional: { true: "border-dashed", false: "" },
     },
     defaultVariants: { tone: "neutral", provisional: false },

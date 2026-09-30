@@ -19,6 +19,13 @@ export const buttonVariants = cva(
   ],
   {
     variants: {
+      /**
+       * 외형 — 시각 무게.
+       * - `solid` — 채움. 화면에 하나뿐인 주된 동작
+       * - `outline` — 외곽선. 기본값 — 보조 동작
+       * - `ghost` — 상자 없음. 도구 막대·목록 안의 가벼운 동작
+       * - `link` — 글자만. 문장 안의 동작 — 높이·가로 패딩이 없다
+       */
       variant: {
         solid: "",
         outline: "bg-card",
@@ -30,6 +37,15 @@ export const buttonVariants = cva(
         primary: "",
         destructive: "",
       },
+      /**
+       * 크기 — 컨트롤 높이 사다리(`h-ctl-*`).
+       * - `sm` — 작은 컨트롤 높이
+       * - `md` — 기본 컨트롤 높이
+       * - `lg` — 큰 컨트롤 높이
+       * - `icon-sm` — 아이콘 전용 정사각, 작은 높이
+       * - `icon` — 아이콘 전용 정사각, 기본 높이
+       * - `icon-lg` — 아이콘 전용 정사각, 큰 높이
+       */
       size: {
         sm: "h-ctl-sm px-3",
         md: "h-ctl px-4",

@@ -1,9 +1,4 @@
 {
-  "packages/ui/src/CanvasScale.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 3
-    }
-  },
   "packages/ui/src/__tests__/accordion.spec.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
@@ -170,22 +165,9 @@
       "count": 2
     }
   },
-  "packages/ui/src/primitives/Badge.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 7
-    }
-  },
   "packages/ui/src/primitives/Badge.variants.ts": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
-    }
-  },
-  "packages/ui/src/primitives/Button.tsx": {
-    "ds/no-forward-ref": {
-      "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 4
     }
   },
   "packages/ui/src/primitives/Card.tsx": {
@@ -195,16 +177,8 @@
     "better-tailwindcss/no-unknown-classes": {
       "count": 3
     },
-    "jsdoc/require-jsdoc": {
-      "count": 12
-    },
     "react-hooks/refs": {
       "count": 2
-    }
-  },
-  "packages/ui/src/primitives/Choice.tsx": {
-    "ds/no-forward-ref": {
-      "count": 3
     }
   },
   "packages/ui/src/primitives/Editorial.tsx": {
@@ -216,20 +190,11 @@
     },
     "ds/no-literal-style-value": {
       "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 5
     }
   },
   "packages/ui/src/primitives/Input.tsx": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
-    },
-    "ds/no-forward-ref": {
-      "count": 2
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 2
     }
   },
   "packages/ui/src/primitives/MediaCard.tsx": {
@@ -238,27 +203,11 @@
     },
     "better-tailwindcss/no-unknown-classes": {
       "count": 2
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 7
     }
   },
   "packages/ui/src/primitives/MediaCard.variants.ts": {
     "better-tailwindcss/no-restricted-classes": {
       "count": 1
-    }
-  },
-  "packages/ui/src/primitives/Misc.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 3
-    }
-  },
-  "packages/ui/src/primitives/PanelToggleButton.tsx": {
-    "ds/no-forward-ref": {
-      "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 4
     }
   },
   "packages/ui/stories/gallery/Gallery.tsx": {

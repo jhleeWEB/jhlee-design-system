@@ -1,5 +1,5 @@
 "use client";
-import { forwardRef, useState } from "react";
+import { useState } from "react";
 
 import { cn, type VariantProps } from "../cn";
 import { inputVariants } from "./Input.variants";
@@ -9,10 +9,15 @@ import { inputVariants } from "./Input.variants";
  * `numeric` 이 별도 prop 인 이유는 base 의 원칙 3 때문이다: 수치는 mono + tabular-nums 여야
  * 슬라이더를 움직일 때 자릿수가 흔들리지 않는다. 호출처가 매번 클래스를 적게 두면 반드시 빠진다. */
 
+/** `<Input>` 의 props — `<input>` 속성 전부(ref 포함, 네이티브 `size` 제외) + `size` · `invalid` · `numeric` · `suffix`. */
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">, VariantProps<typeof inputVariants> {
-  /** 값 뒤에 붙는 단위 — "m", "m²", "%". 입력 안에 겹쳐 그리므로 값이 가려지지 않게 패딩을 준다. */
-  suffix?: string;
+  extends Omit<React.ComponentPropsWithRef<"input">, "size">, VariantProps<typeof inputVariants> {
+  /**
+   * 값 뒤에 붙는 단위 — "m", "m²", "%". 입력 안에 겹쳐 그리므로 값이 가려지지 않게 패딩을 준다.
+   * 주면 `className` 은 입력이 아니라 래퍼(`data-slot="input-wrapper"`)로 간다.
+   * @default undefined
+   */
+  suffix?: string | undefined;
 }
 
 // Number 변환은 소수부의 0·지수·빈 입력까지 바꾸므로 정수부의 중복 0만 지운다.
@@ -30,25 +35,24 @@ function selectZeroForReplacement(input: HTMLInputElement) {
   if (!input.readOnly && !input.disabled && input.value === "0") input.select();
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  {
-    className,
-    size,
-    invalid,
-    numeric,
-    suffix,
-    type,
-    value,
-    defaultValue,
-    onChange,
-    onInput,
-    onFocus,
-    onClick,
-    onBlur,
-    ...rest
-  },
+/** 입력 — 글자와 수치. `numeric` 이면 mono + tabular-nums, `type="number"` 면 선행 0 정리와 0 전체선택을 한다. */
+export function Input({
   ref,
-) {
+  className,
+  size,
+  invalid,
+  numeric,
+  suffix,
+  type,
+  value,
+  defaultValue,
+  onChange,
+  onInput,
+  onFocus,
+  onClick,
+  onBlur,
+  ...rest
+}: InputProps) {
   const [incompleteNumber, setIncompleteNumber] = useState(false);
   const controlledZero = type === "number" && (value === 0 || value === "0");
   // 외부에서 다른 값을 적용하면 이전 편집의 보류 상태가 나중의 0에 다시 적용되지 않게 한다.
@@ -69,11 +73,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       className={suffix ? cn("relative inline-flex items-center", className) : "contents"}
     >
       <input
+        aria-invalid={invalid || undefined}
+        {...rest}
         ref={ref}
         data-slot="input"
-        aria-invalid={invalid || undefined}
+        data-size={size ?? "md"}
+        data-invalid={invalid ? "" : undefined}
+        data-numeric={numeric ? "" : undefined}
         className={cn(inputVariants({ size, invalid, numeric }), !suffix && className)}
-        {...rest}
         type={type}
         value={
           controlledZero && incompleteNumber
@@ -143,23 +150,30 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       ) : null}
     </span>
   );
-});
+}
 
-export const Textarea = forwardRef<
-  HTMLTextAreaElement,
-  Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "size"> & { invalid?: boolean }
->(function Textarea({ className, invalid, ...rest }, ref) {
+/** `<Textarea>` 의 props — `<textarea>` 속성 전부(ref 포함) + `invalid`. */
+export interface TextareaProps extends React.ComponentPropsWithRef<"textarea"> {
+  /**
+   * 검증 실패 — 파괴색 테두리와 `aria-invalid`.
+   * @default false
+   */
+  invalid?: boolean;
+}
+
+/** 여러 줄 입력 — Input 의 `md` 모양에 높이만 풀었다(세로 크기 조절). */
+export function Textarea({ className, invalid, ...rest }: TextareaProps) {
   return (
     <textarea
-      ref={ref}
-      data-slot="textarea"
       aria-invalid={invalid || undefined}
+      {...rest}
+      data-slot="textarea"
+      data-invalid={invalid ? "" : undefined}
       className={cn(
         inputVariants({ size: "md", invalid: invalid ?? false }),
         "leading-relaxed h-auto min-h-(--size-textarea) resize-y py-3",
         className,
       )}
-      {...rest}
     />
   );
-});
+}

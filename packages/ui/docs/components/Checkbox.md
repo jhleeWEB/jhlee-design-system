@@ -8,6 +8,8 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 클라이언트 컴포넌트(`"use client"` — 서버 컴포넌트에서 렌더할 수 없다) · 원본 `src/primitives/Choice.tsx`
 
-물려받는 props: `Omit<CheckboxProps & RefAttributes<HTMLButtonElement>, "ref">`, `RefAttributes<HTMLButtonElement>`
+체크박스 — 여러 개를 독립적으로 켠다. Radix `Checkbox.Root` 의 props 를 그대로 받는다(`indeterminate` 는 `checked="indeterminate"`).
+
+물려받는 props: `CheckboxProps`, `RefAttributes<HTMLButtonElement>`
 
 _(DS 가 더하는 prop 없음 — 물려받는 속성만)_

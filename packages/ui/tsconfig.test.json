@@ -6,7 +6,8 @@
     // 스펙이 scripts/*.ts(매니페스트 생성기)를 확장자째 import 한다 — Node 24 type stripping 은 확장자 없는 지정자를 못 푼다(#31). noEmit 이라 허용된다.
     "allowImportingTsExtensions": true
   },
-  "include": ["src/__tests__", "src/__arch__"],
+  // 컴포넌트 옆 `Name.spec.tsx`(Phase D 공통 계약, #42)도 스펙이다.
+  "include": ["src/__tests__", "src/__arch__", "src/**/*.spec.tsx"],
   // 래칫 — 엄격 프로필을 아직 못 넘는 스펙 파일을 여기 적는다. **줄어들기만 한다**: 고치면 지우고, 새 스펙은 여기 넣지 않는다.
   // 첫 실측(#11)에서 깨진 파일은 shell-migration.spec.tsx 의 미사용 변수 하나뿐이라 같은 PR 에서 고쳤고 목록은 비어 있다.
   "exclude": []

@@ -1,5 +1,4 @@
 "use client";
-import { forwardRef } from "react";
 import { Checkbox as RadixCheckbox, RadioGroup as RadixRadio, Slot, Switch as RadixSwitch } from "radix-ui";
 
 import { cn } from "../cn";
@@ -19,17 +18,19 @@ const box = [
   "disabled:pointer-events-none disabled:opacity-45",
 ].join(" ");
 
-export const Checkbox = forwardRef<
-  HTMLButtonElement,
-  React.ComponentPropsWithoutRef<typeof RadixCheckbox.Root>
->(function Checkbox({ className, asChild = false, children, ...rest }, ref) {
+/** 체크박스 — 여러 개를 독립적으로 켠다. Radix `Checkbox.Root` 의 props 를 그대로 받는다(`indeterminate` 는 `checked="indeterminate"`). */
+export function Checkbox({
+  className,
+  asChild = false,
+  children,
+  ...rest
+}: React.ComponentPropsWithRef<typeof RadixCheckbox.Root>) {
   return (
     <RadixCheckbox.Root
-      ref={ref}
+      {...rest}
       asChild={asChild}
       data-slot="checkbox"
       className={cn(box, "size-7", className)}
-      {...rest}
     >
       {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : null}
       <RadixCheckbox.Indicator className="flex items-center justify-center">
@@ -46,55 +47,63 @@ export const Checkbox = forwardRef<
       </RadixCheckbox.Indicator>
     </RadixCheckbox.Root>
   );
-});
+}
 
-export const RadioGroup = RadixRadio.Root;
+/** 라디오 묶음 — 여럿 중 하나를 고른다. Radix `RadioGroup.Root` 에 `data-slot` 만 더한다(배치는 소비자 `className`). */
+export function RadioGroup({ className, ...rest }: React.ComponentPropsWithRef<typeof RadixRadio.Root>) {
+  return <RadixRadio.Root {...rest} data-slot="radio-group" className={cn(className)} />;
+}
 
-export const RadioGroupItem = forwardRef<
-  HTMLButtonElement,
-  React.ComponentPropsWithoutRef<typeof RadixRadio.Item>
->(function RadioGroupItem({ className, asChild = false, children, ...rest }, ref) {
+/** 라디오 한 개 — `RadioGroup` 안에서만 쓴다. */
+export function RadioGroupItem({
+  className,
+  asChild = false,
+  children,
+  ...rest
+}: React.ComponentPropsWithRef<typeof RadixRadio.Item>) {
   return (
     <RadixRadio.Item
-      ref={ref}
+      {...rest}
       asChild={asChild}
       data-slot="radio"
       className={cn(box, "size-7 rounded-full", className)}
-      {...rest}
     >
       {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : null}
       <RadixRadio.Indicator className="block size-3 rounded-full bg-current" />
     </RadixRadio.Item>
   );
-});
+}
 
 /* 스위치. 손잡이는 `--radius-full`, 트랙은 그 절반 높이 — 사다리에 없는 값이라 여기서 계산한다. */
-export const Switch = forwardRef<HTMLButtonElement, React.ComponentPropsWithoutRef<typeof RadixSwitch.Root>>(
-  function Switch({ className, asChild = false, children, ...rest }, ref) {
-    return (
-      <RadixSwitch.Root
-        ref={ref}
-        asChild={asChild}
-        data-slot="switch"
+/** 스위치 — **즉시 적용되는** 켬/끔. 폼을 제출해야 반영되는 것에는 체크박스를 쓴다. */
+export function Switch({
+  className,
+  asChild = false,
+  children,
+  ...rest
+}: React.ComponentPropsWithRef<typeof RadixSwitch.Root>) {
+  return (
+    <RadixSwitch.Root
+      {...rest}
+      asChild={asChild}
+      data-slot="switch"
+      className={cn(
+        "peer inline-flex h-9 w-16 shrink-0 items-center rounded-full border border-border-strong bg-border-strong p-px",
+        "transition-colors duration-fast motion-reduce:transition-none",
+        "data-[state=checked]:border-primary data-[state=checked]:bg-primary",
+        "focus-visible:focus-ring focus-visible:outline-none",
+        "disabled:pointer-events-none disabled:opacity-45",
+        className,
+      )}
+    >
+      {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : null}
+      <RadixSwitch.Thumb
         className={cn(
-          "peer inline-flex h-9 w-16 shrink-0 items-center rounded-full border border-border-strong bg-border-strong p-px",
-          "transition-colors duration-fast motion-reduce:transition-none",
-          "data-[state=checked]:border-primary data-[state=checked]:bg-primary",
-          "focus-visible:focus-ring focus-visible:outline-none",
-          "disabled:pointer-events-none disabled:opacity-45",
-          className,
+          "block size-7 rounded-full bg-card shadow-chip",
+          "transition-transform duration-fast motion-reduce:transition-none",
+          "data-[state=checked]:translate-x-7",
         )}
-        {...rest}
-      >
-        {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : null}
-        <RadixSwitch.Thumb
-          className={cn(
-            "block size-7 rounded-full bg-card shadow-chip",
-            "transition-transform duration-fast motion-reduce:transition-none",
-            "data-[state=checked]:translate-x-7",
-          )}
-        />
-      </RadixSwitch.Root>
-    );
-  },
-);
+      />
+    </RadixSwitch.Root>
+  );
+}

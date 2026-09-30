@@ -132,10 +132,7 @@ const PATTERNS: readonly Pattern[] = [
     kinds: ["tsx"],
     find: (file) => matches(file.code, /\b(?:size|width|height|strokeWidth)=\{\s*\d+(?:\.\d+)?\s*\}/g),
     baseline: {
-      "CanvasScale.tsx": 3,
       "navigation/BackButton.tsx": 2,
-      "primitives/Card.tsx": 3,
-      "primitives/PanelToggleButton.tsx": 2,
     },
   },
   {
@@ -146,10 +143,6 @@ const PATTERNS: readonly Pattern[] = [
     baseline: {
       "navigation/Accordion.tsx": 6,
       "navigation/BackButton.tsx": 2,
-      "primitives/Button.tsx": 2,
-      "primitives/Choice.tsx": 4,
-      "primitives/Input.tsx": 3,
-      "primitives/PanelToggleButton.tsx": 2,
     },
   },
   {
@@ -160,7 +153,6 @@ const PATTERNS: readonly Pattern[] = [
     // Alert 의 `tone === "danger" ?` 는 #22 가 normalizeTone() 결과를 쓰면서 사라졌다.
     baseline: {
       "navigation/SegmentedControl.tsx": 1,
-      "primitives/Card.tsx": 1,
     },
   },
   {
@@ -168,9 +160,7 @@ const PATTERNS: readonly Pattern[] = [
     why: 'data-x={value} 에 불리언을 그대로 넣으면 DOM 에 "true"/"false" 문자열이 실려 `[data-x]` 선택자가 false 에도 맞는다 — 문자열 값이거나 `value ? "" : undefined` 로 적는다(ESLint ds/no-boolean-string-data-attr)',
     kinds: ["tsx"],
     find: (file) => matches(file.code, /\bdata-[a-z-]+=\{[a-zA-Z.]+\}/g),
-    baseline: {
-      "primitives/Card.tsx": 1,
-    },
+    baseline: {},
   },
   {
     id: "domain-vocabulary",
