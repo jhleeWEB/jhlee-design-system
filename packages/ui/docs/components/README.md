@@ -25,6 +25,10 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [EmptyState](EmptyState.md) | component | server ok |  | 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다. |
 | [Eyebrow](Eyebrow.md) | component | server ok |  | 들머리 눈썹 — 대문자 mono 한 줄 |
 | [Field](Field.md) | component | client |  | 레거시 셸 `Field`. |
+| [FieldControl](FieldControl.md) | component | client |  | 컨트롤 자리 — 자식 컨트롤 하나에 id · `aria-describedby`(그려진 설명 · 오류) · `aria-invalid` · `disabled` 를 꽂는다. |
+| [FieldDescription](FieldDescription.md) | component | client |  | 컨트롤 아래의 도움말 — 컨트롤의 `aria-describedby` 에 실린다 |
+| [FieldError](FieldError.md) | component | client |  | 검증 오류 문장 — 내용이 있을 때만 그려지고, 그려지면 필드를 실패(`aria-invalid`)로 만들며 `aria-describedby` 에 실린다. |
+| [FieldLabel](FieldLabel.md) | component | client |  | 컨트롤의 이름 — `htmlFor` 가 `FieldControl` 의 id 를 가리키므로 누르면 컨트롤로 간다 |
 | [Hud](Hud.md) | component | client | HudCell | 레거시 셸 `Hud`. |
 | [Input](Input.md) | component | client |  | 입력 — 글자와 수치 |
 | [Kbd](Kbd.md) | component | client |  | 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. |
@@ -43,6 +47,13 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Segmented](Segmented.md) | component | client |  | 레거시 컨트롤 `Segmented`. |
 | [SegmentedControl](SegmentedControl.md) | component | client |  | 배타적 뷰 전환 — 트랙 위의 흰 pill 이 지금 고른 값이다(radiogroup · roving tabindex). |
 | [Select](Select.md) | component | client |  | 레거시 컨트롤 `Select`. |
+| [SelectContent](SelectContent.md) | component | client |  | 목록 상자 — DropdownMenu 와 같은 면(카드 바탕 · `shadow-pop`)이다 |
+| [SelectGroup](SelectGroup.md) | component | client |  | 항목 묶음 — 시각 구분 없이 의미만 묶는다 |
+| [SelectItem](SelectItem.md) | component | client |  | 고를 수 있는 항목 — `value` 가 루트의 값이 된다 |
+| [SelectLabel](SelectLabel.md) | component | client |  | 묶음의 머리글 — mono 대문자 미세라벨(DropdownMenuLabel 과 같은 모양) |
+| [SelectSeparator](SelectSeparator.md) | component | client |  | 묶음 사이 구분선 — 목록 상자의 안쪽 여백까지 가로지른다. |
+| [SelectTrigger](SelectTrigger.md) | component | client |  | 목록을 여는 버튼 — Input 과 같은 높이 사다리(`size`)와 검증 실패(`invalid`)를 갖는다 |
+| [SelectValue](SelectValue.md) | component | client |  | 트리거 안에 고른 항목의 글자를 보인다 |
 | [Separator](Separator.md) | component | client |  | 구분선 — 크롬의 헤어라인 |
 | [Sidebar](Sidebar.md) | component | client | SidebarGroup, SidebarItem | 사이드바 — 접힌 rail(아이콘)과 펼친 panel(아이콘 + 라벨) 두 모습을 갖는 내비게이션 랜드마크. |
 | [Skeleton](Skeleton.md) | component | server ok | SkeletonText | 스켈레톤 바 — 곧 올 내용과 같은 높이의 자리 |
@@ -53,6 +64,9 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Switch](Switch.md) | component | client |  | 스위치 — **즉시 적용되는** 켬/끔 |
 | [Table](Table.md) | component | server ok |  | 수치 표의 뿌리 — 가로 스크롤 영역 안의 `<table>` |
 | [Tabs](Tabs.md) | component | client |  | 레거시 셸 `Tabs`. |
+| [TabsContent](TabsContent.md) | component | client |  | 탭 패널 — `value` 가 활성 칸과 같을 때만 보인다 |
+| [TabsList](TabsList.md) | component | client |  | 탭 칸의 줄 — `variant` 가 줄과 그 안의 칸 모양을 함께 정한다 |
+| [TabsTrigger](TabsTrigger.md) | component | client |  | 탭 한 칸 — `value` 가 같은 `TabsContent` 를 보인다 |
 | [Tbody](Tbody.md) | component | server ok |  | 표 본문 구역(`<tbody>`) — 행의 호버 면이 붙는 범위다. |
 | [Td](Td.md) | component | server ok |  | 표 본문 칸(`<td>`) — `numeric` · `tone` 축은 `tableCellVariants` 가 소유하고 `data-tone`(해석된 값)으로 찍힌다. |
 | [Textarea](Textarea.md) | component | client |  | 여러 줄 입력 — Input 의 `md` 모양에 높이만 풀었다(세로 크기 조절). |

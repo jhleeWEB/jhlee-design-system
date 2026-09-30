@@ -16,6 +16,8 @@ const box = [
   "data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground",
   "focus-visible:focus-ring focus-visible:outline-none",
   "disabled:pointer-events-none disabled:opacity-45",
+  // `FieldControl` 이 꽂는 `aria-invalid` 에 파괴색 테두리로 답한다(#47) — 켜진 상태의 채움은 그대로 둔다.
+  "aria-invalid:data-[state=unchecked]:border-destructive",
 ].join(" ");
 
 /** 체크박스 — 여러 개를 독립적으로 켠다. Radix `Checkbox.Root` 의 props 를 그대로 받는다(`indeterminate` 는 `checked="indeterminate"`). */

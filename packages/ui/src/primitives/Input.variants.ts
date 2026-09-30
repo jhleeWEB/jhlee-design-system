@@ -12,6 +12,8 @@ export const inputVariants = cva(
     "placeholder:text-foreground-disabled",
     "focus-visible:focus-ring focus-visible:outline-none",
     "disabled:pointer-events-none disabled:opacity-45",
+    /* `FieldControl` 은 invalid 를 prop 이 아니라 `aria-invalid` 로 꽂는다(#47) — 같은 파괴색 테두리를 ARIA 로도 켠다. */
+    "aria-invalid:border-destructive aria-invalid:focus-visible:outline-destructive",
     /* 숫자 입력의 스피너는 24px 높이에서 잡을 수 없는 크기가 된다 — 드래그와 키보드로 바꾼다. */
     "[&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none",
     "[&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none",

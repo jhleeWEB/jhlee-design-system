@@ -84,6 +84,10 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [EmptyState](docs/components/EmptyState.md): 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다.
 - [Eyebrow](docs/components/Eyebrow.md): 들머리 눈썹 — 대문자 mono 한 줄
 - [Field](docs/components/Field.md): 레거시 셸 `Field`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [FieldControl](docs/components/FieldControl.md): 컨트롤 자리 — 자식 컨트롤 하나에 id · `aria-describedby`(그려진 설명 · 오류) · `aria-invalid` · `disabled` 를 꽂는다. — "use client"
+- [FieldDescription](docs/components/FieldDescription.md): 컨트롤 아래의 도움말 — 컨트롤의 `aria-describedby` 에 실린다 — "use client"
+- [FieldError](docs/components/FieldError.md): 검증 오류 문장 — 내용이 있을 때만 그려지고, 그려지면 필드를 실패(`aria-invalid`)로 만들며 `aria-describedby` 에 실린다. — "use client"
+- [FieldLabel](docs/components/FieldLabel.md): 컨트롤의 이름 — `htmlFor` 가 `FieldControl` 의 id 를 가리키므로 누르면 컨트롤로 간다 — "use client"
 - [Hud](docs/components/Hud.md): 레거시 셸 `Hud`. — 부품: HudCell — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Input](docs/components/Input.md): 입력 — 글자와 수치 — "use client"
 - [Kbd](docs/components/Kbd.md): 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. — "use client"
@@ -102,6 +106,13 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [Segmented](docs/components/Segmented.md): 레거시 컨트롤 `Segmented`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [SegmentedControl](docs/components/SegmentedControl.md): 배타적 뷰 전환 — 트랙 위의 흰 pill 이 지금 고른 값이다(radiogroup · roving tabindex). — "use client"
 - [Select](docs/components/Select.md): 레거시 컨트롤 `Select`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [SelectContent](docs/components/SelectContent.md): 목록 상자 — DropdownMenu 와 같은 면(카드 바탕 · `shadow-pop`)이다 — "use client"
+- [SelectGroup](docs/components/SelectGroup.md): 항목 묶음 — 시각 구분 없이 의미만 묶는다 — "use client"
+- [SelectItem](docs/components/SelectItem.md): 고를 수 있는 항목 — `value` 가 루트의 값이 된다 — "use client"
+- [SelectLabel](docs/components/SelectLabel.md): 묶음의 머리글 — mono 대문자 미세라벨(DropdownMenuLabel 과 같은 모양) — "use client"
+- [SelectSeparator](docs/components/SelectSeparator.md): 묶음 사이 구분선 — 목록 상자의 안쪽 여백까지 가로지른다. — "use client"
+- [SelectTrigger](docs/components/SelectTrigger.md): 목록을 여는 버튼 — Input 과 같은 높이 사다리(`size`)와 검증 실패(`invalid`)를 갖는다 — "use client"
+- [SelectValue](docs/components/SelectValue.md): 트리거 안에 고른 항목의 글자를 보인다 — "use client"
 - [Separator](docs/components/Separator.md): 구분선 — 크롬의 헤어라인 — "use client"
 - [Sidebar](docs/components/Sidebar.md): 사이드바 — 접힌 rail(아이콘)과 펼친 panel(아이콘 + 라벨) 두 모습을 갖는 내비게이션 랜드마크. — 부품: SidebarGroup, SidebarItem — "use client"
 - [Skeleton](docs/components/Skeleton.md): 스켈레톤 바 — 곧 올 내용과 같은 높이의 자리 — 부품: SkeletonText
@@ -112,6 +123,9 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [Switch](docs/components/Switch.md): 스위치 — **즉시 적용되는** 켬/끔 — "use client"
 - [Table](docs/components/Table.md): 수치 표의 뿌리 — 가로 스크롤 영역 안의 `<table>`
 - [Tabs](docs/components/Tabs.md): 레거시 셸 `Tabs`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
+- [TabsContent](docs/components/TabsContent.md): 탭 패널 — `value` 가 활성 칸과 같을 때만 보인다 — "use client"
+- [TabsList](docs/components/TabsList.md): 탭 칸의 줄 — `variant` 가 줄과 그 안의 칸 모양을 함께 정한다 — "use client"
+- [TabsTrigger](docs/components/TabsTrigger.md): 탭 한 칸 — `value` 가 같은 `TabsContent` 를 보인다 — "use client"
 - [Tbody](docs/components/Tbody.md): 표 본문 구역(`<tbody>`) — 행의 호버 면이 붙는 범위다.
 - [Td](docs/components/Td.md): 표 본문 칸(`<td>`) — `numeric` · `tone` 축은 `tableCellVariants` 가 소유하고 `data-tone`(해석된 값)으로 찍힌다.
 - [Textarea](docs/components/Textarea.md): 여러 줄 입력 — Input 의 `md` 모양에 높이만 풀었다(세로 크기 조절). — "use client"
@@ -140,14 +154,18 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - `drawerVariants`: cva — 축 side(right | left | bottom) · size(sm | md | lg); 기본 side=right, size=md. 서버에서 호출 가능.
 - `dropdownMenuItemVariants`: cva — 축 tone(neutral | destructive); 기본 tone=neutral. 서버에서 호출 가능.
 - `emptyStateVariants`: cva — 축 size(default | compact); 기본 size=default. 서버에서 호출 가능.
+- `fieldVariants`: cva — 축 orientation(vertical | horizontal); 기본 orientation=vertical. 서버에서 호출 가능.
 - `inputVariants`: cva — 축 size(sm | md | lg) · invalid(true | false) · numeric(true | false); 기본 size=md, invalid=false, numeric=false. 서버에서 호출 가능.
 - `mediaCardMediaVariants`: cva — 축 orientation(vertical | horizontal) · ratio(16/9 | 4/3 | 1/1 | plan | none); 기본 orientation=vertical, ratio=plan. 서버에서 호출 가능.
 - `mediaCardVariants`: cva — 축 orientation(vertical | horizontal) · elevation(raised | flat | flush) · selected(true | false) · interactive(true | false); 기본 orientation=vertical, elevation=raised, selected=false, interactive=false. 서버에서 호출 가능.
 - `modalVariants`: cva — 축 size(sm | md | lg | xl | full); 기본 size=md. 서버에서 호출 가능.
 - `progressVariants`: cva — 축 tone(primary | success | warning | destructive | neutral); 기본 tone=primary. 서버에서 호출 가능.
+- `selectTriggerVariants`: cva — 축 size(sm | md | lg) · invalid(true | false); 기본 size=md, invalid=false. 서버에서 호출 가능.
 - `skeletonVariants`: cva — 축 shape(bar | circle); 기본 shape=bar. 서버에서 호출 가능.
 - `spinnerVariants`: cva — 축 size(sm | md | lg) · tone(neutral | muted | primary); 기본 size=md, tone=neutral. 서버에서 호출 가능.
 - `tableCellVariants`: cva — 축 numeric(true | false) · tone(neutral | success | warning | destructive); 기본 numeric=false, tone=neutral. 서버에서 호출 가능.
+- `tabsListVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.
+- `tabsTriggerVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.
 - `toastVariants`: cva — 축 tone(neutral | success | warning | destructive); 기본 tone=neutral. 서버에서 호출 가능.
 - `toastViewportVariants`: cva — 축 position(bottom-right | bottom-center | top-right | top-center); 기본 position=bottom-right. 서버에서 호출 가능.
 - `cn`: function

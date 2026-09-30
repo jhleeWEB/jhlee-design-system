@@ -62,6 +62,11 @@ import { DesignSystemProvider as LegacyDesignSystemProvider } from "./legacy/des
  * @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
  */
 export const AppShell = LegacyAppShell;
+/*
+ * TODO(#49): 새 부품 `Field`(src/primitives/Field.tsx, #47)이 이 이름을 이어받는다. 오늘은 이 const 별칭이 `export * from "./primitives"` 의 같은 이름을
+ * 가린다(ES 모듈에서 지역 export 가 star re-export 를 이긴다) — 부품(`FieldLabel · FieldControl` …)만 루트로 나가고 루트 `Field` 은 아직 레거시다.
+ * D8(#49)이 이 별칭을 지울 때 새 `Field` 가 그대로 드러난다 — 루트 배럴 export 의 모양이 바뀌므로 3.0.0(major)에 함께 낸다.
+ */
 /**
  * 레거시 셸 `Field`.
  * @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
@@ -102,6 +107,11 @@ export const PanelGroup = LegacyPanelGroup;
  * @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
  */
 export const StatusBadge = LegacyStatusBadge;
+/*
+ * TODO(#49): 새 부품 `Tabs`(src/navigation/Tabs.tsx, #47)이 이 이름을 이어받는다. 오늘은 이 const 별칭이 `export * from "./navigation"` 의 같은 이름을
+ * 가린다(ES 모듈에서 지역 export 가 star re-export 를 이긴다) — 부품(`TabsList · TabsTrigger` …)만 루트로 나가고 루트 `Tabs` 은 아직 레거시다.
+ * D8(#49)이 이 별칭을 지울 때 새 `Tabs` 가 그대로 드러난다 — 루트 배럴 export 의 모양이 바뀌므로 3.0.0(major)에 함께 낸다.
+ */
 /**
  * 레거시 셸 `Tabs`.
  * @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
@@ -127,6 +137,11 @@ export type Verdict = LegacyVerdict;
  * @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
  */
 export const Segmented = LegacySegmented;
+/*
+ * TODO(#49): 새 부품 `Select`(src/primitives/Select.tsx, #47)이 이 이름을 이어받는다. 오늘은 이 const 별칭이 `export * from "./primitives"` 의 같은 이름을
+ * 가린다(ES 모듈에서 지역 export 가 star re-export 를 이긴다) — 부품(`SelectTrigger · SelectContent` …)만 루트로 나가고 루트 `Select` 은 아직 레거시다.
+ * D8(#49)이 이 별칭을 지울 때 새 `Select` 가 그대로 드러난다 — 루트 배럴 export 의 모양이 바뀌므로 3.0.0(major)에 함께 낸다.
+ */
 /**
  * 레거시 컨트롤 `Select`.
  * @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다

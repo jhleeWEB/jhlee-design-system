@@ -19,6 +19,9 @@ import { describe, expect, it } from "vitest";
 
 import { runContract, type ContractSubject, type Probe } from "../__arch__/component-contract";
 import * as barrel from "../index";
+import { Tabs as TabsRoot } from "../navigation/Tabs";
+import { Field as FieldRoot } from "../primitives/Field";
+import { Select as SelectRoot } from "../primitives/Select";
 import * as legacy from "../legacy/index";
 
 const {
@@ -53,6 +56,10 @@ const {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   Eyebrow,
+  FieldControl,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
   Lede,
   MediaCard,
   Modal,
@@ -70,6 +77,13 @@ const {
   RadioGroup,
   RadioGroupItem,
   SectionLabel,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
   Separator,
   Sidebar,
   SidebarGroup,
@@ -78,6 +92,9 @@ const {
   StatusDot,
   Switch,
   Table,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
   Tbody,
   Td,
   Textarea,
@@ -120,6 +137,20 @@ const openDrawer =
       </DrawerContent>
     </Drawer>
   );
+/* Field · Select · Tabs 의 루트는 루트 배럴에서 아직 레거시 별칭이 가린다(#49) — 부품 픽스처는 층 모듈의 루트로 감싼다. */
+const openSelect =
+  (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
+  (p) => (
+    <SelectRoot open defaultValue="a">
+      <SelectTrigger aria-label="Choice">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>{child(p)}</SelectContent>
+    </SelectRoot>
+  );
+const inTabs =
+  (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
+  (p) => <TabsRoot defaultValue="a">{child(p)}</TabsRoot>;
 const inAccordion =
   (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
   (p) => (
@@ -358,6 +389,53 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   Eyebrow: { slot: "eyebrow", render: (p) => <Eyebrow {...p}>Step</Eyebrow> },
+  FieldControl: {
+    // 자기 DOM 이 없는 Slot 이다 — 탐침은 자식 Input 에 닿고 data-slot 은 자식의 것이 남는다.
+    slot: "input",
+    render: (p) => (
+      <FieldRoot>
+        <FieldLabel>Name</FieldLabel>
+        <FieldControl {...p}>
+          <barrel.Input />
+        </FieldControl>
+      </FieldRoot>
+    ),
+  },
+  FieldDescription: {
+    slot: "field-description",
+    render: (p) => (
+      <FieldRoot>
+        <FieldLabel>Name</FieldLabel>
+        <FieldControl>
+          <barrel.Input />
+        </FieldControl>
+        <FieldDescription {...p}>Help</FieldDescription>
+      </FieldRoot>
+    ),
+  },
+  FieldError: {
+    slot: "field-error",
+    render: (p) => (
+      <FieldRoot>
+        <FieldLabel>Name</FieldLabel>
+        <FieldControl>
+          <barrel.Input />
+        </FieldControl>
+        <FieldError {...p}>Required</FieldError>
+      </FieldRoot>
+    ),
+  },
+  FieldLabel: {
+    slot: "field-label",
+    render: (p) => (
+      <FieldRoot>
+        <FieldLabel {...p}>Name</FieldLabel>
+        <FieldControl>
+          <barrel.Input />
+        </FieldControl>
+      </FieldRoot>
+    ),
+  },
   Lede: { slot: "lede", render: (p) => <Lede {...p}>Lede</Lede> },
   Modal: {
     slot: "modal",
@@ -438,6 +516,72 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   SectionLabel: { slot: "section-label", render: (p) => <SectionLabel {...p}>Section</SectionLabel> },
+  SelectContent: {
+    slot: "select-content",
+    axeOff: ["aria-hidden-focus"],
+    render: (p) => (
+      <SelectRoot open defaultValue="a">
+        <SelectTrigger aria-label="Choice">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent {...p}>
+          <SelectItem value="a">A</SelectItem>
+        </SelectContent>
+      </SelectRoot>
+    ),
+  },
+  SelectGroup: {
+    slot: "select-group",
+    axeOff: ["aria-hidden-focus"],
+    render: openSelect((p) => (
+      <SelectGroup {...p}>
+        <SelectItem value="a">A</SelectItem>
+      </SelectGroup>
+    )),
+  },
+  SelectItem: {
+    slot: "select-item",
+    axeOff: ["aria-hidden-focus"],
+    render: openSelect((p) => (
+      <SelectItem value="a" {...p}>
+        A
+      </SelectItem>
+    )),
+  },
+  SelectLabel: {
+    slot: "select-label",
+    axeOff: ["aria-hidden-focus"],
+    render: openSelect((p) => (
+      <SelectGroup>
+        <SelectLabel {...p}>Group</SelectLabel>
+        <SelectItem value="a">A</SelectItem>
+      </SelectGroup>
+    )),
+  },
+  SelectSeparator: {
+    slot: "select-separator",
+    axeOff: ["aria-hidden-focus"],
+    render: openSelect((p) => (
+      <>
+        <SelectItem value="a">A</SelectItem>
+        <SelectSeparator {...p} />
+        <SelectItem value="b">B</SelectItem>
+      </>
+    )),
+  },
+  SelectValue: {
+    slot: "select-value",
+    render: (p) => (
+      <SelectRoot defaultValue="a">
+        <SelectTrigger aria-label="Choice">
+          <SelectValue {...p} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="a">A</SelectItem>
+        </SelectContent>
+      </SelectRoot>
+    ),
+  },
   Separator: { slot: "separator", render: (p) => <Separator {...p} /> },
   SidebarGroup: {
     slot: "sidebar-group",
@@ -460,6 +604,45 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   SkeletonText: { slot: "skeleton-text", render: (p) => <SkeletonText {...p} /> },
   StatusDot: { slot: "status-dot", render: (p) => <StatusDot tone="success" label="Pass" {...p} /> },
   Switch: { slot: "switch", render: (p) => <Switch aria-label="Dark" {...p} /> },
+  TabsContent: {
+    slot: "tabs-content",
+    render: inTabs((p) => (
+      <>
+        <TabsList aria-label="Views">
+          <TabsTrigger value="a">A</TabsTrigger>
+        </TabsList>
+        <TabsContent value="a" {...p}>
+          A body
+        </TabsContent>
+      </>
+    )),
+  },
+  TabsList: {
+    slot: "tabs-list",
+    axes: ["variant"],
+    render: inTabs((p) => (
+      <>
+        <TabsList aria-label="Views" {...p}>
+          <TabsTrigger value="a">A</TabsTrigger>
+        </TabsList>
+        <TabsContent value="a">A body</TabsContent>
+      </>
+    )),
+  },
+  TabsTrigger: {
+    slot: "tabs-trigger",
+    axes: ["variant"],
+    render: inTabs((p) => (
+      <>
+        <TabsList aria-label="Views" variant="underline">
+          <TabsTrigger value="a" {...p}>
+            A
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="a">A body</TabsContent>
+      </>
+    )),
+  },
   Tbody: {
     slot: "table-body",
     render: (p) => (

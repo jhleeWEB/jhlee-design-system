@@ -22,3 +22,5 @@ export {
   type SidebarProps,
 } from "./Sidebar";
 export { Toolbar, ToolbarDivider, ToolbarSpacer, type ToolbarProps } from "./Toolbar";
+export { Tabs, TabsContent, TabsList, TabsTrigger, type TabsListProps } from "./Tabs";
+export { tabsListVariants, tabsTriggerVariants } from "./Tabs.variants";

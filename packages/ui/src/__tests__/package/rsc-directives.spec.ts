@@ -68,6 +68,7 @@ describe('"use client"', () => {
         "navigation/ScrollArea.tsx",
         "navigation/SegmentedControl.tsx",
         "navigation/Sidebar.tsx",
+        "navigation/Tabs.tsx",
         "navigation/usePanelLayout.ts",
         "overlay/AlertDialog.tsx",
         "overlay/Drawer.tsx",
@@ -78,10 +79,12 @@ describe('"use client"', () => {
         "primitives/Button.tsx",
         "primitives/Card.tsx",
         "primitives/Choice.tsx",
+        "primitives/Field.tsx",
         "primitives/Input.tsx",
         "primitives/MediaCard.tsx",
         "primitives/Misc.tsx",
         "primitives/PanelToggleButton.tsx",
+        "primitives/Select.tsx",
       ]
     `);
   });
