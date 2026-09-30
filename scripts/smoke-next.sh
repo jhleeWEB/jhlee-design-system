@@ -122,7 +122,7 @@ export default function ClientPage() {
             <Button loading>Loading</Button>
           </ButtonGroup>
           <Badge tone="success">ok</Badge>
-          <StatusDot tone="warning" />
+          <StatusDot tone="warning" label="warning" />
           <Alert tone="info">Alert</Alert>
           <Card>card</Card>
           <Input placeholder="input" />
