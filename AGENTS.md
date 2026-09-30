@@ -33,10 +33,11 @@ main            기본 브랜치이자 유일한 장기 브랜치. 모든 PR 의
 |---|---|
 | `fix: …` `perf: …` `refactor: …`(release 규칙상 patch 대상 type) | patch |
 | `feat: …` | minor |
-| `feat!: …` 또는 본문에 `BREAKING CHANGE: …` | major(0.x 에서는 minor 가 올라간다) |
+| `feat!: …` 또는 본문에 `BREAKING CHANGE: …` | **major** — 0.x 예외 없음(실측: `feat(tokens)!:` 한 건이 0.2.0 → 1.0.0 을 냈다, #25) |
 | `docs` `chore` `ci` `test` `build` `style` | 발행 없음 |
 
 한국어 설명만으로는 major 가 오르지 않는다 — 파괴적 변경은 반드시 `!` 또는 `BREAKING CHANGE:` 를 적는다.
+반대로 `!` 는 언제나 major 다 — 옛 이름 alias·`normalizeTone`·루트 배럴의 legacy 별칭을 지우는 다음 파괴적 변경은 **2.0.0** 이 된다. 소비 레포는 정확 버전을 고정하므로 major 가 잦아도 깨지지 않는다.
 잘못 올린 버전은 삭제하지 않고 patch 를 하나 더 올린다. 가시성은 private 유지(public 은 되돌릴 수 없다).
 
 ## 커밋 메시지
