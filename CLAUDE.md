@@ -63,7 +63,6 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
   stories/                   페이지 스토리 — `Pages/Gallery`(옛 apps/ds-gallery 통째, Light·Dark) · `Pages/Workbench`(제품 화면 복제) · ThemePair · Matrix
   vrt/                       Playwright 시각 회귀 — storybook-static/index.json 의 `vrt` 태그 스토리 × 라이트/다크. 기준선은 도커로만(scripts/vrt-update.sh).
-                             `corners.spec.ts`(#26)는 별도 프로젝트(DPR 2) — CSSOM 스윕·픽셀 프로파일은 CI chromium, 3엔진 darwin 골든은 `VRT_ENGINES=1` 로컬 절차
   tsconfig.json              엄격 프로필 한 벌(src 전량, 스펙·스토리 제외) — tsdown dts 가 읽는다. app-profile(느슨한 2차 검사)은 하는 일이 없어 지웠다(#11)
   tsconfig.test.json         스펙·__arch__ 를 같은 엄격도로 검사. `exclude` 가 래칫(줄어들기만 한다, 오늘 비어 있다)
   tsconfig.stories.json      stories·.storybook·vrt 의 엄격 검사. 빌드 tsconfig 밖에 두어 d.ts 로 새지 않게 한다
@@ -90,10 +89,9 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
   ESLint). 리터럴(hex·px·ms)이 필요하면 `tokens/` JSON 에 토큰을 더한다. 조어 규칙은 [`packages/ui/tokens/README.md`](packages/ui/tokens/README.md), shadcn 과 다른 점은
   [`docs/design-tokens.md`](docs/design-tokens.md). 옛 이름(`text-ink`·`bg-surface`·`--chrome-line`·`--ink`·`--gap`)은 legacy alias 다 — 새 코드는 쓰지 않는다(린트가 `--fix` 로 바꾼다).
   `tone` prop 도 같은 어휘다: `neutral | primary | success | warning | destructive | info`(옛 키는 한 마이너 동안 `normalizeTone()` 이 옮긴다, ESLint `ds/legacy-tone --fix`).
-- **모든 크롬 모서리는 연속 곡률(스쿼클)이다**(#26). CSS `corner-shape` 진행형 향상 — 지원 엔진(Chromium 139+)은 `squircle` + 보정 반경(`--corner-k` 1.5 ·
-  md/lg/xl 만, sm 6px 고정), 미지원 엔진(2026-09: Safari 정식·Firefox 정식)은 원호로 떨어지며 **그것이 허용된 폴백이다**(런타임 폴백 없음). 값은 토큰
-  (`corner.shape`·`corner.k`), 규칙은 `src/corner.css`(레이어 밖). 원형·pill 은 `rounded-full` 로만 적어 원호 유지, 동심원은 `calc(바깥 토큰 − 패딩)` 만,
-  킬 스위치는 `html[data-corner="round"]`. `docs/architecture/design-system-patterns.md` «곡률» 절이 정본이다.
+- **모서리는 일반 `border-radius` 원호 사다리다** — `rounded-sm/md/lg/xl` = 6/8/12/16px 고정, 원형·pill 은 `rounded-full` 로만, 동심원은
+  `calc(바깥 토큰 − 패딩)` 만. 스쿼클(`corner-shape`, #26)은 **2026-09-30 사용자 결정으로 폐기했다**(#36) — Chromium 에서 초타원의 안쪽 윤곽 간격 때문에
+  1px 테두리가 모서리에서 두꺼워 보였다. `corner-shape` 를 다시 쓰지 않는다(`corner.spec` 이 막는다). `src/corner.css` 는 호환용 빈 파일이다.
 - **클라이언트 경계.** 훅·핸들러·컨텍스트·Radix 를 쓰는 파일은 첫 줄에 `"use client"`. 배럴(index.ts)·cn·canvas-metrics·순수 표시 컴포넌트에는 없다.
 - **JS 에서 CSS 를 import 하지 않는다.** 컴포넌트 CSS 는 theme.css 가 `@import` 한다.
 
@@ -131,7 +129,6 @@ pnpm verify            # typecheck + lint + tokens:check + manifest:check + test
 bash scripts/smoke-next.sh   # Next App Router 스모크(tarball → 최소 앱 next build). 야간 workflow smoke-next.yml 이 돌린다(비필수)
 pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(Phase A 는 'todo')
 pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
-VRT_ENGINES=1 pnpm --filter @jhleeweb/squircle-design-system vrt --project corners-chromium --project corners-webkit --project corners-firefox   # 모서리 3엔진 골든(로컬 macOS, playwright install webkit firefox 뒤)
 cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics legacy testing eslint   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
 ```
 

@@ -64,7 +64,7 @@ export function MediaCard({
     <div
       data-slot="media-card"
       data-selected={selected || undefined}
-      /* 선택 버튼의 ::after 링이 카드 곡선을 따르려면 자기 elevation 을 알아야 한다(#26) — 링은 안쪽 버튼에 있고 카드 반경은 여기 있다. */
+      /* 선택 버튼의 ::after 링이 카드 반경을 따르려면 자기 elevation 을 알아야 한다(#26) — 링은 안쪽 버튼에 있고 카드 반경은 여기 있다. */
       data-elevation={elevation ?? "raised"}
       className={cn(
         mediaCardVariants({ orientation, elevation, selected: selected ?? false, interactive: !!onSelect }),

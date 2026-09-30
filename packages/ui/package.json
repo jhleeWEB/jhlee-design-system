@@ -1,7 +1,7 @@
 {
   "name": "@jhleeweb/squircle-design-system",
   "version": "0.1.0",
-  "description": "Squircle Design System — 도면 캔버스와 UI 크롬을 가른 토큰(방향 C), Radix 기반 오버레이·피드백 층, 3열 작업대 셸, 그리고 그 위의 컨트롤. 모든 크롬 모서리는 연속 곡률(스쿼클)을 향한다.",
+  "description": "Squircle Design System — 도면 캔버스와 UI 크롬을 가른 토큰(방향 C), Radix 기반 오버레이·피드백 층, 3열 작업대 셸, 그리고 그 위의 컨트롤.",
   "license": "UNLICENSED",
   "type": "module",
   "repository": {

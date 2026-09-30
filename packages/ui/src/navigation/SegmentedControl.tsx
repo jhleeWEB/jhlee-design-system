@@ -77,8 +77,8 @@ export function SegmentedControl<T extends string | number>({
             onClick={() => onChange(option.value)}
             className={cn(
               "appearance-none border-0 bg-transparent font-inherit",
-              /* 동심원 — 안쪽 반경 = 바깥(rounded-md) − 패딩(p-0.5). 토큰만으로 적어야 --corner-k 를 따라 양쪽 엔진에서 동심이 유지된다(#26).
-                 미지원 엔진에서는 8 − 2 = 6px 로 옛 rounded-sm 과 같다. */
+              /* 동심원 — 안쪽 반경 = 바깥(rounded-md) − 패딩(p-0.5) = 8 − 2 = 6px(#26). 스쿼클 폐기(#36) 뒤에도 값이 옛 rounded-sm 과 같아 그대로 둔다 —
+                 바깥 토큰이 바뀌면 안쪽이 따라가는 것이 임의값 6px 보다 낫다. */
               "cursor-pointer rounded-[calc(var(--radius-md)-var(--spacing)*0.5)] px-3 font-medium transition-colors duration-fast",
               "focus-visible:focus-ring focus-visible:outline-none",
               "disabled:pointer-events-none disabled:opacity-45",

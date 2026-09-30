@@ -1,21 +1,21 @@
 {
-  "$description": "층위 — radius · shadow 사다리(Tailwind @theme)와 z-index 층(:root --layer-* + 생성 @utility z-*, #18). radius·shadow 는 shipped 캔버스 툴(tldraw)의 라이브 DOM 값을 이 제품의 밀도로 누른 것. radius 이름은 shadcn 의 sm/md/lg/xl(6/8/12/16 체감값, B5 #22) — 옛 역할 이름(chip/control/card/float/modal)은 legacy.json 의 alias 다. reset 은 Tailwind 기본 사다리를 지워 역할 이름만 남긴다. corner(스쿼클, Part 3 #26): md/lg/xl 은 sds.corner 로 `calc(N px * var(--corner-k, 1))` 이 되고 계수·모양은 아래 corner 그룹이 `@supports (corner-shape: squircle)` 안에서만 바꾼다 — 미지원 엔진의 반경은 그대로다.",
+  "$description": "층위 — radius · shadow 사다리(Tailwind @theme)와 z-index 층(:root --layer-* + 생성 @utility z-*, #18). radius·shadow 는 shipped 캔버스 툴(tldraw)의 라이브 DOM 값을 이 제품의 밀도로 누른 것. radius 이름은 shadcn 의 sm/md/lg/xl(6/8/12/16 체감값, B5 #22) — 옛 역할 이름(chip/control/card/float/modal)은 legacy.json 의 alias 다. reset 은 Tailwind 기본 사다리를 지워 역할 이름만 남긴다. 값은 전부 px 리터럴 고정이다 — 스쿼클(#26·#27)은 사용자 결정(2026-09-30, #36)으로 폐기했다.",
   "$extensions": { "sds": { "scope": "theme" } },
   "radius": {
     "$type": "dimension",
     "$extensions": { "sds": { "reset": true } },
     "none": { "$value": "0", "$description": "캔버스 · 도면 요소 · 표 셀." },
     "sm": { "$value": "6px", "$description": "배지 · 칩 · 스켈레톤 바(옛 chip)." },
-    "md": { "$value": "8px", "$extensions": { "sds": { "corner": true } }, "$description": "버튼 · 입력 · 셀렉트 — 잡는 것(옛 control). 스쿼클 엔진에서는 × corner.k." },
-    "lg": { "$value": "12px", "$extensions": { "sds": { "corner": true } }, "$description": "떠 있는 패널 · 팝오버 · 툴팁 · 토스트 · 드롭다운 — 이 제품의 기본 구획(옛 card 와 float, 값이 같아 하나로). 스쿼클 엔진에서는 × corner.k." },
-    "xl": { "$value": "16px", "$extensions": { "sds": { "corner": true } }, "$description": "모달 · 서랍 — 화면을 가리는 것(옛 modal). 스쿼클 엔진에서는 × corner.k." },
-    "full": { "$value": "9999px", "$description": "스위치 손잡이 · 상태 점 · pill 토글. 원형은 corner-shape round 고정이라 계수를 곱하지 않는다." }
+    "md": { "$value": "8px", "$description": "버튼 · 입력 · 셀렉트 — 잡는 것(옛 control)." },
+    "lg": { "$value": "12px", "$description": "떠 있는 패널 · 팝오버 · 툴팁 · 토스트 · 드롭다운 — 이 제품의 기본 구획(옛 card 와 float, 값이 같아 하나로)." },
+    "xl": { "$value": "16px", "$description": "모달 · 서랍 — 화면을 가리는 것(옛 modal)." },
+    "full": { "$value": "9999px", "$description": "스위치 손잡이 · 상태 점 · pill 토글." }
   },
   "corner": {
-    "$description": "곡률(#26) — «radius 는 역할이 정하고, 곡률은 시스템이 정한다». 값은 :root 기본(fallback = 미지원 엔진 = 원호)과 `@supports (corner-shape: squircle)` 안의 지원 엔진 값 두 벌이다. 규칙(전역 `*` 선언 · 킬 스위치 `[data-corner=round]` · 원형 예외)은 src/corner.css 가 든다.",
+    "$description": "곡률 — 결정 기록. #26·#27 이 `corner-shape: squircle`(K=2) + 보정 계수 1.5 를 `@supports` 안에서 들였으나, Chromium 에서 초타원의 안쪽 윤곽 간격 특성으로 1px 테두리가 모서리에서 두꺼워 보여 사용자 결정(2026-09-30, #36)으로 폐기했다. 값은 원호(round)·계수 1 고정이고 `@supports` 재정의는 없다 — 두 변수는 옛 소비자의 `var(--corner-*)` 참조가 비지 않게 남긴 호환 alias 다. 규칙 파일 src/corner.css 는 비어 있다.",
     "$extensions": { "sds": { "scope": "root" } },
-    "shape": { "$type": "keyword", "$value": "squircle", "$extensions": { "sds": { "supports": "corner-shape: squircle", "fallback": "round" } }, "$description": "squircle = superellipse(2) = 초타원 지수 n=4(사용자 결정 Q5, 카탈로그에서 K 를 눈으로 맞춘다). corner.css 의 `*` 규칙이 var(--corner-shape) 로 읽는다." },
-    "k": { "$type": "number", "$value": 1.5, "$extensions": { "sds": { "supports": "corner-shape: squircle", "fallback": 1 } }, "$description": "반경 보정 계수 — 같은 반경이면 스쿼클이 작아 보여(대각 깊이 원호 0.293R vs K=2 0.159R, 대각 중점 일치는 1.84) 1.5 로 시작한다(Q5). sm(6px)·full 은 곱하지 않는다 — 6px 의 차이는 서브픽셀이고 9–11px 은 20px 배지를 알약으로 만든다." }
+    "shape": { "$type": "keyword", "$value": "round", "$description": "원호. 어떤 엔진에서도 바뀌지 않는다 — src/corner.css 에 이 변수를 읽는 규칙은 없다." },
+    "k": { "$type": "number", "$value": 1, "$description": "반경 보정 계수 — 1 고정. 사다리(radius.md/lg/xl)는 이 계수를 곱하지 않는 px 리터럴이다." }
   },
   "shadow": {
     "$type": "shadow",
