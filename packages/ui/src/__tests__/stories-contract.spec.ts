@@ -20,7 +20,6 @@ const SRC = resolve(dirname(fileURLToPath(import.meta.url)), "..");
  *  `legacy/*`(shell·controls·design-system)는 여기 없다 — 루트 배럴이 `@deprecated` const 별칭으로만 내보내
  *  스캐너(`export … from`)에 잡히지 않고, 격리·동결된 코드라 스토리 계약 밖이다(#10). */
 const STORIES_MISSING: readonly string[] = [
-  "CanvasScale",
   "navigation/Accordion",
   "navigation/BackButton",
   "navigation/Breadcrumb",
@@ -28,14 +27,6 @@ const STORIES_MISSING: readonly string[] = [
   "navigation/SegmentedControl",
   "navigation/Sidebar",
   "navigation/Toolbar",
-  "primitives/Badge",
-  "primitives/Card",
-  "primitives/Choice",
-  "primitives/Editorial",
-  "primitives/Input",
-  "primitives/MediaCard",
-  "primitives/Misc",
-  "primitives/PanelToggleButton",
 ];
 
 const REQUIRED_EXPORTS = ["Default", "Variants", "ThemeContrast"] as const;
@@ -49,6 +40,7 @@ const PKG = resolve(SRC, "..");
  * 메타(파일 머리)에서 규칙을 끄는 것은 금지다 — 파일의 모든 스토리가 한꺼번에 빠져나가기 때문이다.
  */
 const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
+  "src/CanvasScale.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/data/DataTable.stories.tsx#Default": ["color-contrast"],
   "src/data/DataTable.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/data/DataTable.stories.tsx#Variants": ["color-contrast"],
@@ -72,8 +64,25 @@ const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
   "src/overlay/Modal.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/overlay/Popover.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/overlay/Tooltip.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Badge.stories.tsx#Default": ["color-contrast"],
+  "src/primitives/Badge.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Badge.stories.tsx#Variants": ["color-contrast"],
   "src/primitives/Button.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/primitives/Button.stories.tsx#Variants": ["color-contrast"],
+  "src/primitives/Card.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Card.stories.tsx#Variants": ["color-contrast"],
+  "src/primitives/Choice.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Choice.stories.tsx#Variants": ["color-contrast"],
+  "src/primitives/Editorial.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Editorial.stories.tsx#Variants": ["color-contrast"],
+  "src/primitives/Input.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Input.stories.tsx#Variants": ["color-contrast"],
+  "src/primitives/MediaCard.stories.tsx#Default": ["color-contrast"],
+  "src/primitives/MediaCard.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/MediaCard.stories.tsx#Variants": ["color-contrast"],
+  "src/primitives/Misc.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Misc.stories.tsx#Variants": ["color-contrast"],
+  "src/primitives/PanelToggleButton.stories.tsx#ThemeContrast": ["color-contrast"],
   "stories/Gallery.stories.tsx#Dark": ["aria-progressbar-name", "color-contrast", "label"],
   "stories/Gallery.stories.tsx#Light": ["aria-progressbar-name", "color-contrast", "label"],
   "stories/Radius.stories.tsx#Components": ["aria-hidden-focus", "color-contrast"],

@@ -14,5 +14,5 @@ SVG 도면 안과 HTML 위 오버레이에서 같은 모양을 쓰며 위치와 
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
-| `lengthPx` | `number` |  |  |  |
-| `label` | `string` |  |  |  |
+| `lengthPx` | `number` |  | `0` | 막대 길이(화면 px) — `niceScale()` 의 `px`. 음수·NaN·무한대는 0 으로 그린다. |
+| `label` | `string` |  | `""` | 막대 아래 라벨 — `niceScale()` 의 `lengthM` 을 소비자가 단위와 함께 적는다("10 m"). |

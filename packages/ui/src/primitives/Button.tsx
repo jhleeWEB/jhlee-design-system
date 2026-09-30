@@ -1,9 +1,8 @@
 "use client";
 import {
   cloneElement,
-  forwardRef,
   isValidElement,
-  type ButtonHTMLAttributes,
+  type ComponentPropsWithRef,
   type HTMLAttributes,
   type KeyboardEvent,
   type ReactElement,
@@ -22,16 +21,24 @@ import { Spinner } from "../feedback/Spinner";
  * 덱에서 실제로 필요했던 조합이 «위험하지만 보조인 버튼»(외곽선 빨강)과 «위험하고 주된
  * 버튼»(채움 빨강) 둘 다였는데, 한 축으로 합치면 그 중 하나를 표현할 수 없다. */
 
+/** `<Button>` 의 props — `<button>` 속성 전부(ref 포함) + `variant` · `tone` · `size`. */
 export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>, Omit<VariantProps<typeof buttonVariants>, "tone"> {
+  extends ComponentPropsWithRef<"button">, Omit<VariantProps<typeof buttonVariants>, "tone"> {
   /**
    * 톤 — `neutral`(기본) · `primary`(주된 동작) · `destructive`(파괴적 동작).
+   * @default "neutral"
    * @deprecated 옛 키 `accent` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
    */
   tone?: ToneInput<ButtonTone> | null | undefined;
-  /** 래퍼를 만들지 않고 자식 요소에 버튼 스타일을 입힌다 — 링크를 버튼으로 보이게 할 때. */
+  /**
+   * 래퍼를 만들지 않고 자식 요소에 버튼 스타일을 입힌다 — 링크를 버튼으로 보이게 할 때.
+   * @default false
+   */
   asChild?: boolean;
-  /** 진행 중. 스피너로 라벨을 **대체하지 않는다** — 폭이 흔들리면 옆 버튼이 밀린다. */
+  /**
+   * 진행 중. 스피너로 라벨을 **대체하지 않는다** — 폭이 흔들리면 옆 버튼이 밀린다.
+   * @default false
+   */
   loading?: boolean | undefined;
 }
 
@@ -67,10 +74,24 @@ const disabledSlotProps = {
   onMouseUpCapture: preventActivation,
 } satisfies HTMLAttributes<HTMLElement>;
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { className, variant, tone, size, asChild, loading, disabled, children, ...rest },
+/**
+ * 버튼 — 크롬의 동작. `variant`(외형)와 `tone`(판정색)은 다른 축이다.
+ *
+ * `data-slot` 은 `{...rest}` **앞**에 둔다(공통 계약의 slot-locked 예외) — Toast · Modal · Drawer 의 닫기 버튼과 동결된 legacy Select 가
+ * `data-slot` 을 넘겨 자기 이름을 붙이고, legacy/shell.css 가 `[data-slot="select"]` 로 그 버튼을 그린다. 잠그면 그 셋이 이름을 잃는다.
+ */
+export function Button({
   ref,
-) {
+  className,
+  variant,
+  tone,
+  size,
+  asChild,
+  loading,
+  disabled,
+  children,
+  ...rest
+}: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button";
   const blocked = Boolean(disabled || loading);
   const child =
@@ -92,12 +113,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
           },
         )
       : children;
+  const resolvedTone = normalizeTone(tone);
   return (
     <Comp
       ref={ref}
       data-slot="button"
-      data-loading={loading || undefined}
-      className={cn(buttonVariants({ variant, tone: normalizeTone(tone), size }), className)}
+      data-variant={variant ?? "outline"}
+      data-tone={resolvedTone ?? "neutral"}
+      data-size={size ?? "md"}
+      data-loading={loading ? "" : undefined}
+      className={cn(buttonVariants({ variant, tone: resolvedTone, size }), className)}
       disabled={blocked}
       aria-busy={loading || undefined}
       {...rest}
@@ -110,13 +135,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {asChild ? <Slot.Slottable>{child}</Slot.Slottable> : children}
     </Comp>
   );
-});
+}
 
-/* 버튼 묶음 — 사이 경계를 하나로 접어 «한 덩어리» 로 읽히게 한다. */
-export function ButtonGroup({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+/** 버튼 묶음 — 사이 경계를 하나로 접어 «한 덩어리» 로 읽히게 한다. */
+export function ButtonGroup({ className, ...rest }: ComponentPropsWithRef<"div">) {
   return (
     <div
       role="group"
+      {...rest}
       data-slot="button-group"
       className={cn(
         "inline-flex [&>*]:rounded-none",
@@ -124,7 +150,6 @@ export function ButtonGroup({ className, ...rest }: React.HTMLAttributes<HTMLDiv
         "[&>*+*]:-ml-px [&>*:focus-visible]:relative [&>*:focus-visible]:z-raised",
         className,
       )}
-      {...rest}
     />
   );
 }

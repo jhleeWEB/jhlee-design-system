@@ -1,0 +1,5 @@
+import { describeComponentContract } from "../__arch__/component-contract";
+import * as stories from "./Badge.stories";
+
+/* 공통 계약(C3) — 스토리 `Default` 가 유일한 픽스처다. 같은 모듈의 부품은 D7 까지 render-all.spec 의 FIXTURES 가 돈다. */
+describeComponentContract(stories, { slot: "badge", axes: ["tone"] });

@@ -15,8 +15,9 @@ import {
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import { cn, type VariantProps } from "../cn";
-import { cardVariants } from "./Card.variants";
-import { PanelToggleButton } from "./PanelToggleButton";
+import { ICON, INLINE_ICON } from "../lib/icons";
+import { cardHeaderVariants, cardVariants } from "./Card.variants";
+import { renderPanelToggle } from "./PanelToggleButton";
 
 /* 카드 — 이 제품의 기본 구획.
  *
@@ -47,23 +48,46 @@ interface CardCtx {
 }
 const Ctx = createContext<CardCtx | null>(null);
 
+/** `<Card>` 의 props — `<div>` 속성 전부(ref 포함) + `elevation` · `pad` + 접기. */
 export interface CardProps extends React.ComponentPropsWithRef<"div">, VariantProps<typeof cardVariants> {
-  /** 머리줄을 명시하면 사용자 정의 컴포넌트로 감싸도 헤더 접기에서 항상 남는다. */
+  /**
+   * 머리줄을 명시하면 사용자 정의 컴포넌트로 감싸도 헤더 접기에서 항상 남는다.
+   * @default undefined
+   */
   header?: React.ReactNode;
-  /** 주면 이 카드는 접힌다. 제어 컴포넌트이므로 `onCollapsedChange` 도 함께 준다. */
+  /**
+   * 주면 이 카드는 접힌다. 제어 컴포넌트이므로 `onCollapsedChange` 도 함께 준다. 둘 다 없으면 접히지 않는 카드다.
+   * @default undefined
+   */
   collapsed?: boolean | undefined;
+  /**
+   * 접기 버튼·세로 탭을 누르면 다음 상태로 불린다.
+   * @default undefined
+   */
   onCollapsedChange?: ((collapsed: boolean) => void) | undefined;
   /**
    * 접혔을 때 무엇으로 남는가.
-   *   strip   세로 탭. **가로로 나란히 놓인** 패널·뷰 — 접으면 폭을 옆에 돌려준다
-   *   header  머리줄만. **세로로 쌓인** 칸 — 접으면 높이를 아래에 돌려준다
+   * - `strip` — 세로 탭. **가로로 나란히 놓인** 패널·뷰 — 접으면 폭을 옆에 돌려준다
+   * - `header` — 머리줄만. **세로로 쌓인** 칸 — 접으면 높이를 아래에 돌려준다
+   * @default "header"
    */
   collapseTo?: "strip" | "header";
-  /** 세로 탭에 적히는 이름. `collapseTo="strip"` 이면 필수다. */
+  /**
+   * 세로 탭에 적히는 이름. `collapseTo="strip"` 이면 필수다.
+   * @default "panel"
+   */
   collapsedLabel?: string;
-  /** 접혔을 때도 남는 신호 — 미해결 판정 수 같은 것. 없으면 자리도 없다. */
+  /**
+   * 접혔을 때도 남는 신호 — 미해결 판정 수 같은 것. 없으면 자리도 없다.
+   * @default undefined
+   */
   collapsedSignal?: React.ReactNode;
-  /** 탭이 붙는 가장자리. 셰브론 방향과 세로 글자 방향이 여기서 정해진다. */
+  /**
+   * 탭이 붙는 가장자리. 셰브론 방향과 세로 글자 방향이 여기서 정해진다.
+   * - `left` — 왼쪽 가장자리. 셰브론은 오른쪽(펼치면 내용이 오른쪽으로 자란다)
+   * - `right` — 오른쪽 가장자리. 셰브론은 왼쪽
+   * @default "left"
+   */
   side?: "left" | "right";
 }
 
@@ -81,16 +105,7 @@ function Chevron({
     down: "M3.5 6L8 10.5 12.5 6",
   }[pointing];
   return (
-    <svg
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-      className={cn("size-4", className)}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.6}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg {...INLINE_ICON} className={cn("size-4", className)}>
       <path d={d} />
     </svg>
   );
@@ -110,6 +125,7 @@ function flattenCardChildren(
   });
 }
 
+/** 카드 — 이 제품의 기본 구획. `collapsed` + `onCollapsedChange` 를 주면 접힌다(`collapseTo` 로 세로 탭 또는 머리줄). */
 export function Card({
   ref,
   className,
@@ -254,14 +270,16 @@ export function Card({
   return (
     <Ctx.Provider value={ctx}>
       <div
+        tabIndex={collapsible ? -1 : undefined}
+        {...rest}
         ref={rootRef}
         data-slot="card"
+        data-elevation={elevation ?? "raised"}
+        data-pad={pad ?? "none"}
         data-collapsed={isCollapsed || undefined}
         data-collapse-to={collapsible ? collapseTo : undefined}
-        tabIndex={collapsible ? -1 : undefined}
         className={cn("group/card", cardVariants({ elevation, pad }), className)}
         style={style}
-        {...rest}
       >
         {stripMode ? (
           <>
@@ -285,13 +303,7 @@ export function Card({
                 "focus-visible:focus-ring focus-visible:outline-none",
               )}
             >
-              <StripChevron
-                className="size-4 shrink-0"
-                size={16}
-                strokeWidth={2}
-                aria-hidden="true"
-                focusable={false}
-              />
+              <StripChevron {...ICON} className="size-4 shrink-0" />
               <span
                 className={cn(
                   "flex-1 font-mono text-micro tracking-caps whitespace-nowrap uppercase",
@@ -347,38 +359,59 @@ export function Card({
 /* 카드 머리 — 제목은 왼쪽, 치수·상태 같은 메타는 오른쪽. 참고 화면의 «2D Plan … 18.00 × 12.00 m»
    배치가 그것이고, 메타가 오른쪽 끝에 고정되어야 여러 카드의 제목 줄이 같은 리듬으로 읽힌다.
    카드가 접히는 카드면 접기 버튼이 여기 자동으로 붙는다 — 호출처가 매번 달면 빠진다. */
+/** `<CardHeader>` 의 props — `<div>` 속성(ref 포함, `title` 제외) + 제목 · 메타 · 앞장식. */
+export interface CardHeaderProps
+  extends Omit<React.ComponentPropsWithRef<"div">, "title">, VariantProps<typeof cardHeaderVariants> {
+  /**
+   * 제목 — `headingLevel` 이 있으면 그 수준의 제목 요소로, 없으면 `div` 로 그린다.
+   * @default undefined
+   */
+  title?: React.ReactNode;
+  /**
+   * 오른쪽 끝의 메타 — 치수 · 상태. tabular-nums 로 그린다.
+   * @default undefined
+   */
+  meta?: React.ReactNode;
+  /**
+   * 제목 앞의 장식 — 아이콘 · 순번.
+   * @default undefined
+   */
+  leading?: React.ReactNode;
+  /**
+   * 제목 요소의 수준.
+   * - `2` — `h2`
+   * - `3` — `h3`
+   * - `4` — `h4`
+   * @default undefined
+   */
+  headingLevel?: 2 | 3 | 4;
+  /**
+   * 보기 전용 뷰도 본문 DOM 구조는 유지하고 접기 조작만 뺄 수 있다.
+   * @default true
+   */
+  collapseButton?: boolean;
+}
+
+/** 카드 머리 — 제목은 왼쪽, 메타는 오른쪽. 접히는 카드면 접기 버튼이 자동으로 붙는다. */
 export function CardHeader({
   className,
   title,
   meta,
   leading,
-  variant = "default",
+  variant,
   headingLevel,
   children,
   collapseButton = true,
   ...rest
-}: Omit<React.ComponentPropsWithRef<"div">, "title"> & {
-  title?: React.ReactNode;
-  meta?: React.ReactNode;
-  leading?: React.ReactNode;
-  /** 뷰·페이지 패널은 같은 높이와 홈통을 공유한다. 일반 카드의 기존 여백은 유지한다. */
-  variant?: "default" | "panel";
-  headingLevel?: 2 | 3 | 4;
-  /** 보기 전용 뷰도 본문 DOM 구조는 유지하고 접기 조작만 뺄 수 있다. */
-  collapseButton?: boolean;
-}) {
+}: CardHeaderProps) {
   const ctx = useContext(Ctx);
-  const Heading = headingLevel === 2 ? "h2" : headingLevel === 3 ? "h3" : headingLevel === 4 ? "h4" : "div";
+  const Heading = headingLevel ? (`h${headingLevel}` as const) : "div";
   return (
     <div
-      data-slot="card-header"
-      data-variant={variant}
-      className={cn(
-        "group/head flex min-w-0 shrink-0 items-center gap-3",
-        variant === "panel" ? "box-border min-h-12 border-b border-border bg-card px-3 py-2" : "px-4 py-3",
-        className,
-      )}
       {...rest}
+      data-slot="card-header"
+      data-variant={variant ?? "default"}
+      className={cn(cardHeaderVariants({ variant }), className)}
     >
       {leading ? <div className="flex shrink-0 items-center">{leading}</div> : null}
       {title ? (
@@ -393,14 +426,16 @@ export function CardHeader({
       {meta ? <div className="ml-auto shrink-0 tnum text-label text-muted-foreground">{meta}</div> : null}
       {ctx?.collapsible && collapseButton ? (
         ctx.collapseTo === "strip" ? (
-          <PanelToggleButton
-            data-slot="card-collapse"
-            open={!ctx.collapsed}
-            onOpenChange={ctx.toggle}
-            label={ctx.label}
-            controls={ctx.contentId}
-            className={!meta ? "ml-auto" : undefined}
-          />
+          renderPanelToggle(
+            {
+              open: !ctx.collapsed,
+              onOpenChange: ctx.toggle,
+              label: ctx.label,
+              controls: ctx.contentId,
+              className: !meta ? "ml-auto" : undefined,
+            },
+            "card-collapse",
+          )
         ) : (
           <button
             data-slot="card-collapse"
@@ -432,12 +467,12 @@ export function CardHeader({
 /* 접기 버튼을 **머리줄 밖에** 두어야 할 때. 브리프처럼 편집형 들머리를 갖는 패널은 일반
    머리줄을 원하지 않는데, 그렇다고 접을 길이 없으면 `collapseTo="strip"` 이 한쪽으로만
    동작한다(펼칠 수는 있는데 접을 수가 없다). 호출처가 원하는 자리에 이것을 놓는다. */
+/** 머리줄 밖에 두는 접기 버튼 — 접히는 카드 안에서만 그려진다(아니면 `null`). */
 export function CardCollapse({ className, onClick, ...rest }: React.ComponentPropsWithRef<"button">) {
   const ctx = useContext(Ctx);
   if (!ctx?.collapsible) return null;
   return (
     <button
-      data-slot="card-collapse"
       type="button"
       aria-expanded={!ctx.collapsed}
       aria-controls={ctx.contentId}
@@ -456,6 +491,7 @@ export function CardCollapse({ className, onClick, ...rest }: React.ComponentPro
         className,
       )}
       {...rest}
+      data-slot="card-collapse"
     >
       <Chevron pointing={ctx.side === "left" ? "left" : "right"} />
     </button>
@@ -465,12 +501,13 @@ export function CardCollapse({ className, onClick, ...rest }: React.ComponentPro
 /* 카드 안의 «웰» — 캔버스가 앉는 자리. 실측에서 카드 면(#ffffff)보다 한 단 들어간
    #f9fbfc 였고, 그 안에 흰 도면 시트가 다시 놓였다. 웰이 없으면 시트와 카드가 한 면으로
    붙어 «종이가 놓여 있다» 는 감각이 사라진다. */
+/** 카드 안의 «웰» — 캔버스가 앉는 한 단 들어간 면. */
 export function CardWell({ className, ...rest }: React.ComponentPropsWithRef<"div">) {
   return (
     <div
+      {...rest}
       data-slot="card-well"
       className={cn("relative min-h-0 flex-1 overflow-hidden rounded-b-lg bg-muted", className)}
-      {...rest}
     />
   );
 }
