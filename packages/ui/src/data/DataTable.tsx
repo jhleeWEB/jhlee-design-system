@@ -66,7 +66,8 @@ export interface DataTableProps<Row> {
 type SortState = { key: string; dir: "asc" | "desc" } | null;
 
 /* 셀 안의 편집·이동 동작이 행 선택까지 일으키면 앱의 캔버스 선택이 의도치 않게 바뀐다. */
-const ROW_CONTROL = 'a[href], button, input, label, select, textarea, summary, [role="button"], [role="link"], [role="checkbox"], [role="radio"], [role="switch"], [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
+const ROW_CONTROL =
+  'a[href], button, input, label, select, textarea, summary, [role="button"], [role="link"], [role="checkbox"], [role="radio"], [role="switch"], [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
 
 export function DataTable<Row>({
   columns,
@@ -88,7 +89,7 @@ export function DataTable<Row>({
 
   const sorted = useMemo(() => {
     if (!sort) return rows;
-    const column = columns.find(c => c.key === sort.key);
+    const column = columns.find((c) => c.key === sort.key);
     if (!column?.sortValue) return rows;
     const read = column.sortValue;
     const sign = sort.dir === "asc" ? 1 : -1;
@@ -101,10 +102,10 @@ export function DataTable<Row>({
     });
   }, [rows, sort, columns]);
 
-  const hasTotals = columns.some(c => c.total !== undefined);
+  const hasTotals = columns.some((c) => c.total !== undefined);
 
   function toggleSort(key: string) {
-    setSort(current => {
+    setSort((current) => {
       if (!current || current.key !== key) return { key, dir: "asc" };
       if (current.dir === "asc") return { key, dir: "desc" };
       /* 세 번째 누르면 정렬을 **푼다**. 원래 순서가 의미를 갖는 표(층 순서·동 순서)에서
@@ -118,175 +119,186 @@ export function DataTable<Row>({
   return (
     <div
       data-slot="data-table"
-      className={cn("flex min-h-0 min-w-0 w-full max-w-full flex-col overflow-hidden", className)}
+      className={cn("flex min-h-0 w-full max-w-full min-w-0 flex-col overflow-hidden", className)}
     >
       <ScrollArea className="min-h-0 flex-auto" orientation="both">
-      <table className="w-full border-collapse text-body text-foreground">
-        <caption
-          className={cn(
-            "text-left",
-            captionVisible
-              ? "px-3 pb-2 text-label text-muted-foreground"
-              : "sr-only absolute size-px overflow-hidden",
-          )}
-        >
-          {caption}
-        </caption>
-        <thead className={cn("bg-muted", stickyHeader && "sticky top-0 z-raised")}>
-          <tr>
-            {columns.map(column => {
-              const active = sort?.key === column.key;
-              const ariaSort = !column.sortValue
-                ? undefined
-                : active
-                  ? sort.dir === "asc"
-                    ? ("ascending" as const)
-                    : ("descending" as const)
-                  : ("none" as const);
-              return (
-                <th
-                  key={column.key}
-                  scope="col"
-                  aria-sort={ariaSort}
-                  style={column.width === undefined ? undefined : { width: column.width }}
-                  className={cn(
-                    "border-b border-border align-bottom",
-                    "font-mono text-micro font-normal uppercase tracking-caps text-muted-foreground",
-                    column.numeric ? "text-right" : "text-left",
-                    column.sortValue ? "p-0" : cellPad,
-                  )}
-                >
-                  {column.sortValue ? (
-                    <button
-                      data-slot="table-sort"
-                      type="button"
-                      onClick={() => toggleSort(column.key)}
-                      aria-label={column.label ?? undefined}
-                      className={cn(
-                        "appearance-none border-0 bg-transparent font-inherit text-inherit",
-                        "flex w-full cursor-pointer items-end gap-1",
-                        cellPad,
-                        column.numeric ? "justify-end" : "justify-start",
-                        "hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
-                        active && "text-foreground",
-                      )}
-                    >
-                      {column.header}
-                      {/* 화살표는 **정렬된 열에만** 나온다. 모든 열에 흐린 화살표를 두면
-                          「무엇으로 정렬돼 있나」가 한눈에 안 보인다. */}
-                      {active ? (
-                        <svg viewBox="0 0 10 10" aria-hidden="true" className="size-2.5 shrink-0">
-                          <path
-                            d={sort.dir === "asc" ? "M5 1.5L8.5 7h-7z" : "M5 8.5L1.5 3h7z"}
-                            fill="currentColor"
-                          />
-                        </svg>
-                      ) : null}
-                    </button>
-                  ) : (
-                    column.header
-                  )}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-
-        <tbody>
-          {loading
-            ? Array.from({ length: loadingRows }, (_, i) => (
-                <tr key={`sk-${i}`} className="border-b border-border last:border-b-0">
-                  {columns.map(column => (
-                    <td key={column.key} className={cellPad}>
-                      {/* 값이 올 자리와 **같은 높이**. 다르면 도착하는 순간 표가 뛴다. */}
-                      <Skeleton h={14} w={column.numeric ? "60%" : "80%"} className={column.numeric ? "ml-auto" : ""} />
-                    </td>
-                  ))}
-                </tr>
-              ))
-            : sorted.map((row, index) => {
-                const key = rowKey(row, index);
-                const selected = selectedKey !== undefined && key === selectedKey;
+        <table className="w-full border-collapse text-body text-foreground">
+          <caption
+            className={cn(
+              "text-left",
+              captionVisible
+                ? "px-3 pb-2 text-label text-muted-foreground"
+                : "sr-only absolute size-px overflow-hidden",
+            )}
+          >
+            {caption}
+          </caption>
+          <thead className={cn("bg-muted", stickyHeader && "sticky top-0 z-raised")}>
+            <tr>
+              {columns.map((column) => {
+                const active = sort?.key === column.key;
+                const ariaSort = !column.sortValue
+                  ? undefined
+                  : active
+                    ? sort.dir === "asc"
+                      ? ("ascending" as const)
+                      : ("descending" as const)
+                    : ("none" as const);
                 return (
-                  <tr
-                    key={key}
-                    data-selected={onSelect ? selected : undefined}
-                    onClick={onSelect ? event => {
-                      if (event.defaultPrevented || (event.target instanceof Element && event.target.closest(ROW_CONTROL))) return;
-                      onSelect(key, row);
-                    } : undefined}
+                  <th
+                    key={column.key}
+                    scope="col"
+                    aria-sort={ariaSort}
+                    style={column.width === undefined ? undefined : { width: column.width }}
                     className={cn(
-                      "border-b border-border last:border-b-0",
-                      onSelect && "cursor-pointer hover:bg-muted",
-                      selected && "bg-accent hover:bg-accent",
+                      "border-b border-border align-bottom",
+                      "font-mono text-micro font-normal tracking-caps text-muted-foreground uppercase",
+                      column.numeric ? "text-right" : "text-left",
+                      column.sortValue ? "p-0" : cellPad,
                     )}
                   >
-                    {columns.map((column, columnIndex) => {
-                      const tone = normalizeTone(column.tone?.(row));
-                      const content = column.cell
-                        ? column.cell(row, index)
-                        : ((row as Record<string, unknown>)[column.key] as React.ReactNode);
-                      return (
-                        <td
-                          key={column.key}
-                          className={cn(
-                            cellPad,
-                            "align-middle",
-                            column.numeric && "tnum text-right",
-                            tone === "success" && "text-success",
-                            tone === "warning" && "text-warning",
-                            tone === "destructive" && "text-destructive",
-                          )}
-                        >
-                          {onSelect && columnIndex === 0 ? (
-                            <div className={cn("flex items-center gap-2", column.numeric && "justify-end")}>
-                              {/* 선택은 네이티브 radio가 맡고 임의 셀 내용은 형제로 남겨 중첩 버튼을 만들지 않는다. */}
-                              <input
-                                data-slot="table-row-select"
-                                type="radio"
-                                name={selectionGroup}
-                                value={key}
-                                checked={selected}
-                                aria-label={`Select row ${key}`}
-                                onChange={() => onSelect(key, row)}
-                                className="m-0 size-4 shrink-0 cursor-pointer accent-primary focus-visible:focus-ring focus-visible:outline-none"
-                              />
-                              {content}
-                            </div>
-                          ) : content}
-                        </td>
-                      );
-                    })}
-                  </tr>
+                    {column.sortValue ? (
+                      <button
+                        data-slot="table-sort"
+                        type="button"
+                        onClick={() => toggleSort(column.key)}
+                        aria-label={column.label ?? undefined}
+                        className={cn(
+                          "font-inherit appearance-none border-0 bg-transparent text-inherit",
+                          "flex w-full cursor-pointer items-end gap-1",
+                          cellPad,
+                          column.numeric ? "justify-end" : "justify-start",
+                          "hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
+                          active && "text-foreground",
+                        )}
+                      >
+                        {column.header}
+                        {/* 화살표는 **정렬된 열에만** 나온다. 모든 열에 흐린 화살표를 두면
+                          「무엇으로 정렬돼 있나」가 한눈에 안 보인다. */}
+                        {active ? (
+                          <svg viewBox="0 0 10 10" aria-hidden="true" className="size-2.5 shrink-0">
+                            <path
+                              d={sort.dir === "asc" ? "M5 1.5L8.5 7h-7z" : "M5 8.5L1.5 3h7z"}
+                              fill="currentColor"
+                            />
+                          </svg>
+                        ) : null}
+                      </button>
+                    ) : (
+                      column.header
+                    )}
+                  </th>
                 );
               })}
-
-          {!loading && sorted.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length} className="p-0">
-                {empty ?? (
-                  <div className="px-3 py-8 text-center text-body text-muted-foreground">No rows.</div>
-                )}
-              </td>
             </tr>
-          ) : null}
-        </tbody>
+          </thead>
 
-        {hasTotals && !loading && sorted.length > 0 ? (
-          <tfoot>
-            <tr className="border-t-2 border-border-strong bg-muted font-medium">
-              {columns.map((column, i) => (
-                <td
-                  key={column.key}
-                  className={cn(cellPad, column.numeric && "tnum text-right")}
-                >
-                  {column.total ?? (i === 0 ? totalLabel : null)}
+          <tbody>
+            {loading
+              ? Array.from({ length: loadingRows }, (_, i) => (
+                  <tr key={`sk-${i}`} className="border-b border-border last:border-b-0">
+                    {columns.map((column) => (
+                      <td key={column.key} className={cellPad}>
+                        {/* 값이 올 자리와 **같은 높이**. 다르면 도착하는 순간 표가 뛴다. */}
+                        <Skeleton
+                          h={14}
+                          w={column.numeric ? "60%" : "80%"}
+                          className={column.numeric ? "ml-auto" : ""}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              : sorted.map((row, index) => {
+                  const key = rowKey(row, index);
+                  const selected = selectedKey !== undefined && key === selectedKey;
+                  return (
+                    <tr
+                      key={key}
+                      data-selected={onSelect ? selected : undefined}
+                      onClick={
+                        onSelect
+                          ? (event) => {
+                              if (
+                                event.defaultPrevented ||
+                                (event.target instanceof Element && event.target.closest(ROW_CONTROL))
+                              )
+                                return;
+                              onSelect(key, row);
+                            }
+                          : undefined
+                      }
+                      className={cn(
+                        "border-b border-border last:border-b-0",
+                        onSelect && "cursor-pointer hover:bg-muted",
+                        selected && "bg-accent hover:bg-accent",
+                      )}
+                    >
+                      {columns.map((column, columnIndex) => {
+                        const tone = normalizeTone(column.tone?.(row));
+                        const content = column.cell
+                          ? column.cell(row, index)
+                          : ((row as Record<string, unknown>)[column.key] as React.ReactNode);
+                        return (
+                          <td
+                            key={column.key}
+                            className={cn(
+                              cellPad,
+                              "align-middle",
+                              column.numeric && "text-right tnum",
+                              tone === "success" && "text-success",
+                              tone === "warning" && "text-warning",
+                              tone === "destructive" && "text-destructive",
+                            )}
+                          >
+                            {onSelect && columnIndex === 0 ? (
+                              <div className={cn("flex items-center gap-2", column.numeric && "justify-end")}>
+                                {/* 선택은 네이티브 radio가 맡고 임의 셀 내용은 형제로 남겨 중첩 버튼을 만들지 않는다. */}
+                                <input
+                                  data-slot="table-row-select"
+                                  type="radio"
+                                  name={selectionGroup}
+                                  value={key}
+                                  checked={selected}
+                                  aria-label={`Select row ${key}`}
+                                  onChange={() => onSelect(key, row)}
+                                  className="m-0 size-4 shrink-0 cursor-pointer accent-primary focus-visible:focus-ring focus-visible:outline-none"
+                                />
+                                {content}
+                              </div>
+                            ) : (
+                              content
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+
+            {!loading && sorted.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className="p-0">
+                  {empty ?? (
+                    <div className="px-3 py-8 text-center text-body text-muted-foreground">No rows.</div>
+                  )}
                 </td>
-              ))}
-            </tr>
-          </tfoot>
-        ) : null}
-      </table>
+              </tr>
+            ) : null}
+          </tbody>
+
+          {hasTotals && !loading && sorted.length > 0 ? (
+            <tfoot>
+              <tr className="border-t-2 border-border-strong bg-muted font-medium">
+                {columns.map((column, i) => (
+                  <td key={column.key} className={cn(cellPad, column.numeric && "text-right tnum")}>
+                    {column.total ?? (i === 0 ? totalLabel : null)}
+                  </td>
+                ))}
+              </tr>
+            </tfoot>
+          ) : null}
+        </table>
       </ScrollArea>
     </div>
   );

@@ -30,8 +30,14 @@ if (errors.length) {
   process.exit(1);
 }
 // 린트 표는 `^…$` 로 클래스 하나를 맞춘다 — 여기서는 앵커를 떼고 토큰 경계로 감싸 본문 전체에 한 번 적용한다.
-const rules = legacyClassRenames(legacyRenames(tokens, renames)).map(({ pattern, fix }) => ({ body: pattern.slice(1, -1), fix }));
-const ONE_PASS = new RegExp(`(^|[\\s"'\`{(,])(?:${rules.map((r, i) => `(?<r${i}>${r.body})`).join("|")})(?=[\\s"'\`})]|,|$)`, "gm");
+const rules = legacyClassRenames(legacyRenames(tokens, renames)).map(({ pattern, fix }) => ({
+  body: pattern.slice(1, -1),
+  fix,
+}));
+const ONE_PASS = new RegExp(
+  `(^|[\\s"'\`{(,])(?:${rules.map((r, i) => `(?<r${i}>${r.body})`).join("|")})(?=[\\s"'\`})]|,|$)`,
+  "gm",
+);
 
 /** @param {string} text @returns {{ text: string, count: number }} */
 export function codemodClasses(text) {
@@ -64,7 +70,7 @@ function* walk(path) {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   const dry = args.includes("--dry");
-  const targets = args.filter(a => a !== "--dry");
+  const targets = args.filter((a) => a !== "--dry");
   if (targets.length === 0) {
     console.error("사용법: node scripts/codemod-classes.mjs [--dry] <파일|디렉터리>…");
     process.exit(2);

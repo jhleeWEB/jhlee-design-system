@@ -11,7 +11,7 @@ export type CellTone = "success" | "warning" | "destructive";
  * radius 0 인 이유: 표는 캔버스 쪽 어휘다. 인쇄되고, 격자가 정보를 나른다. */
 export function Table({ className, ...rest }: React.TableHTMLAttributes<HTMLTableElement>) {
   return (
-    <ScrollArea className="min-w-0 w-full max-w-full" orientation="horizontal">
+    <ScrollArea className="w-full max-w-full min-w-0" orientation="horizontal">
       <table
         data-slot="table"
         className={cn("w-full border-collapse text-body text-foreground", className)}
@@ -58,7 +58,7 @@ export function Th({
       scope={rest.scope ?? "col"}
       className={cn(
         "border-b border-border px-4 py-3 text-left align-bottom",
-        "font-mono text-micro font-normal uppercase tracking-caps text-muted-foreground",
+        "font-mono text-micro font-normal tracking-caps text-muted-foreground uppercase",
         numeric && "text-right",
         className,
       )}
@@ -82,7 +82,7 @@ export function Td({
     <td
       className={cn(
         "px-4 py-3 align-middle",
-        numeric && "tnum text-right",
+        numeric && "text-right tnum",
         resolved === "success" && "text-success",
         resolved === "warning" && "text-warning",
         resolved === "destructive" && "text-destructive",

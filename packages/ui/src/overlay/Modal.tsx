@@ -18,7 +18,6 @@ import { ScrollArea } from "../navigation/ScrollArea";
  * 포커스 트랩 · 스크롤 락 · Escape · 포커스 복귀는 Radix 가 맡는다. 이 저장소에는 그중 어느
  * 것도 없었다(`createPortal` 호출 0건, Escape 는 다이얼로그마다 손으로, 갤러리는 아예 없음). */
 
-
 type ContentProps = Omit<React.ComponentPropsWithRef<typeof Dialog.Content>, "forceMount">;
 
 export const Modal = Dialog.Root;
@@ -26,9 +25,7 @@ export const ModalTrigger = Dialog.Trigger;
 export const ModalClose = Dialog.Close;
 
 /** 포털의 열림·닫힘 수명은 DS가 소유한다. forceMount로 닫힌 모달의 포커스·스크롤 잠금을 남기지 않는다. */
-export interface ModalContentProps
-  extends ContentProps,
-    VariantProps<typeof modalVariants> {
+export interface ModalContentProps extends ContentProps, VariantProps<typeof modalVariants> {
   /** 스크림을 눌러도 닫히지 않게 한다 — 되돌릴 수 없는 작업의 확인창에 쓴다. */
   dismissible?: boolean;
 }
@@ -44,20 +41,17 @@ export function ModalContent({
 }: ModalContentProps) {
   return (
     <Dialog.Portal>
-      <Dialog.Overlay
-        data-slot="modal-scrim"
-        className="fixed inset-0 z-scrim bg-scrim animate-in-fade"
-      />
+      <Dialog.Overlay data-slot="modal-scrim" className="fixed inset-0 z-scrim animate-in-fade bg-scrim" />
       <Dialog.Content
         data-slot="modal"
         className={cn(modalVariants({ size }), className)}
         {...rest}
         // 호출자의 관찰·취소 핸들러는 유지하되 닫기 금지 계약을 덮어쓰지는 못하게 한다.
-        onPointerDownOutside={event => {
+        onPointerDownOutside={(event) => {
           onPointerDownOutside?.(event);
           if (!dismissible) event.preventDefault();
         }}
-        onInteractOutside={event => {
+        onInteractOutside={(event) => {
           onInteractOutside?.(event);
           if (!dismissible) event.preventDefault();
         }}
@@ -82,25 +76,29 @@ export function ModalHeader({
   return (
     <div
       data-slot="modal-header"
-      className={cn(
-        "flex shrink-0 items-start gap-4 border-b border-border px-6 py-5",
-        className,
-      )}
+      className={cn("flex shrink-0 items-start gap-4 border-b border-border px-6 py-5", className)}
       {...rest}
     >
       <div className="min-w-0 flex-1">
-        <Dialog.Title className="m-0 text-title font-semibold leading-snug text-foreground">
+        <Dialog.Title className="leading-snug m-0 text-title font-semibold text-foreground">
           {title}
         </Dialog.Title>
         {description ? (
-          <Dialog.Description className="mt-1 text-body leading-relaxed text-muted-foreground">
+          <Dialog.Description className="leading-relaxed mt-1 text-body text-muted-foreground">
             {description}
           </Dialog.Description>
         ) : null}
       </div>
       {children}
       <Dialog.Close asChild>
-        <Button data-slot="dialog-close" type="button" variant="ghost" size="icon-sm" aria-label="Close" className="-mr-2 -mt-1 shrink-0 [&_svg]:size-4">
+        <Button
+          data-slot="dialog-close"
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Close"
+          className="-mt-1 -mr-2 shrink-0 [&_svg]:size-4"
+        >
           <LuX size={16} strokeWidth={2} aria-hidden="true" focusable={false} />
         </Button>
       </Dialog.Close>
@@ -110,7 +108,12 @@ export function ModalHeader({
 
 /* 본문만 스크롤한다 — 머리와 바닥은 붙어 있어야 긴 목록에서 버튼을 찾아 내려가지 않는다.
  * 본문 div는 유지해 소비자의 grid·gap·자식 선택자가 Radix 내부 래퍼에 끊기지 않게 한다. */
-export function ModalBody({ className, onScroll, onScrollCapture, ...rest }: React.ComponentPropsWithRef<"div">) {
+export function ModalBody({
+  className,
+  onScroll,
+  onScrollCapture,
+  ...rest
+}: React.ComponentPropsWithRef<"div">) {
   return (
     <ScrollArea className="min-h-0 min-w-0 flex-auto" viewportProps={{ onScroll, onScrollCapture }}>
       <div data-slot="modal-body" className={cn("px-6 py-5", className)} {...rest} />

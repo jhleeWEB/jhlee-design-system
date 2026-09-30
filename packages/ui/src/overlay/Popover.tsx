@@ -11,8 +11,10 @@ export const PopoverAnchor = Radix.Anchor;
 export const PopoverClose = Radix.Close;
 
 /** 포털의 마운트 수명은 DS가 소유하므로 Content만 forceMount하는 조합은 공개하지 않는다. */
-export interface PopoverContentProps
-  extends Omit<React.ComponentPropsWithRef<typeof Radix.Content>, "forceMount"> {
+export interface PopoverContentProps extends Omit<
+  React.ComponentPropsWithRef<typeof Radix.Content>,
+  "forceMount"
+> {
   /** 캔버스 위에 얹힌다 — 반투명 + 블러로 도면이 비친다. */
   onCanvas?: boolean;
   arrow?: boolean;
@@ -34,9 +36,9 @@ export function PopoverContent({
         data-slot="popover"
         sideOffset={sideOffset}
         className={cn(
-          "z-popover w-(--radix-popover-trigger-width) min-w-popover-min max-w-popover-fluid",
+          "z-popover w-(--radix-popover-trigger-width) max-w-popover-fluid min-w-popover-min",
           "rounded-lg border border-border p-5 shadow-pop",
-          "text-body text-foreground animate-in-pop focus-visible:outline-none",
+          "animate-in-pop text-body text-foreground focus-visible:outline-none",
           onCanvas ? "on-canvas" : "bg-card",
           className,
         )}

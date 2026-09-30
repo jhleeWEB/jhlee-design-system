@@ -15,7 +15,10 @@ import { MOTION } from "../../generated/tokens";
 import { loadTokenModel, resolvedMap } from "./model";
 
 const css = (file: string): string =>
-  readFileSync(fileURLToPath(new URL(`../../${file}`, import.meta.url)), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  readFileSync(fileURLToPath(new URL(`../../${file}`, import.meta.url)), "utf8").replace(
+    /\/\*[\s\S]*?\*\//g,
+    "",
+  );
 
 const toast = css("feedback/toast.css");
 const theme = css("theme.css");
@@ -42,7 +45,8 @@ describe("모션 상수 == CSS 토큰", () => {
       toastDefaultMs: "--duration-toast-default",
       tooltipDelayMs: "--duration-tooltip-delay",
     };
-    for (const [key, name] of Object.entries(pairs) as [keyof typeof MOTION, string][]) expect(ms(name), key).toBe(MOTION[key]);
+    for (const [key, name] of Object.entries(pairs) as [keyof typeof MOTION, string][])
+      expect(ms(name), key).toBe(MOTION[key]);
   });
 
   it("토스트 등장·퇴장은 toast.css 가 토큰으로 읽는다 — ms 리터럴이 아니다", () => {
@@ -54,12 +58,18 @@ describe("모션 상수 == CSS 토큰", () => {
   it("접기는 옛 이름 --motion-collapse-duration 이 --duration-collapse 를 잇고 reduced-motion 에서 0 이 된다", () => {
     const model = loadTokenModel();
     expect(light["--motion-collapse-duration"]).toBe(`${MOTION.collapseMs}ms`);
-    expect(model.tokens.find(t => t.name === "--motion-collapse-duration")?.refs).toEqual(["--duration-collapse"]);
-    expect(model.tokens.find(t => t.name === "--duration-collapse" && t.scope === "reduced-motion")?.value).toBe("0ms");
+    expect(model.tokens.find((t) => t.name === "--motion-collapse-duration")?.refs).toEqual([
+      "--duration-collapse",
+    ]);
+    expect(
+      model.tokens.find((t) => t.name === "--duration-collapse" && t.scope === "reduced-motion")?.value,
+    ).toBe("0ms");
   });
 
   it("스크롤바 페이드는 theme.css 의 .ds-scroll-area-scrollbar 가 토큰으로 읽는다", () => {
-    expect(theme).toMatch(/\.ds-scroll-area-scrollbar\s*\{[^}]*transition:\s*opacity\s+var\(--duration-scrollbar-fade\)/);
+    expect(theme).toMatch(
+      /\.ds-scroll-area-scrollbar\s*\{[^}]*transition:\s*opacity\s+var\(--duration-scrollbar-fade\)/,
+    );
     expect(ms("--duration-scrollbar-fade")).toBe(MOTION.scrollFadeMs);
   });
 });

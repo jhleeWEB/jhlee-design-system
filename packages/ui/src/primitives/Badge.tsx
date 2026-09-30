@@ -9,8 +9,7 @@ import { badgeVariants, type BadgeTone } from "./Badge.variants";
  * 을 따로 두되 그쪽은 `aria-label` 을 요구한다. */
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLSpanElement>,
-    Omit<VariantProps<typeof badgeVariants>, "tone"> {
+  extends React.HTMLAttributes<HTMLSpanElement>, Omit<VariantProps<typeof badgeVariants>, "tone"> {
   /**
    * 톤 — `neutral`(기본) · `primary` · `success` · `warning` · `destructive`.
    * @deprecated 옛 키 `accent` · `ok` · `warn` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
@@ -22,7 +21,11 @@ export interface BadgeProps
 
 export function Badge({ className, tone, provisional, dot, children, ...rest }: BadgeProps) {
   return (
-    <span data-slot="badge" className={cn(badgeVariants({ tone: normalizeTone(tone), provisional }), className)} {...rest}>
+    <span
+      data-slot="badge"
+      className={cn(badgeVariants({ tone: normalizeTone(tone), provisional }), className)}
+      {...rest}
+    >
       {dot ? <i aria-hidden="true" className="size-3 shrink-0 rounded-full bg-current" /> : null}
       {children}
     </span>

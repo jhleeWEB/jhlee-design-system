@@ -11,7 +11,13 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-import postcss, { type AtRule, type ChildNode, type Declaration, type Node as CssNode, type Rule } from "postcss";
+import postcss, {
+  type AtRule,
+  type ChildNode,
+  type Declaration,
+  type Node as CssNode,
+  type Rule,
+} from "postcss";
 import valueParser, { type Node as ValueNode } from "postcss-value-parser";
 
 /** 토큰이 정의된 자리. `@theme` 은 정적 사다리, `@theme inline` 은 모드가 갈리는 값의 매핑이다(혼용 규칙 ③·④). */
@@ -58,7 +64,14 @@ export interface TokenModel {
  * postcss 는 @import 를 따라가지 않으므로 여기 나열한다. 생성물 셋이 값이고 손 셋(tokens.css · corner.css · theme.css)은 요소 규칙 · keyframes ·
  * 손 @utility · `.ds-*` 다 — 손 파일의 `var()` 참조가 전부 정의돼 있는지도 같은 모델이 본다.
  */
-export const TOKEN_FILES = ["generated/tokens.css", "generated/legacy.css", "generated/theme.tailwind.css", "tokens.css", "corner.css", "theme.css"] as const;
+export const TOKEN_FILES = [
+  "generated/tokens.css",
+  "generated/legacy.css",
+  "generated/theme.tailwind.css",
+  "tokens.css",
+  "corner.css",
+  "theme.css",
+] as const;
 
 /** `src/` 기준 경로로 읽는다. */
 function read(file: string): string {
@@ -75,7 +88,7 @@ export function varNames(value: string): { readonly names: string[]; readonly ha
       if (node.value === "var") {
         const first = node.nodes[0];
         if (first && first.type === "word" && first.value.startsWith("--")) names.push(first.value);
-        if (node.nodes.some(n => n.type === "div" && n.value === ",")) hasFallback = true;
+        if (node.nodes.some((n) => n.type === "div" && n.value === ",")) hasFallback = true;
       }
       walk(node.nodes);
     }
@@ -118,7 +131,7 @@ export function loadTokenModelFrom(files: readonly string[]): TokenModel {
   const utilities: { name: string; file: string }[] = [];
   for (const file of files) {
     const root = postcss.parse(read(file), { from: file });
-    root.walkAtRules("utility", at => {
+    root.walkAtRules("utility", (at) => {
       utilities.push({ name: at.params.trim(), file });
     });
     root.walkDecls((decl: Declaration) => {
@@ -132,7 +145,14 @@ export function loadTokenModelFrom(files: readonly string[]): TokenModel {
         resets.push({ namespace: decl.prop.slice(0, -2), scope });
         return;
       }
-      tokens.push({ name: decl.prop, value: decl.value.replace(/\s+/g, " ").trim(), scope, file, line, refs: names });
+      tokens.push({
+        name: decl.prop,
+        value: decl.value.replace(/\s+/g, " ").trim(),
+        scope,
+        file,
+        line,
+        refs: names,
+      });
     });
   }
   return { tokens, references, resets, utilities };
@@ -156,15 +176,21 @@ const LIGHT_SCOPES: readonly TokenScope[] = ["root", "theme", "theme-inline"];
  * 캐스케이드와 같다. 두 다크 블록은 생성기가 한 정본(chrome.dark.json)을 두 번 찍은 것이라(ladders.spec 이 이름 집합을 본다) 한쪽만 읽는다.
  */
 export function definitionOf(model: TokenModel, name: string, mode: Mode): Token | undefined {
-  const dark = mode === "dark" ? model.tokens.find(t => t.name === name && t.scope === "dark-attr") : undefined;
-  return dark ?? model.tokens.find(t => t.name === name && LIGHT_SCOPES.includes(t.scope));
+  const dark =
+    mode === "dark" ? model.tokens.find((t) => t.name === name && t.scope === "dark-attr") : undefined;
+  return dark ?? model.tokens.find((t) => t.name === name && LIGHT_SCOPES.includes(t.scope));
 }
 
 /**
  * `var(--x)` 를 끝까지 치환한 값. 정의가 없으면 폴백을, 폴백도 없으면 `var(--x)` 를 그대로 남긴다 — 그런 참조는 `references.spec` 이 잡는다.
  * 순환은 `visiting` 으로 끊고 원문을 남긴다.
  */
-export function resolveValue(model: TokenModel, value: string, mode: Mode, visiting: ReadonlySet<string> = new Set()): string {
+export function resolveValue(
+  model: TokenModel,
+  value: string,
+  mode: Mode,
+  visiting: ReadonlySet<string> = new Set(),
+): string {
   const ast = valueParser(value);
   const substitute = (nodes: ValueNode[]): void => {
     for (let i = 0; i < nodes.length; i++) {
@@ -176,13 +202,23 @@ export function resolveValue(model: TokenModel, value: string, mode: Mode, visit
         const def = name && !visiting.has(name) ? definitionOf(model, name, mode) : undefined;
         if (name && def) {
           const resolved = resolveValue(model, def.value, mode, new Set([...visiting, name]));
-          nodes[i] = { type: "word", value: resolved, sourceIndex: node.sourceIndex, sourceEndIndex: node.sourceEndIndex };
+          nodes[i] = {
+            type: "word",
+            value: resolved,
+            sourceIndex: node.sourceIndex,
+            sourceEndIndex: node.sourceEndIndex,
+          };
           continue;
         }
-        const comma = node.nodes.findIndex(n => n.type === "div" && n.value === ",");
+        const comma = node.nodes.findIndex((n) => n.type === "div" && n.value === ",");
         if (comma !== -1) {
           const fallback = valueParser.stringify(node.nodes.slice(comma + 1)).trim();
-          nodes[i] = { type: "word", value: resolveValue(model, fallback, mode, visiting), sourceIndex: node.sourceIndex, sourceEndIndex: node.sourceEndIndex };
+          nodes[i] = {
+            type: "word",
+            value: resolveValue(model, fallback, mode, visiting),
+            sourceIndex: node.sourceIndex,
+            sourceEndIndex: node.sourceEndIndex,
+          };
           continue;
         }
       }
@@ -195,7 +231,7 @@ export function resolveValue(model: TokenModel, value: string, mode: Mode, visit
 
 /** 모드별 `이름 → 해석값` 맵. 이름 오름차순 — 스냅샷이 선언 순서에 흔들리지 않게. */
 export function resolvedMap(model: TokenModel, mode: Mode): Record<string, string> {
-  const names = [...new Set(model.tokens.map(t => t.name))].sort();
+  const names = [...new Set(model.tokens.map((t) => t.name))].sort();
   const out: Record<string, string> = {};
   for (const name of names) {
     const def = definitionOf(model, name, mode);
@@ -205,10 +241,15 @@ export function resolvedMap(model: TokenModel, mode: Mode): Record<string, strin
 }
 
 /** `--a → --b → --c` 사슬의 길이(var 홉 수). 순환이면 Infinity. */
-export function referenceDepth(model: TokenModel, name: string, mode: Mode, seen: ReadonlySet<string> = new Set()): number {
+export function referenceDepth(
+  model: TokenModel,
+  name: string,
+  mode: Mode,
+  seen: ReadonlySet<string> = new Set(),
+): number {
   if (seen.has(name)) return Number.POSITIVE_INFINITY;
   const def = definitionOf(model, name, mode);
   if (!def || def.refs.length === 0) return 0;
   const next = new Set([...seen, name]);
-  return 1 + Math.max(...def.refs.map(ref => referenceDepth(model, ref, mode, next)));
+  return 1 + Math.max(...def.refs.map((ref) => referenceDepth(model, ref, mode, next)));
 }

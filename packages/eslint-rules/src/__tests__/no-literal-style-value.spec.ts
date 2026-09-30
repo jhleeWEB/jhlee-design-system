@@ -15,21 +15,36 @@ syntaxTester.run("no-literal-style-value", rule as never, {
     'const w = "w-[16px]";',
   ],
   invalid: [
-    { code: '<div className="rounded-[7px]" />;', errors: [{ messageId: "arbitraryLiteral", data: { token: "rounded-[7px]" } }] },
+    {
+      code: '<div className="rounded-[7px]" />;',
+      errors: [{ messageId: "arbitraryLiteral", data: { token: "rounded-[7px]" } }],
+    },
     { code: '<div className="w-[16px] h-4" />;', errors: [{ messageId: "arbitraryLiteral" }] },
     { code: '<div className="bg-[#0869e1]" />;', errors: [{ messageId: "arbitraryLiteral" }] },
     { code: '<div className="text-[rgb(0,0,0)]" />;', errors: [{ messageId: "arbitraryLiteral" }] },
     { code: '<div className="hover:duration-[150ms]" />;', errors: [{ messageId: "arbitraryLiteral" }] },
-    { code: '<div className="duration-100" />;', errors: [{ messageId: "defaultScale", data: { token: "duration-100" } }] },
-    { code: '<div className="z-50 leading-5" />;', errors: [{ messageId: "defaultScale" }, { messageId: "defaultScale" }] },
+    {
+      code: '<div className="duration-100" />;',
+      errors: [{ messageId: "defaultScale", data: { token: "duration-100" } }],
+    },
+    {
+      code: '<div className="z-50 leading-5" />;',
+      errors: [{ messageId: "defaultScale" }, { messageId: "defaultScale" }],
+    },
     { code: '<div className="md:!z-50" />;', errors: [{ messageId: "defaultScale" }] },
-    { code: '<div className={`flex ${x} tracking-2`} />;', errors: [{ messageId: "defaultScale" }] },
+    { code: "<div className={`flex ${x} tracking-2`} />;", errors: [{ messageId: "defaultScale" }] },
     { code: '<div className={open ? "z-50" : "z-pop"} />;', errors: [{ messageId: "defaultScale" }] },
     { code: 'cn("flex", { "w-[16px]": wide });', errors: [{ messageId: "arbitraryLiteral" }] },
     { code: 'cn("flex", ["mt-[1rem]"]);', errors: [{ messageId: "arbitraryLiteral" }] },
-    { code: 'cva("inline-flex duration-100", { variants: { tone: { ok: "bg-[#fff]" } } });', errors: [{ messageId: "defaultScale" }, { messageId: "arbitraryLiteral" }] },
+    {
+      code: 'cva("inline-flex duration-100", { variants: { tone: { ok: "bg-[#fff]" } } });',
+      errors: [{ messageId: "defaultScale" }, { messageId: "arbitraryLiteral" }],
+    },
     { code: 'twMerge("p-2", "p-[3px]");', errors: [{ messageId: "arbitraryLiteral" }] },
     // className 속성과 cn 호출이 겹치는 자리 — 한 번만 보고한다
-    { code: '<div className={cn("w-[16px]", active && "duration-100")} />;', errors: [{ messageId: "arbitraryLiteral" }, { messageId: "defaultScale" }] },
+    {
+      code: '<div className={cn("w-[16px]", active && "duration-100")} />;',
+      errors: [{ messageId: "arbitraryLiteral" }, { messageId: "defaultScale" }],
+    },
   ],
 });

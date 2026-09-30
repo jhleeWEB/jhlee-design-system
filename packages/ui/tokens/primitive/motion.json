@@ -7,18 +7,44 @@
   },
   "animate": {
     "$type": "animation",
-    "in-pop": { "$value": "pop 0.14s {ease.out-quick}", "$extensions": { "sds": { "reducedMotion": "none" } } },
+    "in-pop": {
+      "$value": "pop 0.14s {ease.out-quick}",
+      "$extensions": { "sds": { "reducedMotion": "none" } }
+    },
     "in-fade": { "$value": "fade 0.12s linear", "$extensions": { "sds": { "reducedMotion": "none" } } },
-    "in-rise": { "$value": "rise 0.16s {ease.out-quick}", "$extensions": { "sds": { "reducedMotion": "none" } } },
-    "shimmer": { "$value": "shimmer 1.25s linear infinite", "$extensions": { "sds": { "reducedMotion": "none" } } }
+    "in-rise": {
+      "$value": "rise 0.16s {ease.out-quick}",
+      "$extensions": { "sds": { "reducedMotion": "none" } }
+    },
+    "shimmer": {
+      "$value": "shimmer 1.25s linear infinite",
+      "$extensions": { "sds": { "reducedMotion": "none" } }
+    }
   },
   "duration": {
     "$type": "duration",
     "$description": "전환 시간 4단. 컴포넌트가 `duration-fast` 처럼 쓰고, .ds-* CSS 와 JS 는 --duration-* · MOTION 으로 같은 값을 읽는다. 컴포넌트별 시간(toast · collapse · scrollbar · tooltip)은 component/ 에서 같은 네임스페이스로 잇는다.",
-    "$extensions": { "sds": { "scope": "root", "utility": { "prefix": "duration", "properties": ["--tw-duration", "transition-duration"] } } },
+    "$extensions": {
+      "sds": {
+        "scope": "root",
+        "utility": { "prefix": "duration", "properties": ["--tw-duration", "transition-duration"] }
+      }
+    },
     "instant": { "$value": "0ms", "$extensions": { "sds": { "ts": "instantMs" } } },
-    "fast": { "$value": "100ms", "$description": "색·불투명도 전환 — 옛 duration-100.", "$extensions": { "sds": { "ts": "fastMs" } } },
-    "base": { "$value": "150ms", "$description": "너비·위치 전환 — 옛 duration-150.", "$extensions": { "sds": { "ts": "baseMs" } } },
-    "slow": { "$value": "200ms", "$description": "접기·진행 막대 — 옛 duration-200.", "$extensions": { "sds": { "ts": "slowMs" } } }
+    "fast": {
+      "$value": "100ms",
+      "$description": "색·불투명도 전환 — 옛 duration-100.",
+      "$extensions": { "sds": { "ts": "fastMs" } }
+    },
+    "base": {
+      "$value": "150ms",
+      "$description": "너비·위치 전환 — 옛 duration-150.",
+      "$extensions": { "sds": { "ts": "baseMs" } }
+    },
+    "slow": {
+      "$value": "200ms",
+      "$description": "접기·진행 막대 — 옛 duration-200.",
+      "$extensions": { "sds": { "ts": "slowMs" } }
+    }
   }
 }

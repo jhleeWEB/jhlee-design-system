@@ -16,13 +16,16 @@ function toMs(value) {
 /** 토큰의 JSDoc 한 줄 — 경로 · 값, `$deprecated` 면 `@deprecated` 태그. */
 function doc(t) {
   const deprecated = t.$deprecated;
-  const tag = deprecated === undefined || deprecated === false ? "" : ` @deprecated ${typeof deprecated === "string" ? deprecated : ""}`.trimEnd();
+  const tag =
+    deprecated === undefined || deprecated === false
+      ? ""
+      : ` @deprecated ${typeof deprecated === "string" ? deprecated : ""}`.trimEnd();
   return `  /** ${t.path.join(".")} — ${t.$value}${tag} */`;
 }
 
 function motion(dictionary) {
-  const tokens = dictionary.allTokens.filter(t => sds(t).ts !== undefined).sort(byOrder);
-  const lines = tokens.map(t => `${doc(t)}\n  ${sds(t).ts}: ${toMs(t.$value)},`);
+  const tokens = dictionary.allTokens.filter((t) => sds(t).ts !== undefined).sort(byOrder);
+  const lines = tokens.map((t) => `${doc(t)}\n  ${sds(t).ts}: ${toMs(t.$value)},`);
   return [
     HEADER,
     "/** 시간 상수(ms) — tokens/**.json 의 duration 가운데 `$extensions.sds.ts` 가 붙은 것. CSS 쪽 짝(--duration-*)은 같은 토큰에서 나온다. */",
@@ -35,9 +38,14 @@ function motion(dictionary) {
 
 function ladders(dictionary) {
   // @theme 사다리 + 생성 @utility 가 있는 네임스페이스. 후자는 :root 토큰이지만 클래스 이름(z-toast)이 되므로 twMerge 가 알아야 한다.
-  const tokens = dictionary.allTokens.filter(t => t.path.length >= 2 && (sds(t).scope === "theme" || sds(t).utility)).sort(byOrder);
-  const groups = groupBy(tokens, t => t.path[0]);
-  const lines = [...groups].map(([ns, list]) => `  ${JSON.stringify(ns)}: [${list.map(t => JSON.stringify(t.path.slice(1).join("-"))).join(", ")}],`);
+  const tokens = dictionary.allTokens
+    .filter((t) => t.path.length >= 2 && (sds(t).scope === "theme" || sds(t).utility))
+    .sort(byOrder);
+  const groups = groupBy(tokens, (t) => t.path[0]);
+  const lines = [...groups].map(
+    ([ns, list]) =>
+      `  ${JSON.stringify(ns)}: [${list.map((t) => JSON.stringify(t.path.slice(1).join("-"))).join(", ")}],`,
+  );
   return [
     HEADER,
     "/** 역할 이름 사다리 — 네임스페이스별, 정본 순. @theme 의 것(rounded-* · text-* · font-* …)과 생성 @utility 의 것(layer → z-* · duration → duration-*). twMerge(cn.ts)가 충돌을 해소하려면 이 이름들을 알아야 한다. */",

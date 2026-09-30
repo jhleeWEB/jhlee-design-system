@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "../cn";
  * 이 파일에는 지시문·훅·Radix 가 없어야 한다. */
 
 /** 스피너의 변형 — `size` 와 `tone`(neutral 은 글자색을 따른다 — 옛 current). `muted` 는 스피너만의 것이다. */
-export const spinnerVariants = cva("shrink-0 animate-spin motion-reduce:animate-none", {
+export const spinnerVariants = cva("animate-spin shrink-0 motion-reduce:animate-none", {
   variants: {
     size: { sm: "size-6", md: "size-8", lg: "size-12" },
     tone: { neutral: "text-current", muted: "text-muted-foreground", primary: "text-primary" },

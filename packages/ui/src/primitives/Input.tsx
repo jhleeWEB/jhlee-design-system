@@ -10,8 +10,7 @@ import { inputVariants } from "./Input.variants";
  * 슬라이더를 움직일 때 자릿수가 흔들리지 않는다. 호출처가 매번 클래스를 적게 두면 반드시 빠진다. */
 
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
-    VariantProps<typeof inputVariants> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">, VariantProps<typeof inputVariants> {
   /** 값 뒤에 붙는 단위 — "m", "m²", "%". 입력 안에 겹쳐 그리므로 값이 가려지지 않게 패딩을 준다. */
   suffix?: string;
 }
@@ -32,7 +31,22 @@ function selectZeroForReplacement(input: HTMLInputElement) {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { className, size, invalid, numeric, suffix, type, value, defaultValue, onChange, onInput, onFocus, onClick, onBlur, ...rest },
+  {
+    className,
+    size,
+    invalid,
+    numeric,
+    suffix,
+    type,
+    value,
+    defaultValue,
+    onChange,
+    onInput,
+    onFocus,
+    onClick,
+    onBlur,
+    ...rest
+  },
   ref,
 ) {
   const [incompleteNumber, setIncompleteNumber] = useState(false);
@@ -50,7 +64,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
      래퍼로 가고 입력은 그 안을 채운다. 접미사가 없는 래퍼는 레이아웃 상자를 만들지 않는다.
      두 경우 모두 같은 input을 유지해야 단위가 바뀔 때 포커스·선택 영역·비제어 값이 남는다. */
   return (
-    <span data-slot="input-wrapper" className={suffix ? cn("relative inline-flex items-center", className) : "contents"}>
+    <span
+      data-slot="input-wrapper"
+      className={suffix ? cn("relative inline-flex items-center", className) : "contents"}
+    >
       <input
         ref={ref}
         data-slot="input"
@@ -58,40 +75,72 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         className={cn(inputVariants({ size, invalid, numeric }), !suffix && className)}
         {...rest}
         type={type}
-        value={controlledZero && incompleteNumber ? "" : type === "number" && typeof value === "string" ? stripLeadingZeros(value) : value}
-        defaultValue={type === "number" && typeof defaultValue === "string" ? stripLeadingZeros(defaultValue) : defaultValue}
-        onFocus={type === "number" ? event => {
-          onFocus?.(event);
-          if (!event.defaultPrevented) selectZeroForReplacement(event.currentTarget);
-        } : onFocus}
-        onClick={type === "number" ? event => {
-          onClick?.(event);
-          // 마우스 기본 동작이 포커스 때의 선택을 다시 접을 수 있어 클릭 완료 후에도 적용한다.
-          if (!event.defaultPrevented) selectZeroForReplacement(event.currentTarget);
-        } : onClick}
-        onBlur={type === "number" ? event => {
-          setIncompleteNumber(false);
-          onBlur?.(event);
-        } : onBlur}
-        onChange={type === "number" ? event => {
-          updateNumberInput(event.currentTarget);
-          onChange?.(event);
-        } : onChange}
-        onInput={type === "number" ? event => {
-          updateNumberInput(event.currentTarget);
-          onInput?.(event);
-        } : onInput}
+        value={
+          controlledZero && incompleteNumber
+            ? ""
+            : type === "number" && typeof value === "string"
+              ? stripLeadingZeros(value)
+              : value
+        }
+        defaultValue={
+          type === "number" && typeof defaultValue === "string"
+            ? stripLeadingZeros(defaultValue)
+            : defaultValue
+        }
+        onFocus={
+          type === "number"
+            ? (event) => {
+                onFocus?.(event);
+                if (!event.defaultPrevented) selectZeroForReplacement(event.currentTarget);
+              }
+            : onFocus
+        }
+        onClick={
+          type === "number"
+            ? (event) => {
+                onClick?.(event);
+                // 마우스 기본 동작이 포커스 때의 선택을 다시 접을 수 있어 클릭 완료 후에도 적용한다.
+                if (!event.defaultPrevented) selectZeroForReplacement(event.currentTarget);
+              }
+            : onClick
+        }
+        onBlur={
+          type === "number"
+            ? (event) => {
+                setIncompleteNumber(false);
+                onBlur?.(event);
+              }
+            : onBlur
+        }
+        onChange={
+          type === "number"
+            ? (event) => {
+                updateNumberInput(event.currentTarget);
+                onChange?.(event);
+              }
+            : onChange
+        }
+        onInput={
+          type === "number"
+            ? (event) => {
+                updateNumberInput(event.currentTarget);
+                onInput?.(event);
+              }
+            : onInput
+        }
         /* 오른쪽 패딩은 **접미사 길이에 따라** 잡는다. 고정값을 주면 "bays" 처럼 긴 단위가
            값 위에 겹친다(실측). `ch` 는 mono 글꼴에서 글자 하나 폭이므로 정확하다.
            `{...rest}` **뒤에** 와야 한다 — 앞에 두면 호출처의 `style` 이 통째로 덮어쓴다. */
         style={suffix ? { paddingRight: `calc(${suffix.length}ch + 10px)`, ...rest.style } : rest.style}
       />
-      {suffix ? <span
-        aria-hidden="true"
-        className="pointer-events-none absolute right-3 font-mono text-micro text-muted-foreground"
-      >
-        {suffix}
-      </span> : null}
+      {suffix ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-3 font-mono text-micro text-muted-foreground"
+        >
+          {suffix}
+        </span>
+      ) : null}
     </span>
   );
 });
@@ -107,7 +156,7 @@ export const Textarea = forwardRef<
       aria-invalid={invalid || undefined}
       className={cn(
         inputVariants({ size: "md", invalid: invalid ?? false }),
-        "h-auto min-h-[56px] resize-y py-3 leading-relaxed",
+        "leading-relaxed h-auto min-h-[56px] resize-y py-3",
         className,
       )}
       {...rest}

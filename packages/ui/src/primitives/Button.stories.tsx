@@ -39,9 +39,9 @@ export const Variants: Story = {
   tags: ["!manifest"],
   // color-contrast: ghost/link 의 destructive·neutral 글자와 disabled 상태 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
   parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
-  render: args => (
+  render: (args) => (
     <div className="flex flex-col gap-6">
-      {sizeValues.map(size => (
+      {sizeValues.map((size) => (
         <Matrix
           key={size}
           rows={variantValues}
@@ -52,8 +52,12 @@ export const Variants: Story = {
         />
       ))}
       <div className="flex items-start gap-3">
-        <Button {...args} loading>Solving</Button>
-        <Button {...args} disabled>Unavailable</Button>
+        <Button {...args} loading>
+          Solving
+        </Button>
+        <Button {...args} disabled>
+          Unavailable
+        </Button>
       </div>
     </div>
   ),
@@ -63,7 +67,7 @@ export const ThemeContrast: Story = {
   args: { variant: "solid", tone: "primary" },
   // color-contrast: 다크의 ghost destructive 글자 — 토큰 값의 몫(#23)
   parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
-  render: args => (
+  render: (args) => (
     <ThemePair>
       <Button {...args} />
       <Button {...args} variant="outline" tone="neutral" />

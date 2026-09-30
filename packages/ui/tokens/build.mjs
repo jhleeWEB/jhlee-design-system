@@ -31,7 +31,7 @@ const check = process.argv.includes("--check");
 const sources = readTokenSources(here);
 const { errors, tokens: flat, dark, renames } = validateTokenSources(sources);
 if (errors.length) {
-  console.error(`tokens: 정본 검사 실패 ${errors.length}건\n${errors.map(e => ` - ${e}`).join("\n")}`);
+  console.error(`tokens: 정본 검사 실패 ${errors.length}건\n${errors.map((e) => ` - ${e}`).join("\n")}`);
   process.exit(1);
 }
 
@@ -42,18 +42,30 @@ function nest(list) {
     let node = root;
     for (const key of t.path.slice(0, -1)) node = node[key] ??= {};
     // $deprecated 도 싣는다 — 포맷이 `/* @deprecated */`·JSDoc @deprecated 를 낼 근거다(#22 에서 빠져 있던 것을 실측으로 잡았다).
-    node[t.path.at(-1)] = { $type: t.type, $value: t.value, $extensions: { sds: { ...t.sds, file: t.file, order: t.order } }, ...(t.deprecated !== undefined ? { $deprecated: t.deprecated } : {}) };
+    node[t.path.at(-1)] = {
+      $type: t.type,
+      $value: t.value,
+      $extensions: { sds: { ...t.sds, file: t.file, order: t.order } },
+      ...(t.deprecated !== undefined ? { $deprecated: t.deprecated } : {}),
+    };
   }
   return root;
 }
 
-StyleDictionary.registerTransform({ name: "name/sds", type: "name", transform: token => token.path.join("-") });
+StyleDictionary.registerTransform({
+  name: "name/sds",
+  type: "name",
+  transform: (token) => token.path.join("-"),
+});
 StyleDictionary.registerFormat({ name: "sds/css-vars", format: cssVars });
 StyleDictionary.registerFormat({ name: "sds/tailwind-theme", format: tailwindTheme });
 StyleDictionary.registerFormat({ name: "sds/ts-consts", format: tsConsts });
 
 // 다크는 리터럴이거나 원시 참조다 — 스키마가 참조 존재를 봤으므로 여기서는 선언으로만 바꾼다.
-const darkDeclarations = dark.map(t => ({ name: t.path.join("-"), declarations: declarations(t.path.join("-"), t.type, t.value, t.value, true) }));
+const darkDeclarations = dark.map((t) => ({
+  name: t.path.join("-"),
+  declarations: declarations(t.path.join("-"), t.type, t.value, t.value, true),
+}));
 
 const sd = new StyleDictionary({
   usesDtcg: true,
@@ -64,9 +76,21 @@ const sd = new StyleDictionary({
       transforms: ["name/sds"],
       buildPath: `${OUT_DIR}/`,
       files: [
-        { destination: "tokens.css", format: "sds/css-vars", options: { outputReferences: true, dark: darkDeclarations } },
-        { destination: "theme.tailwind.css", format: "sds/tailwind-theme", options: { outputReferences: true } },
-        { destination: "legacy.css", format: "sds/css-vars", options: { outputReferences: true, legacy: true } },
+        {
+          destination: "tokens.css",
+          format: "sds/css-vars",
+          options: { outputReferences: true, dark: darkDeclarations },
+        },
+        {
+          destination: "theme.tailwind.css",
+          format: "sds/tailwind-theme",
+          options: { outputReferences: true },
+        },
+        {
+          destination: "legacy.css",
+          format: "sds/css-vars",
+          options: { outputReferences: true, legacy: true },
+        },
         { destination: "tokens.ts", format: "sds/ts-consts", options: { kind: "motion" } },
         { destination: "ladders.ts", format: "sds/ts-consts", options: { kind: "ladders" } },
       ],
@@ -75,14 +99,26 @@ const sd = new StyleDictionary({
 });
 await sd.hasInitialized;
 // formatPlatform 은 쓰지 않고 문자열만 돌려준다(4.4 실측: destination 에 buildPath 가 이미 붙어 온다) — --check 가 그것을 커밋본과 비교한다.
-const outputs = (await sd.formatPlatform("generated")).map(({ destination, output }) => ({ path: destination, name: `src/generated/${relative(OUT_DIR, destination)}`, output }));
+const outputs = (await sd.formatPlatform("generated")).map(({ destination, output }) => ({
+  path: destination,
+  name: `src/generated/${relative(OUT_DIR, destination)}`,
+  output,
+}));
 // 코드모드 표는 SD 를 거치지 않는다 — 편 토큰과 renames 만 있으면 된다. JSON 은 사람이 diff 로 읽으므로 2칸 들여쓰기로.
-outputs.push({ path: ESLINT_OUT, name: "src/generated/legacy-classes.json", output: `${JSON.stringify(legacyClassRestrictions(legacyRenames(flat, renames)), null, 2)}\n` });
+outputs.push({
+  path: ESLINT_OUT,
+  name: "src/generated/legacy-classes.json",
+  output: `${JSON.stringify(legacyClassRestrictions(legacyRenames(flat, renames)), null, 2)}\n`,
+});
 
 if (check) {
-  const stale = outputs.filter(({ path, output }) => !existsSync(path) || readFileSync(path, "utf8") !== output).map(o => o.name);
+  const stale = outputs
+    .filter(({ path, output }) => !existsSync(path) || readFileSync(path, "utf8") !== output)
+    .map((o) => o.name);
   if (stale.length) {
-    console.error(`tokens: 생성물이 정본과 다르다 — pnpm tokens:build 로 다시 만들고 함께 커밋한다\n${stale.map(s => ` - ${s}`).join("\n")}`);
+    console.error(
+      `tokens: 생성물이 정본과 다르다 — pnpm tokens:build 로 다시 만들고 함께 커밋한다\n${stale.map((s) => ` - ${s}`).join("\n")}`,
+    );
     process.exit(1);
   }
   console.log(`tokens: 생성물 ${outputs.length}개가 최신이다`);
@@ -90,5 +126,5 @@ if (check) {
   mkdirSync(OUT_DIR, { recursive: true });
   mkdirSync(dirname(ESLINT_OUT), { recursive: true });
   for (const { path, output } of outputs) writeFileSync(path, output);
-  console.log(`tokens: ${outputs.map(o => o.name).join(" · ")}`);
+  console.log(`tokens: ${outputs.map((o) => o.name).join(" · ")}`);
 }

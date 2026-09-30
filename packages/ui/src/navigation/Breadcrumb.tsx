@@ -25,7 +25,7 @@ export function Breadcrumb({
         return (
           <span key={i} className="flex min-w-0 items-center gap-2">
             {i > 0 ? (
-              <span aria-hidden="true" className="select-none text-foreground-disabled">
+              <span aria-hidden="true" className="text-foreground-disabled select-none">
                 /
               </span>
             ) : null}
@@ -42,7 +42,7 @@ export function Breadcrumb({
                 data-slot="breadcrumb-link"
                 type="button"
                 onClick={item.onSelect}
-                className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit min-w-0 cursor-pointer truncate rounded-md hover:text-foreground hover:underline focus-visible:focus-ring focus-visible:outline-none"
+                className="font-inherit min-w-0 cursor-pointer appearance-none truncate rounded-md border-0 bg-transparent p-0 text-inherit hover:text-foreground hover:underline focus-visible:focus-ring focus-visible:outline-none"
               >
                 {item.label}
               </button>

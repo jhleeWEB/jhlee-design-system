@@ -11,7 +11,10 @@ import { ModalBody, ModalFooter } from "./Modal";
  * `Modal` 과 나눠 둔 이유는 외형이 아니라 행동이다: `AlertDialog` 는 스크림 클릭으로 닫히지 않고,
  * 포커스가 기본으로 취소 쪽에 간다. 저장소에 있던 `role="alertdialog"` 네 자리(필지 삭제 ·
  * 저장 확인 ·닫히지 않은 필지 · 필지 비우기)가 전부 이 경우였다. */
-export interface ConfirmDialogProps extends Omit<React.ComponentPropsWithRef<typeof Radix.Content>, "title" | "children" | "forceMount" | "asChild"> {
+export interface ConfirmDialogProps extends Omit<
+  React.ComponentPropsWithRef<typeof Radix.Content>,
+  "title" | "children" | "forceMount" | "asChild"
+> {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: React.ReactNode;
@@ -55,29 +58,29 @@ export function ConfirmDialog({
   return (
     <Radix.Root open={open} onOpenChange={onOpenChange}>
       <Radix.Portal>
-        <Radix.Overlay className="fixed inset-0 z-scrim bg-scrim animate-in-fade" />
+        <Radix.Overlay className="fixed inset-0 z-scrim animate-in-fade bg-scrim" />
         <Radix.Content
           // 설명을 소유하므로 없는 ID를 만들지 않는다. 호출자가 지정한 ARIA 연결은 그대로 우선한다.
           aria-describedby={description ? descriptionId : undefined}
           {...contentProps}
           data-slot="confirm-dialog"
           className={cn(
-            "fixed left-1/2 top-1/2 z-modal -translate-x-1/2 -translate-y-1/2",
+            "fixed top-1/2 left-1/2 z-modal -translate-x-1/2 -translate-y-1/2",
             "flex max-h-dialog-fluid flex-col overflow-hidden [overflow-wrap:anywhere]",
             // 세 갈래 확인은 일반 모달 폭을 쓰고, 좁은 화면의 줄바꿈은 공용 바닥이 맡는다. 유동 폭 + 상한 = 옛 min(폭, 100vw-24px).
             "w-dialog-fluid",
             secondaryAction ? "max-w-dialog-md" : "max-w-dialog-sm",
             "rounded-xl border border-border bg-card shadow-modal",
-            "text-body text-foreground animate-in-pop focus-visible:outline-none",
+            "animate-in-pop text-body text-foreground focus-visible:outline-none",
             className,
           )}
         >
-          <ModalBody className="pb-4 pt-5">
-            <Radix.Title className="text-title font-semibold leading-snug text-foreground">
+          <ModalBody className="pt-5 pb-4">
+            <Radix.Title className="leading-snug text-title font-semibold text-foreground">
               {title}
             </Radix.Title>
             {description ? (
-              <Radix.Description id={descriptionId} className="mt-2 leading-relaxed text-muted-foreground">
+              <Radix.Description id={descriptionId} className="leading-relaxed mt-2 text-muted-foreground">
                 {description}
               </Radix.Description>
             ) : null}

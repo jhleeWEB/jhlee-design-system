@@ -22,7 +22,18 @@ export type Scope = (typeof SCOPES)[number];
 
 /** 허용하는 `$type`. `animation` 은 DTCG 에 없는 확장이다 — Tailwind `--animate-*` 의 «name duration easing» 한 줄을 그대로 든다.
  * `keyword` 도 확장이다 — `corner.shape` 의 `round` 처럼 CSS 키워드 하나가 값인 토큰(#26; 스쿼클 폐기 뒤에도 호환 alias 로 남는다, #36). */
-export const TYPES = ["color", "dimension", "duration", "cubicBezier", "fontFamily", "number", "shadow", "typography", "animation", "keyword"] as const;
+export const TYPES = [
+  "color",
+  "dimension",
+  "duration",
+  "cubicBezier",
+  "fontFamily",
+  "number",
+  "shadow",
+  "typography",
+  "animation",
+  "keyword",
+] as const;
 /** `$type` 이름. */
 export type TokenType = (typeof TYPES)[number];
 
@@ -73,13 +84,26 @@ const sdsSchema = z.strictObject({
 });
 const extensionsSchema = z.looseObject({ sds: sdsSchema.optional() });
 
-const dimension = z.string().regex(/^(?:\{[a-z0-9.-]+\}|0|-?\d+(?:\.\d+)?(?:px|em|rem))$/, "dimension 은 0 · [-]<n>px|em|rem · {alias}");
+const dimension = z
+  .string()
+  .regex(
+    /^(?:\{[a-z0-9.-]+\}|0|-?\d+(?:\.\d+)?(?:px|em|rem))$/,
+    "dimension 은 0 · [-]<n>px|em|rem · {alias}",
+  );
 const valueSchemas: Readonly<Record<TokenType, z.ZodType>> = {
   color: z
     .string()
-    .refine(v => REF.test(v) || /^#[0-9a-f]{6}$/.test(v) || /^rgb\(\d+ \d+ \d+ \/ \d*\.?\d+\)$/.test(v) || v === "transparent" || v === "currentColor", {
-      message: "color 는 #rrggbb(소문자) · rgb(r g b / a) · transparent · currentColor · {alias}",
-    }),
+    .refine(
+      (v) =>
+        REF.test(v) ||
+        /^#[0-9a-f]{6}$/.test(v) ||
+        /^rgb\(\d+ \d+ \d+ \/ \d*\.?\d+\)$/.test(v) ||
+        v === "transparent" ||
+        v === "currentColor",
+      {
+        message: "color 는 #rrggbb(소문자) · rgb(r g b / a) · transparent · currentColor · {alias}",
+      },
+    ),
   dimension,
   duration: z.string().regex(/^(?:\{[a-z0-9.-]+\}|\d+(?:\.\d+)?m?s)$/, "duration 은 <n>ms|s · {alias}"),
   keyword: z.string().regex(/^[a-z][a-z-]*$/, "keyword 는 소문자 CSS 키워드 하나(round)"),
@@ -94,7 +118,8 @@ const valueSchemas: Readonly<Record<TokenType, z.ZodType>> = {
 /** `$extensions.sds` 의 모양. */
 export type SdsExtension = z.infer<typeof sdsSchema>;
 /** 토큰 값 — `$type` 이 정한다. */
-export type TokenValue = string | number | readonly number[] | { readonly fontSize: string; readonly lineHeight: number };
+export type TokenValue =
+  string | number | readonly number[] | { readonly fontSize: string; readonly lineHeight: number };
 
 /** 트리를 편 토큰 하나 — 생성기와 스펙이 읽는 형태. */
 export interface FlatToken {
@@ -125,7 +150,7 @@ export interface ValidationResult {
 /** 층 → 파일 순으로 정렬한 경로. */
 export function sortSourcePaths(paths: readonly string[]): string[] {
   const rank = (p: string): number => {
-    const i = LAYER_ORDER.findIndex(prefix => p === prefix || p.startsWith(prefix));
+    const i = LAYER_ORDER.findIndex((prefix) => p === prefix || p.startsWith(prefix));
     return i === -1 ? LAYER_ORDER.length : i;
   };
   return [...paths].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
@@ -139,19 +164,21 @@ export function readTokenSources(dir: string): TokenSources {
       if (name.startsWith(".")) continue;
       const full = join(d, name);
       if (statSync(full).isDirectory()) walk(full);
-      else if (name.endsWith(".json")) out[relative(dir, full).split(sep).join("/")] = JSON.parse(readFileSync(full, "utf8"));
+      else if (name.endsWith(".json"))
+        out[relative(dir, full).split(sep).join("/")] = JSON.parse(readFileSync(full, "utf8"));
     }
   };
   walk(dir);
   return out;
 }
 
-const isObject = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
+const isObject = (v: unknown): v is Record<string, unknown> =>
+  typeof v === "object" && v !== null && !Array.isArray(v);
 
 /** 문자열 값 안의 `{a.b}` 참조 경로들. */
 export function referencesIn(value: TokenValue): string[] {
   if (typeof value !== "string") return [];
-  return [...value.matchAll(REF_ANYWHERE)].map(m => m[1]!);
+  return [...value.matchAll(REF_ANYWHERE)].map((m) => m[1]!);
 }
 
 interface Inherited {
@@ -161,7 +188,13 @@ interface Inherited {
   readonly deprecated: boolean | string | undefined;
 }
 
-function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[], counter: { n: number }): void {
+function walkFile(
+  file: string,
+  root: unknown,
+  errors: string[],
+  out: FlatToken[],
+  counter: { n: number },
+): void {
   if (!isObject(root)) {
     errors.push(`${file}: 최상위는 객체여야 한다`);
     return;
@@ -175,18 +208,30 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
     for (const key of Object.keys(node)) {
       if (key.startsWith("$")) {
         if (!META_KEYS.has(key)) errors.push(`${where}: 알 수 없는 메타 키 ${key}`);
-      } else if (!NAME.test(key)) errors.push(`${where}: 이름 «${key}» 은 kebab-case(소문자·숫자·하이픈)여야 한다`);
+      } else if (!NAME.test(key))
+        errors.push(`${where}: 이름 «${key}» 은 kebab-case(소문자·숫자·하이픈)여야 한다`);
     }
-    if (node.$type !== undefined && !TYPES.includes(node.$type as TokenType)) errors.push(`${where}: $type «${String(node.$type)}» 은 ${TYPES.join(" | ")} 가운데 하나여야 한다`);
+    if (node.$type !== undefined && !TYPES.includes(node.$type as TokenType))
+      errors.push(`${where}: $type «${String(node.$type)}» 은 ${TYPES.join(" | ")} 가운데 하나여야 한다`);
     const type = TYPES.includes(node.$type as TokenType) ? (node.$type as TokenType) : inherited.type;
     const ext = extensionsSchema.safeParse(node.$extensions ?? {});
-    if (!ext.success) errors.push(`${where}: $extensions — ${ext.error.issues.map(i => `${i.path.join(".")}: ${i.message}`).join("; ")}`);
+    if (!ext.success)
+      errors.push(
+        `${where}: $extensions — ${ext.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`,
+      );
     const { renames, ...own }: SdsExtension = ext.success ? (ext.data.sds ?? {}) : {};
     // renames 는 파일 머리의 것만 읽고(validateTokenSources 가 따로 본다) 토큰으로 물려주지 않는다 — 토큰의 sds 에 섞이면 포맷이 오해한다.
-    if (renames !== undefined && (path.length > 0 || file !== LEGACY_FILE)) errors.push(`${where}: renames 는 ${LEGACY_FILE} 의 파일 머리에만 둔다`);
+    if (renames !== undefined && (path.length > 0 || file !== LEGACY_FILE))
+      errors.push(`${where}: renames 는 ${LEGACY_FILE} 의 파일 머리에만 둔다`);
     const isToken = "$value" in node;
-    if (node.$deprecated !== undefined && typeof node.$deprecated !== "boolean" && typeof node.$deprecated !== "string") errors.push(`${where}: $deprecated 는 boolean 또는 문자열`);
-    const deprecated = node.$deprecated !== undefined ? (node.$deprecated as boolean | string) : inherited.deprecated;
+    if (
+      node.$deprecated !== undefined &&
+      typeof node.$deprecated !== "boolean" &&
+      typeof node.$deprecated !== "string"
+    )
+      errors.push(`${where}: $deprecated 는 boolean 또는 문자열`);
+    const deprecated =
+      node.$deprecated !== undefined ? (node.$deprecated as boolean | string) : inherited.deprecated;
 
     if (isToken) {
       if (path.length === 0) errors.push(`${where}: 파일 머리는 토큰일 수 없다`);
@@ -196,14 +241,21 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
       const sds = { ...inherited.sds, ...own };
       if (type) {
         const parsed = valueSchemas[type].safeParse(node.$value);
-        if (!parsed.success) errors.push(`${where}: ${type} 값 — ${parsed.error.issues.map(i => i.message).join("; ")}`);
-        if (sds.ts !== undefined && type !== "duration") errors.push(`${where}: sds.ts 는 duration 에만 붙는다`);
-        if (sds.reducedMotion !== undefined && type !== "duration" && type !== "animation") errors.push(`${where}: sds.reducedMotion 은 duration·animation 에만 붙는다`);
+        if (!parsed.success)
+          errors.push(`${where}: ${type} 값 — ${parsed.error.issues.map((i) => i.message).join("; ")}`);
+        if (sds.ts !== undefined && type !== "duration")
+          errors.push(`${where}: sds.ts 는 duration 에만 붙는다`);
+        if (sds.reducedMotion !== undefined && type !== "duration" && type !== "animation")
+          errors.push(`${where}: sds.reducedMotion 은 duration·animation 에만 붙는다`);
       }
-      if (sds.reset && sds.scope !== "theme" && sds.scope !== "theme-inline") errors.push(`${where}: reset 은 theme · theme-inline 스코프에서만 뜻이 있다`);
-      if (sds.utility && sds.scope === "legacy") errors.push(`${where}: legacy 이름으로 유틸리티를 내지 않는다`);
-      if (node.$description !== undefined && typeof node.$description !== "string") errors.push(`${where}: $description 은 문자열`);
-      for (const key of Object.keys(node)) if (!key.startsWith("$")) errors.push(`${where}: 토큰 안에 자식 «${key}» 을 둘 수 없다`);
+      if (sds.reset && sds.scope !== "theme" && sds.scope !== "theme-inline")
+        errors.push(`${where}: reset 은 theme · theme-inline 스코프에서만 뜻이 있다`);
+      if (sds.utility && sds.scope === "legacy")
+        errors.push(`${where}: legacy 이름으로 유틸리티를 내지 않는다`);
+      if (node.$description !== undefined && typeof node.$description !== "string")
+        errors.push(`${where}: $description 은 문자열`);
+      for (const key of Object.keys(node))
+        if (!key.startsWith("$")) errors.push(`${where}: 토큰 안에 자식 «${key}» 을 둘 수 없다`);
       out.push({
         path,
         file,
@@ -217,7 +269,8 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
       return;
     }
 
-    if (own.ts !== undefined || own.reducedMotion !== undefined) errors.push(`${where}: ts · reducedMotion 은 토큰에만 둔다`);
+    if (own.ts !== undefined || own.reducedMotion !== undefined)
+      errors.push(`${where}: ts · reducedMotion 은 토큰에만 둔다`);
     const next: Inherited = { type, sds: { ...inherited.sds, ...own }, deprecated };
     for (const [key, child] of Object.entries(node)) {
       if (key.startsWith("$")) continue;
@@ -267,10 +320,11 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
 
   // alias 존재 — 다크의 참조도 라이트 집합에서 푼다(생성물에서 var() 는 한 :root 캐스케이드다).
   for (const t of [...light, ...dark]) {
-    for (const ref of referencesIn(t.value)) if (!seen.has(ref)) errors.push(`${t.file}: ${key(t)} → {${ref}} 정의가 없다`);
+    for (const ref of referencesIn(t.value))
+      if (!seen.has(ref)) errors.push(`${t.file}: ${key(t)} → {${ref}} 정의가 없다`);
   }
   // 순환 — `--a → --b → --a` 는 브라우저가 둘 다 무효로 만든다.
-  const byKey = new Map(light.map(t => [key(t), t] as const));
+  const byKey = new Map(light.map((t) => [key(t), t] as const));
   const visiting = new Set<string>();
   const done = new Set<string>();
   const cycle = (k: string, trail: readonly string[]): void => {
@@ -287,37 +341,63 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
   for (const k of byKey.keys()) cycle(k, []);
 
   // chrome — light · dark 둘 다, 같은 집합, 그 두 파일에만. legacy.json 의 chrome.* 는 옛 이름 → 새 chrome 이름 alias 라 예외다(B5, #22).
-  const chromeLight = new Set(light.filter(t => t.path[0] === "chrome" && t.file === CHROME_LIGHT_FILE).map(key));
+  const chromeLight = new Set(
+    light.filter((t) => t.path[0] === "chrome" && t.file === CHROME_LIGHT_FILE).map(key),
+  );
   for (const t of light) {
-    if (t.path[0] === "chrome" && t.file !== CHROME_LIGHT_FILE && t.file !== LEGACY_FILE) errors.push(`${t.file}: chrome.* 는 ${CHROME_LIGHT_FILE} 에만 둔다`);
-    if (t.path[0] === "chrome" && t.file === LEGACY_FILE && !referencesIn(t.value).every(ref => ref.startsWith("chrome.")))
-      errors.push(`${LEGACY_FILE}: ${key(t)} 는 옛 크롬 이름이라 새 chrome.* 만 가리킨다 — 값이 다르면 alias 가 아니라 회귀다`);
-    if (t.file === CHROME_LIGHT_FILE && t.path[0] !== "chrome") errors.push(`${t.file}: 크롬 파일에 chrome.* 아닌 ${key(t)}`);
-    if (t.sds.scope === "chrome" && t.file !== CHROME_LIGHT_FILE) errors.push(`${t.file}: chrome 스코프는 크롬 파일만 쓴다`);
-    if (t.path[0] === "canvas" && t.file !== CANVAS_FILE) errors.push(`${t.file}: canvas.* 는 ${CANVAS_FILE} 에만 둔다`);
-    if (t.file === CANVAS_FILE && t.path[0] !== "canvas") errors.push(`${t.file}: 캔버스 파일에 canvas.* 아닌 ${key(t)}`);
+    if (t.path[0] === "chrome" && t.file !== CHROME_LIGHT_FILE && t.file !== LEGACY_FILE)
+      errors.push(`${t.file}: chrome.* 는 ${CHROME_LIGHT_FILE} 에만 둔다`);
+    if (
+      t.path[0] === "chrome" &&
+      t.file === LEGACY_FILE &&
+      !referencesIn(t.value).every((ref) => ref.startsWith("chrome."))
+    )
+      errors.push(
+        `${LEGACY_FILE}: ${key(t)} 는 옛 크롬 이름이라 새 chrome.* 만 가리킨다 — 값이 다르면 alias 가 아니라 회귀다`,
+      );
+    if (t.file === CHROME_LIGHT_FILE && t.path[0] !== "chrome")
+      errors.push(`${t.file}: 크롬 파일에 chrome.* 아닌 ${key(t)}`);
+    if (t.sds.scope === "chrome" && t.file !== CHROME_LIGHT_FILE)
+      errors.push(`${t.file}: chrome 스코프는 크롬 파일만 쓴다`);
+    if (t.path[0] === "canvas" && t.file !== CANVAS_FILE)
+      errors.push(`${t.file}: canvas.* 는 ${CANVAS_FILE} 에만 둔다`);
+    if (t.file === CANVAS_FILE && t.path[0] !== "canvas")
+      errors.push(`${t.file}: 캔버스 파일에 canvas.* 아닌 ${key(t)}`);
   }
-  if (CHROME_LIGHT_FILE in files && !(DARK_FILE in files)) errors.push(`${DARK_FILE} 이 없다 — 크롬은 듀얼 테마다`);
+  if (CHROME_LIGHT_FILE in files && !(DARK_FILE in files))
+    errors.push(`${DARK_FILE} 이 없다 — 크롬은 듀얼 테마다`);
   if (DARK_FILE in files && !(CHROME_LIGHT_FILE in files)) errors.push(`${CHROME_LIGHT_FILE} 이 없다`);
   for (const t of dark) {
-    if (t.path[0] !== "chrome") errors.push(`${DARK_FILE}: 다크는 크롬만 갈린다 — ${key(t)} 는 여기 둘 수 없다`);
+    if (t.path[0] !== "chrome")
+      errors.push(`${DARK_FILE}: 다크는 크롬만 갈린다 — ${key(t)} 는 여기 둘 수 없다`);
     if (t.sds.scope !== "chrome") errors.push(`${DARK_FILE}: 스코프는 chrome 이어야 한다`);
     if (!chromeLight.has(key(t))) errors.push(`${DARK_FILE}: ${key(t)} 가 라이트에 없다`);
   }
-  for (const k of chromeLight) if (!darkSeen.has(k) && DARK_FILE in files) errors.push(`${DARK_FILE}: ${k} 의 다크 값이 없다 — 빠진 토큰은 다크에서 라이트 색으로 남는다`);
+  for (const k of chromeLight)
+    if (!darkSeen.has(k) && DARK_FILE in files)
+      errors.push(`${DARK_FILE}: ${k} 의 다크 값이 없다 — 빠진 토큰은 다크에서 라이트 색으로 남는다`);
 
   // legacy — 옛 이름은 LEGACY_FILE 에만, 전부 $deprecated, 그리고 새 정본은 옛 이름을 참조하지 않는다(alias 는 밖으로만 향한다).
-  const legacyKeys = new Set(light.filter(t => t.file === LEGACY_FILE).map(key));
+  const legacyKeys = new Set(light.filter((t) => t.file === LEGACY_FILE).map(key));
   for (const t of light) {
     if (t.file === LEGACY_FILE) {
-      if (t.deprecated === undefined || t.deprecated === false) errors.push(`${LEGACY_FILE}: ${key(t)} 는 $deprecated 여야 한다 — 이 파일은 옛 이름만 산다`);
-      if (!LEGACY_SCOPES.includes(t.sds.scope)) errors.push(`${LEGACY_FILE}: ${key(t)} 의 스코프는 ${LEGACY_SCOPES.join(" | ")} 가운데 하나여야 한다`);
+      if (t.deprecated === undefined || t.deprecated === false)
+        errors.push(`${LEGACY_FILE}: ${key(t)} 는 $deprecated 여야 한다 — 이 파일은 옛 이름만 산다`);
+      if (!LEGACY_SCOPES.includes(t.sds.scope))
+        errors.push(
+          `${LEGACY_FILE}: ${key(t)} 의 스코프는 ${LEGACY_SCOPES.join(" | ")} 가운데 하나여야 한다`,
+        );
       continue;
     }
-    if (t.sds.scope === "legacy") errors.push(`${t.file}: legacy 스코프는 ${LEGACY_FILE} 만 쓴다 — ${key(t)}`);
-    for (const ref of referencesIn(t.value)) if (legacyKeys.has(ref)) errors.push(`${t.file}: ${key(t)} → {${ref}} 는 옛 이름이다 — 새 정본은 legacy 를 참조하지 않는다`);
+    if (t.sds.scope === "legacy")
+      errors.push(`${t.file}: legacy 스코프는 ${LEGACY_FILE} 만 쓴다 — ${key(t)}`);
+    for (const ref of referencesIn(t.value))
+      if (legacyKeys.has(ref))
+        errors.push(`${t.file}: ${key(t)} → {${ref}} 는 옛 이름이다 — 새 정본은 legacy 를 참조하지 않는다`);
   }
-  for (const t of dark) for (const ref of referencesIn(t.value)) if (legacyKeys.has(ref)) errors.push(`${DARK_FILE}: ${key(t)} → {${ref}} 는 옛 이름이다`);
+  for (const t of dark)
+    for (const ref of referencesIn(t.value))
+      if (legacyKeys.has(ref)) errors.push(`${DARK_FILE}: ${key(t)} → {${ref}} 는 옛 이름이다`);
 
   // renames — alias 없는 개명. 옛 경로는 새 정본의 다른 토큰과 글자가 같아야 하고(그래서 alias 가 불가능하다), 새 경로는 정의돼 있어야 한다.
   const head = files[LEGACY_FILE];
@@ -326,7 +406,10 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
   for (const [from, to] of Object.entries(renames)) {
     if (from === to) errors.push(`${LEGACY_FILE}: renames ${from} → 자기 자신`);
     if (!seen.has(to)) errors.push(`${LEGACY_FILE}: renames ${from} → ${to} 정의가 없다`);
-    if (!seen.has(from) || seen.get(from) === LEGACY_FILE) errors.push(`${LEGACY_FILE}: renames ${from} 은 새 정본의 다른 토큰과 이름이 같을 때만 쓴다 — 아니면 alias 토큰으로 둔다`);
+    if (!seen.has(from) || seen.get(from) === LEGACY_FILE)
+      errors.push(
+        `${LEGACY_FILE}: renames ${from} 은 새 정본의 다른 토큰과 이름이 같을 때만 쓴다 — 아니면 alias 토큰으로 둔다`,
+      );
   }
 
   const tsNames = new Map<string, string>();

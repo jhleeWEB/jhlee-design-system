@@ -43,7 +43,13 @@ const STEPS = [
 ] as const;
 type Step = (typeof STEPS)[number]["step"];
 /* 정적 문자열이어야 Tailwind 가 굽는다 — 템플릿으로 조립하면 클래스가 CSS 에 없다. */
-const ROUNDED: Record<Step, string> = { sm: "rounded-sm", md: "rounded-md", lg: "rounded-lg", xl: "rounded-xl", full: "rounded-full" };
+const ROUNDED: Record<Step, string> = {
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  full: "rounded-full",
+};
 
 function Specimen({ step, label }: { step: Step; label: string }) {
   return (
@@ -60,7 +66,8 @@ function CornerLadder() {
     /* 측정은 다음 프레임에 — 스타일 재계산이 끝난 뒤의 값이어야 하고, effect 본문의 동기 setState 는 연쇄 렌더다. */
     const frame = requestAnimationFrame(() => {
       const next: Record<string, string> = {};
-      for (const el of document.querySelectorAll<HTMLElement>("[data-radius-specimen]")) next[el.dataset.radiusSpecimen ?? ""] = getComputedStyle(el).borderTopLeftRadius;
+      for (const el of document.querySelectorAll<HTMLElement>("[data-radius-specimen]"))
+        next[el.dataset.radiusSpecimen ?? ""] = getComputedStyle(el).borderTopLeftRadius;
       setComputed(next);
     });
     return () => cancelAnimationFrame(frame);
@@ -71,7 +78,7 @@ function CornerLadder() {
       <section className="flex flex-col gap-3">
         <h2 className="m-0 text-title font-semibold">Ladder — 96 × 96 specimens</h2>
         <div className="flex flex-wrap items-end gap-8">
-          {STEPS.map(s => (
+          {STEPS.map((s) => (
             <Specimen key={s.step} step={s.step} label={`${s.token} · ${computed[s.step] ?? ""}`} />
           ))}
         </div>
@@ -94,7 +101,7 @@ function CornerLadder() {
             </Tr>
           </Thead>
           <Tbody>
-            {STEPS.map(s => (
+            {STEPS.map((s) => (
               <Tr key={s.step}>
                 <Td className="font-mono">{s.token}</Td>
                 <Td className="font-mono">{s.base}</Td>
@@ -123,20 +130,28 @@ function ConcentricSpecimens() {
             { value: "model", label: "Model" },
           ]}
         />
-        <figcaption className="font-mono text-micro text-muted-foreground">segmented · md track − p-0.5 → calc(var(--radius-md) − spacing × 0.5)</figcaption>
+        <figcaption className="font-mono text-micro text-muted-foreground">
+          segmented · md track − p-0.5 → calc(var(--radius-md) − spacing × 0.5)
+        </figcaption>
       </figure>
       <figure className="m-0 flex flex-col items-start gap-2">
         <div className="rounded-lg bg-primary-track p-1">
           <div className="h-ctl w-rail rounded-[calc(var(--radius-lg)-var(--spacing))] bg-card shadow-chip" />
         </div>
-        <figcaption className="font-mono text-micro text-muted-foreground">bare pair · lg − p-1 → calc(var(--radius-lg) − spacing)</figcaption>
+        <figcaption className="font-mono text-micro text-muted-foreground">
+          bare pair · lg − p-1 → calc(var(--radius-lg) − spacing)
+        </figcaption>
       </figure>
       <figure className="m-0 flex flex-col items-start gap-2">
         <div className="rounded-lg border border-border bg-card p-2 shadow-pop">
           <div className="rounded-md bg-muted px-3 py-2">item · rounded-md (8px)</div>
-          <div className="rounded-[calc(var(--radius-lg)-var(--spacing)*2)] bg-muted px-3 py-2">item · lg − p-2 (concentric: 4px)</div>
+          <div className="rounded-[calc(var(--radius-lg)-var(--spacing)*2)] bg-muted px-3 py-2">
+            item · lg − p-2 (concentric: 4px)
+          </div>
         </div>
-        <figcaption className="font-mono text-micro text-muted-foreground">dropdown item candidates inside a lg surface with p-2</figcaption>
+        <figcaption className="font-mono text-micro text-muted-foreground">
+          dropdown item candidates inside a lg surface with p-2
+        </figcaption>
       </figure>
     </div>
   );
@@ -185,7 +200,9 @@ function CornerComponents() {
       <section className="grid grid-cols-2 gap-6">
         <Card elevation="raised" pad="md">
           <CardHeader title="Raised card" meta="shadow-card" />
-          <p className="m-0 text-muted-foreground">Shadow follows the curve; no hairline doubles the border.</p>
+          <p className="m-0 text-muted-foreground">
+            Shadow follows the curve; no hairline doubles the border.
+          </p>
         </Card>
         <Card elevation="flat" pad="md">
           <CardHeader title="Flat card" meta="1px border" />
@@ -239,11 +256,12 @@ function CornerComponents() {
         <div className={toastVariants({ tone: "success" })}>
           <div className="min-w-0 flex-1">
             <div className="font-semibold">Toast surface</div>
-            <div className="text-muted-foreground">shadow-pop with its inset hairline — one line, not two.</div>
+            <div className="text-muted-foreground">
+              shadow-pop with its inset hairline — one line, not two.
+            </div>
           </div>
         </div>
       </section>
-
     </div>
   );
 }
@@ -254,18 +272,23 @@ function CornerModal() {
     <>
       <span className="sr-only">Modal open</span>
       <Modal open>
-      <ModalContent size="sm">
-        <ModalHeader title="Discard changes?" description="The corner is 16px with shadow-modal and its inset hairline." />
-        <ModalBody>
-          <p className="m-0 text-muted-foreground">The scrim clips nothing; the surface curve carries border, shadow and the hairline together.</p>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="outline">Keep editing</Button>
-          <Button variant="solid" tone="destructive">
-            Discard
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+        <ModalContent size="sm">
+          <ModalHeader
+            title="Discard changes?"
+            description="The corner is 16px with shadow-modal and its inset hairline."
+          />
+          <ModalBody>
+            <p className="m-0 text-muted-foreground">
+              The scrim clips nothing; the surface curve carries border, shadow and the hairline together.
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="outline">Keep editing</Button>
+            <Button variant="solid" tone="destructive">
+              Discard
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </>
   );
@@ -289,7 +312,16 @@ export const Ladder: Story = {
 export const Components: Story = {
   render: () => <CornerComponents />,
   // color-contrast: 위와 같다. aria-hidden-focus: 열린 드롭다운의 Radix 포커스 가드(aria-hidden 트리 안 tabindex 0)는 Radix 의 것이다
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }, { id: "aria-hidden-focus", enabled: false }] } } },
+  parameters: {
+    a11y: {
+      config: {
+        rules: [
+          { id: "color-contrast", enabled: false },
+          { id: "aria-hidden-focus", enabled: false },
+        ],
+      },
+    },
+  },
 };
 /** 열린 모달 — xl 반경 + shadow-modal 헤어라인. */
 export const ModalOpen: Story = { render: () => <CornerModal />, parameters: { layout: "fullscreen" } };

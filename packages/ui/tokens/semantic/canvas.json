@@ -4,7 +4,10 @@
   "canvas": {
     "$type": "color",
     "bg": { "$value": "{palette.gray.0}" },
-    "plan-bg": { "$value": "#f4f4f2", "$description": "도면 시트 뒤의 바닥 — 순회색 사다리 밖의 따뜻한 회색이라 유일한 리터럴." },
+    "plan-bg": {
+      "$value": "#f4f4f2",
+      "$description": "도면 시트 뒤의 바닥 — 순회색 사다리 밖의 따뜻한 회색이라 유일한 리터럴."
+    },
     "surface": { "$value": "{palette.gray.50}", "$description": "필지 채움처럼 바탕에서 한 단 들어간 면." },
     "line": { "$value": "{palette.gray.200}" },
     "line-strong": { "$value": "{palette.gray.300}" },

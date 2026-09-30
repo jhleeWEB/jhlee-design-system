@@ -20,23 +20,30 @@ export function Matrix<R extends string, C extends string>({
     <table className="border-separate border-spacing-3 font-sans text-body text-foreground">
       <thead>
         <tr>
-          <th scope="col" className="text-left font-mono text-micro font-normal uppercase tracking-caps text-muted-foreground">
+          <th
+            scope="col"
+            className="text-left font-mono text-micro font-normal tracking-caps text-muted-foreground uppercase"
+          >
             {rowLabel} \ {colLabel}
           </th>
-          {cols.map(col => (
-            <th key={col} scope="col" className="text-left font-mono text-micro font-normal text-muted-foreground">
+          {cols.map((col) => (
+            <th
+              key={col}
+              scope="col"
+              className="text-left font-mono text-micro font-normal text-muted-foreground"
+            >
               {col}
             </th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {rows.map(row => (
+        {rows.map((row) => (
           <tr key={row}>
             <th scope="row" className="text-left font-mono text-micro font-normal text-muted-foreground">
               {row}
             </th>
-            {cols.map(col => (
+            {cols.map((col) => (
               <td key={col} className="align-top">
                 {cell(row, col)}
               </td>

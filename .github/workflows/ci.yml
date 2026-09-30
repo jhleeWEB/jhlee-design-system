@@ -11,10 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm typecheck   # 엄격 · test · stories 프로필 셋(#11)
-      - run: pnpm lint        # ESLint 10 — 기준선(eslint-suppressions.json) 밖 신규 위반만
-      - run: pnpm lint:css    # stylelint — 손 CSS 의 리터럴(C4). shell.css 는 warning 실측값으로 붙든다
-      - run: pnpm format:check   # Prettier — 검사만. 포맷은 로컬 `pnpm format`
+      - run: pnpm typecheck # 엄격 · test · stories 프로필 셋(#11)
+      - run: pnpm lint # ESLint 10 — 기준선(eslint-suppressions.json) 밖 신규 위반만
+      - run: pnpm lint:css # stylelint — 손 CSS 의 리터럴(C4). shell.css 는 warning 실측값으로 붙든다
+      - run: pnpm format:check # Prettier — 검사만. 포맷은 로컬 `pnpm format`
   tokens:
     runs-on: ubuntu-latest
     steps:

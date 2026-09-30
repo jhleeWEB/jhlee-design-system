@@ -154,11 +154,24 @@ export type Option<T extends string | number> = LegacyOption<T>;
 export const DesignSystemProvider = LegacyDesignSystemProvider;
 
 export { CanvasScale, type CanvasScaleProps } from "./CanvasScale";
-export { niceScale, gridPitchM, GRID_TARGET_PX, GRID_MAJOR_EVERY, GRID_MAX_DIVISIONS } from "./canvas-metrics";
+export {
+  niceScale,
+  gridPitchM,
+  GRID_TARGET_PX,
+  GRID_MAJOR_EVERY,
+  GRID_MAX_DIVISIONS,
+} from "./canvas-metrics";
 
 /* ── 디자인 시스템(#1198) ─────────────────────────────────────────────────── */
 export { cn, cva, type VariantProps } from "./cn";
-export { normalizeTone, toneValues, type LegacyTone, type LegacyToneOf, type Tone, type ToneInput } from "./lib/tone";
+export {
+  normalizeTone,
+  toneValues,
+  type LegacyTone,
+  type LegacyToneOf,
+  type Tone,
+  type ToneInput,
+} from "./lib/tone";
 export * from "./primitives";
 export * from "./overlay";
 export * from "./feedback";

@@ -5,9 +5,12 @@
     ["@semantic-release/commit-analyzer", { "preset": "conventionalcommits" }],
     ["@semantic-release/release-notes-generator", { "preset": "conventionalcommits" }],
     ["@semantic-release/npm", { "pkgRoot": "packages/ui", "npmPublish": false }],
-    ["@semantic-release/exec", {
-      "publishCmd": "pnpm --filter @jhleeweb/squircle-design-system publish --no-git-checks --access restricted"
-    }],
+    [
+      "@semantic-release/exec",
+      {
+        "publishCmd": "pnpm --filter @jhleeweb/squircle-design-system publish --no-git-checks --access restricted"
+      }
+    ],
     "@semantic-release/github"
   ]
 }

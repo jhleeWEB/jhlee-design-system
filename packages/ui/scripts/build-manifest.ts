@@ -115,13 +115,17 @@ const inSrc = (fileName: string): boolean => toPosix(fileName).startsWith(`${toP
 
 function createProgram(): ts.Program {
   const configPath = join(PKG_DIR, "tsconfig.json");
-  const config = ts.readConfigFile(configPath, path => ts.sys.readFile(path));
+  const config = ts.readConfigFile(configPath, (path) => ts.sys.readFile(path));
   if (config.error) throw new Error(ts.flattenDiagnosticMessageText(config.error.messageText, "\n"));
   const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, PKG_DIR);
-  return ts.createProgram({ rootNames: [join(SRC_DIR, "index.ts")], options: { ...parsed.options, noEmit: true } });
+  return ts.createProgram({
+    rootNames: [join(SRC_DIR, "index.ts")],
+    options: { ...parsed.options, noEmit: true },
+  });
 }
 
-const isClientFile = (sf: ts.SourceFile): boolean => (sf.text.split("\n")[0] ?? "").trim() === '"use client";';
+const isClientFile = (sf: ts.SourceFile): boolean =>
+  (sf.text.split("\n")[0] ?? "").trim() === '"use client";';
 
 /**
  * 소스 안의 마지막 선언 — client·source 는 «우리 파일» 의 것이어야 한다.
@@ -140,7 +144,11 @@ function originDeclaration(checker: ts.TypeChecker, exported: ts.Symbol): ts.Dec
   }
   const decl = symbol.valueDeclaration ?? symbol.declarations?.[0];
   if (!decl) return undefined;
-  if (ts.isVariableDeclaration(decl) && decl.initializer && /(^|\/)index\.ts$/.test(toPosix(decl.getSourceFile().fileName))) {
+  if (
+    ts.isVariableDeclaration(decl) &&
+    decl.initializer &&
+    /(^|\/)index\.ts$/.test(toPosix(decl.getSourceFile().fileName))
+  ) {
     const init = decl.initializer;
     const target = ts.isIdentifier(init) ? init : ts.isPropertyAccessExpression(init) ? init.name : null;
     if (target) {
@@ -163,7 +171,7 @@ const docOf = (checker: ts.TypeChecker, ...symbols: ts.Symbol[]): string => {
 
 const tagOf = (checker: ts.TypeChecker, name: string, ...symbols: ts.Symbol[]): string | undefined => {
   for (const s of symbols) {
-    const tag = s.getJsDocTags(checker).find(t => t.name === name);
+    const tag = s.getJsDocTags(checker).find((t) => t.name === name);
     if (tag) return ts.displayPartsToString(tag.text ?? []).trim();
   }
   return undefined;
@@ -177,7 +185,9 @@ const deprecatedOf = (checker: ts.TypeChecker, ...symbols: ts.Symbol[]): string 
 /** 설명에서 값 하나의 뜻을 읽는다 — «`값` — 설명»(다음 항목 앞까지) 또는 «`값`(설명)». */
 export function docForValue(description: string, value: string): string {
   const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const dash = new RegExp("`" + escaped + "`\\s*[—–-]+\\s*([^\\n]*?)(?=\\s+[-·•]\\s+`|\\s*$)", "m").exec(description);
+  const dash = new RegExp("`" + escaped + "`\\s*[—–-]+\\s*([^\\n]*?)(?=\\s+[-·•]\\s+`|\\s*$)", "m").exec(
+    description,
+  );
   if (dash?.[1]) return dash[1].trim();
   const paren = new RegExp("`" + escaped + "`\\(([^)]+)\\)").exec(description);
   if (paren?.[1]) return paren[1].trim();
@@ -185,7 +195,11 @@ export function docForValue(description: string, value: string): string {
 }
 
 function typeText(checker: ts.TypeChecker, type: ts.Type): string {
-  return checker.typeToString(type, undefined, ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope);
+  return checker.typeToString(
+    type,
+    undefined,
+    ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope,
+  );
 }
 
 function literalValues(type: ts.Type): string[] | null {
@@ -200,13 +214,17 @@ function literalValues(type: ts.Type): string[] | null {
 }
 
 /** cva 호출의 `variants` 축과 `defaultVariants` — AST 에서 읽는다(타입은 `defaultVariants` 를 잃는다). */
-export function readCva(decl: ts.Declaration): { axes: Record<string, string[]>; defaults: Record<string, string> } | null {
-  if (!ts.isVariableDeclaration(decl) || !decl.initializer || !ts.isCallExpression(decl.initializer)) return null;
+export function readCva(
+  decl: ts.Declaration,
+): { axes: Record<string, string[]>; defaults: Record<string, string> } | null {
+  if (!ts.isVariableDeclaration(decl) || !decl.initializer || !ts.isCallExpression(decl.initializer))
+    return null;
   const call = decl.initializer;
   if (!ts.isIdentifier(call.expression) || call.expression.text !== "cva") return null;
   const config = call.arguments[1];
   if (!config || !ts.isObjectLiteralExpression(config)) return { axes: {}, defaults: {} };
-  const keyOf = (name: ts.PropertyName): string => (ts.isIdentifier(name) || ts.isStringLiteral(name) ? name.text : name.getText());
+  const keyOf = (name: ts.PropertyName): string =>
+    ts.isIdentifier(name) || ts.isStringLiteral(name) ? name.text : name.getText();
   const axes: Record<string, string[]> = {};
   const defaults: Record<string, string> = {};
   for (const prop of config.properties) {
@@ -215,14 +233,17 @@ export function readCva(decl: ts.Declaration): { axes: Record<string, string[]>;
     if (key === "variants" && ts.isObjectLiteralExpression(prop.initializer)) {
       for (const axis of prop.initializer.properties) {
         if (!ts.isPropertyAssignment(axis) || !ts.isObjectLiteralExpression(axis.initializer)) continue;
-        axes[keyOf(axis.name)] = axis.initializer.properties.filter(ts.isPropertyAssignment).map(v => keyOf(v.name));
+        axes[keyOf(axis.name)] = axis.initializer.properties
+          .filter(ts.isPropertyAssignment)
+          .map((v) => keyOf(v.name));
       }
     }
     if (key === "defaultVariants" && ts.isObjectLiteralExpression(prop.initializer)) {
       for (const d of prop.initializer.properties) {
         if (!ts.isPropertyAssignment(d)) continue;
         const init = d.initializer;
-        defaults[keyOf(d.name)] = ts.isStringLiteral(init) || ts.isNoSubstitutionTemplateLiteral(init) ? init.text : init.getText();
+        defaults[keyOf(d.name)] =
+          ts.isStringLiteral(init) || ts.isNoSubstitutionTemplateLiteral(init) ? init.text : init.getText();
       }
     }
   }
@@ -230,11 +251,19 @@ export function readCva(decl: ts.Declaration): { axes: Record<string, string[]>;
 }
 
 /** 컴포넌트 파일이 import 하는 `*Variants` 심볼들의 cva 축·기본값 — `@default` 가 없는 variant prop 의 기본값과 값 순서의 출처. */
-function cvaInFile(checker: ts.TypeChecker, sf: ts.SourceFile): { defaults: Record<string, string>; axes: Record<string, string[]> } {
+function cvaInFile(
+  checker: ts.TypeChecker,
+  sf: ts.SourceFile,
+): { defaults: Record<string, string>; axes: Record<string, string[]> } {
   const defaults: Record<string, string> = {};
   const axes: Record<string, string[]> = {};
   for (const stmt of sf.statements) {
-    if (!ts.isImportDeclaration(stmt) || !stmt.importClause?.namedBindings || !ts.isNamedImports(stmt.importClause.namedBindings)) continue;
+    if (
+      !ts.isImportDeclaration(stmt) ||
+      !stmt.importClause?.namedBindings ||
+      !ts.isNamedImports(stmt.importClause.namedBindings)
+    )
+      continue;
     for (const el of stmt.importClause.namedBindings.elements) {
       if (!el.name.text.endsWith("Variants")) continue;
       let s = checker.getSymbolAtLocation(el.name);
@@ -277,22 +306,26 @@ function propsOf(
   for (const p of checker.getPropertiesOfType(propsType)) {
     const decls = p.declarations ?? [];
     // 우리 소스에 선언된 prop 만 — React 의 HTML 속성(onClick · aria-* …)은 `inherits` 로 가리킨다.
-    if (!decls.some(d => inSrc(d.getSourceFile().fileName))) continue;
+    if (!decls.some((d) => inSrc(d.getSourceFile().fileName))) continue;
     const decl = p.valueDeclaration ?? decls[0] ?? at;
     const type = checker.getTypeOfSymbolAtLocation(p, decl);
     const optional = Boolean(p.flags & ts.SymbolFlags.Optional);
     const description = docOf(checker, p);
     const literals = orderValues(literalValues(type) ?? [], cvaAxes[p.name] ?? []);
-    const values = literals.map(value => {
+    const values = literals.map((value) => {
       let doc = docForValue(description, value);
-      if (!doc && LEGACY_TONE_KEYS.has(value)) doc = `deprecated alias of "${LEGACY_TONES[value as keyof typeof LEGACY_TONES]}"`;
+      if (!doc && LEGACY_TONE_KEYS.has(value))
+        doc = `deprecated alias of "${LEGACY_TONES[value as keyof typeof LEGACY_TONES]}"`;
       return { value, doc };
     });
     let defaultValue = tagOf(checker, "default", p) ?? "";
-    if (!defaultValue && optional && cvaDefaults[p.name] !== undefined) defaultValue = JSON.stringify(cvaDefaults[p.name]);
+    if (!defaultValue && optional && cvaDefaults[p.name] !== undefined)
+      defaultValue = JSON.stringify(cvaDefaults[p.name]);
     props.push({
       name: p.name,
-      type: typeText(checker, type).replace(/^undefined \| /, "").replace(/ \| undefined$/, ""),
+      type: typeText(checker, type)
+        .replace(/^undefined \| /, "")
+        .replace(/ \| undefined$/, ""),
       required: !optional,
       default: defaultValue,
       values,
@@ -307,23 +340,36 @@ function propsOf(
   for (const t of constituents) {
     const decl = t.symbol?.declarations?.[0];
     if (decl && ts.isInterfaceDeclaration(decl) && inSrc(decl.getSourceFile().fileName)) {
-      for (const clause of decl.heritageClauses ?? []) for (const type of clause.types) pushInherit(type.getText());
+      for (const clause of decl.heritageClauses ?? [])
+        for (const type of clause.types) pushInherit(type.getText());
     } else if (decl && ts.isTypeLiteralNode(decl) && inSrc(decl.getSourceFile().fileName)) {
       continue;
     } else if (t !== propsType || !t.symbol) {
       pushInherit(typeText(checker, t));
     }
   }
-  return { props, inherits: inherits.filter(text => text !== "{}") };
+  return { props, inherits: inherits.filter((text) => text !== "{}") };
 }
 
 function hookParams(checker: ts.TypeChecker, sig: ts.Signature): ManifestProp[] {
-  return sig.parameters.map(param => {
+  return sig.parameters.map((param) => {
     const decl = param.valueDeclaration;
-    const type = decl ? checker.getTypeOfSymbolAtLocation(param, decl) : checker.getDeclaredTypeOfSymbol(param);
-    const optional = decl !== undefined && ts.isParameter(decl) && (decl.questionToken !== undefined || decl.initializer !== undefined);
+    const type = decl
+      ? checker.getTypeOfSymbolAtLocation(param, decl)
+      : checker.getDeclaredTypeOfSymbol(param);
+    const optional =
+      decl !== undefined &&
+      ts.isParameter(decl) &&
+      (decl.questionToken !== undefined || decl.initializer !== undefined);
     const defaultValue = decl && ts.isParameter(decl) && decl.initializer ? decl.initializer.getText() : "";
-    return { name: param.name, type: typeText(checker, type), required: !optional, default: defaultValue, values: [], description: docOf(checker, param) };
+    return {
+      name: param.name,
+      type: typeText(checker, type),
+      required: !optional,
+      default: defaultValue,
+      values: [],
+      description: docOf(checker, param),
+    };
   });
 }
 
@@ -332,7 +378,12 @@ export function tokenIndex(): ManifestTokens {
   const { errors, tokens } = validateTokenSources(readTokenSources(join(PKG_DIR, "tokens")));
   if (errors.length) throw new Error(`tokens: ${errors.join("\n")}`);
   const names = (group: string, scope?: string): string[] =>
-    tokens.filter(t => t.file !== LEGACY_FILE && t.path[0] === group && (scope === undefined || t.sds.scope === scope)).map(t => t.path.slice(1).join("-"));
+    tokens
+      .filter(
+        (t) =>
+          t.file !== LEGACY_FILE && t.path[0] === group && (scope === undefined || t.sds.scope === scope),
+      )
+      .map((t) => t.path.slice(1).join("-"));
   return {
     colors: names("color", "theme-inline"),
     radius: names("radius"),
@@ -341,7 +392,7 @@ export function tokenIndex(): ManifestTokens {
     height: names("height"),
     container: names("container"),
     layer: names("layer"),
-    duration: names("duration").filter(n => !n.includes("-")), // 컴포넌트 전용(toast-enter …)은 유틸리티가 아니다
+    duration: names("duration").filter((n) => !n.includes("-")), // 컴포넌트 전용(toast-enter …)은 유틸리티가 아니다
     spacingSteps: [...SPACING_STEPS],
   };
 }
@@ -354,7 +405,10 @@ export function buildManifest(): Manifest {
   if (!indexSf) throw new Error("src/index.ts 를 프로그램이 읽지 못했다");
   const moduleSymbol = checker.getSymbolAtLocation(indexSf);
   if (!moduleSymbol) throw new Error("src/index.ts 의 모듈 심볼이 없다");
-  const pkg = JSON.parse(readFileSync(join(PKG_DIR, "package.json"), "utf8")) as { name: string; version: string };
+  const pkg = JSON.parse(readFileSync(join(PKG_DIR, "package.json"), "utf8")) as {
+    name: string;
+    version: string;
+  };
 
   const components: ManifestComponent[] = [];
   const utilities: ManifestUtility[] = [];
@@ -378,30 +432,72 @@ export function buildManifest(): Manifest {
     if (/^use[A-Z]/.test(name)) {
       const sig = signatures[0];
       components.push({
-        name, kind: "hook", importPath: IMPORT_PATH, source, client, description, example: tagOf(checker, "example", exported, target) ?? "",
-        props: sig ? hookParams(checker, sig) : [], inherits: [], parts: [], sugar: [], deprecated,
+        name,
+        kind: "hook",
+        importPath: IMPORT_PATH,
+        source,
+        client,
+        description,
+        example: tagOf(checker, "example", exported, target) ?? "",
+        props: sig ? hookParams(checker, sig) : [],
+        inherits: [],
+        parts: [],
+        sugar: [],
+        deprecated,
       });
       continue;
     }
     if (name.endsWith("Variants")) {
       const cva = readCva(target.valueDeclaration ?? decl);
-      utilities.push({ name, kind: "variants", importPath: IMPORT_PATH, source, client, description, deprecated, axes: cva?.axes ?? {}, defaults: cva?.defaults ?? {} });
+      utilities.push({
+        name,
+        kind: "variants",
+        importPath: IMPORT_PATH,
+        source,
+        client,
+        description,
+        deprecated,
+        axes: cva?.axes ?? {},
+        defaults: cva?.defaults ?? {},
+      });
       continue;
     }
     const pascal = /^[A-Z][a-z]/.test(name);
     if (pascal && (signatures.length > 0 || type.getConstructSignatures().length > 0)) {
       const sig = signatures[0];
       const param = sig?.parameters[0];
-      const propsType = param ? checker.getTypeOfSymbolAtLocation(param, param.valueDeclaration ?? decl) : null;
+      const propsType = param
+        ? checker.getTypeOfSymbolAtLocation(param, param.valueDeclaration ?? decl)
+        : null;
       const cva = cvaInFile(checker, sf);
-      const { props, inherits } = propsType ? propsOf(checker, propsType, decl, cva.defaults, cva.axes) : { props: [], inherits: [] };
+      const { props, inherits } = propsType
+        ? propsOf(checker, propsType, decl, cva.defaults, cva.axes)
+        : { props: [], inherits: [] };
       components.push({
-        name, kind: "component", importPath: IMPORT_PATH, source, client, description, example: tagOf(checker, "example", exported, target) ?? "",
-        props, inherits, parts: [], sugar: [], deprecated,
+        name,
+        kind: "component",
+        importPath: IMPORT_PATH,
+        source,
+        client,
+        description,
+        example: tagOf(checker, "example", exported, target) ?? "",
+        props,
+        inherits,
+        parts: [],
+        sugar: [],
+        deprecated,
       });
       continue;
     }
-    utilities.push({ name, kind: signatures.length > 0 ? "function" : "constant", importPath: IMPORT_PATH, source, client, description, deprecated });
+    utilities.push({
+      name,
+      kind: signatures.length > 0 ? "function" : "constant",
+      importPath: IMPORT_PATH,
+      source,
+      client,
+      description,
+      deprecated,
+    });
   }
 
   // 부품 판정 — 같은 파일의 다른 컴포넌트 이름을 접두로 가지면 부품이다. 다른 파일이면 우연한 접두(Segmented ↔ SegmentedControl)다.
@@ -411,11 +507,16 @@ export function buildManifest(): Manifest {
     let root: string | null = null;
     for (const other of candidates) {
       if (other === c || other.kind !== "component" || other.source !== c.source) continue;
-      if (c.name.startsWith(other.name) && /^[A-Z]/.test(c.name.slice(other.name.length)) && (root === null || other.name.length > root.length)) root = other.name;
+      if (
+        c.name.startsWith(other.name) &&
+        /^[A-Z]/.test(c.name.slice(other.name.length)) &&
+        (root === null || other.name.length > root.length)
+      )
+        root = other.name;
     }
     return root;
   };
-  const roots = components.filter(c => c.kind === "component" && prefixOf(c, components) === null);
+  const roots = components.filter((c) => c.kind === "component" && prefixOf(c, components) === null);
   const parts = new Map<string, string[]>();
   const kinds = new Map<string, ComponentKind>();
   for (const c of components) {
@@ -427,7 +528,11 @@ export function buildManifest(): Manifest {
     }
   }
   const finished = components
-    .map(c => ({ ...c, kind: kinds.get(c.name) ?? c.kind, parts: [...(parts.get(c.name) ?? [])].sort((a, b) => a.localeCompare(b)) }))
+    .map((c) => ({
+      ...c,
+      kind: kinds.get(c.name) ?? c.kind,
+      parts: [...(parts.get(c.name) ?? [])].sort((a, b) => a.localeCompare(b)),
+    }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return {
@@ -455,5 +560,7 @@ export function writeManifest(): Manifest {
 const invoked = process.argv[1] ? realpathSync(process.argv[1]) : "";
 if (invoked && invoked === fileURLToPath(import.meta.url)) {
   const manifest = writeManifest();
-  console.log(`manifest: ${manifest.components.length} components · ${manifest.utilities.length} utilities → ${relative(PKG_DIR, MANIFEST_PATH)}`);
+  console.log(
+    `manifest: ${manifest.components.length} components · ${manifest.utilities.length} utilities → ${relative(PKG_DIR, MANIFEST_PATH)}`,
+  );
 }

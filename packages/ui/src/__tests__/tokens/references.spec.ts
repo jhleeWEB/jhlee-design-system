@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest";
 import { loadTokenModel, referenceDepth, type Mode } from "./model";
 
 const model = loadTokenModel();
-const defined = new Set(model.tokens.map(t => t.name));
+const defined = new Set(model.tokens.map((t) => t.name));
 const MODES: readonly Mode[] = ["light", "dark"];
 
 /**
@@ -26,7 +26,9 @@ const RENAME_ALIAS = /^--color-(?:cool|azure|mono)-\d+$/;
 describe("참조 무결성", () => {
   it("var(--x) 가 가리키는 토큰은 전부 정의돼 있다", () => {
     /* 폴백이 있어도(`var(--x, 12px)`) 정의가 없으면 폴백만 살아 토큰이 아니게 된다 — 폴백은 정의를 대신하지 않는다. */
-    const missing = model.references.filter(r => !defined.has(r.name)).map(r => `${r.file}:${r.line} ${r.prop}: var(${r.name})`);
+    const missing = model.references
+      .filter((r) => !defined.has(r.name))
+      .map((r) => `${r.file}:${r.line} ${r.prop}: var(${r.name})`);
     expect(missing).toEqual([]);
   });
 
@@ -34,18 +36,25 @@ describe("참조 무결성", () => {
     /* `--color-ok → --chrome-ok → --palette-moss-500` · `--motion-collapse-duration → --duration-collapse → --duration-slow` 가 오늘 가장 깊은 사슬(2)이다.
        3을 넘기면 값을 찾아 세 파일을 오가야 한다. */
     for (const mode of MODES) {
-      const tooDeep = [...defined].filter(name => referenceDepth(model, name, mode) > 3).map(name => `${name} (${mode}): ${referenceDepth(model, name, mode)}`);
+      const tooDeep = [...defined]
+        .filter((name) => referenceDepth(model, name, mode) > 3)
+        .map((name) => `${name} (${mode}): ${referenceDepth(model, name, mode)}`);
       expect(tooDeep).toEqual([]);
     }
   });
 
   it("@theme inline 의 --color-* 는 --chrome-*·--canvas-* 참조뿐이다 — 리터럴은 KNOWN_INLINE_LITERALS 만", () => {
     /* inline 매핑에 리터럴이 들어오면 그 색은 테마 전환을 타지 않는다(theme.tailwind.css 의 `inline` 주석). */
-    const colours = model.tokens.filter(t => t.scope === "theme-inline" && t.name.startsWith("--color-"));
+    const colours = model.tokens.filter((t) => t.scope === "theme-inline" && t.name.startsWith("--color-"));
     expect(colours.length).toBeGreaterThan(20);
-    const badRefs = colours.filter(t => t.refs.some(ref => !/^--(?:chrome|canvas)-/.test(ref))).map(t => `${t.name}: ${t.value}`);
+    const badRefs = colours
+      .filter((t) => t.refs.some((ref) => !/^--(?:chrome|canvas)-/.test(ref)))
+      .map((t) => `${t.name}: ${t.value}`);
     expect(badRefs).toEqual([]);
-    const literals = colours.filter(t => t.refs.length === 0).map(t => t.name).sort();
+    const literals = colours
+      .filter((t) => t.refs.length === 0)
+      .map((t) => t.name)
+      .sort();
     expect(literals).toEqual([...KNOWN_INLINE_LITERALS].sort());
   });
 
@@ -53,13 +62,15 @@ describe("참조 무결성", () => {
     /* 원시(`--palette-*`)는 시맨틱이 참조해야 존재 이유가 있다. #11 의 18개에서 #18 이 cool.950(판정색 위의 어두운 글자)을 쓰기 시작해 17개다.
        나머지는 자매 저장소의 mono 12단(무채색이 필요한 자리를 위해 지우지 않는다)과 cool·azure 의 빈 단이다 — 늘지 않게 붙들어 둔다. */
     const referrers = new Map<string, string[]>();
-    for (const t of model.tokens) for (const ref of t.refs) referrers.set(ref, [...(referrers.get(ref) ?? []), t.name]);
-    for (const r of model.references) if (!r.prop.startsWith("--")) referrers.set(r.name, [...(referrers.get(r.name) ?? []), r.prop]);
-    const primitives = model.tokens.filter(t => PALETTE.test(t.name));
+    for (const t of model.tokens)
+      for (const ref of t.refs) referrers.set(ref, [...(referrers.get(ref) ?? []), t.name]);
+    for (const r of model.references)
+      if (!r.prop.startsWith("--")) referrers.set(r.name, [...(referrers.get(r.name) ?? []), r.prop]);
+    const primitives = model.tokens.filter((t) => PALETTE.test(t.name));
     expect(primitives.length).toBeGreaterThan(60);
     const dead = primitives
-      .filter(t => (referrers.get(t.name) ?? []).every(by => RENAME_ALIAS.test(by)))
-      .map(t => t.name)
+      .filter((t) => (referrers.get(t.name) ?? []).every((by) => RENAME_ALIAS.test(by)))
+      .map((t) => t.name)
       .sort();
     expect(dead).toMatchInlineSnapshot(`
       [

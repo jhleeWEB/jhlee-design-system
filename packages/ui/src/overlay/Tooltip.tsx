@@ -11,11 +11,10 @@ import { MOTION } from "../generated/tokens";
  * 받지 않으므로 그 안의 것을 키보드로 누를 수 없다. */
 export const TooltipProvider = Radix.Provider;
 
-export interface TooltipProps
-  extends Pick<
-    React.ComponentPropsWithoutRef<typeof Radix.Content>,
-    "side" | "align" | "sideOffset"
-  > {
+export interface TooltipProps extends Pick<
+  React.ComponentPropsWithoutRef<typeof Radix.Content>,
+  "side" | "align" | "sideOffset"
+> {
   /** 띄울 대상. 포커스 가능한 요소여야 키보드에서도 보인다. */
   children: React.ReactNode;
   label: React.ReactNode;
@@ -56,14 +55,12 @@ export function Tooltip({
           sideOffset={sideOffset}
           className={cn(
             "z-tooltip flex items-center gap-3 rounded-lg bg-tooltip px-3 py-2",
-            "text-label text-tooltip-foreground shadow-pop animate-in-pop",
+            "animate-in-pop text-label text-tooltip-foreground shadow-pop",
             "select-none",
           )}
         >
           {label}
-          {shortcut ? (
-            <kbd className="font-mono text-micro opacity-60">{shortcut}</kbd>
-          ) : null}
+          {shortcut ? <kbd className="font-mono text-micro opacity-60">{shortcut}</kbd> : null}
           <Radix.Arrow className="fill-tooltip" width={9} height={4} />
         </Radix.Content>
       </Radix.Portal>

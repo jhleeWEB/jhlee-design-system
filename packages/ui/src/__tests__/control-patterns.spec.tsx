@@ -11,41 +11,76 @@ import { DesignSystemProvider } from "../legacy/design-system";
 afterEach(cleanup);
 
 describe("컨트롤의 React 합성 계약", () => {
-  it.each(["disabled", "loading"] as const)("slotted 링크의 %s 상태가 자식과 부모의 활성화를 막고 해제 시 복원한다", blockedProp => {
-    const childClick = vi.fn(), parentClick = vi.fn(), childCapture = vi.fn(), parentCapture = vi.fn();
-    const childKey = vi.fn(), parentKey = vi.fn();
-    const parentRef = createRef<HTMLButtonElement>(), childRef = createRef<HTMLAnchorElement>();
-    const view = (blocked: boolean) => <Button asChild {...{ [blockedProp]: blocked }} ref={parentRef}
-      onClick={parentClick} onClickCapture={parentCapture} onKeyDown={parentKey}>
-      <a href="#continue" ref={childRef} onClick={childClick} onClickCapture={childCapture} onKeyDown={childKey}>Continue</a>
-    </Button>;
-    const { rerender } = render(view(true));
-    const link = screen.getByRole("link", { name: "Continue" });
-    expect(parentRef.current).toBe(link);
-    expect(childRef.current).toBe(link);
-    expect(link.hasAttribute("href")).toBe(false);
-    expect(link.getAttribute("aria-disabled")).toBe("true");
-    expect(link.tabIndex).toBe(-1);
-    expect(fireEvent.click(link)).toBe(false);
-    expect(fireEvent.keyDown(link, { key: "Enter" })).toBe(false);
-    expect(fireEvent.keyDown(link, { key: " " })).toBe(false);
-    for (const callback of [childClick, parentClick, childCapture, parentCapture, childKey, parentKey]) expect(callback).not.toHaveBeenCalled();
-    expect(fireEvent.keyDown(link, { key: "Tab" })).toBe(true);
+  it.each(["disabled", "loading"] as const)(
+    "slotted 링크의 %s 상태가 자식과 부모의 활성화를 막고 해제 시 복원한다",
+    (blockedProp) => {
+      const childClick = vi.fn(),
+        parentClick = vi.fn(),
+        childCapture = vi.fn(),
+        parentCapture = vi.fn();
+      const childKey = vi.fn(),
+        parentKey = vi.fn();
+      const parentRef = createRef<HTMLButtonElement>(),
+        childRef = createRef<HTMLAnchorElement>();
+      const view = (blocked: boolean) => (
+        <Button
+          asChild
+          {...{ [blockedProp]: blocked }}
+          ref={parentRef}
+          onClick={parentClick}
+          onClickCapture={parentCapture}
+          onKeyDown={parentKey}
+        >
+          <a
+            href="#continue"
+            ref={childRef}
+            onClick={childClick}
+            onClickCapture={childCapture}
+            onKeyDown={childKey}
+          >
+            Continue
+          </a>
+        </Button>
+      );
+      const { rerender } = render(view(true));
+      const link = screen.getByRole("link", { name: "Continue" });
+      expect(parentRef.current).toBe(link);
+      expect(childRef.current).toBe(link);
+      expect(link.hasAttribute("href")).toBe(false);
+      expect(link.getAttribute("aria-disabled")).toBe("true");
+      expect(link.tabIndex).toBe(-1);
+      expect(fireEvent.click(link)).toBe(false);
+      expect(fireEvent.keyDown(link, { key: "Enter" })).toBe(false);
+      expect(fireEvent.keyDown(link, { key: " " })).toBe(false);
+      for (const callback of [childClick, parentClick, childCapture, parentCapture, childKey, parentKey])
+        expect(callback).not.toHaveBeenCalled();
+      expect(fireEvent.keyDown(link, { key: "Tab" })).toBe(true);
 
-    rerender(view(false));
-    expect(screen.getByRole("link", { name: "Continue" })).toBe(link);
-    expect(link.getAttribute("href")).toBe("#continue");
-    expect(link.hasAttribute("aria-disabled")).toBe(false);
-    expect(link.tabIndex).toBe(0);
-    fireEvent.click(link);
-    for (const callback of [childClick, parentClick, childCapture, parentCapture]) expect(callback).toHaveBeenCalledTimes(1);
-  });
+      rerender(view(false));
+      expect(screen.getByRole("link", { name: "Continue" })).toBe(link);
+      expect(link.getAttribute("href")).toBe("#continue");
+      expect(link.hasAttribute("aria-disabled")).toBe(false);
+      expect(link.tabIndex).toBe(0);
+      fireEvent.click(link);
+      for (const callback of [childClick, parentClick, childCapture, parentCapture])
+        expect(callback).toHaveBeenCalledTimes(1);
+    },
+  );
 
   it("slotted 커스텀 버튼에도 native disabled와 두 ref를 전달한다", () => {
-    const CustomButton = forwardRef<HTMLButtonElement, ComponentPropsWithoutRef<"button">>((props, ref) => <button {...props} ref={ref} />);
-    const parentRef = createRef<HTMLButtonElement>(), childRef = createRef<HTMLButtonElement>();
+    const CustomButton = forwardRef<HTMLButtonElement, ComponentPropsWithoutRef<"button">>((props, ref) => (
+      <button {...props} ref={ref} />
+    ));
+    const parentRef = createRef<HTMLButtonElement>(),
+      childRef = createRef<HTMLButtonElement>();
     const click = vi.fn();
-    const { rerender } = render(<Button asChild loading ref={parentRef}><CustomButton ref={childRef} onClick={click}>Save</CustomButton></Button>);
+    const { rerender } = render(
+      <Button asChild loading ref={parentRef}>
+        <CustomButton ref={childRef} onClick={click}>
+          Save
+        </CustomButton>
+      </Button>,
+    );
     const button = screen.getByRole("button", { name: "Save" }) as HTMLButtonElement;
     expect(button.disabled).toBe(true);
     expect(button.getAttribute("aria-busy")).toBe("true");
@@ -53,7 +88,13 @@ describe("컨트롤의 React 합성 계약", () => {
     expect(childRef.current).toBe(button);
     fireEvent.click(button);
     expect(click).not.toHaveBeenCalled();
-    rerender(<Button asChild ref={parentRef}><CustomButton ref={childRef} onClick={click}>Save</CustomButton></Button>);
+    rerender(
+      <Button asChild ref={parentRef}>
+        <CustomButton ref={childRef} onClick={click}>
+          Save
+        </CustomButton>
+      </Button>,
+    );
     expect(button.disabled).toBe(false);
     fireEvent.click(button);
     expect(click).toHaveBeenCalledTimes(1);
@@ -67,9 +108,13 @@ describe("컨트롤의 React 합성 계약", () => {
       onKeyUpCapture: () => calls.push(`${source}:up:capture`),
       onKeyUp: () => calls.push(`${source}:up`),
     });
-    const view = (loading: boolean) => <Button asChild loading={loading} {...handlers("parent")}>
-      <a href="#continue" {...handlers("child")}>Continue</a>
-    </Button>;
+    const view = (loading: boolean) => (
+      <Button asChild loading={loading} {...handlers("parent")}>
+        <a href="#continue" {...handlers("child")}>
+          Continue
+        </a>
+      </Button>
+    );
     const { rerender } = render(view(false));
     const link = screen.getByRole("link", { name: "Continue" });
     link.focus();
@@ -79,8 +124,14 @@ describe("컨트롤의 React 합성 계약", () => {
       expect(fireEvent.keyDown(link, { key })).toBe(true);
       expect(fireEvent.keyUp(link, { key })).toBe(true);
       expect(calls.splice(0)).toEqual([
-        "child:down:capture", "parent:down:capture", "child:down", "parent:down",
-        "child:up:capture", "parent:up:capture", "child:up", "parent:up",
+        "child:down:capture",
+        "parent:down:capture",
+        "child:down",
+        "parent:down",
+        "child:up:capture",
+        "parent:up:capture",
+        "child:up",
+        "parent:up",
       ]);
     }
     for (const key of ["Enter", " "]) {
@@ -94,11 +145,17 @@ describe("컨트롤의 React 합성 계약", () => {
     { Control: Checkbox, role: "checkbox" },
     { Control: Switch, role: "switch" },
   ])("$role asChild가 실제 버튼, 비제어 상태, 합성 ref를 유지한다", ({ Control, role }) => {
-    const parentRef = createRef<HTMLButtonElement>(), childRef = createRef<HTMLButtonElement>();
-    const change = vi.fn(), childClick = vi.fn();
-    const { unmount } = render(<Control asChild defaultChecked onCheckedChange={change} ref={parentRef}>
-      <button ref={childRef} onClick={childClick}>Shadows</button>
-    </Control>);
+    const parentRef = createRef<HTMLButtonElement>(),
+      childRef = createRef<HTMLButtonElement>();
+    const change = vi.fn(),
+      childClick = vi.fn();
+    const { unmount } = render(
+      <Control asChild defaultChecked onCheckedChange={change} ref={parentRef}>
+        <button ref={childRef} onClick={childClick}>
+          Shadows
+        </button>
+      </Control>,
+    );
     const control = screen.getByRole(role, { name: "Shadows" });
     expect(control.tagName).toBe("BUTTON");
     expect(control.getAttribute("aria-checked")).toBe("true");
@@ -116,12 +173,20 @@ describe("컨트롤의 React 합성 계약", () => {
 
   it("Choice asChild의 제어 상태는 외부 값만 따르고 자식 preventDefault를 존중한다", () => {
     const change = vi.fn();
-    const { rerender } = render(<Checkbox asChild checked={false} onCheckedChange={change}><button>Agree</button></Checkbox>);
+    const { rerender } = render(
+      <Checkbox asChild checked={false} onCheckedChange={change}>
+        <button>Agree</button>
+      </Checkbox>,
+    );
     const control = screen.getByRole("checkbox", { name: "Agree" });
     fireEvent.click(control);
     expect(change).toHaveBeenCalledExactlyOnceWith(true);
     expect(control.getAttribute("aria-checked")).toBe("false");
-    rerender(<Checkbox asChild checked onCheckedChange={change}><button onClick={event => event.preventDefault()}>Agree</button></Checkbox>);
+    rerender(
+      <Checkbox asChild checked onCheckedChange={change}>
+        <button onClick={(event) => event.preventDefault()}>Agree</button>
+      </Checkbox>,
+    );
     expect(screen.getByRole("checkbox", { name: "Agree" })).toBe(control);
     expect(control.getAttribute("aria-checked")).toBe("true");
     fireEvent.click(control);
@@ -129,12 +194,19 @@ describe("컨트롤의 React 합성 계약", () => {
   });
 
   it("slotted 라디오가 그룹 선택, 내부 표시와 ref를 유지한다", () => {
-    const parentRef = createRef<HTMLButtonElement>(), childRef = createRef<HTMLButtonElement>();
+    const parentRef = createRef<HTMLButtonElement>(),
+      childRef = createRef<HTMLButtonElement>();
     const change = vi.fn();
-    render(<RadioGroup defaultValue="plan" onValueChange={change} aria-label="View">
-      <RadioGroupItem asChild value="plan"><button>Plan</button></RadioGroupItem>
-      <RadioGroupItem asChild value="model" ref={parentRef}><button ref={childRef}>Model</button></RadioGroupItem>
-    </RadioGroup>);
+    render(
+      <RadioGroup defaultValue="plan" onValueChange={change} aria-label="View">
+        <RadioGroupItem asChild value="plan">
+          <button>Plan</button>
+        </RadioGroupItem>
+        <RadioGroupItem asChild value="model" ref={parentRef}>
+          <button ref={childRef}>Model</button>
+        </RadioGroupItem>
+      </RadioGroup>,
+    );
     const model = screen.getByRole("radio", { name: "Model" });
     expect(model.tagName).toBe("BUTTON");
     expect(parentRef.current).toBe(model);
@@ -148,7 +220,9 @@ describe("컨트롤의 React 합성 계약", () => {
 
   it("Input 단위를 붙이거나 제거해도 DOM·비제어 값·포커스·선택 영역을 보존한다", () => {
     const ref = createRef<HTMLInputElement>();
-    const view = (suffix?: string) => <Input ref={ref} aria-label="Width" defaultValue="21" {...(suffix ? { suffix } : {})} />;
+    const view = (suffix?: string) => (
+      <Input ref={ref} aria-label="Width" defaultValue="21" {...(suffix ? { suffix } : {})} />
+    );
     const { rerender } = render(view());
     const input = screen.getByRole("textbox", { name: "Width" }) as HTMLInputElement;
     input.focus();
@@ -166,12 +240,24 @@ describe("컨트롤의 React 합성 계약", () => {
 
   it("Input의 제어 값과 native id·설명·오류 연결을 단위 변경에도 전달한다", () => {
     const change = vi.fn();
-    const { rerender } = render(<><label htmlFor="width">Width</label><span id="hint">Minimum ten</span><Input id="width" aria-describedby="hint" value="10" invalid onChange={change} /></>);
+    const { rerender } = render(
+      <>
+        <label htmlFor="width">Width</label>
+        <span id="hint">Minimum ten</span>
+        <Input id="width" aria-describedby="hint" value="10" invalid onChange={change} />
+      </>,
+    );
     const input = screen.getByRole("textbox", { name: "Width" }) as HTMLInputElement;
     fireEvent.change(input, { target: { value: "20" } });
     expect(change).toHaveBeenCalledTimes(1);
     expect(input.value).toBe("10");
-    rerender(<><label htmlFor="width">Width</label><span id="hint">Minimum ten</span><Input id="width" aria-describedby="hint" value="20" suffix="m" invalid onChange={change} /></>);
+    rerender(
+      <>
+        <label htmlFor="width">Width</label>
+        <span id="hint">Minimum ten</span>
+        <Input id="width" aria-describedby="hint" value="20" suffix="m" invalid onChange={change} />
+      </>,
+    );
     expect(screen.getByRole("textbox", { name: "Width" })).toBe(input);
     expect(input.value).toBe("20");
     expect(input.getAttribute("aria-describedby")).toBe("hint");
@@ -180,14 +266,18 @@ describe("컨트롤의 React 합성 계약", () => {
 });
 
 describe("세그먼트의 키보드 계약", () => {
-  const options = [{ value: 0, label: "Zero" }, { value: 1, label: "One", disabled: true }, { value: 2, label: "Two" }];
+  const options = [
+    { value: 0, label: "Zero" },
+    { value: 1, label: "One", disabled: true },
+    { value: 2, label: "Two" },
+  ];
 
-  it.each([1, 99])("선택값 %s이 비활성 또는 없을 때도 첫 활성 항목으로 진입한다", async value => {
+  it.each([1, 99])("선택값 %s이 비활성 또는 없을 때도 첫 활성 항목으로 진입한다", async (value) => {
     const change = vi.fn();
     render(<SegmentedControl label="Levels" options={options} value={value} onChange={change} />);
     const first = screen.getByRole("radio", { name: "Zero" });
     expect(first.tabIndex).toBe(0);
-    expect(screen.getAllByRole("radio").filter(radio => radio.tabIndex === 0)).toEqual([first]);
+    expect(screen.getAllByRole("radio").filter((radio) => radio.tabIndex === 0)).toEqual([first]);
     act(() => first.focus());
     expect(document.activeElement).toBe(first);
     expect(change).not.toHaveBeenCalled();
@@ -200,11 +290,25 @@ describe("세그먼트의 키보드 계약", () => {
     const change = vi.fn();
     function Example() {
       const [value, setValue] = useState(0);
-      return <SegmentedControl label="Levels" options={options} value={value} onChange={next => { change(next); setValue(next); }} />;
+      return (
+        <SegmentedControl
+          label="Levels"
+          options={options}
+          value={value}
+          onChange={(next) => {
+            change(next);
+            setValue(next);
+          }}
+        />
+      );
     }
     render(<Example />);
     act(() => screen.getByRole("radio", { name: "Zero" }).focus());
-    for (const [key, name, value] of [["End", "Two", 2], ["Home", "Zero", 0], ["ArrowLeft", "Two", 2]] as const) {
+    for (const [key, name, value] of [
+      ["End", "Two", 2],
+      ["Home", "Zero", 0],
+      ["ArrowLeft", "Two", 2],
+    ] as const) {
       fireEvent.keyDown(document.activeElement!, { key });
       const next = screen.getByRole("radio", { name });
       await waitFor(() => expect(document.activeElement).toBe(next));
@@ -244,7 +348,17 @@ describe("세그먼트의 키보드 계약", () => {
     const change = vi.fn();
     function Example() {
       const [value, setValue] = useState(0);
-      return <SegmentedControl label="Levels" options={options} value={value} onChange={next => { change(next); setValue(next); }} />;
+      return (
+        <SegmentedControl
+          label="Levels"
+          options={options}
+          value={value}
+          onChange={(next) => {
+            change(next);
+            setValue(next);
+          }}
+        />
+      );
     }
     render(<Example />);
     const zero = screen.getByRole("radio", { name: "Zero" });
@@ -278,9 +392,11 @@ describe("세그먼트의 키보드 계약", () => {
 });
 
 describe("스위치 설명 연결", () => {
-  it.each([false, true])("DS=%s에서 hint를 안정된 설명 ID로 연결하고 숨긴 문구를 참조하지 않는다", ds => {
+  it.each([false, true])("DS=%s에서 hint를 안정된 설명 ID로 연결하고 숨긴 문구를 참조하지 않는다", (ds) => {
     const toggle = (hint: string, hideText = false) => {
-      const control = <Toggle label="Tandem stalls" hint={hint} hideText={hideText} value={false} onChange={() => {}} />;
+      const control = (
+        <Toggle label="Tandem stalls" hint={hint} hideText={hideText} value={false} onChange={() => {}} />
+      );
       return ds ? <DesignSystemProvider>{control}</DesignSystemProvider> : control;
     };
     const { rerender } = render(toggle("Up to 20% by count"));

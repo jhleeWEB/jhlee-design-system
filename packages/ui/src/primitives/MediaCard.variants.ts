@@ -30,7 +30,11 @@ export const mediaCardVariants = cva(
     compoundVariants: [
       /* 선택은 **테두리 두께가 아니라 색**으로 말한다. 두께를 바꾸면 선택될 때 카드가
          1px 씩 움직여 격자 전체가 흔들린다. */
-      { elevation: "raised", selected: true, class: "shadow-[0_0_0_2px_var(--chrome-primary),var(--shadow-card)]" },
+      {
+        elevation: "raised",
+        selected: true,
+        class: "shadow-[0_0_0_2px_var(--chrome-primary),var(--shadow-card)]",
+      },
       { elevation: "flat", selected: true, class: "border-primary ring-1 ring-primary" },
       { elevation: "flush", selected: true, class: "border-primary ring-1 ring-primary" },
     ],

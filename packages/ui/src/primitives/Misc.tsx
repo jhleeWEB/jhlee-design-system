@@ -43,7 +43,7 @@ export function SectionLabel({ className, ...rest }: React.HTMLAttributes<HTMLDi
     <div
       data-slot="section-label"
       className={cn(
-        "font-mono text-micro uppercase tracking-caps text-muted-foreground select-none",
+        "font-mono text-micro tracking-caps text-muted-foreground uppercase select-none",
         className,
       )}
       {...rest}

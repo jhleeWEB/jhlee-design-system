@@ -7,7 +7,7 @@ const JSDOM_OFF = ["color-contrast", "region"] as const;
 
 /** 위반을 `rule: selector, selector` 줄로 낸다 — 빈 배열이 통과다. */
 export async function axeViolations(node: Element, disabledRules: readonly string[] = []): Promise<string[]> {
-  const rules = Object.fromEntries([...JSDOM_OFF, ...disabledRules].map(id => [id, { enabled: false }]));
+  const rules = Object.fromEntries([...JSDOM_OFF, ...disabledRules].map((id) => [id, { enabled: false }]));
   const results = await axe.run(node, { rules, resultTypes: ["violations"] });
-  return results.violations.map(v => `${v.id}: ${v.nodes.map(n => n.target.join(" ")).join(", ")}`);
+  return results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`);
 }

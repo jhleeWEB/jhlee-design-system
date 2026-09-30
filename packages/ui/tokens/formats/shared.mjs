@@ -11,13 +11,14 @@ export const HEADER = [
 ].join("\n");
 
 /** 토큰의 `$extensions.sds` — 없으면 빈 객체. */
-export const sds = token => token.$extensions?.sds ?? {};
+export const sds = (token) => token.$extensions?.sds ?? {};
 
 /** 정본 순서(층 → 파일 → 선언). */
 export const byOrder = (a, b) => sds(a).order - sds(b).order;
 
 /** `{a.b-c}` → `var(--a-b-c)`. 이름 규칙은 name/sds 변환(path.join("-"))과 같다. */
-export const refsToVars = text => text.replace(/\{([a-z0-9.-]+)\}/g, (_, path) => `var(--${path.split(".").join("-")})`);
+export const refsToVars = (text) =>
+  text.replace(/\{([a-z0-9.-]+)\}/g, (_, path) => `var(--${path.split(".").join("-")})`);
 
 /** 해석된 값을 CSS 글자로 — cubicBezier 배열만 함수 표기로 바꾼다. */
 export function literal(type, value) {
@@ -38,17 +39,23 @@ export function declarations(name, type, original, resolved, outputReferences) {
       [`--${name}--line-height`, String(v.lineHeight)],
     ];
   }
-  if (outputReferences && typeof original === "string" && /\{[a-z0-9.-]+\}/.test(original)) return [[`--${name}`, refsToVars(original)]];
+  if (outputReferences && typeof original === "string" && /\{[a-z0-9.-]+\}/.test(original))
+    return [[`--${name}`, refsToVars(original)]];
   return [[`--${name}`, literal(type, resolved)]];
 }
 
 /** Style Dictionary 토큰 → 선언 목록. 조건부(`@supports`) 값은 없다 — 모든 토큰이 `:root` 한 곳에 한 값이다(#36 이 #26 의 supports/fallback 을 지웠다). */
-export const tokenDeclarations = (token, outputReferences) => declarations(token.name, token.$type, token.original.$value, token.$value, outputReferences);
+export const tokenDeclarations = (token, outputReferences) =>
+  declarations(token.name, token.$type, token.original.$value, token.$value, outputReferences);
 
 /** `selector {\n  decl;\n}` — 들여쓰기는 2칸, 중첩(@media 안)은 indent 로. */
 export function block(selector, lines, indent = "") {
   // 빈 줄은 들여쓰지 않는다 — 꼬리 공백은 diff 잡음이고 에디터가 지워 버려 `--check` 가 빨개진다.
-  return [`${indent}${selector} {`, ...lines.map(l => (l === "" ? "" : `${indent}  ${l}`)), `${indent}}`].join("\n");
+  return [
+    `${indent}${selector} {`,
+    ...lines.map((l) => (l === "" ? "" : `${indent}  ${l}`)),
+    `${indent}}`,
+  ].join("\n");
 }
 
 /** `[prop, value]` → `prop: value;`. */

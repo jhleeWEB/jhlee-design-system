@@ -36,7 +36,7 @@ export function EmptyState({
         {title}
       </div>
       {description ? (
-        <p className="max-w-[46ch] text-body leading-relaxed text-muted-foreground">{description}</p>
+        <p className="leading-relaxed max-w-[46ch] text-body text-muted-foreground">{description}</p>
       ) : null}
       {action ? <div className="mt-2">{action}</div> : null}
     </div>

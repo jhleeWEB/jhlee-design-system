@@ -30,7 +30,9 @@ function isSyntacticallyBoolean(node) {
       return isSyntacticallyBoolean(node.consequent) || isSyntacticallyBoolean(node.alternate);
     case "LogicalExpression":
       // `a && b` 는 a 가 falsy 면 a 를 돌려준다 — 왼쪽이 불리언이면 false 가 새어 나온다.
-      return node.operator === "&&" ? isSyntacticallyBoolean(node.left) || isSyntacticallyBoolean(node.right) : isSyntacticallyBoolean(node.right);
+      return node.operator === "&&"
+        ? isSyntacticallyBoolean(node.left) || isSyntacticallyBoolean(node.right)
+        : isSyntacticallyBoolean(node.right);
     default:
       return false;
   }
@@ -39,7 +41,7 @@ function isSyntacticallyBoolean(node) {
 /** @param {import("typescript").Type} type */
 function mayBeFalse(type) {
   const parts = type.isUnion() ? type.types : [type];
-  return parts.some(part => {
+  return parts.some((part) => {
     if (part.flags & ts.TypeFlags.Boolean) return true;
     if (part.flags & ts.TypeFlags.BooleanLiteral) {
       // TS 는 `false` 리터럴 타입을 intrinsicName 으로 구분한다 — 공개 API 가 없어 이 필드를 읽는다.
@@ -55,11 +57,11 @@ const rule = {
   meta: {
     type: "problem",
     docs: {
-      description: "data-* 속성에 불리언을 넘기지 않는다 — \"false\" 문자열이 그려진다",
+      description: 'data-* 속성에 불리언을 넘기지 않는다 — "false" 문자열이 그려진다',
     },
     messages: {
       booleanDataAttr:
-        "`{{name}}` would render the string \"true\"/\"false\" — use presence (`{{name}}={cond || undefined}`) or an explicit string.",
+        '`{{name}}` would render the string "true"/"false" — use presence (`{{name}}={cond || undefined}`) or an explicit string.',
     },
     schema: [],
   },
@@ -71,7 +73,12 @@ const rule = {
       JSXAttribute(node) {
         if (node.name.type !== "JSXIdentifier" || !node.name.name.startsWith("data-")) return;
         const value = node.value;
-        if (!value || value.type !== "JSXExpressionContainer" || value.expression.type === "JSXEmptyExpression") return;
+        if (
+          !value ||
+          value.type !== "JSXExpressionContainer" ||
+          value.expression.type === "JSXEmptyExpression"
+        )
+          return;
         const expression = value.expression;
 
         let violates;
@@ -80,9 +87,12 @@ const rule = {
           const type = checker.getTypeAtLocation(services.esTreeNodeToTSNodeMap.get(expression));
           violates = mayBeFalse(type);
         } else {
-          violates = isSyntacticallyBoolean(/** @type {import("estree").Node} */ (/** @type {unknown} */ (expression)));
+          violates = isSyntacticallyBoolean(
+            /** @type {import("estree").Node} */ (/** @type {unknown} */ (expression)),
+          );
         }
-        if (violates) context.report({ node: value, messageId: "booleanDataAttr", data: { name: node.name.name } });
+        if (violates)
+          context.report({ node: value, messageId: "booleanDataAttr", data: { name: node.name.name } });
       },
     };
   },

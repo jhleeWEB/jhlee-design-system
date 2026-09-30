@@ -15,7 +15,8 @@ const CLASS_ATTRIBUTES = new Set(["className", "class"]);
 
 /* 대괄호 안에 px/rem/em/ms/s/vh/vw 단위 숫자, hex, rgb/hsl/oklch 함수가 있으면 리터럴 값이다.
  * `[&>svg]`·`[data-state=open]` 같은 선택자 arbitrary variant 는 걸리지 않는다. */
-const ARBITRARY_LITERAL = /\[[^\]]*(?:\d+(?:\.\d+)?(?:px|rem|em|ms|s|vh|vw|%)\b|#[0-9a-fA-F]{3,8}\b|(?:rgb|hsl|oklch|oklab|lab|lch)a?\()[^\]]*\]/;
+const ARBITRARY_LITERAL =
+  /\[[^\]]*(?:\d+(?:\.\d+)?(?:px|rem|em|ms|s|vh|vw|%)\b|#[0-9a-fA-F]{3,8}\b|(?:rgb|hsl|oklch|oklab|lab|lch)a?\()[^\]]*\]/;
 /* Tailwind 기본 눈금. `duration-100` 은 잡고 `duration-fast`·`duration-(--x)` 는 두 번째 세그먼트가 숫자가 아니라 통과한다. */
 const DEFAULT_SCALE = /^-?(?:duration|delay|z|leading|font|tracking)-\d+(?:\.\d+)?$/;
 
@@ -50,8 +51,10 @@ const rule = {
       description: "className/cva/cn 문자열에 토큰 밖 리터럴(px·hex·rgb·기본 눈금)을 쓰지 않는다",
     },
     messages: {
-      arbitraryLiteral: "`{{token}}` hard-codes a value — use a token utility from theme.css (add a token if none fits).",
-      defaultScale: "`{{token}}` uses Tailwind's default scale, which theme.css resets — use the token ladder (e.g. `duration-fast`, `z-pop`).",
+      arbitraryLiteral:
+        "`{{token}}` hard-codes a value — use a token utility from theme.css (add a token if none fits).",
+      defaultScale:
+        "`{{token}}` uses Tailwind's default scale, which theme.css resets — use the token ladder (e.g. `duration-fast`, `z-pop`).",
     },
     schema: [],
   },
@@ -71,7 +74,7 @@ const rule = {
 
     /** 클래스 자리 안의 모든 문자열·템플릿 조각을 본다. 조건식·객체·배열 어디에 있든 문자열이면 클래스다.
      * @param {import("estree").Node | null | undefined} node */
-    const visit = node => {
+    const visit = (node) => {
       if (!node || typeof node !== "object") return;
       // JSX 노드는 estree 타입 밖이다 — `className={…}` 의 컨테이너만 벗기고 나머지는 estree 로 본다.
       if (/** @type {string} */ (node.type) === "JSXExpressionContainer") {

@@ -7,10 +7,10 @@ import { cva } from "../cn";
 /** 모달 내용 상자의 변형 — `size`. */
 export const modalVariants = cva(
   [
-    "fixed left-1/2 top-1/2 z-modal -translate-x-1/2 -translate-y-1/2",
+    "fixed top-1/2 left-1/2 z-modal -translate-x-1/2 -translate-y-1/2",
     "flex max-h-dialog-fluid flex-col overflow-hidden",
     "rounded-xl border border-border bg-card shadow-modal",
-    "text-body text-foreground animate-in-pop",
+    "animate-in-pop text-body text-foreground",
     "focus-visible:outline-none",
   ],
   {

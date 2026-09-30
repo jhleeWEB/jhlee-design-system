@@ -56,7 +56,7 @@ const rule = {
   },
   create(context) {
     /** @param {import("estree").Node} node */
-    const report = node =>
+    const report = (node) =>
       context.report({ node, messageId: "magicMs", data: { value: context.sourceCode.getText(node) } });
 
     return {

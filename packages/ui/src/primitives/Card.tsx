@@ -1,5 +1,17 @@
 "use client";
-import { Children, Fragment, cloneElement, createContext, isValidElement, useContext, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from "react";
+import {
+  Children,
+  Fragment,
+  cloneElement,
+  createContext,
+  isValidElement,
+  useContext,
+  useId,
+  useImperativeHandle,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import { cn, type VariantProps } from "../cn";
@@ -35,10 +47,7 @@ interface CardCtx {
 }
 const Ctx = createContext<CardCtx | null>(null);
 
-
-export interface CardProps
-  extends React.ComponentPropsWithRef<"div">,
-    VariantProps<typeof cardVariants> {
+export interface CardProps extends React.ComponentPropsWithRef<"div">, VariantProps<typeof cardVariants> {
   /** 머리줄을 명시하면 사용자 정의 컴포넌트로 감싸도 헤더 접기에서 항상 남는다. */
   header?: React.ReactNode;
   /** 주면 이 카드는 접힌다. 제어 컴포넌트이므로 `onCollapsedChange` 도 함께 준다. */
@@ -58,7 +67,13 @@ export interface CardProps
   side?: "left" | "right";
 }
 
-function Chevron({ pointing, className }: { pointing: "left" | "right" | "up" | "down"; className?: string }) {
+function Chevron({
+  pointing,
+  className,
+}: {
+  pointing: "left" | "right" | "up" | "down";
+  className?: string;
+}) {
   const d = {
     left: "M10 3.5L5.5 8l4.5 4.5",
     right: "M6 3.5L10.5 8 6 12.5",
@@ -66,7 +81,16 @@ function Chevron({ pointing, className }: { pointing: "left" | "right" | "up" | 
     down: "M3.5 6L8 10.5 12.5 6",
   }[pointing];
   return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" className={cn("size-4", className)} fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      className={cn("size-4", className)}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d={d} />
     </svg>
   );
@@ -74,7 +98,10 @@ function Chevron({ pointing, className }: { pointing: "left" | "right" | "up" | 
 
 /* 기존 직접 자식 CardHeader API의 호환 경로다. 새 코드는 header 슬롯을 사용한다.
    경로 전체를 key로 쓰면 서로 다른 Fragment의 같은 지역 key도 충돌하지 않는다. */
-function flattenCardChildren(children: React.ReactNode, ancestry: readonly (string | number)[] = []): React.ReactNode[] {
+function flattenCardChildren(
+  children: React.ReactNode,
+  ancestry: readonly (string | number)[] = [],
+): React.ReactNode[] {
   return Children.toArray(children).flatMap<React.ReactNode>((child, index) => {
     if (!isValidElement<{ children?: React.ReactNode }>(child)) return [child];
     const path = [...ancestry, child.key ?? index];
@@ -130,7 +157,9 @@ export function Card({
   const stripMode = collapsible && collapseTo === "strip";
   const headerCollapse = collapsible && collapseTo === "header";
   const collapsedRef = useRef(isCollapsed);
-  useLayoutEffect(() => { collapsedRef.current = isCollapsed; }, [isCollapsed]);
+  useLayoutEffect(() => {
+    collapsedRef.current = isCollapsed;
+  }, [isCollapsed]);
 
   /* 고정 폭은 width로, 남는 폭을 나누는 카드는 flex-basis/grow로 보간한다.
      접힌 채 처음 마운트해도 원래 클래스·인라인 크기를 읽고, 측정 과정은 그리지 않는다. */
@@ -142,12 +171,18 @@ export function Card({
     element.style.setProperty("transition", "none", "important");
     element.dataset.cardMeasuring = "true";
     const computed = getComputedStyle(element);
-    element.dataset.cardFlexible = Number(computed.flexGrow) > 0 || (computed.flexBasis !== "auto" && computed.flexBasis !== "") ? "true" : "false";
+    element.dataset.cardFlexible =
+      Number(computed.flexGrow) > 0 || (computed.flexBasis !== "auto" && computed.flexBasis !== "")
+        ? "true"
+        : "false";
     const rememberWidth = () => {
       const style = getComputedStyle(element);
-      const width = element.getBoundingClientRect().width
-        - (parseFloat(style.borderLeftWidth) || 0) - (parseFloat(style.borderRightWidth) || 0)
-        - (parseFloat(style.paddingLeft) || 0) - (parseFloat(style.paddingRight) || 0);
+      const width =
+        element.getBoundingClientRect().width -
+        (parseFloat(style.borderLeftWidth) || 0) -
+        (parseFloat(style.borderRightWidth) || 0) -
+        (parseFloat(style.paddingLeft) || 0) -
+        (parseFloat(style.paddingRight) || 0);
       if (width > 0) element.style.setProperty("--card-content-width", `${width}px`);
     };
     rememberWidth();
@@ -161,7 +196,18 @@ export function Card({
     });
     observer.observe(element);
     return () => observer.disconnect();
-  }, [stripMode, className, pad, style?.width, style?.minWidth, style?.maxWidth, style?.flex, style?.flexBasis, style?.flexGrow, style?.flexShrink]);
+  }, [
+    stripMode,
+    className,
+    pad,
+    style?.width,
+    style?.minWidth,
+    style?.maxWidth,
+    style?.flex,
+    style?.flexBasis,
+    style?.flexGrow,
+    style?.flexShrink,
+  ]);
 
   useLayoutEffect(() => {
     const element = rootRef.current;
@@ -179,15 +225,20 @@ export function Card({
   }, [stripMode, isCollapsed]);
 
   useLayoutEffect(() => {
-    const element = rootRef.current, content = contentRef.current;
+    const element = rootRef.current,
+      content = contentRef.current;
     if (!collapsible || !element || !content) return;
     const active = document.activeElement;
     const requestedFocus = stripMode && toggleFocus.current;
     if (isCollapsed && (requestedFocus || (active && content.contains(active)))) {
-      const trigger = stripMode ? stripRef.current : element.querySelector<HTMLButtonElement>('[data-slot="card-header"] [data-slot="card-collapse"]');
+      const trigger = stripMode
+        ? stripRef.current
+        : element.querySelector<HTMLButtonElement>('[data-slot="card-header"] [data-slot="card-collapse"]');
       (trigger ?? element).focus({ preventScroll: true });
     } else if (!isCollapsed && (requestedFocus || active === stripRef.current)) {
-      (content.querySelector<HTMLButtonElement>('[data-slot="card-collapse"]') ?? content).focus({ preventScroll: true });
+      (content.querySelector<HTMLButtonElement>('[data-slot="card-collapse"]') ?? content).focus({
+        preventScroll: true,
+      });
     }
     toggleFocus.current = false;
   }, [collapsible, isCollapsed, stripMode]);
@@ -195,7 +246,7 @@ export function Card({
   const childList = headerCollapse && header === undefined ? flattenCardChildren(children) : [];
   const isHeader = (child: React.ReactNode) => isValidElement(child) && child.type === CardHeader;
   const headerContent = header === undefined ? childList.filter(isHeader) : header;
-  const bodyContent = header === undefined ? childList.filter(child => !isHeader(child)) : children;
+  const bodyContent = header === undefined ? childList.filter((child) => !isHeader(child)) : children;
   /* 셰브론은 **누르면 일어날 일**을 가리킨다. 왼쪽에 붙은 패널을 펼치면 내용이 오른쪽으로
      자라므로 오른쪽을 가리킨다. */
   const StripChevron = side === "left" ? LuChevronRight : LuChevronLeft;
@@ -228,16 +279,22 @@ export function Card({
               onClick={ctx.toggle}
               title={`Expand ${ctx.label}`}
               className={cn(
-                "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
+                "font-inherit appearance-none border-0 bg-transparent p-0 text-inherit",
                 "ds-card-strip flex cursor-pointer flex-col items-center gap-2 py-2.5",
                 "text-muted-foreground hover:bg-muted hover:text-foreground",
                 "focus-visible:focus-ring focus-visible:outline-none",
               )}
             >
-              <StripChevron className="size-4 shrink-0" size={16} strokeWidth={2} aria-hidden="true" focusable={false} />
+              <StripChevron
+                className="size-4 shrink-0"
+                size={16}
+                strokeWidth={2}
+                aria-hidden="true"
+                focusable={false}
+              />
               <span
                 className={cn(
-                  "flex-1 whitespace-nowrap font-mono text-micro uppercase tracking-caps",
+                  "flex-1 font-mono text-micro tracking-caps whitespace-nowrap uppercase",
                   "[writing-mode:vertical-rl]",
                   /* 왼쪽 탭은 아래에서 위로 읽는다 — 화면 중앙을 향해 글이 흐르는 쪽. */
                   side === "left" && "rotate-180",
@@ -247,7 +304,15 @@ export function Card({
               </span>
               {collapsedSignal ? <span className="shrink-0">{collapsedSignal}</span> : null}
             </button>
-            <div ref={contentRef} id={contentId} data-slot="card-content" className="ds-card-strip-content" aria-hidden={isCollapsed || undefined} inert={isCollapsed || undefined} tabIndex={-1}>
+            <div
+              ref={contentRef}
+              id={contentId}
+              data-slot="card-content"
+              className="ds-card-strip-content"
+              aria-hidden={isCollapsed || undefined}
+              inert={isCollapsed || undefined}
+              tabIndex={-1}
+            >
               {header}
               {children}
             </div>
@@ -256,12 +321,23 @@ export function Card({
           <>
             {headerContent}
             {/* grid의 한 행을 줄여 내용 높이를 보간한다. 본문과 그 자식의 DOM 위치는 변하지 않는다. */}
-            <div ref={contentRef} id={contentId} data-slot="card-content" className="ds-card-header-content" aria-hidden={isCollapsed || undefined} inert={isCollapsed || undefined} tabIndex={-1}>
+            <div
+              ref={contentRef}
+              id={contentId}
+              data-slot="card-content"
+              className="ds-card-header-content"
+              aria-hidden={isCollapsed || undefined}
+              inert={isCollapsed || undefined}
+              tabIndex={-1}
+            >
               <div className="ds-card-header-inner">{bodyContent}</div>
             </div>
           </>
         ) : (
-          <>{header}{children}</>
+          <>
+            {header}
+            {children}
+          </>
         )}
       </div>
     </Ctx.Provider>
@@ -299,48 +375,55 @@ export function CardHeader({
       data-variant={variant}
       className={cn(
         "group/head flex min-w-0 shrink-0 items-center gap-3",
-        variant === "panel"
-          ? "box-border min-h-12 border-b border-border bg-card px-3 py-2"
-          : "px-4 py-3",
+        variant === "panel" ? "box-border min-h-12 border-b border-border bg-card px-3 py-2" : "px-4 py-3",
         className,
       )}
       {...rest}
     >
       {leading ? <div className="flex shrink-0 items-center">{leading}</div> : null}
-      {title ? <Heading data-slot="card-title" className="m-0 min-w-0 truncate text-control font-semibold text-foreground">{title}</Heading> : null}
+      {title ? (
+        <Heading
+          data-slot="card-title"
+          className="m-0 min-w-0 truncate text-control font-semibold text-foreground"
+        >
+          {title}
+        </Heading>
+      ) : null}
       {children}
       {meta ? <div className="ml-auto shrink-0 tnum text-label text-muted-foreground">{meta}</div> : null}
-      {ctx?.collapsible && collapseButton ? ctx.collapseTo === "strip" ? (
-        <PanelToggleButton
-          data-slot="card-collapse"
-          open={!ctx.collapsed}
-          onOpenChange={ctx.toggle}
-          label={ctx.label}
-          controls={ctx.contentId}
-          className={!meta ? "ml-auto" : undefined}
-        />
-      ) : (
-        <button
-          data-slot="card-collapse"
-          type="button"
-          aria-expanded={!ctx.collapsed}
-          aria-controls={ctx.contentId}
-          onClick={ctx.toggle}
-          title={`${ctx.collapsed ? "Expand" : "Collapse"} ${ctx.label}`}
-          className={cn(
-            "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
-            "grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-muted-foreground",
-            !meta && "ml-auto",
-            "hover:bg-muted hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
-            /* 평소에는 흐리다 — 상시 진한 작은 크롬이 카드마다 붙으면 화면이 시끄럽다.
+      {ctx?.collapsible && collapseButton ? (
+        ctx.collapseTo === "strip" ? (
+          <PanelToggleButton
+            data-slot="card-collapse"
+            open={!ctx.collapsed}
+            onOpenChange={ctx.toggle}
+            label={ctx.label}
+            controls={ctx.contentId}
+            className={!meta ? "ml-auto" : undefined}
+          />
+        ) : (
+          <button
+            data-slot="card-collapse"
+            type="button"
+            aria-expanded={!ctx.collapsed}
+            aria-controls={ctx.contentId}
+            onClick={ctx.toggle}
+            title={`${ctx.collapsed ? "Expand" : "Collapse"} ${ctx.label}`}
+            className={cn(
+              "font-inherit appearance-none border-0 bg-transparent p-0 text-inherit",
+              "grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-muted-foreground",
+              !meta && "ml-auto",
+              "hover:bg-muted hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
+              /* 평소에는 흐리다 — 상시 진한 작은 크롬이 카드마다 붙으면 화면이 시끄럽다.
                접혀 있을 때는 그것이 유일한 되돌리는 길이므로 항상 진하다. */
-            ctx.collapsed
-              ? "opacity-100"
-              : "opacity-0 transition-opacity duration-fast group-hover/head:opacity-100 focus-visible:opacity-100",
-          )}
-        >
-          <Chevron pointing={ctx.collapsed ? "down" : "up"} />
-        </button>
+              ctx.collapsed
+                ? "opacity-100"
+                : "opacity-0 transition-opacity duration-fast group-hover/head:opacity-100 focus-visible:opacity-100",
+            )}
+          >
+            <Chevron pointing={ctx.collapsed ? "down" : "up"} />
+          </button>
+        )
       ) : null}
     </div>
   );
@@ -358,18 +441,18 @@ export function CardCollapse({ className, onClick, ...rest }: React.ComponentPro
       type="button"
       aria-expanded={!ctx.collapsed}
       aria-controls={ctx.contentId}
-      onClick={event => {
+      onClick={(event) => {
         onClick?.(event);
         if (!event.defaultPrevented) ctx.toggle();
       }}
       title={`${ctx.collapsed ? "Expand" : "Collapse"} ${ctx.label}`}
       className={cn(
-        "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
+        "font-inherit appearance-none border-0 bg-transparent p-0 text-inherit",
         "grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-muted-foreground",
         "hover:bg-muted hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
         ctx.collapsed
           ? "opacity-100"
-          : "opacity-0 transition-opacity duration-fast focus-visible:opacity-100 group-hover/card:opacity-100",
+          : "opacity-0 transition-opacity duration-fast group-hover/card:opacity-100 focus-visible:opacity-100",
         className,
       )}
       {...rest}

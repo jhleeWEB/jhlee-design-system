@@ -55,7 +55,8 @@ const legacyTone: Rule.RuleModule = {
     fixable: "code",
     docs: { description: "옛 톤 키(accent · ok · warn · danger · default · current)를 새 키로 바꾼다" },
     messages: {
-      legacyTone: "`tone=\"{{from}}\"` is a legacy tone — use `\"{{to}}\"` (neutral · primary · success · warning · destructive · info).",
+      legacyTone:
+        '`tone="{{from}}"` is a legacy tone — use `"{{to}}"` (neutral · primary · success · warning · destructive · info).',
     },
     schema: [],
   },
@@ -70,7 +71,7 @@ const legacyTone: Rule.RuleModule = {
           node: literal,
           messageId: "legacyTone",
           data: { from, to },
-          fix: fixer => fixer.replaceText(literal, `${quote}${to}${quote}`),
+          fix: (fixer) => fixer.replaceText(literal, `${quote}${to}${quote}`),
         });
       }
     };
@@ -79,7 +80,11 @@ const legacyTone: Rule.RuleModule = {
         const attr = node as unknown as JsxAttributeNode;
         if (attr.name?.type !== "JSXIdentifier" || attr.name.name !== "tone" || !attr.value) return;
         if (attr.value.type === "Literal") check(attr.value as Literal);
-        else if (attr.value.type === "JSXExpressionContainer" && attr.value.expression && attr.value.expression.type !== ("JSXEmptyExpression" as string))
+        else if (
+          attr.value.type === "JSXExpressionContainer" &&
+          attr.value.expression &&
+          attr.value.expression.type !== ("JSXEmptyExpression" as string)
+        )
           check(attr.value.expression);
       },
       Property(node) {

@@ -64,4 +64,4 @@ describe("Button — link 변형은 상자가 없다", () => {
     expect(merged).not.toContain("h-ctl-sm");
     expect(merged).not.toContain("px-3");
   });
-})
+});

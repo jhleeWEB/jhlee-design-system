@@ -20,7 +20,14 @@ describe("Input type=number — 선행 0(CLAUDE.md «DS Input 의 type=number»)
   it("'0234' 를 한 자씩 치면 정수부 선행 0 이 사라져 234 가 된다", async () => {
     const user = userEvent.setup();
     const changed = vi.fn();
-    render(<Input type="number" aria-label="Area" defaultValue="" onChange={event => changed(event.currentTarget.value)} />);
+    render(
+      <Input
+        type="number"
+        aria-label="Area"
+        defaultValue=""
+        onChange={(event) => changed(event.currentTarget.value)}
+      />,
+    );
     const input = screen.getByRole("spinbutton", { name: "Area" });
     await user.type(input, "0234");
     expect(input).toHaveValue(234);
@@ -49,7 +56,9 @@ describe("Input type=number — 선행 0(CLAUDE.md «DS Input 의 type=number»)
 
 describe("PanelToggleButton — 아이콘(CLAUDE.md «Lucide LuMinimize2/LuMaximize2 를 16px»)", () => {
   const iconMarkup = (Icon: typeof LuMinimize2) => {
-    const { container, unmount } = render(<Icon size={16} strokeWidth={2} aria-hidden="true" focusable={false} />);
+    const { container, unmount } = render(
+      <Icon size={16} strokeWidth={2} aria-hidden="true" focusable={false} />,
+    );
     const html = container.querySelector("svg")!.outerHTML;
     unmount();
     return html;

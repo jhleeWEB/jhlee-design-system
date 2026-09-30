@@ -42,19 +42,25 @@ interface Pattern {
  * 값이 여러 줄이어도(`--shadow-pop`) `;` 까지가 한 정의다. `--radius-*: initial` 의 `*` 도 이름의 일부다.
  */
 function withoutTokenDefinitions(code: string): string {
-  return code.replace(/--[\w*-]+\s*:[^;{}]*;/g, m => m.replace(/[^\n]/g, " "));
+  return code.replace(/--[\w*-]+\s*:[^;{}]*;/g, (m) => m.replace(/[^\n]/g, " "));
 }
 
-const cssValues = (file: SourceFileInfo, re: RegExp): readonly Located[] => matches(withoutTokenDefinitions(file.code), re);
+const cssValues = (file: SourceFileInfo, re: RegExp): readonly Located[] =>
+  matches(withoutTokenDefinitions(file.code), re);
 
 /**
  * legacy.json 의 옛 이름(`--ink` · `--gap` · `--size-gap` · `--color-cool-500` …)을 정본에서 읽어 `var(--이름` 을 잡는 정규식으로 만든다.
  * 목록을 여기 복사하지 않는 이유: legacy 에 이름이 더해지거나 빠질 때 래칫이 저절로 따라가야 한다.
  */
-const LEGACY_NAMES = validateTokenSources(readTokenSources(fileURLToPath(new URL("../../tokens/", import.meta.url))))
-  .tokens.filter(t => t.file === LEGACY_FILE)
-  .map(t => `--${t.path.join("-")}`);
-const LEGACY_ALIAS_USE = new RegExp(`var\\(\\s*(?:${LEGACY_NAMES.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})\\s*[,)]`, "g");
+const LEGACY_NAMES = validateTokenSources(
+  readTokenSources(fileURLToPath(new URL("../../tokens/", import.meta.url))),
+)
+  .tokens.filter((t) => t.file === LEGACY_FILE)
+  .map((t) => `--${t.path.join("-")}`);
+const LEGACY_ALIAS_USE = new RegExp(
+  `var\\(\\s*(?:${LEGACY_NAMES.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})\\s*[,)]`,
+  "g",
+);
 
 const PATTERNS: readonly Pattern[] = [
   {
@@ -62,7 +68,7 @@ const PATTERNS: readonly Pattern[] = [
     why: "클래스 대괄호 안의 px·rem·ms·s 리터럴은 토큰 밖 값이다 — theme.css 사다리(rounded-*·text-*·h-ctl·duration-*)에 이름을 더하고 그 유틸리티를 쓴다(혼용 규칙 ①)",
     kinds: ["ts", "tsx"],
     // 한 줄 안의 `[…]` 만 본다 — 여러 줄에 걸친 배열 리터럴을 클래스 대괄호로 오인하지 않게.
-    find: file => matches(file.code, /\[[^\]\n]*\d+(?:\.\d+)?(?:px|rem|ms|s)\b[^\]\n]*\]/g),
+    find: (file) => matches(file.code, /\[[^\]\n]*\d+(?:\.\d+)?(?:px|rem|ms|s)\b[^\]\n]*\]/g),
     // #22 가 오버레이의 `w-[min(560px,calc(100vw-24px))]` 류를 `w-dialog-fluid max-w-dialog-md`(손 @utility + --container-*)로 흡수해 24 → 5.
     // 남은 다섯은 같은 값의 토큰이 없다(토스트 352px · 30px · 텍스트영역 56px · 아래쪽 서랍 280/460px) — Phase D 의 몫.
     baseline: {
@@ -76,7 +82,11 @@ const PATTERNS: readonly Pattern[] = [
     why: "duration-100 · z-50 · leading-5 · font-500 · tracking-1 같은 Tailwind 기본 사다리와 rounded-[…] 는 역할 이름이 아니다 — theme.css 가 initial 로 지운 사다리에 역할(duration-fast · z-toast)을 더해 쓴다",
     kinds: ["ts", "tsx"],
     // `rounded-[calc(var(--radius-…)-…)]` 는 동심원(바깥 토큰 − 패딩)의 유일한 허용 임의값이다(#26, 스쿼클 폐기 #36 뒤에도 corner.spec 이 형태를 본다) — 여기서는 세지 않는다.
-    find: file => matches(file.code, /\b(?:duration|z|leading|font|tracking)-\d+\b|\brounded-\[(?!calc\(var\(--radius-)/g),
+    find: (file) =>
+      matches(
+        file.code,
+        /\b(?:duration|z|leading|font|tracking)-\d+\b|\brounded-\[(?!calc\(var\(--radius-)/g,
+      ),
     // #18 이 z-50 → z-scrim/z-modal/z-popover/z-toast/z-tooltip, z-1 → z-raised, duration-100/150/200 → duration-fast/base/slow 로 바꿔 24파일 → 3건.
     // #22 가 rounded-[6px] → rounded-sm(같은 6px). 남은 둘은 같은 값의 토큰이 없다(duration-120 · leading-5) — Phase D 의 몫.
     baseline: {
@@ -88,7 +98,7 @@ const PATTERNS: readonly Pattern[] = [
     id: "css-px-literal",
     why: "`.ds-*` CSS 의 px 는 토큰(`var(--…)`)이어야 한다 — 0 과 1px(헤어라인)만 예외다(혼용 규칙 ②). 토큰 정의 자리(`--x: 12px`)는 세지 않는다",
     kinds: ["css"],
-    find: file => cssValues(file, /(?<![\w.-])(?!0px\b|1px\b)\d+(?:\.\d+)?px\b/g),
+    find: (file) => cssValues(file, /(?<![\w.-])(?!0px\b|1px\b)\d+(?:\.\d+)?px\b/g),
     baseline: {
       "canvas.css": 1,
       "feedback/toast.css": 1,
@@ -99,7 +109,7 @@ const PATTERNS: readonly Pattern[] = [
     id: "css-hex-literal",
     why: "`.ds-*` CSS 의 hex 색은 토큰 밖 색이다 — 크롬은 `var(--chrome-*)`, 캔버스는 `var(--canvas-*)` 만 쓴다(혼용 규칙 ②). 토큰 정의 자리는 세지 않는다",
     kinds: ["css"],
-    find: file => cssValues(file, /#[0-9a-fA-F]{3,8}\b/g),
+    find: (file) => cssValues(file, /#[0-9a-fA-F]{3,8}\b/g),
     baseline: {
       "canvas.css": 1,
     },
@@ -108,7 +118,7 @@ const PATTERNS: readonly Pattern[] = [
     id: "css-ms-literal",
     why: "`.ds-*` CSS 의 ms 는 모션 토큰(`--motion-*`·`--duration-*`)이어야 한다 — 값이 흩어지면 접기·토스트·스크롤바가 서로 다른 박자로 움직인다. 0 과 토큰 정의 자리는 세지 않는다",
     kinds: ["css"],
-    find: file => cssValues(file, /(?<![\w.-])(?!0ms\b)\d+(?:\.\d+)?ms\b/g),
+    find: (file) => cssValues(file, /(?<![\w.-])(?!0ms\b)\d+(?:\.\d+)?ms\b/g),
     // toast.css 4 · theme.css 1 은 #18 이 --duration-* 참조로 바꿨다. card-motion.css 의 넷은 var() 의 폴백값이다.
     baseline: {
       "primitives/card-motion.css": 4,
@@ -119,7 +129,11 @@ const PATTERNS: readonly Pattern[] = [
     why: "setTimeout 의 지연과 duration/delayDuration 기본값을 숫자로 적으면 CSS 의 모션 토큰과 JS 상수가 따로 논다(토스트 퇴장 180ms 는 큐 유예 240ms 안에 끝나야 한다) — 생성물 `generated/tokens.ts` 의 `MOTION` 상수를 쓴다(B1 #15 · B3 #18)",
     kinds: ["ts", "tsx"],
     // `setTimeout(` 부터 처음 만나는 `, <숫자>)` 까지 — 콜백이 여러 줄이어도 지연 인자는 그 뒤에 온다.
-    find: file => matches(file.code, /\bsetTimeout\([\s\S]*?,\s*\d+\s*\)|\b(?:delayDuration|skipDelayDuration|duration)\s*=\s*\{?\s*\d+\b/g),
+    find: (file) =>
+      matches(
+        file.code,
+        /\bsetTimeout\([\s\S]*?,\s*\d+\s*\)|\b(?:delayDuration|skipDelayDuration|duration)\s*=\s*\{?\s*\d+\b/g,
+      ),
     // B1(#15)이 세 파일 4건을 MOTION 상수로 바꿔 0 이 됐다 — 기준선이 비어도 검출기 검증(DETECTOR_CASES)은 남는다.
     baseline: {},
   },
@@ -127,7 +141,7 @@ const PATTERNS: readonly Pattern[] = [
     id: "jsx-size-number",
     why: "JSX 의 size={16} · width={12} · strokeWidth={2} 는 아이콘·치수 토큰 밖 숫자다 — `lib/icons.ts` 한 곳(16px · strokeWidth 2)과 `--size-*` 토큰으로 모은다",
     kinds: ["tsx"],
-    find: file => matches(file.code, /\b(?:size|width|height|strokeWidth)=\{\s*\d+(?:\.\d+)?\s*\}/g),
+    find: (file) => matches(file.code, /\b(?:size|width|height|strokeWidth)=\{\s*\d+(?:\.\d+)?\s*\}/g),
     baseline: {
       "CanvasScale.tsx": 3,
       "feedback/Toast.tsx": 1,
@@ -144,7 +158,7 @@ const PATTERNS: readonly Pattern[] = [
     id: "forward-ref",
     why: "React 19 는 ref 가 일반 prop 이다 — forwardRef 는 displayName·제네릭·docgen 을 흐리는 옛 형태라 컴포넌트별 PR 로 걷어낸다(계획 §2.3 규칙 · Phase D)",
     kinds: ["ts", "tsx"],
-    find: file => matches(file.code, /\bforwardRef\b/g),
+    find: (file) => matches(file.code, /\bforwardRef\b/g),
     baseline: {
       "navigation/Accordion.tsx": 6,
       "navigation/BackButton.tsx": 2,
@@ -158,7 +172,7 @@ const PATTERNS: readonly Pattern[] = [
     id: "non-cva-variant-ternary",
     why: "size/tone/variant/elevation 축을 삼항으로 가르면 축의 값 목록이 cva 정의와 따로 자란다 — 축은 `*.variants.ts` 의 cva 하나가 소유한다(계획 §2.3)",
     kinds: ["ts", "tsx"],
-    find: file => matches(file.code, /\b(?:size|tone|variant|elevation)\s*===\s*["'][^"'\n]*["']\s*\?/g),
+    find: (file) => matches(file.code, /\b(?:size|tone|variant|elevation)\s*===\s*["'][^"'\n]*["']\s*\?/g),
     // Alert 의 `tone === "danger" ?` 는 #22 가 normalizeTone() 결과를 쓰면서 사라졌다.
     baseline: {
       "feedback/EmptyState.tsx": 2,
@@ -168,9 +182,9 @@ const PATTERNS: readonly Pattern[] = [
   },
   {
     id: "boolean-string-data-attr",
-    why: "data-x={value} 에 불리언을 그대로 넣으면 DOM 에 \"true\"/\"false\" 문자열이 실려 `[data-x]` 선택자가 false 에도 맞는다 — 문자열 값이거나 `value ? \"\" : undefined` 로 적는다(ESLint ds/no-boolean-string-data-attr)",
+    why: 'data-x={value} 에 불리언을 그대로 넣으면 DOM 에 "true"/"false" 문자열이 실려 `[data-x]` 선택자가 false 에도 맞는다 — 문자열 값이거나 `value ? "" : undefined` 로 적는다(ESLint ds/no-boolean-string-data-attr)',
     kinds: ["tsx"],
-    find: file => matches(file.code, /\bdata-[a-z-]+=\{[a-zA-Z.]+\}/g),
+    find: (file) => matches(file.code, /\bdata-[a-z-]+=\{[a-zA-Z.]+\}/g),
     baseline: {
       "feedback/Toast.tsx": 1,
       "primitives/Card.tsx": 1,
@@ -180,7 +194,7 @@ const PATTERNS: readonly Pattern[] = [
     id: "domain-vocabulary",
     why: "parcel · FSI · TBV · verdict · 필지 · 법규 는 원 저장소(인도 주거 컨피규레이터)의 도메인 어휘다 — 디자인 시스템은 도메인을 모른다. legacy 격리(`./legacy`)와 함께 앱으로 돌려보낸다",
     kinds: ["ts", "tsx"],
-    find: file => matches(file.code, /\b(?:parcel|FSI|TBV|verdict)\b|To be verified|필지|법규/g),
+    find: (file) => matches(file.code, /\b(?:parcel|FSI|TBV|verdict)\b|To be verified|필지|법규/g),
     baseline: {
       "data/DescriptionList.tsx": 1,
     },
@@ -189,7 +203,7 @@ const PATTERNS: readonly Pattern[] = [
     id: "legacy-alias-use",
     why: "var(--ink) · var(--gap) · var(--size-gap) · var(--color-cool-500) 같은 옛 이름은 legacy.json 의 $deprecated alias 다 — 새 정본 이름(--chrome-* · --canvas-* · --palette-* · --space-* · --font-stack-*)을 쓴다. 옛 이름 제거는 major 이고 그때 이 기준선이 0 이어야 한다(#18)",
     kinds: ["ts", "tsx", "css"],
-    find: file => matches(file.code, LEGACY_ALIAS_USE),
+    find: (file) => matches(file.code, LEGACY_ALIAS_USE),
     // tokens.css 의 body 바닥·글자색은 같은 값의 새 이름이 없다(chrome.background · chrome.foreground 는 값이 다르다) — B5(#22)는 값 불변이라 남겼고
     // 크롬으로 옮기는 것(시각 변경)은 별도 결정이다. canvas.css 는 폴백 사슬의 첫 고리다.
     baseline: {
@@ -201,7 +215,9 @@ const PATTERNS: readonly Pattern[] = [
 ];
 
 /** 패턴 검출기가 실제로 잡는지 — 기준선이 `{}` 가 된 뒤에도 이 스펙이 «아무것도 안 보는 초록» 이 되지 않게 한다. */
-const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly source: string; readonly hits: readonly string[] }>> = {
+const DETECTOR_CASES: Readonly<
+  Record<string, { readonly path: string; readonly source: string; readonly hits: readonly string[] }>
+> = {
   "tsx-arbitrary-literal": {
     path: "primitives/__probe__.tsx",
     source: [
@@ -237,7 +253,11 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
   },
   "css-hex-literal": {
     path: "primitives/__probe__.css",
-    source: [":root { --chrome-ink: #191f28; }", ".ds-x { color: var(--x, #6b7280); background: #fff; }", "/* #0869e1 */"].join("\n"),
+    source: [
+      ":root { --chrome-ink: #191f28; }",
+      ".ds-x { color: var(--x, #6b7280); background: #fff; }",
+      "/* #0869e1 */",
+    ].join("\n"),
     hits: ["#6b7280", "#fff"],
   },
   "css-ms-literal": {
@@ -258,16 +278,31 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
       "<Tooltip delayDuration={350} />;",
       "// setTimeout(f, 200) 은 상수로",
     ].join("\n"),
-    hits: ["setTimeout(() => {\n  setActive(false);\n}, 500)", "duration = 4200", "delayDuration = 350", "delayDuration={350"],
+    hits: [
+      "setTimeout(() => {\n  setActive(false);\n}, 500)",
+      "duration = 4200",
+      "delayDuration = 350",
+      "delayDuration={350",
+    ],
   },
   "jsx-size-number": {
     path: "primitives/__probe__.tsx",
-    source: ["<LuX size={16} strokeWidth={2} />;", "<svg width={ 12 } height={1.5} />;", "<Icon size={iconSize} />;", "// size={16}"].join("\n"),
+    source: [
+      "<LuX size={16} strokeWidth={2} />;",
+      "<svg width={ 12 } height={1.5} />;",
+      "<Icon size={iconSize} />;",
+      "// size={16}",
+    ].join("\n"),
     hits: ["size={16}", "strokeWidth={2}", "width={ 12 }", "height={1.5}"],
   },
   "forward-ref": {
     path: "primitives/__probe__.tsx",
-    source: ['import { forwardRef } from "react";', "export const X = React.forwardRef<HTMLDivElement, Props>(function X() {});", "const forwardRefs = 1;", "// forwardRef 는 쓰지 않는다"].join("\n"),
+    source: [
+      'import { forwardRef } from "react";',
+      "export const X = React.forwardRef<HTMLDivElement, Props>(function X() {});",
+      "const forwardRefs = 1;",
+      "// forwardRef 는 쓰지 않는다",
+    ].join("\n"),
     hits: ["forwardRef", "forwardRef"],
   },
   "non-cva-variant-ternary": {
@@ -278,13 +313,16 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
       'const c = variant==="ghost"?1:2;',
       'const d = elevation === "raised" ? "shadow-card" : "";',
       'const e = state === "open" ? 1 : 0;',
-      "// size === \"sm\" ? 는 cva 로",
+      '// size === "sm" ? 는 cva 로',
     ].join("\n"),
     hits: ['size === "sm" ?', "tone === 'danger' ?", 'variant==="ghost"?', 'elevation === "raised" ?'],
   },
   "boolean-string-data-attr": {
     path: "primitives/__probe__.tsx",
-    source: ["<div data-open={open} data-state={props.state} data-slot=\"card\" data-collapsed={collapsed ? \"\" : undefined} />;", "// data-open={open}"].join("\n"),
+    source: [
+      '<div data-open={open} data-state={props.state} data-slot="card" data-collapsed={collapsed ? "" : undefined} />;',
+      "// data-open={open}",
+    ].join("\n"),
     hits: ["data-open={open}", "data-state={props.state}"],
   },
   "legacy-alias-use": {
@@ -301,8 +339,8 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
     source: [
       'const label = "Parcel area (FSI)";',
       "<Badge tone={verdict}>TBV</Badge>;",
-      "const note = \"To be verified\";",
-      "const ko = \"필지 법규\";",
+      'const note = "To be verified";',
+      'const ko = "필지 법규";',
       "const v: Verdict = ok;",
       "// FSI 는 앱 어휘다",
     ].join("\n"),
@@ -312,7 +350,10 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
 
 const graph = sourceGraph();
 
-function countsOf(pattern: Pattern): { readonly counts: Record<string, number>; readonly where: Record<string, readonly number[]> } {
+function countsOf(pattern: Pattern): {
+  readonly counts: Record<string, number>;
+  readonly where: Record<string, readonly number[]>;
+} {
   const counts: Record<string, number> = {};
   const where: Record<string, readonly number[]> = {};
   for (const file of graph.values()) {
@@ -322,7 +363,7 @@ function countsOf(pattern: Pattern): { readonly counts: Record<string, number>; 
     const hits = pattern.find(file);
     if (hits.length === 0) continue;
     counts[file.path] = hits.length;
-    where[file.path] = hits.map(hit => hit.line);
+    where[file.path] = hits.map((hit) => hit.line);
   }
   return { counts, where };
 }
@@ -346,19 +387,22 @@ describe("소스 그래프", () => {
   });
 });
 
-describe.each(PATTERNS)("금지 패턴 래칫 — $id", pattern => {
+describe.each(PATTERNS)("금지 패턴 래칫 — $id", (pattern) => {
   const { counts, where } = countsOf(pattern);
 
   it("검출기가 가짜 본문에서 위반만 골라낸다", () => {
     const probe = DETECTOR_CASES[pattern.id];
     expect(probe, "DETECTOR_CASES 에 이 패턴의 가짜 본문을 더한다").toBeDefined();
-    expect(pattern.find(parseSource(probe!.path, probe!.source)).map(hit => hit.text)).toEqual(probe!.hits);
+    expect(pattern.find(parseSource(probe!.path, probe!.source)).map((hit) => hit.text)).toEqual(probe!.hits);
   });
 
   it("어느 파일도 기준선보다 늘지 않고 새 파일에 나타나지 않는다", () => {
     const grown = Object.entries(counts)
       .filter(([path, count]) => count > (pattern.baseline[path] ?? 0))
-      .map(([path, count]) => `${path}: ${pattern.baseline[path] ?? 0} → ${count} (줄 ${where[path]!.join(", ")})`);
+      .map(
+        ([path, count]) =>
+          `${path}: ${pattern.baseline[path] ?? 0} → ${count} (줄 ${where[path]!.join(", ")})`,
+      );
     expect(grown, pattern.why).toEqual([]);
   });
 
@@ -366,7 +410,10 @@ describe.each(PATTERNS)("금지 패턴 래칫 — $id", pattern => {
     const stale = Object.entries(pattern.baseline)
       .filter(([path, count]) => (counts[path] ?? 0) < count)
       .map(([path, count]) => `${path}: 기준선 ${count} → 실제 ${counts[path] ?? 0}`);
-    expect(stale, "고쳐진 위반 — forbidden-patterns.spec.ts 의 baseline 숫자를 실제 값으로 낮춘다(0 이면 줄을 지운다)").toEqual([]);
+    expect(
+      stale,
+      "고쳐진 위반 — forbidden-patterns.spec.ts 의 baseline 숫자를 실제 값으로 낮춘다(0 이면 줄을 지운다)",
+    ).toEqual([]);
   });
 
   it("기준선은 경로 오름차순이고 0 이하인 줄이 없다", () => {

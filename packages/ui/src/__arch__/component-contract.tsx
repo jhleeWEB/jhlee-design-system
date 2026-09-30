@@ -65,19 +65,23 @@ export async function runContract(subject: ContractSubject): Promise<ContractFai
     render(subject.render({ className: CLASS_PROBE, ref, "data-testid": TESTID_PROBE }));
   } catch (error) {
     cleanup();
-    for (const id of CONTRACT_CHECKS) fail(id, `render threw: ${error instanceof Error ? error.message : String(error)}`);
+    for (const id of CONTRACT_CHECKS)
+      fail(id, `render threw: ${error instanceof Error ? error.message : String(error)}`);
     return failed;
   }
 
-  if (!body.querySelector(`[data-slot="${subject.slot}"]`)) fail("slot", `[data-slot="${subject.slot}"] not in DOM`);
+  if (!body.querySelector(`[data-slot="${subject.slot}"]`))
+    fail("slot", `[data-slot="${subject.slot}"] not in DOM`);
 
   const withProbe = [...body.querySelectorAll<HTMLElement>(".p-8")];
   if (withProbe.length === 0) fail("className", "className did not reach any element");
-  else if (withProbe.some(el => el.classList.contains("p-0"))) fail("className", "className is concatenated, not merged (p-0 survived next to p-8)");
+  else if (withProbe.some((el) => el.classList.contains("p-0")))
+    fail("className", "className is concatenated, not merged (p-0 survived next to p-8)");
 
   // SVG 컴포넌트(Spinner · CanvasScale)의 ref 는 SVGElement 다 — DOM 요소이면 된다.
   if (!(ref.current instanceof Element)) fail("ref", "ref.current is not a DOM element");
-  if (!body.querySelector(`[data-testid="${TESTID_PROBE}"]`)) fail("rest", "data-testid did not reach the DOM");
+  if (!body.querySelector(`[data-testid="${TESTID_PROBE}"]`))
+    fail("rest", "data-testid did not reach the DOM");
 
   for (const axis of subject.axes ?? []) {
     if (!body.querySelector(`[data-${axis}]`)) fail("axes", `data-${axis} not stamped`);
@@ -89,7 +93,10 @@ export async function runContract(subject: ContractSubject): Promise<ContractFai
 
   try {
     render(subject.render({ "data-slot": SLOT_PROBE }));
-    if (!body.querySelector(`[data-slot="${subject.slot}"]`) || body.querySelector(`[data-slot="${SLOT_PROBE}"]`)) {
+    if (
+      !body.querySelector(`[data-slot="${subject.slot}"]`) ||
+      body.querySelector(`[data-slot="${SLOT_PROBE}"]`)
+    ) {
       fail("slot-locked", "consumer data-slot overrode the declared slot");
     }
   } finally {
@@ -101,20 +108,26 @@ export async function runContract(subject: ContractSubject): Promise<ContractFai
 type StoriesModule = Parameters<typeof composeStories>[0] & { readonly Default: unknown };
 
 /** 스토리 모듈의 `Default` 를 계약 대상으로 — 탐침은 스토리 args 위에 얹힌다. */
-export function storySubject(storiesModule: StoriesModule, options: Omit<ContractSubject, "render">): ContractSubject {
+export function storySubject(
+  storiesModule: StoriesModule,
+  options: Omit<ContractSubject, "render">,
+): ContractSubject {
   const { Default } = composeStories(storiesModule) as unknown as { Default: (props: Probe) => ReactElement };
-  return { ...options, render: probe => <Default {...probe} /> };
+  return { ...options, render: (probe) => <Default {...probe} /> };
 }
 
 /** 폴더별 spec 의 입구 — 검사마다 `it` 하나, 실패 0 이 계약이다. */
-export function describeComponentContract(storiesModule: StoriesModule, options: Omit<ContractSubject, "render">): void {
+export function describeComponentContract(
+  storiesModule: StoriesModule,
+  options: Omit<ContractSubject, "render">,
+): void {
   const subject = storySubject(storiesModule, options);
   describe(`component contract · ${options.slot}`, () => {
     let failures: ContractFailure[] | undefined;
     const failuresOf = async () => (failures ??= await runContract(subject));
     for (const id of CONTRACT_CHECKS) {
       it(id, async () => {
-        const mine = (await failuresOf()).filter(f => f.id === id).map(f => f.reason);
+        const mine = (await failuresOf()).filter((f) => f.id === id).map((f) => f.reason);
         expect(mine).toEqual([]);
       });
     }

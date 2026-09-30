@@ -1,7 +1,11 @@
 /* Radix Presence가 서로 다른 애니메이션 이름으로 퇴장을 감지한다.
    길이는 토큰(--duration-toast-*)이다 — JS 의 큐 정리 유예(MOTION.toastQueueGraceMs 240)가 같은 정본에서 나오므로 퇴장이 그 안에 끝난다(motion.spec). */
-.ds-toast { --toast-offset-y: 12px; }
-.ds-toast[data-position^="top"] { --toast-offset-y: -12px; }
+.ds-toast {
+  --toast-offset-y: 12px;
+}
+.ds-toast[data-position^="top"] {
+  --toast-offset-y: -12px;
+}
 .ds-toast[data-state="open"] {
   animation: ds-toast-enter var(--duration-toast-enter) var(--ease-out-quick, ease-out) both;
 }
@@ -18,20 +22,44 @@
   transform: translate3d(0, 0, 0);
   transition: transform var(--duration-toast-exit) var(--ease-out-quick, ease-out);
 }
-.ds-toast[data-swipe="end"] { animation: ds-toast-swipe-exit var(--duration-toast-exit) ease-out both; }
+.ds-toast[data-swipe="end"] {
+  animation: ds-toast-swipe-exit var(--duration-toast-exit) ease-out both;
+}
 
 @keyframes ds-toast-enter {
-  from { opacity: 0; transform: translate3d(0, var(--toast-offset-y), 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--toast-offset-y), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 @keyframes ds-toast-exit {
-  from { opacity: 1; transform: translate3d(0, 0, 0); }
-  to { opacity: 0; transform: translate3d(0, var(--toast-offset-y), 0); }
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, var(--toast-offset-y), 0);
+  }
 }
 @keyframes ds-toast-swipe-exit {
-  from { opacity: 1; transform: translate3d(var(--radix-toast-swipe-end-x, 0px), 0, 0); }
-  to { opacity: 0; transform: translate3d(calc(100% + 16px), 0, 0); }
+  from {
+    opacity: 1;
+    transform: translate3d(var(--radix-toast-swipe-end-x, 0px), 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(calc(100% + 16px), 0, 0);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ds-toast[data-state], .ds-toast[data-state][data-swipe] { animation: none; transition: none; }
+  .ds-toast[data-state],
+  .ds-toast[data-state][data-swipe] {
+    animation: none;
+    transition: none;
+  }
 }

@@ -19,7 +19,8 @@ const pkg = JSON.parse(readFileSync(`${PKG_DIR}package.json`, "utf8")) as {
   publishConfig: { exports: Record<string, string | Record<string, string>> };
 };
 
-const flatten = (target: string | Record<string, string>): string[] => (typeof target === "string" ? [target] : Object.values(target));
+const flatten = (target: string | Record<string, string>): string[] =>
+  typeof target === "string" ? [target] : Object.values(target);
 
 describe("exports", () => {
   it("서브패스는 명시된 것뿐이다 — 이 표가 공개 표면이다", () => {
@@ -43,7 +44,8 @@ describe("exports", () => {
   it("publishConfig.exports 는 같은 서브패스를 dist 로 가리킨다", () => {
     expect(Object.keys(pkg.publishConfig.exports)).toEqual(Object.keys(pkg.exports));
     for (const [key, target] of Object.entries(pkg.publishConfig.exports)) {
-      for (const path of flatten(target)) expect(path, key).toMatch(key === "./package.json" ? /^\.\/package\.json$/ : /^\.\/dist\//);
+      for (const path of flatten(target))
+        expect(path, key).toMatch(key === "./package.json" ? /^\.\/package\.json$/ : /^\.\/dist\//);
     }
     expect(pkg.publishConfig.exports).toMatchInlineSnapshot(`
       {
@@ -83,14 +85,18 @@ describe("exports", () => {
   });
 
   it("와일드카드가 없다 — attw 가 타입을 해석하지 못하는 유일한 모양이다", () => {
-    for (const [key, target] of [...Object.entries(pkg.exports), ...Object.entries(pkg.publishConfig.exports)]) {
+    for (const [key, target] of [
+      ...Object.entries(pkg.exports),
+      ...Object.entries(pkg.publishConfig.exports),
+    ]) {
       expect(key).not.toContain("*");
       for (const path of flatten(target)) expect(path).not.toContain("*");
     }
   });
 
   it("exports 대상 파일이 존재한다", () => {
-    for (const [key, target] of Object.entries(pkg.exports)) expect(existsSync(`${PKG_DIR}${target}`), `${key} → ${target}`).toBe(true);
+    for (const [key, target] of Object.entries(pkg.exports))
+      expect(existsSync(`${PKG_DIR}${target}`), `${key} → ${target}`).toBe(true);
   });
 
   it("dist 가 있으면 publishConfig.exports 대상 파일도 존재한다", () => {
@@ -98,7 +104,8 @@ describe("exports", () => {
        로컬에서 여기가 빨가면 대개 dist 가 낡은 것이다(서브패스를 더한 뒤 build 를 안 돌렸다) — `pnpm build` 뒤 다시 본다. */
     if (!existsSync(`${PKG_DIR}dist/index.js`)) return;
     for (const [key, target] of Object.entries(pkg.publishConfig.exports))
-      for (const path of flatten(target)) expect(existsSync(`${PKG_DIR}${path}`), `${key} → ${path} (dist 가 낡았으면 pnpm build)`).toBe(true);
+      for (const path of flatten(target))
+        expect(existsSync(`${PKG_DIR}${path}`), `${key} → ${path} (dist 가 낡았으면 pnpm build)`).toBe(true);
   });
 
   it("files 는 dist · 에이전트 산출물(agent · docs · llms.txt) · 문서뿐이다", () => {
@@ -113,11 +120,23 @@ describe("exports", () => {
 describe("pack 내용", () => {
   /* pnpm 10 의 `pack` 에는 --dry-run 이 없다(실측 «Unknown option: 'dry-run'») — npm 의 것을 쓴다. `--ignore-scripts` 가 없으면 prepack 이
      build 를 돌려 dist 를 지우고 다시 만드는데, 그 사이 다른 워커의 dist 검사가 빈 폴더를 본다. 목록은 `files` 필드가 정하므로 npm 으로 충분하다. */
-  const out = execFileSync("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"], { cwd: PKG_DIR, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] });
-  const files = (JSON.parse(out) as { files: { path: string }[] }[])[0]!.files.map(f => f.path);
+  const out = execFileSync("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"], {
+    cwd: PKG_DIR,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "ignore"],
+  });
+  const files = (JSON.parse(out) as { files: { path: string }[] }[])[0]!.files.map((f) => f.path);
 
   it("스펙·소스·스토리는 실리지 않는다", () => {
-    expect(files.filter(f => f.startsWith("src/") || f.includes("__tests__") || f.includes("__arch__") || f.includes(".stories."))).toEqual([]);
+    expect(
+      files.filter(
+        (f) =>
+          f.startsWith("src/") ||
+          f.includes("__tests__") ||
+          f.includes("__arch__") ||
+          f.includes(".stories."),
+      ),
+    ).toEqual([]);
   });
 
   it("package.json 과 README 는 실린다", () => {
@@ -142,6 +161,7 @@ describe("pack 내용", () => {
   it("dist 가 있으면 publishConfig.exports 대상이 전부 실린다", () => {
     if (!existsSync(`${PKG_DIR}dist/index.js`)) return;
     for (const target of Object.values(pkg.publishConfig.exports))
-      for (const path of flatten(target)) expect(files, `${path} (dist 가 낡았으면 pnpm build)`).toContain(path.replace(/^\.\//, ""));
+      for (const path of flatten(target))
+        expect(files, `${path} (dist 가 낡았으면 pnpm build)`).toContain(path.replace(/^\.\//, ""));
   });
 });

@@ -23,12 +23,12 @@ const ui = (fg: string, bg: string, where: string): ContrastPair => ({ fg, bg, m
 
 export const CONTRAST_PAIRS: readonly ContrastPair[] = [
   // 본문 글자 3단 × 면 3단 — 페이지·카드·옅은 면 어디에나 세 글자색이 놓인다.
-  ...(["foreground", "foreground-2", "muted-foreground"] as const).flatMap(fg =>
-    (["background", "card", "muted"] as const).map(bg => text(fg, bg, `body text on ${bg}`)),
+  ...(["foreground", "foreground-2", "muted-foreground"] as const).flatMap((fg) =>
+    (["background", "card", "muted"] as const).map((bg) => text(fg, bg, `body text on ${bg}`)),
   ),
   text("primary-foreground", "primary", "solid primary button label"),
   // 판정색 — 채운 버튼·배지의 글자, 옅은 면 위의 판정색 글자(Alert·Badge soft), 카드 위의 판정색 글자(StatusDot 옆 라벨).
-  ...TONES.flatMap(tone => [
+  ...TONES.flatMap((tone) => [
     text(`${tone}-foreground`, tone, `solid ${tone} label`),
     text(tone, `${tone}-soft`, `${tone} text on its soft surface (Alert · Badge)`),
     text(tone, "card", `${tone} text on card`),

@@ -39,19 +39,25 @@ describe("sync", { timeout: 30_000 }, () => {
     writeFileSync(join(cwd, "AGENTS.md"), "# Consumer\n\n규칙 하나.\n");
     const first = sync({ cwd });
     expect(first.agents).toBe("updated");
-    expect(first.skillFiles.map(f => f.status)).toEqual(["created"]);
-    expect(first.skillFiles.map(f => f.path)).toEqual(["SKILL.md"]);
+    expect(first.skillFiles.map((f) => f.status)).toEqual(["created"]);
+    expect(first.skillFiles.map((f) => f.path)).toEqual(["SKILL.md"]);
     const agents = readFileSync(join(cwd, "AGENTS.md"), "utf8");
-    expect(agents.startsWith("# Consumer\n\n규칙 하나.\n\n<!-- sds:begin -->\n## 디자인 시스템 계약(에이전트) — @jhleeweb/squircle-design-system v")).toBe(true);
+    expect(
+      agents.startsWith(
+        "# Consumer\n\n규칙 하나.\n\n<!-- sds:begin -->\n## 디자인 시스템 계약(에이전트) — @jhleeweb/squircle-design-system v",
+      ),
+    ).toBe(true);
     expect(agents).not.toContain("{{name}}");
     expect(agents.trimEnd().endsWith(END)).toBe(true);
     const skill = readFileSync(join(cwd, ".claude/skills/squircle-ds/SKILL.md"), "utf8");
     expect(skill.startsWith("---\nname: squircle-ds\n")).toBe(true);
-    expect(skill).toContain("jq '.components[] | select(.name == \"Select\")' node_modules/@jhleeweb/squircle-design-system/dist/components.manifest.json");
+    expect(skill).toContain(
+      "jq '.components[] | select(.name == \"Select\")' node_modules/@jhleeweb/squircle-design-system/dist/components.manifest.json",
+    );
 
     const second = sync({ cwd });
     expect(second.agents).toBe("unchanged");
-    expect(second.skillFiles.map(f => f.status)).toEqual(["unchanged"]);
+    expect(second.skillFiles.map((f) => f.status)).toEqual(["unchanged"]);
     expect(readFileSync(join(cwd, "AGENTS.md"), "utf8")).toBe(agents);
   });
 

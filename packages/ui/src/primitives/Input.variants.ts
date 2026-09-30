@@ -28,7 +28,7 @@ export const inputVariants = cva(
         true: "border-destructive focus-visible:outline-destructive",
         false: "border-border-strong hover:border-foreground-2",
       },
-      numeric: { true: "tnum text-right", false: "" },
+      numeric: { true: "text-right tnum", false: "" },
     },
     defaultVariants: { size: "md", invalid: false, numeric: false },
   },

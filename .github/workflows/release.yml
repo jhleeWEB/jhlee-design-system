@@ -6,10 +6,10 @@ concurrency:
   group: release
   cancel-in-progress: false
 permissions:
-  contents: write      # 태그 · GitHub Release
-  issues: write        # 릴리스 코멘트
+  contents: write # 태그 · GitHub Release
+  issues: write # 릴리스 코멘트
   pull-requests: write
-  packages: write      # npm.pkg.github.com publish
+  packages: write # npm.pkg.github.com publish
   id-token: write
 jobs:
   release:

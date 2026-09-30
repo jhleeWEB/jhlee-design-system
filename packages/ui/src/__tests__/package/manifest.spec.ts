@@ -9,7 +9,13 @@
 import { describe, expect, it } from "vitest";
 
 import { sourceGraph } from "../../__arch__/source-graph";
-import { buildManifest, docForValue, orderValues, readCva, type Manifest } from "../../../scripts/build-manifest.ts";
+import {
+  buildManifest,
+  docForValue,
+  orderValues,
+  readCva,
+  type Manifest,
+} from "../../../scripts/build-manifest.ts";
 
 let cached: Manifest | null = null;
 const manifest = (): Manifest => (cached ??= buildManifest());
@@ -276,13 +282,13 @@ describe("components.manifest.json", { timeout: 120_000 }, () => {
   it("index 의 런타임 export 가 전부 실린다 — 빠진 이름도, 없는 이름도 없다", async () => {
     const runtime = Object.keys(await import("../../index")).sort();
     const m = manifest();
-    const listed = [...m.components.map(c => c.name), ...m.utilities.map(u => u.name)].sort();
+    const listed = [...m.components.map((c) => c.name), ...m.utilities.map((u) => u.name)].sort();
     expect(listed).toEqual(runtime);
   });
 
   it("kind 는 component · compound · hook 이고 부품은 루트의 parts 에만 있다", () => {
     const m = manifest();
-    const byName = new Map(m.components.map(c => [c.name, c]));
+    const byName = new Map(m.components.map((c) => [c.name, c]));
     for (const c of m.components) {
       expect(["component", "compound", "hook"]).toContain(c.kind);
       if (c.kind === "compound") expect(c.parts, `${c.name} 은 부품인데 parts 가 있다`).toEqual([]);
@@ -297,7 +303,7 @@ describe("components.manifest.json", { timeout: 120_000 }, () => {
     expect(byName.get("SegmentedControl")?.kind).toBe("component"); // 다른 파일의 `Segmented` 는 우연한 접두
   });
 
-  it("client 가 선언 파일의 첫 줄 \"use client\" 와 같다", () => {
+  it('client 가 선언 파일의 첫 줄 "use client" 와 같다', () => {
     const graph = sourceGraph();
     for (const entry of [...manifest().components, ...manifest().utilities]) {
       const file = graph.get(entry.source.replace(/^src\//, ""));
@@ -309,30 +315,50 @@ describe("components.manifest.json", { timeout: 120_000 }, () => {
 
   it("optional prop 의 default 빈자리는 KNOWN_GAPS 와 같다(래칫)", () => {
     const gaps = manifest()
-      .components.filter(c => c.kind !== "hook")
-      .flatMap(c => c.props.filter(p => !p.required && p.default === "").map(p => `${c.name}.${p.name}`))
+      .components.filter((c) => c.kind !== "hook")
+      .flatMap((c) =>
+        c.props.filter((p) => !p.required && p.default === "").map((p) => `${c.name}.${p.name}`),
+      )
       .sort();
     expect(gaps).toEqual([...KNOWN_GAPS.default].sort());
   });
 
   it("유니언 values[].doc 빈자리는 KNOWN_GAPS 와 같다(래칫)", () => {
     const gaps = manifest()
-      .components.flatMap(c => c.props.flatMap(p => p.values.filter(v => v.doc === "").map(v => `${c.name}.${p.name}=${v.value}`)))
+      .components.flatMap((c) =>
+        c.props.flatMap((p) =>
+          p.values.filter((v) => v.doc === "").map((v) => `${c.name}.${p.name}=${v.value}`),
+        ),
+      )
       .sort();
     expect(gaps).toEqual([...KNOWN_GAPS.values].sort());
   });
 
   it("옛 tone 키는 deprecated alias 로 자동 설명되고 새 키가 앞에 온다", () => {
-    const tone = manifest().components.find(c => c.name === "Button")?.props.find(p => p.name === "tone");
-    expect(tone?.values.map(v => v.value)).toEqual(["neutral", "primary", "destructive", "accent", "current", "danger", "default"]);
-    expect(tone?.values.find(v => v.value === "accent")?.doc).toBe('deprecated alias of "primary"');
+    const tone = manifest()
+      .components.find((c) => c.name === "Button")
+      ?.props.find((p) => p.name === "tone");
+    expect(tone?.values.map((v) => v.value)).toEqual([
+      "neutral",
+      "primary",
+      "destructive",
+      "accent",
+      "current",
+      "danger",
+      "default",
+    ]);
+    expect(tone?.values.find((v) => v.value === "accent")?.doc).toBe('deprecated alias of "primary"');
     expect(tone?.default).toBe('"neutral"'); // @default 가 없어도 같은 파일의 cva defaultVariants 에서 온다
   });
 
   it("cva 유틸리티는 축과 기본값을 AST 에서 읽는다", () => {
-    const button = manifest().utilities.find(u => u.name === "buttonVariants");
+    const button = manifest().utilities.find((u) => u.name === "buttonVariants");
     expect(button?.kind).toBe("variants");
-    expect(button?.axes).toEqual({ variant: ["solid", "outline", "ghost", "link"], tone: ["neutral", "primary", "destructive"], size: ["sm", "md", "lg", "icon-sm", "icon", "icon-lg"] });
+    expect(button?.axes).toEqual({
+      variant: ["solid", "outline", "ghost", "link"],
+      tone: ["neutral", "primary", "destructive"],
+      size: ["sm", "md", "lg", "icon-sm", "icon", "icon-lg"],
+    });
     expect(button?.defaults).toEqual({ variant: "outline", tone: "neutral", size: "md" });
     expect(button?.client).toBe(false);
   });
@@ -349,7 +375,8 @@ describe("components.manifest.json", { timeout: 120_000 }, () => {
 
 describe("생성기 조각", () => {
   it("docForValue — «`값` — 설명» 과 «`값`(설명)» 을 읽고 다음 항목 앞에서 멈춘다", () => {
-    const bullets = "시각 무게.\n- `solid` — 채움. 화면에 하나뿐인 주된 동작   - `outline` — 외곽선. 기본값\n- `ghost` — 상자 없음";
+    const bullets =
+      "시각 무게.\n- `solid` — 채움. 화면에 하나뿐인 주된 동작   - `outline` — 외곽선. 기본값\n- `ghost` — 상자 없음";
     expect(docForValue(bullets, "solid")).toBe("채움. 화면에 하나뿐인 주된 동작");
     expect(docForValue(bullets, "outline")).toBe("외곽선. 기본값");
     expect(docForValue(bullets, "ghost")).toBe("상자 없음");
@@ -358,7 +385,13 @@ describe("생성기 조각", () => {
   });
 
   it("orderValues — cva 축 순서 → 나머지 알파벳 → 옛 tone 키", () => {
-    expect(orderValues(["danger", "b", "primary", "a", "neutral"], ["neutral", "primary"])).toEqual(["neutral", "primary", "a", "b", "danger"]);
+    expect(orderValues(["danger", "b", "primary", "a", "neutral"], ["neutral", "primary"])).toEqual([
+      "neutral",
+      "primary",
+      "a",
+      "b",
+      "danger",
+    ]);
   });
 
   it("readCva — cva 가 아닌 선언은 null", () => {

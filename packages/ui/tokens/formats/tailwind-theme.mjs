@@ -16,11 +16,16 @@ import { reducedMotionLines } from "./css-vars.mjs";
 /** 네임스페이스(경로 첫 마디) 순으로 묶고, reset 그룹이면 `--ns-*: initial` 을 앞에 둔다. */
 function themeLines(tokens, outputReferences) {
   const lines = [];
-  for (const [ns, group] of groupBy(tokens, t => t.path[0])) {
+  for (const [ns, group] of groupBy(tokens, (t) => t.path[0])) {
     if (lines.length) lines.push("");
-    if (group.some(t => sds(t).reset)) lines.push(`--${ns}-*: initial;`);
+    if (group.some((t) => sds(t).reset)) lines.push(`--${ns}-*: initial;`);
     // legacy.json 의 옛 유틸 이름 alias 는 같은 네임스페이스 끝에 붙는다(정본 순서상 legacy 가 마지막) — 읽는 사람을 위해 표시한다.
-    for (const t of group) lines.push(...tokenDeclarations(t, outputReferences).map(decl).map(l => (t.$deprecated ? `${l} /* @deprecated */` : l)));
+    for (const t of group)
+      lines.push(
+        ...tokenDeclarations(t, outputReferences)
+          .map(decl)
+          .map((l) => (t.$deprecated ? `${l} /* @deprecated */` : l)),
+      );
   }
   return lines;
 }
@@ -28,23 +33,37 @@ function themeLines(tokens, outputReferences) {
 /** `sds.utility` 가 붙은 토큰 → `@utility <prefix>-<이름>` 블록. 이름은 네임스페이스를 뗀 나머지 경로다(`layer.toast` → `z-toast`). */
 export function utilityBlocks(tokens) {
   return tokens
-    .filter(t => sds(t).utility)
+    .filter((t) => sds(t).utility)
     .sort(byOrder)
-    .map(t => {
+    .map((t) => {
       const { prefix, properties } = sds(t).utility;
-      return block(`@utility ${prefix}-${t.path.slice(1).join("-")}`, properties.map(p => `${p}: var(--${t.name});`));
+      return block(
+        `@utility ${prefix}-${t.path.slice(1).join("-")}`,
+        properties.map((p) => `${p}: var(--${t.name});`),
+      );
     });
 }
 
 /** @type {import("style-dictionary/types").Format["format"]} */
 export function tailwindTheme({ dictionary, options }) {
   const { outputReferences = true } = options;
-  const theme = dictionary.allTokens.filter(t => sds(t).scope === "theme").sort(byOrder);
-  const inline = dictionary.allTokens.filter(t => sds(t).scope === "theme-inline").sort(byOrder);
-  const parts = [HEADER, block("@theme", themeLines(theme, outputReferences)), "", block("@theme inline", themeLines(inline, outputReferences))];
+  const theme = dictionary.allTokens.filter((t) => sds(t).scope === "theme").sort(byOrder);
+  const inline = dictionary.allTokens.filter((t) => sds(t).scope === "theme-inline").sort(byOrder);
+  const parts = [
+    HEADER,
+    block("@theme", themeLines(theme, outputReferences)),
+    "",
+    block("@theme inline", themeLines(inline, outputReferences)),
+  ];
   const utilities = utilityBlocks(dictionary.allTokens);
-  if (utilities.length) parts.push("", "/* 생성 유틸리티 — Tailwind 네임스페이스가 아닌 :root 토큰(--layer-* · --duration-*)을 클래스로 낸다. */", utilities.join("\n"));
+  if (utilities.length)
+    parts.push(
+      "",
+      "/* 생성 유틸리티 — Tailwind 네임스페이스가 아닌 :root 토큰(--layer-* · --duration-*)을 클래스로 낸다. */",
+      utilities.join("\n"),
+    );
   const reduced = reducedMotionLines([...theme, ...inline]);
-  if (reduced.length) parts.push("", block("@media (prefers-reduced-motion: reduce)", block(":root", reduced).split("\n")));
+  if (reduced.length)
+    parts.push("", block("@media (prefers-reduced-motion: reduce)", block(":root", reduced).split("\n")));
   return `${parts.join("\n")}\n`;
 }

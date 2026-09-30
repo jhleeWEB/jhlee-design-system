@@ -26,8 +26,8 @@ import tseslint from "typescript-eslint";
 import { restrictedClassPatterns } from "./packages/ui/src/eslint/index.ts";
 
 /** 모든 규칙을 error 로 정규화한다 — bulk suppressions 가 덮는 유일한 severity 라서(파일 머리의 «왜»). */
-const asError = configs =>
-  configs.map(config =>
+const asError = (configs) =>
+  configs.map((config) =>
     config.rules
       ? {
           ...config,
@@ -48,7 +48,10 @@ const TSX_FILES = ["**/*.tsx"];
 const TYPED = {
   ui: { files: ["packages/ui/src/**/*.{ts,tsx}"], project: "packages/ui/tsconfig.json" },
   // ui 블록 뒤에 둔다 — src/__tests__/** 는 두 files 에 다 맞고 뒤가 이긴다.
-  tests: { files: ["packages/ui/src/__tests__/**/*.{ts,tsx}", "packages/ui/src/__arch__/**/*.{ts,tsx}"], project: "packages/ui/tsconfig.test.json" },
+  tests: {
+    files: ["packages/ui/src/__tests__/**/*.{ts,tsx}", "packages/ui/src/__arch__/**/*.{ts,tsx}"],
+    project: "packages/ui/tsconfig.test.json",
+  },
   // 스토리·Storybook 설정·VRT·패키지 설정 파일은 tsconfig.stories.json 만 include 한다(#7) — src 안의 *.stories.tsx 도 여기다.
   stories: {
     files: [
@@ -66,13 +69,19 @@ const TYPED = {
 };
 const TEST_FILES = ["**/__tests__/**", "**/__arch__/**", "**/*.spec.{ts,tsx}", "**/*.test.{ts,tsx}"];
 
-
 export default tseslint.config(
   {
     ignores: [
-      "**/node_modules/", "**/dist/", "**/storybook-static/", "**/*.tsbuildinfo", ".claude/", "packages/eslint-rules/src/__tests__/fixtures/",
+      "**/node_modules/",
+      "**/dist/",
+      "**/storybook-static/",
+      "**/*.tsbuildinfo",
+      ".claude/",
+      "packages/eslint-rules/src/__tests__/fixtures/",
       // 산출물 — Playwright 리포트(번들 JS)·결과·커버리지는 gitignore 지만 ESLint 는 gitignore 를 읽지 않는다(C4 실측: report/ 하나로 3,422건).
-      "**/vrt/report/", "**/vrt/results/", "**/coverage/",
+      "**/vrt/report/",
+      "**/vrt/results/",
+      "**/coverage/",
       // ./legacy 는 격리·동결이다(#10) — 기준선(suppressions)으로 덮던 것을 계획대로 ignores 로 바꿨다. 새 위반이 생길 일도, 고칠 일도 없는 코드라
       // 래칫에 태우지 않는다. 다음 마이너에서 루트 배럴 재export 와 함께 지운다.
       "packages/ui/src/legacy/",
@@ -93,7 +102,7 @@ export default tseslint.config(
 
   // ── 타입 검사 규칙: 소스 디렉터리에만. recommendedTypeChecked 로 시작한다 — strictTypeChecked 는 첫 실측에서
   //    잡음(non-nullable assertion·template literal 타입 등)이 커서 기준선을 부풀린다. 승격은 Phase C. ──
-  ...asError(tseslint.configs.recommendedTypeChecked).map(config => ({
+  ...asError(tseslint.configs.recommendedTypeChecked).map((config) => ({
     ...config,
     files: [...TYPED.ui.files, ...TYPED.tests.files, ...TYPED.stories.files],
   })),
@@ -103,24 +112,33 @@ export default tseslint.config(
   },
   {
     files: TYPED.tests.files,
-    languageOptions: { parserOptions: { project: TYPED.tests.project, tsconfigRootDir: import.meta.dirname } },
+    languageOptions: {
+      parserOptions: { project: TYPED.tests.project, tsconfigRootDir: import.meta.dirname },
+    },
   },
   {
     // ui 블록 뒤에 둔다 — src/**/*.stories.tsx 는 두 files 에 다 맞고 뒤가 이긴다.
     files: TYPED.stories.files,
-    languageOptions: { parserOptions: { project: TYPED.stories.project, tsconfigRootDir: import.meta.dirname } },
+    languageOptions: {
+      parserOptions: { project: TYPED.stories.project, tsconfigRootDir: import.meta.dirname },
+    },
   },
 
   // ── React hooks · JSX a11y ──
-  ...asError([reactHooks.configs.flat["recommended-latest"]]).map(config => ({ ...config, files: TSX_FILES })),
-  ...asError([jsxA11y.flatConfigs.recommended]).map(config => ({ ...config, files: TSX_FILES })),
+  ...asError([reactHooks.configs.flat["recommended-latest"]]).map((config) => ({
+    ...config,
+    files: TSX_FILES,
+  })),
+  ...asError([jsxA11y.flatConfigs.recommended]).map((config) => ({ ...config, files: TSX_FILES })),
 
   // ── import-x: 순환 금지 · 배럴 내부 import 금지 · 테스트 import 금지 ──
   {
     files: ["**/*.{js,mjs,cjs,ts,tsx}"],
     plugins: { "import-x": importX.recommended.plugins["import-x"] },
     settings: {
-      "import-x/resolver-next": [createNodeResolver({ extensions: [".ts", ".tsx", ".mts", ".js", ".mjs", ".jsx", ".json"] })],
+      "import-x/resolver-next": [
+        createNodeResolver({ extensions: [".ts", ".tsx", ".mts", ".js", ".mjs", ".jsx", ".json"] }),
+      ],
     },
     rules: {
       "import-x/no-cycle": ["error", { ignoreExternal: true }],
@@ -138,9 +156,18 @@ export default tseslint.config(
         "error",
         {
           patterns: [
-            { group: ["**/index", "**/index.ts", "../index", "./index"], message: "Import the module directly, not the barrel." },
-            { group: ["@jhleeweb/squircle-design-system", "@jhleeweb/squircle-design-system/*"], message: "Inside the package, import relative modules." },
-            { group: ["**/__tests__/**", "**/*.spec", "**/*.spec.*", "**/*.test", "**/*.test.*"], message: "Production code must not import tests." },
+            {
+              group: ["**/index", "**/index.ts", "../index", "./index"],
+              message: "Import the module directly, not the barrel.",
+            },
+            {
+              group: ["@jhleeweb/squircle-design-system", "@jhleeweb/squircle-design-system/*"],
+              message: "Inside the package, import relative modules.",
+            },
+            {
+              group: ["**/__tests__/**", "**/*.spec", "**/*.spec.*", "**/*.test", "**/*.test.*"],
+              message: "Production code must not import tests.",
+            },
           ],
         },
       ],
@@ -148,12 +175,23 @@ export default tseslint.config(
   },
   {
     // 제품 코드는 테스트 코드를 import 하지 않는다. 테스트끼리(setup·helper)는 허용한다.
-    files: ["packages/ui/stories/**/*.{ts,tsx}", "packages/ui/.storybook/**/*.{ts,tsx}", "packages/eslint-rules/src/**/*.js"],
+    files: [
+      "packages/ui/stories/**/*.{ts,tsx}",
+      "packages/ui/.storybook/**/*.{ts,tsx}",
+      "packages/eslint-rules/src/**/*.js",
+    ],
     ignores: TEST_FILES,
     rules: {
       "no-restricted-imports": [
         "error",
-        { patterns: [{ group: ["**/__tests__/**", "**/*.spec", "**/*.spec.*", "**/*.test", "**/*.test.*"], message: "Production code must not import tests." }] },
+        {
+          patterns: [
+            {
+              group: ["**/__tests__/**", "**/*.spec", "**/*.spec.*", "**/*.test", "**/*.test.*"],
+              message: "Production code must not import tests.",
+            },
+          ],
+        },
       ],
     },
   },
@@ -176,12 +214,20 @@ export default tseslint.config(
           publicOnly: true,
           // --fix 가 빈 `/** */` 를 끼워 넣지 않게 — 첫 코드모드 실행(#22)에서 172개 빈 블록이 생겼다. 설명 없는 JSDoc 은 계약이 아니다.
           enableFixer: false,
-          require: { FunctionDeclaration: true, ArrowFunctionExpression: true, FunctionExpression: true, ClassDeclaration: true },
+          require: {
+            FunctionDeclaration: true,
+            ArrowFunctionExpression: true,
+            FunctionExpression: true,
+            ClassDeclaration: true,
+          },
           contexts: ["TSInterfaceDeclaration", "TSTypeAliasDeclaration", "TSPropertySignature"],
         },
       ],
       "jsdoc/require-description": ["error", { contexts: ["any"] }],
-      "jsdoc/check-tag-names": ["error", { definedTags: ["default", "example", "deprecated", "since", "slot"], typed: true }],
+      "jsdoc/check-tag-names": [
+        "error",
+        { definedTags: ["default", "example", "deprecated", "since", "slot"], typed: true },
+      ],
     },
   },
 
@@ -190,7 +236,12 @@ export default tseslint.config(
     files: ["**/*.{ts,tsx}"],
     plugins: { "better-tailwindcss": betterTailwindcss },
     // tailwindcss 는 루트가 아니라 packages/ui 에 설치돼 있다 — 플러그인이 `cwd` 에서 tailwindcss/package.json 을 찾는다(#361 실측).
-    settings: { "better-tailwindcss": { cwd: "packages/ui", entryPoint: `${import.meta.dirname}/packages/ui/src/theme.css` } },
+    settings: {
+      "better-tailwindcss": {
+        cwd: "packages/ui",
+        entryPoint: `${import.meta.dirname}/packages/ui/src/theme.css`,
+      },
+    },
     rules: {
       // `ds-*` 는 theme.css 가 @import 하는 컴포넌트 CSS 의 클래스다 — 토큰 밖 유틸리티가 아니라 DS 자신의 훅이다.
       // shell.css 의 legacy 클래스(panel·hud …)를 쓰는 src/legacy/ 는 전역 ignores 다(#10).

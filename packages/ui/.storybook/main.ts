@@ -14,7 +14,12 @@ const here = dirname(fileURLToPath(import.meta.url));
 const config: StorybookConfig = {
   framework: "@storybook/react-vite",
   stories: ["../src/**/*.stories.tsx", "../stories/**/*.stories.tsx"],
-  addons: ["@storybook/addon-docs", "@storybook/addon-a11y", "@storybook/addon-vitest", "@storybook/addon-themes"],
+  addons: [
+    "@storybook/addon-docs",
+    "@storybook/addon-a11y",
+    "@storybook/addon-vitest",
+    "@storybook/addon-themes",
+  ],
   core: { disableTelemetry: true },
   typescript: {
     /* docgen 은 Controls 표를 채우는 용도다. 정본 매니페스트는 Phase C 의 자체 생성기가 만든다. */
@@ -22,13 +27,15 @@ const config: StorybookConfig = {
     reactDocgenTypescriptOptions: {
       tsconfigPath: join(here, "../tsconfig.stories.json"),
       shouldExtractLiteralValuesFromEnum: true,
-      propFilter: prop => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+      propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
     },
   },
-  viteFinal: cfg => {
+  viteFinal: (cfg) => {
     const plugins = cfg.plugins ?? [];
     /* 프레임워크가 이미 넣은 react 플러그인과 겹치면 JSX 가 두 번 변환된다 — 이름으로 있는지 보고 없을 때만 더한다. */
-    const hasReact = plugins.flat().some(p => p && typeof p === "object" && "name" in p && String(p.name).startsWith("vite:react"));
+    const hasReact = plugins
+      .flat()
+      .some((p) => p && typeof p === "object" && "name" in p && String(p.name).startsWith("vite:react"));
     return { ...cfg, plugins: [...plugins, ...(hasReact ? [] : [react()]), tailwindcss()] };
   },
 };
