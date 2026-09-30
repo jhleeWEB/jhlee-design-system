@@ -9,8 +9,8 @@ export function Kbd({ className, ...rest }: React.HTMLAttributes<HTMLElement>) {
     <kbd
       data-slot="kbd"
       className={cn(
-        "inline-flex min-w-7 items-center justify-center rounded-chip border border-line-strong",
-        "bg-surface-2 px-2 font-mono text-micro leading-5 text-muted",
+        "inline-flex min-w-7 items-center justify-center rounded-sm border border-border-strong",
+        "bg-muted px-2 font-mono text-micro leading-5 text-muted-foreground",
         className,
       )}
       {...rest}
@@ -28,7 +28,7 @@ export function Separator({
       data-slot="separator"
       orientation={orientation}
       className={cn(
-        "shrink-0 bg-line",
+        "shrink-0 bg-border",
         orientation === "horizontal" ? "h-px w-full" : "h-full w-px",
         className,
       )}
@@ -43,7 +43,7 @@ export function SectionLabel({ className, ...rest }: React.HTMLAttributes<HTMLDi
     <div
       data-slot="section-label"
       className={cn(
-        "font-mono text-micro uppercase tracking-caps text-muted select-none",
+        "font-mono text-micro uppercase tracking-caps text-muted-foreground select-none",
         className,
       )}
       {...rest}

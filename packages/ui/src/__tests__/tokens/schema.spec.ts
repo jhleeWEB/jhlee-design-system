@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { CANVAS_FILE, DARK_FILE, LEGACY_FILE, readTokenSources, sortSourcePaths, validateTokenSources } from "../../../tokens/schema";
+import { CANVAS_FILE, CHROME_LIGHT_FILE, DARK_FILE, LEGACY_FILE, readTokenSources, sortSourcePaths, validateTokenSources } from "../../../tokens/schema";
 
 const sources = readTokenSources(fileURLToPath(new URL("../../../tokens/", import.meta.url)));
 
@@ -52,7 +52,8 @@ describe("정본", () => {
 
   it("다크는 크롬 파일 하나뿐이고 라이트와 같은 집합이다", () => {
     const { tokens, dark } = validateTokenSources(sources);
-    const chrome = tokens.filter(t => t.path[0] === "chrome").map(t => t.path.join("."));
+    // legacy.json 의 chrome.* 는 옛 이름 alias 라 다크 짝이 없다(#22) — 정본 파일의 것만 센다.
+    const chrome = tokens.filter(t => t.path[0] === "chrome" && t.file === CHROME_LIGHT_FILE).map(t => t.path.join("."));
     expect(chrome.length).toBeGreaterThan(20);
     expect(dark.map(t => t.path.join(".")).sort()).toEqual([...chrome].sort());
     expect(Object.keys(sources).filter(f => f.endsWith(".dark.json"))).toEqual([DARK_FILE]);
@@ -108,8 +109,8 @@ describe("검출기", () => {
 
   it("크롬 토큰마다 다크 값이 있어야 한다 — 빠지면 다크에서 라이트 색으로 남는다", () => {
     const dark = structuredClone(sources[DARK_FILE]) as { chrome: Record<string, unknown> };
-    delete dark.chrome.bg;
-    expect(errorsWith({ [DARK_FILE]: dark }).join("\n")).toMatch(/chrome\.bg 의 다크 값이 없다/);
+    delete dark.chrome.background;
+    expect(errorsWith({ [DARK_FILE]: dark }).join("\n")).toMatch(/chrome\.background 의 다크 값이 없다/);
     expect(errorsWith({ [DARK_FILE]: undefined }).join("\n")).toMatch(/chrome\.dark\.json 이 없다/);
   });
 

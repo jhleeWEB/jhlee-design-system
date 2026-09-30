@@ -8,6 +8,7 @@
  * 기대야 한다. 규칙 넷은 작아서 JSDoc 타입 + `checkJs` 로 충분히 검사된다.
  */
 import noBooleanStringDataAttr from "./rules/no-boolean-string-data-attr.js";
+import legacyTone from "./rules/legacy-tone.js";
 import noForwardRef from "./rules/no-forward-ref.js";
 import noLiteralStyleValue from "./rules/no-literal-style-value.js";
 import noMagicMs from "./rules/no-magic-ms.js";
@@ -19,6 +20,7 @@ const plugin = {
   meta: { name: "@buildos/eslint-rules", version: "0.1.0" },
   rules: {
     "no-boolean-string-data-attr": /** @type {import("eslint").Rule.RuleModule} */ (/** @type {unknown} */ (noBooleanStringDataAttr)),
+    "legacy-tone": legacyTone,
     "no-forward-ref": noForwardRef,
     "no-literal-style-value": noLiteralStyleValue,
     "no-magic-ms": noMagicMs,

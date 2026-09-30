@@ -16,7 +16,7 @@
  *     @import "@jhleeweb/squircle-design-system/theme.css";
  *
  * theme.css 가 `@source "./"` 로 자기 자신을 등록하므로 소비자는 이 한 줄로 끝난다. 그래도 컴포넌트가
- * 스타일 없이 렌더되면(에러가 나지 않는 조용한 실패) 산출 CSS 에 `.rounded-control` 이 있는지부터 본다.
+ * 스타일 없이 렌더되면(에러가 나지 않는 조용한 실패) 산출 CSS 에 `.rounded-md` 가 있는지부터 본다.
  * 기존 셸·컨트롤 API까지 전환할 앱은 최상단을 `DesignSystemProvider`로 감싼다.
  * 선택하지 않은 스튜디오는 `shell.css`만으로 기존 UI를 유지한다.
  *
@@ -155,6 +155,7 @@ export { niceScale, gridPitchM, GRID_TARGET_PX, GRID_MAJOR_EVERY, GRID_MAX_DIVIS
 
 /* ── 디자인 시스템(#1198) ─────────────────────────────────────────────────── */
 export { cn, cva, type VariantProps } from "./cn";
+export { normalizeTone, toneValues, type LegacyTone, type LegacyToneOf, type Tone, type ToneInput } from "./lib/tone";
 export * from "./primitives";
 export * from "./overlay";
 export * from "./feedback";

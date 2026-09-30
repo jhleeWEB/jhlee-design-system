@@ -12,7 +12,7 @@ const meta = {
   decorators: [
     Story => (
       <GalleryProviders>
-        <div className="bg-chrome font-sans text-body text-ink">
+        <div className="bg-background font-sans text-body text-foreground">
           <Story />
         </div>
       </GalleryProviders>

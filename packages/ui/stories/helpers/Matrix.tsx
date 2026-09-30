@@ -17,14 +17,14 @@ export function Matrix<R extends string, C extends string>({
   cell: (row: R, col: C) => ReactNode;
 }) {
   return (
-    <table className="border-separate border-spacing-3 font-sans text-body text-ink">
+    <table className="border-separate border-spacing-3 font-sans text-body text-foreground">
       <thead>
         <tr>
-          <th scope="col" className="text-left font-mono text-micro font-normal uppercase tracking-caps text-muted">
+          <th scope="col" className="text-left font-mono text-micro font-normal uppercase tracking-caps text-muted-foreground">
             {rowLabel} \ {colLabel}
           </th>
           {cols.map(col => (
-            <th key={col} scope="col" className="text-left font-mono text-micro font-normal text-muted">
+            <th key={col} scope="col" className="text-left font-mono text-micro font-normal text-muted-foreground">
               {col}
             </th>
           ))}
@@ -33,7 +33,7 @@ export function Matrix<R extends string, C extends string>({
       <tbody>
         {rows.map(row => (
           <tr key={row}>
-            <th scope="row" className="text-left font-mono text-micro font-normal text-muted">
+            <th scope="row" className="text-left font-mono text-micro font-normal text-muted-foreground">
               {row}
             </th>
             {cols.map(col => (

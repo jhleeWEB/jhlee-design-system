@@ -34,6 +34,8 @@ export const CANVAS_FILE = "semantic/canvas.json";
 
 /** 옛 이름의 alias 만 사는 파일 — 여기 토큰은 전부 `$deprecated` 이고, 다른 파일은 여기 토큰을 참조할 수 없다(#18). */
 export const LEGACY_FILE = "legacy.json";
+/** legacy.json 토큰이 나갈 수 있는 곳 — `:root`(legacy.css) 또는 옛 유틸 이름을 살리는 `@theme`·`@theme inline`(theme.tailwind.css)(B5, #22). */
+const LEGACY_SCOPES: readonly Scope[] = ["legacy", "theme", "theme-inline"];
 
 /** 생성물 순서 — 층이 낮은 것부터. 같은 층 안에서는 경로 오름차순. */
 const LAYER_ORDER = ["primitive/", "semantic/", "component/", LEGACY_FILE] as const;
@@ -61,6 +63,12 @@ const sdsSchema = z.strictObject({
   ts: z.string().regex(TS_IDENT, "MOTION 키는 lowerCamel + Ms 접미(예: collapseMs)").optional(),
   /** 토큰에만 — `@media (prefers-reduced-motion: reduce)` 에서의 값. */
   reducedMotion: z.string().optional(),
+  /**
+   * legacy.json 의 파일 머리에만 — alias 를 둘 수 없는 개명 `옛 경로 → 새 경로`(B5, #22). 옛 이름이 새 정본의 **다른** 토큰과 글자가 같을 때
+   * (`chrome.accent` 옛 azure → 새 옅은 면, `chrome.muted` 옛 회색 글자 → 새 면) CSS 변수도 유틸도 alias 로 살릴 수 없으므로 코드모드 표
+   * (eslint/legacy-classes.json · scripts/codemod-css-vars.mjs)에만 실린다.
+   */
+  renames: z.record(z.string().regex(/^[a-z0-9.-]+$/), z.string().regex(/^[a-z0-9.-]+$/)).optional(),
 });
 const extensionsSchema = z.looseObject({ sds: sdsSchema.optional() });
 
@@ -108,6 +116,8 @@ export interface ValidationResult {
   readonly errors: readonly string[];
   readonly tokens: readonly FlatToken[];
   readonly dark: readonly FlatToken[];
+  /** legacy.json 파일 머리의 `renames` — alias 없는 개명(옛 경로 → 새 경로). 없으면 빈 객체. */
+  readonly renames: Readonly<Record<string, string>>;
 }
 
 /** 층 → 파일 순으로 정렬한 경로. */
@@ -169,7 +179,9 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
     const type = TYPES.includes(node.$type as TokenType) ? (node.$type as TokenType) : inherited.type;
     const ext = extensionsSchema.safeParse(node.$extensions ?? {});
     if (!ext.success) errors.push(`${where}: $extensions — ${ext.error.issues.map(i => `${i.path.join(".")}: ${i.message}`).join("; ")}`);
-    const own: SdsExtension = ext.success ? (ext.data.sds ?? {}) : {};
+    const { renames, ...own }: SdsExtension = ext.success ? (ext.data.sds ?? {}) : {};
+    // renames 는 파일 머리의 것만 읽고(validateTokenSources 가 따로 본다) 토큰으로 물려주지 않는다 — 토큰의 sds 에 섞이면 포맷이 오해한다.
+    if (renames !== undefined && (path.length > 0 || file !== LEGACY_FILE)) errors.push(`${where}: renames 는 ${LEGACY_FILE} 의 파일 머리에만 둔다`);
     const isToken = "$value" in node;
     if (node.$deprecated !== undefined && typeof node.$deprecated !== "boolean" && typeof node.$deprecated !== "string") errors.push(`${where}: $deprecated 는 boolean 또는 문자열`);
     const deprecated = node.$deprecated !== undefined ? (node.$deprecated as boolean | string) : inherited.deprecated;
@@ -272,10 +284,12 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
   };
   for (const k of byKey.keys()) cycle(k, []);
 
-  // chrome — light · dark 둘 다, 같은 집합, 그 두 파일에만.
-  const chromeLight = new Set(light.filter(t => t.path[0] === "chrome").map(key));
+  // chrome — light · dark 둘 다, 같은 집합, 그 두 파일에만. legacy.json 의 chrome.* 는 옛 이름 → 새 chrome 이름 alias 라 예외다(B5, #22).
+  const chromeLight = new Set(light.filter(t => t.path[0] === "chrome" && t.file === CHROME_LIGHT_FILE).map(key));
   for (const t of light) {
-    if (t.path[0] === "chrome" && t.file !== CHROME_LIGHT_FILE) errors.push(`${t.file}: chrome.* 는 ${CHROME_LIGHT_FILE} 에만 둔다`);
+    if (t.path[0] === "chrome" && t.file !== CHROME_LIGHT_FILE && t.file !== LEGACY_FILE) errors.push(`${t.file}: chrome.* 는 ${CHROME_LIGHT_FILE} 에만 둔다`);
+    if (t.path[0] === "chrome" && t.file === LEGACY_FILE && !referencesIn(t.value).every(ref => ref.startsWith("chrome.")))
+      errors.push(`${LEGACY_FILE}: ${key(t)} 는 옛 크롬 이름이라 새 chrome.* 만 가리킨다 — 값이 다르면 alias 가 아니라 회귀다`);
     if (t.file === CHROME_LIGHT_FILE && t.path[0] !== "chrome") errors.push(`${t.file}: 크롬 파일에 chrome.* 아닌 ${key(t)}`);
     if (t.sds.scope === "chrome" && t.file !== CHROME_LIGHT_FILE) errors.push(`${t.file}: chrome 스코프는 크롬 파일만 쓴다`);
     if (t.path[0] === "canvas" && t.file !== CANVAS_FILE) errors.push(`${t.file}: canvas.* 는 ${CANVAS_FILE} 에만 둔다`);
@@ -295,13 +309,23 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
   for (const t of light) {
     if (t.file === LEGACY_FILE) {
       if (t.deprecated === undefined || t.deprecated === false) errors.push(`${LEGACY_FILE}: ${key(t)} 는 $deprecated 여야 한다 — 이 파일은 옛 이름만 산다`);
-      if (t.sds.scope !== "legacy") errors.push(`${LEGACY_FILE}: ${key(t)} 의 스코프는 legacy 여야 한다`);
+      if (!LEGACY_SCOPES.includes(t.sds.scope)) errors.push(`${LEGACY_FILE}: ${key(t)} 의 스코프는 ${LEGACY_SCOPES.join(" | ")} 가운데 하나여야 한다`);
       continue;
     }
     if (t.sds.scope === "legacy") errors.push(`${t.file}: legacy 스코프는 ${LEGACY_FILE} 만 쓴다 — ${key(t)}`);
     for (const ref of referencesIn(t.value)) if (legacyKeys.has(ref)) errors.push(`${t.file}: ${key(t)} → {${ref}} 는 옛 이름이다 — 새 정본은 legacy 를 참조하지 않는다`);
   }
   for (const t of dark) for (const ref of referencesIn(t.value)) if (legacyKeys.has(ref)) errors.push(`${DARK_FILE}: ${key(t)} → {${ref}} 는 옛 이름이다`);
+
+  // renames — alias 없는 개명. 옛 경로는 새 정본의 다른 토큰과 글자가 같아야 하고(그래서 alias 가 불가능하다), 새 경로는 정의돼 있어야 한다.
+  const head = files[LEGACY_FILE];
+  const headExt = isObject(head) ? extensionsSchema.safeParse(head.$extensions ?? {}) : null;
+  const renames: Record<string, string> = headExt?.success ? { ...(headExt.data.sds?.renames ?? {}) } : {};
+  for (const [from, to] of Object.entries(renames)) {
+    if (from === to) errors.push(`${LEGACY_FILE}: renames ${from} → 자기 자신`);
+    if (!seen.has(to)) errors.push(`${LEGACY_FILE}: renames ${from} → ${to} 정의가 없다`);
+    if (!seen.has(from) || seen.get(from) === LEGACY_FILE) errors.push(`${LEGACY_FILE}: renames ${from} 은 새 정본의 다른 토큰과 이름이 같을 때만 쓴다 — 아니면 alias 토큰으로 둔다`);
+  }
 
   const tsNames = new Map<string, string>();
   for (const t of light) {
@@ -311,5 +335,5 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
     else tsNames.set(t.sds.ts, key(t));
   }
 
-  return { errors, tokens: light, dark };
+  return { errors, tokens: light, dark, renames };
 }

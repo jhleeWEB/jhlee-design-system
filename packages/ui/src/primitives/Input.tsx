@@ -88,7 +88,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       />
       {suffix ? <span
         aria-hidden="true"
-        className="pointer-events-none absolute right-3 font-mono text-micro text-muted"
+        className="pointer-events-none absolute right-3 font-mono text-micro text-muted-foreground"
       >
         {suffix}
       </span> : null}

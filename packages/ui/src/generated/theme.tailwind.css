@@ -39,12 +39,16 @@
 
   --radius-*: initial;
   --radius-none: 0;
-  --radius-chip: 6px;
-  --radius-control: 8px;
-  --radius-card: 12px;
-  --radius-float: 12px;
-  --radius-modal: 16px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
+  --radius-chip: var(--radius-sm); /* @deprecated */
+  --radius-control: var(--radius-md); /* @deprecated */
+  --radius-card: var(--radius-lg); /* @deprecated */
+  --radius-float: var(--radius-lg); /* @deprecated */
+  --radius-modal: var(--radius-xl); /* @deprecated */
 
   --shadow-*: initial;
   --shadow-none: none;
@@ -81,43 +85,81 @@
   --color-canvas-ink-2: var(--canvas-ink-2);
   --color-canvas-muted: var(--canvas-muted);
   --color-canvas-grid: var(--canvas-grid);
-  --color-chrome: var(--chrome-bg);
-  --color-surface: var(--chrome-surface);
-  --color-surface-2: var(--chrome-surface-2);
-  --color-surface-3: var(--chrome-surface-3);
-  --color-overlay: var(--chrome-overlay);
-  --color-ink: var(--chrome-ink);
-  --color-ink-2: var(--chrome-ink-2);
+  --color-background: var(--chrome-background);
+  --color-card: var(--chrome-card);
   --color-muted: var(--chrome-muted);
-  --color-disabled: var(--chrome-disabled);
-  --color-line: var(--chrome-line);
-  --color-line-strong: var(--chrome-line-strong);
+  --color-secondary: var(--chrome-secondary);
+  --color-popover: var(--chrome-popover);
+  --color-foreground: var(--chrome-foreground);
+  --color-foreground-2: var(--chrome-foreground-2);
+  --color-muted-foreground: var(--chrome-muted-foreground);
+  --color-foreground-disabled: var(--chrome-foreground-disabled);
+  --color-border: var(--chrome-border);
+  --color-input: var(--chrome-border);
+  --color-border-strong: var(--chrome-border-strong);
+  --color-primary: var(--chrome-primary);
+  --color-primary-hover: var(--chrome-primary-hover);
+  --color-primary-foreground: var(--chrome-primary-foreground);
+  --color-primary-track: var(--chrome-primary-track);
   --color-accent: var(--chrome-accent);
-  --color-accent-hover: var(--chrome-accent-hover);
-  --color-accent-ink: var(--chrome-accent-ink);
-  --color-accent-soft: var(--chrome-accent-soft);
-  --color-accent-track: var(--chrome-accent-track);
+  --color-accent-foreground: var(--chrome-accent-foreground);
   --color-selection-fill: var(--chrome-selection-fill);
   --color-selection-stroke: var(--chrome-selection-stroke);
   --color-scrim: var(--chrome-scrim);
-  --color-focus: var(--chrome-focus);
-  --color-tooltip: var(--chrome-tooltip-bg);
-  --color-tooltip-ink: var(--chrome-tooltip-ink);
-  --color-ok: var(--chrome-ok);
-  --color-ok-hover: var(--chrome-ok-hover);
-  --color-ok-ink: var(--chrome-ok-ink);
-  --color-ok-soft: var(--chrome-ok-soft);
-  --color-ok-line: var(--chrome-ok-line);
-  --color-warn: var(--chrome-warn);
-  --color-warn-hover: var(--chrome-warn-hover);
-  --color-warn-ink: var(--chrome-warn-ink);
-  --color-warn-soft: var(--chrome-warn-soft);
-  --color-warn-line: var(--chrome-warn-line);
-  --color-danger: var(--chrome-danger);
-  --color-danger-hover: var(--chrome-danger-hover);
-  --color-danger-ink: var(--chrome-danger-ink);
-  --color-danger-soft: var(--chrome-danger-soft);
-  --color-danger-line: var(--chrome-danger-line);
+  --color-ring: var(--chrome-ring);
+  --color-tooltip: var(--chrome-tooltip);
+  --color-tooltip-foreground: var(--chrome-tooltip-foreground);
+  --color-success: var(--chrome-success);
+  --color-success-hover: var(--chrome-success-hover);
+  --color-success-foreground: var(--chrome-success-foreground);
+  --color-success-soft: var(--chrome-success-soft);
+  --color-success-line: var(--chrome-success-line);
+  --color-warning: var(--chrome-warning);
+  --color-warning-hover: var(--chrome-warning-hover);
+  --color-warning-foreground: var(--chrome-warning-foreground);
+  --color-warning-soft: var(--chrome-warning-soft);
+  --color-warning-line: var(--chrome-warning-line);
+  --color-destructive: var(--chrome-destructive);
+  --color-destructive-hover: var(--chrome-destructive-hover);
+  --color-destructive-foreground: var(--chrome-destructive-foreground);
+  --color-destructive-soft: var(--chrome-destructive-soft);
+  --color-destructive-line: var(--chrome-destructive-line);
+  --color-info: var(--chrome-info);
+  --color-info-hover: var(--chrome-info-hover);
+  --color-info-foreground: var(--chrome-info-foreground);
+  --color-info-soft: var(--chrome-info-soft);
+  --color-info-line: var(--chrome-info-line);
+  --color-chrome: var(--chrome-background); /* @deprecated */
+  --color-surface: var(--chrome-card); /* @deprecated */
+  --color-surface-2: var(--chrome-muted); /* @deprecated */
+  --color-surface-3: var(--chrome-secondary); /* @deprecated */
+  --color-overlay: var(--chrome-popover); /* @deprecated */
+  --color-ink: var(--chrome-foreground); /* @deprecated */
+  --color-ink-2: var(--chrome-foreground-2); /* @deprecated */
+  --color-disabled: var(--chrome-foreground-disabled); /* @deprecated */
+  --color-line: var(--chrome-border); /* @deprecated */
+  --color-line-strong: var(--chrome-border-strong); /* @deprecated */
+  --color-accent-hover: var(--chrome-primary-hover); /* @deprecated */
+  --color-accent-ink: var(--chrome-primary-foreground); /* @deprecated */
+  --color-accent-soft: var(--chrome-accent); /* @deprecated */
+  --color-accent-track: var(--chrome-primary-track); /* @deprecated */
+  --color-focus: var(--chrome-ring); /* @deprecated */
+  --color-tooltip-ink: var(--chrome-tooltip-foreground); /* @deprecated */
+  --color-ok: var(--chrome-success); /* @deprecated */
+  --color-ok-hover: var(--chrome-success-hover); /* @deprecated */
+  --color-ok-ink: var(--chrome-success-foreground); /* @deprecated */
+  --color-ok-soft: var(--chrome-success-soft); /* @deprecated */
+  --color-ok-line: var(--chrome-success-line); /* @deprecated */
+  --color-warn: var(--chrome-warning); /* @deprecated */
+  --color-warn-hover: var(--chrome-warning-hover); /* @deprecated */
+  --color-warn-ink: var(--chrome-warning-foreground); /* @deprecated */
+  --color-warn-soft: var(--chrome-warning-soft); /* @deprecated */
+  --color-warn-line: var(--chrome-warning-line); /* @deprecated */
+  --color-danger: var(--chrome-destructive); /* @deprecated */
+  --color-danger-hover: var(--chrome-destructive-hover); /* @deprecated */
+  --color-danger-ink: var(--chrome-destructive-foreground); /* @deprecated */
+  --color-danger-soft: var(--chrome-destructive-soft); /* @deprecated */
+  --color-danger-line: var(--chrome-destructive-line); /* @deprecated */
 
   --font-sans: "Instrument Sans", var(--font-stack-sans);
   --font-mono: "Geist Mono", var(--font-stack-mono);

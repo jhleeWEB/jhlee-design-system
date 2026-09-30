@@ -24,7 +24,7 @@ describe("cn — 사다리가 충돌을 해소한다", () => {
   });
 
   it("역할 이름 사다리(radius · shadow · text)가 해소된다", () => {
-    expect(cn("rounded-control", "rounded-modal")).toBe("rounded-modal");
+    expect(cn("rounded-md", "rounded-xl")).toBe("rounded-xl");
     expect(cn("shadow-card", "shadow-pop")).toBe("shadow-pop");
     /* 조밀한 레거시 표가 DS 기본 13px 를 11px 로 되돌리는 실제 경로다. */
     expect(cn("text-body", "text-label")).toBe("text-label");

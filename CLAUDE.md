@@ -30,9 +30,14 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              최신성을 강제한다(CI unit job · verify). **연결돼 있다**(B3, #18) — 아래 `tokens.css`·`theme.css` 가 @import 로, `cn.ts` 가 import 로 소비한다.
                              tsdown 이 dist/generated/ 로 복사한다(상대 @import 가 tarball 안에서 살아야 한다). 래칫·ESLint jsdoc 대상이 아니다
   src/tokens/motion.ts       `generated/tokens.ts` 의 `MOTION` 재수출 껍데기(@deprecated) — Toast·ScrollArea·Tooltip 은 생성물을 직접 import 한다(B1 #15 → B3 #18)
+  tokens/README.md           조어 규칙(면 <role> · 글자 <role>-foreground · 옅은 면 <role>-soft · 사다리 -2/-3)과 legacy.json 이 세 출력의 원천이라는 계약(B5 #22)
+  tokens/legacy-map.mjs      옛 이름 → 새 이름 표 — `eslint/legacy-classes.json`(린트용, 사슬 없음)과 `scripts/codemod-*.mjs`(한 번에, accent·muted 포함)의 공통 계산
+  eslint/legacy-classes.json 생성물 — 루트 eslint.config.js 의 `no-restricted-classes` 가 `{pattern, fix}` 로 읽는다 = **`eslint --fix` 가 곧 코드모드**
+  src/lib/tone.ts            톤 어휘 한 벌(`toneValues` · `Tone`) + `normalizeTone()` — 옛 키(accent·ok·warn·danger·default·current) 한 마이너 호환(#22)
   src/tokens.css             `generated/{tokens,legacy}.css` 재수출 + 원칙을 강제하는 요소 규칙(box-sizing · body · 컨트롤 radius 0 · .num). 값은 없다
   src/theme.css              tokens.css + `generated/theme.tailwind.css` 재수출, @source "./" 자기 등록, 컴포넌트 CSS(@import), keyframes,
-                             손 @utility(tnum · focus-ring · on-canvas · h-ctl* · w-rail · gap-shell), `.ds-*` 컴포넌트 규칙. 값은 없다 — 방향 C(캔버스/크롬)의 «왜» 는 머리 주석
+                             손 @utility(tnum · focus-ring · on-canvas · h-ctl* · w-rail · gap-shell · *-dialog-fluid · max-w-popover-fluid), `.ds-*` 컴포넌트 규칙. 값은 없다 —
+                             방향 C(캔버스/크롬)의 «왜» 는 머리 주석
   src/{primitives,overlay,feedback,navigation,data}/   DS 컴포넌트(Tailwind 유틸 + cva + Radix)
   src/**/Name.variants.ts    컴포넌트의 cva 한 벌 — `"use client"` 없음(서버에서 호출 가능). 컴포넌트가 import 하고 층 배럴이 `*Variants` 를 export
   src/legacy/                `./legacy` 서브패스 — 3열 작업대 셸·컨트롤·DesignSystemProvider·shell.css(#10). 격리·동결: ESLint ignores,
@@ -51,8 +56,11 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   tsdown.config.ts           unbundle ESM + d.ts + CSS 복사. banner 로 "use client" 를 붙이지 않는다 — 파일 첫 줄에 직접 둔다
 packages/typescript-config/  tsconfig 프리셋(@buildos/typescript-config, 발행 안 함)
 scripts/vrt-update.sh        VRT 기준선 갱신 — CI 와 같은 playwright:v1.63.0-noble 이미지 안에서만(macOS PNG 는 기준선이 아니다)
+scripts/codemod-classes.mjs  옛 유틸 이름 → 새 이름을 **한 번에**(#22). 소비 레포는 이것을 먼저 한 번 돌리고 그 다음부터 린트가 잡는다 — accent·muted 는 린트 표에 없다
+scripts/codemod-css-vars.mjs `var(--chrome-<옛>)`·`var(--radius-<옛>)` → 새 이름을 한 번에(#22). 둘 다 두 번 돌리면 새 accent·muted 가 다시 바뀐다 — 한 번만
 packages/eslint-rules/       로컬 ESLint 규칙 ds/*(@buildos/eslint-rules, 발행 안 함) + RuleTester 스펙. JS + JSDoc(checkJs)
 docs/architecture/design-system-patterns.md   React 합성·접근성 계약(원 저장소 #1246)
+docs/design-tokens.md        llms 용 «shadcn 과 다른 점» 초안 — 같은 이름은 설명 없이, 다른 이름만 표로(#22)
 docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진행은 이 레포 이슈로 관리한다
 ```
 
@@ -60,10 +68,14 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 
 - **캔버스인가 크롬인가.** 새 컴포넌트를 만들 때 묻는 질문은 언제나 이것 하나다. 도면 요소·치수선·범례 스와치는 캔버스(흰 바탕 고정·radius 0·무채색·다크 없음),
   그 밖은 전부 크롬(듀얼 테마·작은 radius·부유 레이어에만 그림자).
-- **유채색은 판정에만**(base 원칙 2) — 액센트 azure `#0869e1` 은 «지금 고른 것·주된 동작», 판정색은 «통과했는가». 상태는 항상 텍스트와 병기한다.
+- **유채색은 판정에만**(base 원칙 2) — `primary` azure `#0869e1` 은 «지금 고른 것·주된 동작», 판정색 `success`·`warning`·`destructive`·`info` 는 «통과했는가». 상태는 항상 텍스트와 병기한다.
 - **수치는 mono + tabular-nums**(원칙 3).
-- **토큰 밖 값을 쓰지 않는다.** 색·간격·반경·글자·시간·층위는 사다리(`rounded-control`, `text-body`, `shadow-pop`, `h-ctl`, `font-semibold`, `z-toast`, `duration-fast` …)만.
-  리터럴(hex·px·ms)이 필요하면 `tokens/` JSON 에 토큰을 더한다. 옛 base 이름(`--ink`·`--gap`)은 legacy alias 다 — 새 코드는 쓰지 않는다.
+- **토큰 밖 값을 쓰지 않는다.** 색·간격·반경·글자·시간·층위는 생성물 사다리만 — 크롬 색은 **shadcn 어휘**(`bg-background` `bg-card` `bg-muted` `bg-secondary` `text-foreground`
+  `text-muted-foreground` `border-border` `bg-primary` `text-primary-foreground` `bg-accent` `ring-ring` `bg-destructive-soft` …, B5 #22), 캔버스는 `canvas-*`, 그 밖은 역할 이름
+  (`rounded-sm/md/lg/xl` = 6/8/12/16, `text-body`, `shadow-pop`, `h-ctl`, `font-semibold`, `z-toast`, `duration-fast` …). 간격은 4px 스텝 `0 1 2 3 4 5 6 8 10 12 16 20 24` 만(간격 계열,
+  ESLint). 리터럴(hex·px·ms)이 필요하면 `tokens/` JSON 에 토큰을 더한다. 조어 규칙은 [`packages/ui/tokens/README.md`](packages/ui/tokens/README.md), shadcn 과 다른 점은
+  [`docs/design-tokens.md`](docs/design-tokens.md). 옛 이름(`text-ink`·`bg-surface`·`--chrome-line`·`--ink`·`--gap`)은 legacy alias 다 — 새 코드는 쓰지 않는다(린트가 `--fix` 로 바꾼다).
+  `tone` prop 도 같은 어휘다: `neutral | primary | success | warning | destructive | info`(옛 키는 한 마이너 동안 `normalizeTone()` 이 옮긴다, ESLint `ds/legacy-tone --fix`).
 - **모든 크롬 모서리는 연속 곡률(스쿼클)을 향한다.** CSS `corner-shape` 진행형 향상 — 미지원 엔진(2026-09: Safari 정식·Firefox 정식)은 원호로 떨어지며 그것이 허용된 폴백이다. 원형·pill 은 원호 유지. (도입은 docs/plan Part 3.)
 - **클라이언트 경계.** 훅·핸들러·컨텍스트·Radix 를 쓰는 파일은 첫 줄에 `"use client"`. 배럴(index.ts)·cn·canvas-metrics·순수 표시 컴포넌트에는 없다.
 - **JS 에서 CSS 를 import 하지 않는다.** 컴포넌트 CSS 는 theme.css 가 `@import` 한다.

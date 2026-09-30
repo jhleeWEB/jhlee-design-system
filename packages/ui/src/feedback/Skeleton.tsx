@@ -23,8 +23,8 @@ export function Skeleton({ className, h = 12, w, shape = "bar", style, ...rest }
       aria-hidden="true"
       className={cn(
         "animate-shimmer bg-[length:200%_100%]",
-        "bg-[linear-gradient(90deg,var(--chrome-surface-2)_25%,var(--chrome-surface-3)_50%,var(--chrome-surface-2)_75%)]",
-        shape === "circle" ? "rounded-full" : "rounded-chip",
+        "bg-[linear-gradient(90deg,var(--chrome-muted)_25%,var(--chrome-secondary)_50%,var(--chrome-muted)_75%)]",
+        shape === "circle" ? "rounded-full" : "rounded-sm",
         className,
       )}
       style={{ height: h, width: w ?? (shape === "circle" ? h : undefined), ...style }}

@@ -17,7 +17,7 @@ export function Breadcrumb({
     <nav
       data-slot="breadcrumb"
       aria-label="Breadcrumb"
-      className={cn("flex min-w-0 items-center gap-2 text-control text-muted", className)}
+      className={cn("flex min-w-0 items-center gap-2 text-control text-muted-foreground", className)}
       {...rest}
     >
       {items.map((item, i) => {
@@ -25,16 +25,16 @@ export function Breadcrumb({
         return (
           <span key={i} className="flex min-w-0 items-center gap-2">
             {i > 0 ? (
-              <span aria-hidden="true" className="select-none text-disabled">
+              <span aria-hidden="true" className="select-none text-foreground-disabled">
                 /
               </span>
             ) : null}
             {last ? (
-              <span aria-current="page" className="min-w-0 truncate font-semibold text-ink">
+              <span aria-current="page" className="min-w-0 truncate font-semibold text-foreground">
                 {item.label}
               </span>
             ) : item.href ? (
-              <a href={item.href} className="min-w-0 truncate hover:text-ink hover:underline">
+              <a href={item.href} className="min-w-0 truncate hover:text-foreground hover:underline">
                 {item.label}
               </a>
             ) : (
@@ -42,7 +42,7 @@ export function Breadcrumb({
                 data-slot="breadcrumb-link"
                 type="button"
                 onClick={item.onSelect}
-                className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit min-w-0 cursor-pointer truncate rounded-control hover:text-ink hover:underline focus-visible:focus-ring focus-visible:outline-none"
+                className="appearance-none border-0 bg-transparent p-0 font-inherit text-inherit min-w-0 cursor-pointer truncate rounded-md hover:text-foreground hover:underline focus-visible:focus-ring focus-visible:outline-none"
               >
                 {item.label}
               </button>

@@ -1,10 +1,10 @@
 export { Alert, type AlertProps } from "./Alert";
-export { alertVariants } from "./Alert.variants";
+export { alertVariants, type AlertTone } from "./Alert.variants";
 export { EmptyState, type EmptyStateProps } from "./EmptyState";
 export { Progress, type ProgressProps } from "./Progress";
-export { progressVariants } from "./Progress.variants";
+export { progressVariants, type ProgressTone } from "./Progress.variants";
 export { Skeleton, SkeletonText, type SkeletonProps } from "./Skeleton";
 export { Spinner, type SpinnerProps } from "./Spinner";
-export { spinnerVariants } from "./Spinner.variants";
+export { spinnerVariants, type SpinnerTone } from "./Spinner.variants";
 export { ToastProvider, useToast, type ToastOptions, type ToastProviderProps } from "./Toast";
-export { toastVariants } from "./Toast.variants";
+export { toastVariants, type ToastTone } from "./Toast.variants";

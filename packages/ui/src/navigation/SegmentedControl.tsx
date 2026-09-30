@@ -59,7 +59,7 @@ export function SegmentedControl<T extends string | number>({
         buttons[next]?.focus();
       }}
       className={cn(
-        "inline-flex shrink-0 items-center rounded-control bg-accent-track p-0.5",
+        "inline-flex shrink-0 items-center rounded-md bg-primary-track p-0.5",
         className,
       )}
     >
@@ -77,13 +77,13 @@ export function SegmentedControl<T extends string | number>({
             onClick={() => onChange(option.value)}
             className={cn(
               "appearance-none border-0 bg-transparent font-inherit",
-              "cursor-pointer rounded-[6px] px-3 font-medium transition-colors duration-fast",
+              "cursor-pointer rounded-sm px-3 font-medium transition-colors duration-fast",
               "focus-visible:focus-ring focus-visible:outline-none",
               "disabled:pointer-events-none disabled:opacity-45",
               size === "sm" ? "h-6 text-label" : "h-7 text-control",
               active
-                ? "bg-surface text-accent shadow-chip"
-                : "text-muted hover:text-ink-2",
+                ? "bg-card text-primary shadow-chip"
+                : "text-muted-foreground hover:text-foreground-2",
             )}
           >
             {option.label}

@@ -7,25 +7,26 @@ import { cva } from "../cn";
 /** 서랍 패널의 변형 — `side` 와 `size` 의 조합이 폭·높이를 정한다. */
 export const drawerVariants = cva(
   [
-    "fixed z-modal flex flex-col overflow-hidden bg-surface shadow-modal",
-    "text-body text-ink focus-visible:outline-none",
+    "fixed z-modal flex flex-col overflow-hidden bg-card shadow-modal",
+    "text-body text-foreground focus-visible:outline-none",
   ],
   {
     variants: {
       side: {
-        right: "inset-y-0 right-0 h-dvh border-l border-line",
-        left: "inset-y-0 left-0 h-dvh border-r border-line",
-        bottom: "inset-x-0 bottom-0 w-full rounded-t-modal border-t border-line",
+        right: "inset-y-0 right-0 h-dvh border-l border-border",
+        left: "inset-y-0 left-0 h-dvh border-r border-border",
+        bottom: "inset-x-0 bottom-0 w-full rounded-t-xl border-t border-border",
       },
       size: { sm: "", md: "", lg: "" },
     },
     compoundVariants: [
-      { side: "right", size: "sm", class: "w-[min(280px,100vw)]" },
-      { side: "right", size: "md", class: "w-[min(400px,100vw)]" },
-      { side: "right", size: "lg", class: "w-[min(620px,100vw)]" },
-      { side: "left", size: "sm", class: "w-[min(280px,100vw)]" },
-      { side: "left", size: "md", class: "w-[min(400px,100vw)]" },
-      { side: "left", size: "lg", class: "w-[min(620px,100vw)]" },
+      /* `w-screen`(100vw) + 상한(--container-drawer-*) = 옛 `w-[min(폭,100vw)]`(#22). 아래쪽 서랍의 높이는 같은 값의 토큰이 없어 남는다. */
+      { side: "right", size: "sm", class: "w-screen max-w-drawer-sm" },
+      { side: "right", size: "md", class: "w-screen max-w-drawer-md" },
+      { side: "right", size: "lg", class: "w-screen max-w-drawer-lg" },
+      { side: "left", size: "sm", class: "w-screen max-w-drawer-sm" },
+      { side: "left", size: "md", class: "w-screen max-w-drawer-md" },
+      { side: "left", size: "lg", class: "w-screen max-w-drawer-lg" },
       { side: "bottom", size: "sm", class: "h-[min(280px,90dvh)]" },
       { side: "bottom", size: "md", class: "h-[min(460px,90dvh)]" },
       { side: "bottom", size: "lg", class: "h-[min(70dvh,90dvh)]" },

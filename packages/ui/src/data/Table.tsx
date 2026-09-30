@@ -1,5 +1,9 @@
 import { cn } from "../cn";
+import { normalizeTone, type ToneInput } from "../lib/tone";
 import { ScrollArea } from "../navigation/ScrollArea";
+
+/** 표 칸의 판정 톤 — 셀은 «통과 · 주의 · 실패» 만 말한다. */
+export type CellTone = "success" | "warning" | "destructive";
 
 /* 표 — 이 제품에서 표는 대부분 **수치**다(FSI 원장 · 세대 믹스 · 주차 명세).
  * 그래서 숫자 칸은 우측 정렬 + mono + tabular-nums 가 기본이고, `<Td numeric>` 하나로 셋이 온다.
@@ -10,7 +14,7 @@ export function Table({ className, ...rest }: React.TableHTMLAttributes<HTMLTabl
     <ScrollArea className="min-w-0 w-full max-w-full" orientation="horizontal">
       <table
         data-slot="table"
-        className={cn("w-full border-collapse text-body text-ink", className)}
+        className={cn("w-full border-collapse text-body text-foreground", className)}
         {...rest}
       />
     </ScrollArea>
@@ -18,7 +22,7 @@ export function Table({ className, ...rest }: React.TableHTMLAttributes<HTMLTabl
 }
 
 export function Thead({ className, ...rest }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={cn("bg-surface-2", className)} {...rest} />;
+  return <thead className={cn("bg-muted", className)} {...rest} />;
 }
 
 export function Tbody({ className, ...rest }: React.HTMLAttributes<HTMLTableSectionElement>) {
@@ -34,9 +38,9 @@ export function Tr({
     <tr
       aria-selected={selected}
       className={cn(
-        "border-b border-line last:border-b-0",
-        "aria-selected:bg-accent-soft",
-        "[tbody_&:hover]:bg-surface-2 [tbody_&[aria-selected=true]:hover]:bg-accent-soft",
+        "border-b border-border last:border-b-0",
+        "aria-selected:bg-accent",
+        "[tbody_&:hover]:bg-muted [tbody_&[aria-selected=true]:hover]:bg-accent",
         className,
       )}
       {...rest}
@@ -53,8 +57,8 @@ export function Th({
     <th
       scope={rest.scope ?? "col"}
       className={cn(
-        "border-b border-line px-4 py-3 text-left align-bottom",
-        "font-mono text-micro font-normal uppercase tracking-caps text-muted",
+        "border-b border-border px-4 py-3 text-left align-bottom",
+        "font-mono text-micro font-normal uppercase tracking-caps text-muted-foreground",
         numeric && "text-right",
         className,
       )}
@@ -70,17 +74,18 @@ export function Td({
   ...rest
 }: React.TdHTMLAttributes<HTMLTableCellElement> & {
   numeric?: boolean;
-  /** 판정이 붙는 칸 — 음수 잔액처럼. 색만이 아니라 부호가 이미 말하므로 색은 보조다. */
-  tone?: "ok" | "warn" | "danger";
+  /** 판정이 붙는 칸 — 음수 잔액처럼. 색만이 아니라 부호가 이미 말하므로 색은 보조다. 옛 키 ok · warn · danger 는 한 마이너 동안 옮겨 준다. */
+  tone?: ToneInput<CellTone>;
 }) {
+  const resolved = normalizeTone(tone);
   return (
     <td
       className={cn(
         "px-4 py-3 align-middle",
         numeric && "tnum text-right",
-        tone === "ok" && "text-ok",
-        tone === "warn" && "text-warn",
-        tone === "danger" && "text-danger",
+        resolved === "success" && "text-success",
+        resolved === "warning" && "text-warning",
+        resolved === "destructive" && "text-destructive",
         className,
       )}
       {...rest}

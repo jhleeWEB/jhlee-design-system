@@ -41,9 +41,9 @@ export function Sidebar({
         data-collapsed={collapsed || undefined}
         aria-label={label}
         className={cn(
-          "flex shrink-0 flex-col gap-2 bg-surface p-3",
+          "flex shrink-0 flex-col gap-2 bg-card p-3",
           "transition-[width] duration-base motion-reduce:transition-none",
-          side === "left" ? "border-r border-line" : "border-l border-line",
+          side === "left" ? "border-r border-border" : "border-l border-border",
           collapsed ? "w-rail items-center" : "w-[var(--panel-w)]",
           className,
         )}
@@ -83,13 +83,13 @@ export function SidebarItem({
       aria-label={collapsed ? label : undefined}
       className={cn(
         "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit cursor-pointer",
-        "flex h-ctl-lg shrink-0 items-center gap-4 rounded-control border border-solid border-transparent",
-        "text-control text-muted transition-colors duration-fast",
-        "hover:bg-surface-2 hover:text-ink",
+        "flex h-ctl-lg shrink-0 items-center gap-4 rounded-md border border-solid border-transparent",
+        "text-control text-muted-foreground transition-colors duration-fast",
+        "hover:bg-muted hover:text-foreground",
         /* 활성은 **채우지 않고 물들인다.** 참고 화면 실측이 그랬고, 이유가 있다 — 레일은
            상시 보이므로 채워진 액센트 칸이 화면에서 가장 무거운 것이 되어 주 동작 버튼과
            경쟁한다. 옅은 바탕 + 파란 아이콘이면 «여기 있다» 만 말한다. */
-        "aria-[current=page]:border-transparent aria-[current=page]:bg-accent-soft aria-[current=page]:text-accent",
+        "aria-[current=page]:border-transparent aria-[current=page]:bg-accent aria-[current=page]:text-primary",
         "focus-visible:focus-ring focus-visible:outline-none",
         "disabled:pointer-events-none disabled:opacity-45",
         "[&_svg]:size-8 [&_svg]:shrink-0",
@@ -126,9 +126,9 @@ export function SidebarGroup({
   return (
     <div data-slot="sidebar-group" className={cn("flex flex-col gap-1", className)} {...rest}>
       {collapsed ? (
-        <hr aria-label={label} className="my-2 w-8 self-center border-0 border-t border-line" />
+        <hr aria-label={label} className="my-2 w-8 self-center border-0 border-t border-border" />
       ) : (
-        <div className="px-3 pb-1 pt-3 font-mono text-micro uppercase tracking-caps text-muted">
+        <div className="px-3 pb-1 pt-3 font-mono text-micro uppercase tracking-caps text-muted-foreground">
           {label}
         </div>
       )}

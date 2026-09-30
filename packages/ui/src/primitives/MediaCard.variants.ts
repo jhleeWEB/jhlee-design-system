@@ -7,7 +7,7 @@ import { cva } from "../cn";
 /** 내용 카드(항목)의 변형 — `orientation` · `elevation` · `selected` · `interactive`. */
 export const mediaCardVariants = cva(
   [
-    "group relative flex min-w-0 bg-surface text-left",
+    "group relative flex min-w-0 bg-card text-left",
     "transition-[box-shadow,border-color] duration-120 motion-reduce:transition-none",
   ],
   {
@@ -17,9 +17,9 @@ export const mediaCardVariants = cva(
         horizontal: "flex-row items-stretch",
       },
       elevation: {
-        raised: "rounded-card shadow-card hover:shadow-pop",
-        flat: "rounded-card border border-line hover:border-line-strong",
-        flush: "rounded-none border border-line",
+        raised: "rounded-lg shadow-card hover:shadow-pop",
+        flat: "rounded-lg border border-border hover:border-border-strong",
+        flush: "rounded-none border border-border",
       },
       selected: {
         true: "",
@@ -30,20 +30,20 @@ export const mediaCardVariants = cva(
     compoundVariants: [
       /* 선택은 **테두리 두께가 아니라 색**으로 말한다. 두께를 바꾸면 선택될 때 카드가
          1px 씩 움직여 격자 전체가 흔들린다. */
-      { elevation: "raised", selected: true, class: "shadow-[0_0_0_2px_var(--chrome-accent),var(--shadow-card)]" },
-      { elevation: "flat", selected: true, class: "border-accent ring-1 ring-accent" },
-      { elevation: "flush", selected: true, class: "border-accent ring-1 ring-accent" },
+      { elevation: "raised", selected: true, class: "shadow-[0_0_0_2px_var(--chrome-primary),var(--shadow-card)]" },
+      { elevation: "flat", selected: true, class: "border-primary ring-1 ring-primary" },
+      { elevation: "flush", selected: true, class: "border-primary ring-1 ring-primary" },
     ],
     defaultVariants: { orientation: "vertical", elevation: "raised", selected: false, interactive: false },
   },
 );
 
 /** 내용 카드 썸네일 칸의 변형 — `orientation` 과 `ratio`. */
-export const mediaCardMediaVariants = cva("relative shrink-0 overflow-hidden bg-surface-2", {
+export const mediaCardMediaVariants = cva("relative shrink-0 overflow-hidden bg-muted", {
   variants: {
     orientation: {
-      vertical: "w-full rounded-t-card",
-      horizontal: "rounded-l-card",
+      vertical: "w-full rounded-t-lg",
+      horizontal: "rounded-l-lg",
     },
     ratio: {
       "16/9": "aspect-[16/9]",

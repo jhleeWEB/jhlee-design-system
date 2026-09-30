@@ -216,24 +216,24 @@ export function Workbench() {
   const panels = usePanelLayout(PANELS);
 
   return (
-    <div className="flex h-[640px] min-h-0 flex-col bg-chrome">
+    <div className="flex h-[640px] min-h-0 flex-col bg-background">
       {/* 제품 줄 */}
       <header className="flex shrink-0 items-center gap-3 px-4 pt-3">
-        <div className="grid size-7 place-items-center rounded-[7px] bg-accent font-mono text-micro font-medium text-accent-ink">
+        <div className="grid size-7 place-items-center rounded-[7px] bg-primary font-mono text-micro font-medium text-primary-foreground">
           BO
         </div>
-        <span className="text-title font-semibold tracking-[-0.01em] text-ink">Residential Studio</span>
-        <span className="font-mono text-micro uppercase tracking-caps text-muted">BuildOS / India</span>
+        <span className="text-title font-semibold tracking-[-0.01em] text-foreground">Residential Studio</span>
+        <span className="font-mono text-micro uppercase tracking-caps text-muted-foreground">BuildOS / India</span>
         <span className="ml-auto flex items-center gap-2">
           <Button variant="ghost" size="sm">Regulation lab ↗</Button>
           <Button size="sm">Open</Button>
-          <Button size="sm" variant="solid" tone="accent">Save scheme ↓</Button>
+          <Button size="sm" variant="solid" tone="primary">Save scheme ↓</Button>
         </span>
       </header>
 
       {/* 맥락 줄 */}
       <div className="flex shrink-0 items-center gap-3 px-4 py-2.5">
-        <span className="truncate text-label text-muted">
+        <span className="truncate text-label text-muted-foreground">
           Dahisar · 4,812 m² plot · FSI 3.33 · 2 towers · 168 units
         </span>
         <span className="ml-auto flex items-center gap-2">
@@ -264,7 +264,7 @@ export function Workbench() {
 
       {/* 본문 — 레일 + 떠 있는 카드 셋 */}
       <div className="flex min-h-0 flex-1 gap-shell px-4 pb-3">
-        <Sidebar collapsed className="w-rail shrink-0 rounded-card bg-transparent p-1.5">
+        <Sidebar collapsed className="w-rail shrink-0 rounded-lg bg-transparent p-1.5">
           <SidebarItem icon={<Icon d={ICON.site} />} label="Site" shortcut="1" />
           <SidebarItem icon={<Icon d={ICON.plan} />} label="Plan" shortcut="2" active />
           <SidebarItem icon={<Icon d={ICON.tower} />} label="Towers" shortcut="3" />
@@ -284,7 +284,7 @@ export function Workbench() {
           onCollapsedChange={v => panels.setCollapsed("brief", v)}
           collapseTo="strip"
           collapsedLabel="Planning brief"
-          collapsedSignal={<StatusDot tone="warn" label="3 to be verified" />}
+          collapsedSignal={<StatusDot tone="warning" label="3 to be verified" />}
           side="left"
         >
           <div className="flex flex-col gap-4 p-5">
@@ -304,15 +304,15 @@ export function Workbench() {
 
             <div className="flex flex-col gap-3">
               <SectionLabel>Programme</SectionLabel>
-              <label className="flex items-center justify-between gap-3 text-body text-ink-2">
+              <label className="flex items-center justify-between gap-3 text-body text-foreground-2">
                 Storeys
                 <Input numeric defaultValue="21" suffix="fl" className="w-[92px]" />
               </label>
-              <label className="flex items-center justify-between gap-3 text-body text-ink-2">
+              <label className="flex items-center justify-between gap-3 text-body text-foreground-2">
                 Carpet target
                 <Input numeric defaultValue="38,420" suffix="m²" className="w-[118px]" />
               </label>
-              <label className="flex items-center justify-between gap-3 text-body text-ink-2">
+              <label className="flex items-center justify-between gap-3 text-body text-foreground-2">
                 Podium deck
                 <Switch checked={deck} onCheckedChange={setDeck} />
               </label>
@@ -330,16 +330,16 @@ export function Workbench() {
                 ]}
               />
               <div className="flex flex-wrap gap-1.5">
-                <Badge tone="ok" dot>FSI-01 pass</Badge>
-                <Badge tone="warn" dot>3 TBV</Badge>
+                <Badge tone="success" dot>FSI-01 pass</Badge>
+                <Badge tone="warning" dot>3 TBV</Badge>
               </div>
             </div>
 
-            <Button variant="solid" tone="accent" size="lg" className="w-full">
+            <Button variant="solid" tone="primary" size="lg" className="w-full">
               Generate schemes →
             </Button>
             <Button size="lg" className="w-full">Compare schemes</Button>
-            <p className="text-label leading-relaxed text-muted">
+            <p className="text-label leading-relaxed text-muted-foreground">
               Generate returns one checked scheme. Compare explores alternatives and takes longer.
             </p>
           </div>
@@ -360,12 +360,12 @@ export function Workbench() {
               <SitePlan />
             </div>
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
-              <div className="on-canvas flex items-center gap-1 rounded-float border border-line p-1 shadow-pop">
+              <div className="on-canvas flex items-center gap-1 rounded-lg border border-border p-1 shadow-pop">
                 <Tooltip label="Zoom to fit" shortcut="⇧2">
                   <Button size="icon-sm" variant="ghost" aria-label="Zoom to fit"><Icon d={ICON.plan} /></Button>
                 </Tooltip>
                 <Separator orientation="vertical" className="mx-0.5 h-4" />
-                <span className="tnum px-2 text-label text-muted">1 : 500</span>
+                <span className="tnum px-2 text-label text-muted-foreground">1 : 500</span>
                 <Separator orientation="vertical" className="mx-0.5 h-4" />
                 <Popover>
                   <PopoverTrigger asChild>
@@ -373,7 +373,7 @@ export function Workbench() {
                   </PopoverTrigger>
                   <PopoverContent side="top" align="end" className="w-auto">
                     <SectionLabel className="mb-2.5">Categories</SectionLabel>
-                    <ul className="flex flex-col gap-2 text-body text-ink-2">
+                    <ul className="flex flex-col gap-2 text-body text-foreground-2">
                       {[["Tower", "var(--canvas-ink-2)"], ["Podium", "var(--canvas-muted)"], ["Setback", "var(--canvas-muted)"]].map(([l, c]) => (
                         <li key={l} className="flex items-center gap-2">
                           <i className="size-2.5 shrink-0 border border-canvas-line" style={{ background: c }} />
@@ -404,7 +404,7 @@ export function Workbench() {
               <MassingView />
             </div>
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
-              <div className="on-canvas flex items-center gap-1 rounded-float border border-line p-1 shadow-pop">
+              <div className="on-canvas flex items-center gap-1 rounded-lg border border-border p-1 shadow-pop">
                 <Button size="sm" variant="ghost">Orbit</Button>
                 <Separator orientation="vertical" className="mx-0.5 h-4" />
                 <Button size="sm" variant="ghost">Cutaway</Button>
@@ -420,14 +420,14 @@ export function Workbench() {
           onCollapsedChange={v => panels.setCollapsed("inspect", v)}
           collapseTo="strip"
           collapsedLabel="Inspect"
-          collapsedSignal={<StatusDot tone="danger" label="PK-04 fail" />}
+          collapsedSignal={<StatusDot tone="destructive" label="PK-04 fail" />}
           side="right"
         >
           <CardHeader title="Inspect" meta="Tower B" />
           <div className="flex flex-col gap-4 px-4 pb-4">
-            <div className="rounded-control border border-ok/30 bg-ok-soft px-3 py-2 text-label text-ink-2">
-              <b className="text-ink">Scheme COMPLETE</b> · 0 rules unmet
-              <div className="mt-1 tnum text-muted">95.2 / 100 · 168 units · access checked</div>
+            <div className="rounded-md border border-success/30 bg-success-soft px-3 py-2 text-label text-foreground-2">
+              <b className="text-foreground">Scheme COMPLETE</b> · 0 rules unmet
+              <div className="mt-1 tnum text-muted-foreground">95.2 / 100 · 168 units · access checked</div>
             </div>
             <div className="flex flex-col gap-2.5">
               <SectionLabel>Tower B</SectionLabel>
@@ -444,16 +444,16 @@ export function Workbench() {
               <SectionLabel>Parking</SectionLabel>
               <Progress value={82} />
               <div className="flex items-center justify-between text-label">
-                <span className="text-muted">218 of 266 bays</span>
-                <span className="tnum font-medium text-danger">−48</span>
+                <span className="text-muted-foreground">218 of 266 bays</span>
+                <span className="tnum font-medium text-destructive">−48</span>
               </div>
-              <Badge tone="danger" dot>PK-04 fail</Badge>
+              <Badge tone="destructive" dot>PK-04 fail</Badge>
             </div>
           </div>
         </Card>
       </div>
 
-      <footer className="flex shrink-0 items-center gap-3 border-t border-line bg-surface-3 px-4 py-1.5 text-micro text-muted">
+      <footer className="flex shrink-0 items-center gap-3 border-t border-border bg-secondary px-4 py-1.5 text-micro text-muted-foreground">
         <span>Pack in-mh-mumbai · DCPR 2034</span>
         <span className="ml-auto">Targets met · Planning draft</span>
       </footer>
@@ -464,10 +464,10 @@ export function Workbench() {
 /* ── 컴포넌트 명세 ────────────────────────────────────────────────────────── */
 function Spec({ name, note, children }: { name: string; note: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-3 border-t border-line px-6 py-6">
+    <section className="flex flex-col gap-3 border-t border-border px-6 py-6">
       <div className="flex flex-wrap items-baseline gap-3">
-        <h3 className="text-title font-semibold text-ink">{name}</h3>
-        <p className="min-w-0 flex-1 text-body text-muted">{note}</p>
+        <h3 className="text-title font-semibold text-foreground">{name}</h3>
+        <p className="min-w-0 flex-1 text-body text-muted-foreground">{note}</p>
       </div>
       <div className="flex flex-wrap items-start gap-3">{children}</div>
     </section>
@@ -478,9 +478,9 @@ function ToastRow() {
   const { toast } = useToast();
   return (
     <>
-      <Button onClick={() => toast({ tone: "ok", title: "Scheme generated", description: "2 towers · 168 units · balance 1,302 m²" })}>Success</Button>
-      <Button onClick={() => toast({ tone: "warn", title: "Candidate 4 needs review", description: "Parking short by 48 bays — PK-04 fail", action: { label: "Inspect", altText: "Inspect candidate 4", onSelect: () => {} } })}>With action</Button>
-      <Button onClick={() => toast({ tone: "danger", title: "Export failed", description: "The jurisdiction pack has 3 unresolved placeholders.", duration: 0 })}>Sticky failure</Button>
+      <Button onClick={() => toast({ tone: "success", title: "Scheme generated", description: "2 towers · 168 units · balance 1,302 m²" })}>Success</Button>
+      <Button onClick={() => toast({ tone: "warning", title: "Candidate 4 needs review", description: "Parking short by 48 bays — PK-04 fail", action: { label: "Inspect", altText: "Inspect candidate 4", onSelect: () => {} } })}>With action</Button>
+      <Button onClick={() => toast({ tone: "destructive", title: "Export failed", description: "The jurisdiction pack has 3 unresolved placeholders.", duration: 0 })}>Sticky failure</Button>
       <Button variant="ghost" onClick={() => { for (let i = 1; i <= 5; i++) toast({ title: `Queued job ${i}` }); }}>Overflow the queue</Button>
     </>
   );
@@ -496,7 +496,7 @@ export function Gallery() {
   const stack = usePanelLayout(STACK_PANELS, { initial: { notes: true } });
 
   return (
-    <div className="min-h-dvh bg-chrome font-sans text-body text-ink">
+    <div className="min-h-dvh bg-background font-sans text-body text-foreground">
       <Workbench />
 
       <div className="mx-auto max-w-[1180px] px-4 pb-16">
@@ -512,14 +512,14 @@ export function Gallery() {
           </div>
 
           <Spec name="Button" note="variant × tone × size. asChild renders any element with the button's clothes.">
-            <Button variant="solid" tone="accent">Generate</Button>
+            <Button variant="solid" tone="primary">Generate</Button>
             <Button>Reload</Button>
             <Button variant="ghost">Cancel</Button>
-            <Button variant="solid" tone="danger">Delete parcel</Button>
-            <Button tone="danger">Clear</Button>
+            <Button variant="solid" tone="destructive">Delete parcel</Button>
+            <Button tone="destructive">Clear</Button>
             <Button loading>Solving</Button>
             <Button disabled>Unavailable</Button>
-            <Button variant="link" tone="accent" asChild><a href="#ref">As a link</a></Button>
+            <Button variant="link" tone="primary" asChild><a href="#ref">As a link</a></Button>
             <ButtonGroup>
               <Button size="sm">Plan</Button>
               <Button size="sm">Model</Button>
@@ -545,12 +545,12 @@ export function Gallery() {
           </Spec>
 
           <Spec name="ScrollArea" note="6px overlay scrollbars reserve no space. Scroll to reveal; after 500ms at rest, they fade out over 200ms.">
-            <ScrollArea className="h-[160px] w-full max-w-[400px] rounded-control border border-line" viewportProps={{ "aria-label": "Scroll area example", tabIndex: 0 }}>
-              <div className="min-w-[540px] divide-y divide-line">
+            <ScrollArea className="h-[160px] w-full max-w-[400px] rounded-md border border-border" viewportProps={{ "aria-label": "Scroll area example", tabIndex: 0 }}>
+              <div className="min-w-[540px] divide-y divide-border">
                 {Array.from({ length: 12 }, (_, index) => (
                   <div key={index} className="flex justify-between gap-8 px-4 py-3">
                     <span>Floor {index + 1}</span>
-                    <span className="text-muted">Residential · 4 homes · 320 m²</span>
+                    <span className="text-muted-foreground">Residential · 4 homes · 320 m²</span>
                   </div>
                 ))}
               </div>
@@ -559,19 +559,19 @@ export function Gallery() {
 
           <Spec name="Badge" note="State is never colour alone — a badge always carries its word. Dashed means to-be-verified.">
             <Badge>Draft</Badge>
-            <Badge tone="ok" dot>FSI-01 pass</Badge>
-            <Badge tone="warn" dot>3 unresolved</Badge>
-            <Badge tone="danger" dot>PK-04 fail</Badge>
-            <Badge tone="accent" provisional>TBV</Badge>
-            <span className="flex items-center gap-2 text-body text-muted"><StatusDot tone="danger" label="Failing" /> StatusDot needs a name</span>
+            <Badge tone="success" dot>FSI-01 pass</Badge>
+            <Badge tone="warning" dot>3 unresolved</Badge>
+            <Badge tone="destructive" dot>PK-04 fail</Badge>
+            <Badge tone="primary" provisional>TBV</Badge>
+            <span className="flex items-center gap-2 text-body text-muted-foreground"><StatusDot tone="destructive" label="Failing" /> StatusDot needs a name</span>
             <Kbd>⌘K</Kbd>
           </Spec>
 
           <Spec name="Loading" note="Spinner says running; progress says how far; skeleton holds the exact height the value will take.">
             <Spinner />
-            <Spinner size="lg" tone="accent" label="Solving" />
+            <Spinner size="lg" tone="primary" label="Solving" />
             <div className="w-[190px]"><Progress value={68} /></div>
-            <div className="w-[190px]"><Progress value={104} tone="danger" /></div>
+            <div className="w-[190px]"><Progress value={104} tone="destructive" /></div>
             <div className="w-[190px]"><Progress value={null} /></div>
             <Button onClick={() => { setLoading(true); window.setTimeout(() => setLoading(false), 2400); }}>Toggle skeleton</Button>
             <Card elevation="flat" pad="md" className="w-[240px]">
@@ -583,7 +583,7 @@ export function Gallery() {
                 ]} />
               )}
             </Card>
-            {loading ? <Skeleton shape="circle" h={28} /> : <StatusDot tone="ok" label="Ready" />}
+            {loading ? <Skeleton shape="circle" h={28} /> : <StatusDot tone="success" label="Ready" />}
           </Spec>
 
           <Spec name="Toast" note="One queue, auto-dismiss, a live region, and a cap that closes the oldest.">
@@ -593,8 +593,8 @@ export function Gallery() {
           <Spec name="Alert" note="Stays in the flow. An icon rides along so the meaning survives greyscale.">
             <div className="flex w-full flex-col gap-3">
               <Alert tone="info" title="Placeholder values in this pack">11 figures are marked TBV. The balance below is not a determination.</Alert>
-              <Alert tone="warn" title="Height limit reached" action={<Button size="sm">Show rule</Button>}>Full-storey height is 65.8 m against a 65 m limit — ALL-HT-04.</Alert>
-              <Alert tone="danger" title="Parking short by 48 bays">PK-04 fails. Increase basement levels or reduce the unit count.</Alert>
+              <Alert tone="warning" title="Height limit reached" action={<Button size="sm">Show rule</Button>}>Full-storey height is 65.8 m against a 65 m limit — ALL-HT-04.</Alert>
+              <Alert tone="destructive" title="Parking short by 48 bays">PK-04 fails. Increase basement levels or reduce the unit count.</Alert>
             </div>
           </Spec>
 
@@ -607,16 +607,16 @@ export function Gallery() {
                   <div className="flex flex-col gap-4">
                     <label className="flex items-center justify-between gap-4 text-body">Keep existing reservations<Switch defaultChecked /></label>
                     <label className="flex items-center justify-between gap-4 text-body">Revision label<Input defaultValue="r-03" className="w-[130px]" /></label>
-                    <Alert tone="warn" title="This replaces the saved layout" />
+                    <Alert tone="warning" title="This replaces the saved layout" />
                   </div>
                 </ModalBody>
                 <ModalFooter>
                   <Button variant="ghost">Cancel</Button>
-                  <Button variant="solid" tone="accent">Apply scheme</Button>
+                  <Button variant="solid" tone="primary">Apply scheme</Button>
                 </ModalFooter>
               </ModalContent>
             </Modal>
-            <Button tone="danger" onClick={() => setConfirm(true)}>Confirm dialog</Button>
+            <Button tone="destructive" onClick={() => setConfirm(true)}>Confirm dialog</Button>
             <Button onClick={() => setDrawer(true)}>Drawer</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild><Button>Menu</Button></DropdownMenuTrigger>
@@ -625,7 +625,7 @@ export function Gallery() {
                 <DropdownMenuItem shortcut="⌘D">Duplicate</DropdownMenuItem>
                 <DropdownMenuItem shortcut="⌘E">Export RVT</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem tone="danger" shortcut="⌫">Delete scheme</DropdownMenuItem>
+                <DropdownMenuItem tone="destructive" shortcut="⌫">Delete scheme</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Tooltip label="Tooltips flip the surface — dark on light" shortcut="?">
@@ -653,14 +653,14 @@ export function Gallery() {
                     key: "verdict",
                     header: "Verdict",
                     cell: r =>
-                      r.verdict === "pass" ? <Badge tone="ok" dot>pass</Badge>
-                      : r.verdict === "tbv" ? <Badge tone="warn" dot>2 TBV</Badge>
-                      : <Badge tone="danger" dot>PK-04</Badge>,
+                      r.verdict === "pass" ? <Badge tone="success" dot>pass</Badge>
+                      : r.verdict === "tbv" ? <Badge tone="warning" dot>2 TBV</Badge>
+                      : <Badge tone="destructive" dot>PK-04</Badge>,
                   },
                 ]}
               />
             </Card>
-            <p className="w-full text-label text-muted">
+            <p className="w-full text-label text-muted-foreground">
               Click a header to sort; a third click clears it so the original order (floor order, tower order)
               is always reachable. Click a row to select — it drives the canvas selection.
             </p>
@@ -687,9 +687,9 @@ export function Gallery() {
               <Table>
                 <Thead><Tr><Th>Tower</Th><Th numeric>Storeys</Th><Th numeric>Units</Th><Th numeric>Built-up</Th><Th>Verdict</Th></Tr></Thead>
                 <Tbody>
-                  <Tr><Td>A</Td><Td numeric>21</Td><Td numeric>84</Td><Td numeric>18,204</Td><Td><Badge tone="ok" dot>pass</Badge></Td></Tr>
-                  <Tr selected><Td>B</Td><Td numeric>21</Td><Td numeric>84</Td><Td numeric>18,914</Td><Td><Badge tone="warn" dot>2 TBV</Badge></Td></Tr>
-                  <Tr><Td>Podium</Td><Td numeric>2</Td><Td numeric>—</Td><Td numeric tone="danger">−48</Td><Td><Badge tone="danger" dot>PK-04</Badge></Td></Tr>
+                  <Tr><Td>A</Td><Td numeric>21</Td><Td numeric>84</Td><Td numeric>18,204</Td><Td><Badge tone="success" dot>pass</Badge></Td></Tr>
+                  <Tr selected><Td>B</Td><Td numeric>21</Td><Td numeric>84</Td><Td numeric>18,914</Td><Td><Badge tone="warning" dot>2 TBV</Badge></Td></Tr>
+                  <Tr><Td>Podium</Td><Td numeric>2</Td><Td numeric>—</Td><Td numeric tone="destructive">−48</Td><Td><Badge tone="destructive" dot>PK-04</Badge></Td></Tr>
                 </Tbody>
               </Table>
             </Card>
@@ -701,18 +701,18 @@ export function Gallery() {
                 <MediaCard
                   key={i}
                   media={<PlanThumb seed={i} />}
-                  mediaOverlay={<Badge tone={i === 1 ? "warn" : "ok"} dot>{i === 1 ? "2 TBV" : "pass"}</Badge>}
+                  mediaOverlay={<Badge tone={i === 1 ? "warning" : "success"} dot>{i === 1 ? "2 TBV" : "pass"}</Badge>}
                   eyebrow={`Candidate 0${i + 1}`}
-                  title={["Twin tower, north podium", "Triple slab, split core", "Paired slab, deck above"][i]!}
+                  title={["Twin tower, north podium", "Triple slab, split core", "Paired slab, deck above"][i]}
                   description={["Two towers on a shared podium; the north edge keeps the fire loop.", "Three slabs share one core bank; spacing is tightest at the west corner.", "Two long slabs with amenity on the deck; parking runs under both."][i]}
                   meta={<>
-                    <span className="tnum text-label text-muted">{[168, 186, 154][i]} units</span>
-                    <span className="text-disabled">·</span>
-                    <span className="tnum text-label text-muted">FSI {[3.28, 3.33, 3.02][i]!.toFixed(2)}</span>
+                    <span className="tnum text-label text-muted-foreground">{[168, 186, 154][i]} units</span>
+                    <span className="text-foreground-disabled">·</span>
+                    <span className="tnum text-label text-muted-foreground">FSI {[3.28, 3.33, 3.02][i]!.toFixed(2)}</span>
                   </>}
                   selected={picked === `c${i}`}
                   onSelect={() => setPicked(`c${i}`)}
-                  actions={<Button size="sm" variant={picked === `c${i}` ? "solid" : "outline"} tone={picked === `c${i}` ? "accent" : "neutral"}>{picked === `c${i}` ? "Applied" : "Apply"}</Button>}
+                  actions={<Button size="sm" variant={picked === `c${i}` ? "solid" : "outline"} tone={picked === `c${i}` ? "primary" : "neutral"}>{picked === `c${i}` ? "Applied" : "Apply"}</Button>}
                 />
               ))}
             </CardGrid>
@@ -726,7 +726,7 @@ export function Gallery() {
                 eyebrow="in-mh-mumbai · DCPR 2034"
                 title="Dahisar East, plot 44/2"
                 description="4,812 m² · redevelopment · FSI 3.33 with premium and TDR."
-                meta={<><Badge tone="ok" dot>pack verified</Badge><Badge tone="accent" provisional>TDR TBV</Badge></>}
+                meta={<><Badge tone="success" dot>pack verified</Badge><Badge tone="primary" provisional>TDR TBV</Badge></>}
                 actions={<><Button size="sm">Open</Button><Button size="sm" variant="ghost">Duplicate</Button></>}
                 onSelect={() => setPicked("plot-44")}
                 selected={picked === "plot-44"}
@@ -738,7 +738,7 @@ export function Gallery() {
                 mediaWidth="96px"
                 title="Keshavnagar, plot 12"
                 description="2,140 m² · outright · UDCPR 2020."
-                meta={<Badge tone="warn" dot>3 TBV</Badge>}
+                meta={<Badge tone="warning" dot>3 TBV</Badge>}
                 actions={<Button size="sm" variant="ghost">Open</Button>}
               />
             </div>
@@ -750,7 +750,7 @@ export function Gallery() {
                 eyebrow="Revision r-03"
                 title="Podium deck added"
                 description="Half of the first tower floor converted to amenity, per the podium rule."
-                meta={<span className="tnum text-label text-muted">2026-09-21 · jhlee</span>}
+                meta={<span className="tnum text-label text-muted-foreground">2026-09-21 · jhlee</span>}
                 actions={<Button size="sm" variant="ghost">Restore</Button>}
               />
               <MediaCard
@@ -758,7 +758,7 @@ export function Gallery() {
                 eyebrow="Revision r-02"
                 title="Tower B moved 1.4 m east"
                 description="Spacing check passed at 12.4 m after the move."
-                meta={<Badge tone="ok" dot>pass</Badge>}
+                meta={<Badge tone="success" dot>pass</Badge>}
                 actions={<Button size="sm" variant="ghost">Restore</Button>}
               />
               <MediaCard
@@ -766,7 +766,7 @@ export function Gallery() {
                 eyebrow="Revision r-01"
                 title="Initial massing"
                 description="Two towers, no podium, 21 storeys each."
-                meta={<span className="tnum text-label text-muted">2026-09-18 · jhlee</span>}
+                meta={<span className="tnum text-label text-muted-foreground">2026-09-18 · jhlee</span>}
               />
             </CardGrid>
           </Spec>
@@ -830,7 +830,7 @@ export function Gallery() {
                   </Alert>
                 </div>
               </Card>
-              <p className="text-label leading-relaxed text-muted">
+              <p className="text-label leading-relaxed text-muted-foreground">
                 Collapsing never removes the way back — a collapsed card keeps its header row or its
                 vertical tab, and that strip is the control that restores it. Content is hidden, never
                 unmounted, so scroll position and half-typed values survive the round trip.
@@ -845,12 +845,12 @@ export function Gallery() {
                 icon={<Icon d={ICON.site} />}
                 title="No parcel selected"
                 description="Pick a parcel from the pool or draw one, then the programme and layout become available."
-                action={<Button variant="solid" tone="accent">Choose a parcel</Button>}
+                action={<Button variant="solid" tone="primary">Choose a parcel</Button>}
               />
             </Card>
           </Spec>
 
-          <div id="ref" className="border-t border-line px-6 py-5">
+          <div id="ref" className="border-t border-border px-6 py-5">
             <Breadcrumb items={[{ label: "Design system", onSelect: () => {} }, { label: "Component reference" }]} />
           </div>
         </Card>

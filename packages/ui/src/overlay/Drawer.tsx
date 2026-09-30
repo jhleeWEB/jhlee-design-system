@@ -61,15 +61,15 @@ export function DrawerHeader({
   return (
     <div
       data-slot="drawer-header"
-      className={cn("flex shrink-0 items-start gap-4 border-b border-line px-6 py-5", className)}
+      className={cn("flex shrink-0 items-start gap-4 border-b border-border px-6 py-5", className)}
       {...rest}
     >
       <div className="min-w-0 flex-1">
-        <Dialog.Title className="m-0 text-title font-semibold leading-snug text-ink">
+        <Dialog.Title className="m-0 text-title font-semibold leading-snug text-foreground">
           {title}
         </Dialog.Title>
         {description ? (
-          <Dialog.Description className="mt-1 leading-relaxed text-muted">
+          <Dialog.Description className="mt-1 leading-relaxed text-muted-foreground">
             {description}
           </Dialog.Description>
         ) : null}
