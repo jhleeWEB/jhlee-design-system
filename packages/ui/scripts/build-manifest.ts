@@ -333,7 +333,9 @@ function propsOf(
     });
   }
   const inherits: string[] = [];
-  const pushInherit = (text: string): void => {
+  const pushInherit = (raw: string): void => {
+    // 소스의 줄바꿈을 지운다 — Prettier 가 `Omit<…>` 를 여러 줄로 접으면(printWidth 110, C4) 문서에 줄바꿈이 새어 포맷만으로 manifest:check 가 깨졌다(실측).
+    const text = raw.replace(/\s+/g, " ").replace(/< /g, "<").replace(/ >/g, ">");
     if (!/VariantProps</.test(text) && !inherits.includes(text)) inherits.push(text);
   };
   const constituents = propsType.isIntersection() ? propsType.types : [propsType];
