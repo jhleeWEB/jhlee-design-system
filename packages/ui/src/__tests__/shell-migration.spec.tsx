@@ -21,7 +21,7 @@ describe("기존 셸의 DS 전환", () => {
   });
 
   it("그룹을 접어도 작성 중 입력과 DOM을 보존한다", () => {
-    const { container } = render(<DesignSystemProvider><PanelGroup title="Height" echo="Ten floors above ground"><input aria-label="Draft" defaultValue="10" /></PanelGroup></DesignSystemProvider>);
+    render(<DesignSystemProvider><PanelGroup title="Height" echo="Ten floors above ground"><input aria-label="Draft" defaultValue="10" /></PanelGroup></DesignSystemProvider>);
     expect(screen.getByTitle("Ten floors above ground").textContent).toBe("Ten floors above ground");
     const input = screen.getByRole("textbox") as HTMLInputElement;
     fireEvent.change(input, { target: { value: "24" } });

@@ -1,7 +1,7 @@
 {
   "extends": "@buildos/typescript-config/base.json",
   "compilerOptions": {
-    // 스토리·Storybook 설정·VRT 는 패키지 소스가 아니다 — 빌드 tsconfig 와 app-profile 의 include 밖에 두고 여기서만 검사한다.
+    // 스토리·Storybook 설정·VRT 는 패키지 소스가 아니다 — 빌드 tsconfig(tsconfig.json)의 include 밖에 두고 여기서만 검사한다.
     // 안 그러면 stories 가 tsdown dts 로 새어 패키지에 실리거나(계획 §2.5-e), 소스 프로필이 storybook 타입을 요구하게 된다.
     // 엄격도는 tsconfig.json(가장 엄격한 소비자)과 같다 — 스토리는 소비자가 쓰는 방식 그대로여야 본보기가 된다.
     "types": ["node"],

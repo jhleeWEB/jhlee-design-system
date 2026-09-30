@@ -2,12 +2,11 @@
   "extends": "@buildos/typescript-config/base.json",
   "compilerOptions": {
     "types": [],
-    // 앱 경계를 넘는 표면은 **가장 엄격한 소비자**의 프로필로 검사한다.
-    // 이 패키지는 소스로 소비되므로 각 앱의 tsconfig로도 한 번씩 더 컴파일된다 —
-    // DataCenter·FulfillmentCenter가 kaufland보다 엄격하니, 그들이 보는 파일은 여기서
-    // 미리 그 프로필을 통과해야 소비자 쪽에서 뒤늦게 터지지 않는다.
-    // 화면 컴포넌트라 DOM 이 필요하다 — 기하 패키지의 좁은 lib 를 그대로 쓰면
-    // 이벤트 타깃이 해석되지 않는다.
+    // 패키지 소스는 **가장 엄격한 소비자**의 프로필 한 벌로만 검사한다(계획 §2.4 A2).
+    // 예전에는 include 가 3파일 계약 목록이고 나머지를 tsconfig.app-profile.json 이 느슨하게 봤는데, 배럴(index.ts)이
+    // 그 3파일에 들어 있어 실제로는 src 전량(44파일)이 이미 이 엄격 프로필을 통과하고 있었다(--listFilesOnly 실측, #11).
+    // 느슨한 프로필은 하는 일이 없었으므로 지웠다 — 여기 통과하는 파일만 소비자가 어떤 tsconfig 로 import 해도 안전하다.
+    // 화면 컴포넌트라 DOM 이 필요하다 — 기하 패키지의 좁은 lib 를 그대로 쓰면 이벤트 타깃이 해석되지 않는다.
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
@@ -16,10 +15,8 @@
     "exactOptionalPropertyTypes": true,
     "verbatimModuleSyntax": true
   },
-  // 목록이 곧 계약이다: **여기 있는 파일만 엄격한 앱이 import해도 안전하다.**
-  // 나머지는 tsconfig.app-profile.json이 kaufland 프로필로 검사한다 — 그 코드는 느슨한
-  // 설정에서 자랐고(noUncheckedIndexedAccess 위반 151건), 전용 단위 테스트 없이 기계적으로
-  // 뜯는 것은 파이프라인 스펙으로만 간접 검증되는 코드에 낼 위험이 아니다.
-  // 하나씩 손보면서 이 목록으로 옮긴다. 옮기기 전에는 엄격한 앱이 배럴을 import하면 안 된다.
-  "include": ["src/legacy/shell.tsx", "src/legacy/controls.tsx", "src/index.ts"]
+  "include": ["src"],
+  // 테스트·아키텍처 가드는 tsconfig.test.json 이, 스토리는 tsconfig.stories.json 이 같은 엄격도로 검사한다.
+  // 여기서 빼는 이유는 tsdown dts 가 이 tsconfig 를 읽기 때문이다 — 섞이면 스펙·스토리가 d.ts 로 새어 패키지에 실린다.
+  "exclude": ["src/__tests__", "src/__arch__", "src/**/*.stories.tsx"]
 }

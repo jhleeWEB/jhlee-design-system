@@ -24,11 +24,15 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   src/legacy/                `./legacy` 서브패스 — 3열 작업대 셸·컨트롤·DesignSystemProvider·shell.css(#10). 격리·동결: ESLint ignores,
                              래칫 제외. 루트 배럴은 같은 이름을 지정자별 @deprecated 로 한 마이너 재export 하고 다음 마이너에 `feat!:` 로 지운다
   src/**/*.stories.tsx       컴포넌트 옆 스토리 — 3스토리 계약(Default · Variants · ThemeContrast, `stories-contract.spec` 이 검사, 본보기 Button)
-  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트, 16 스펙)
+  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트, 15 스펙). `tokens/`(postcss 토큰 모델 + 사다리·참조·다크 동일·해석 맵 스냅샷)와
+                             `package/`(exports · "use client" 집합 · 공개 API 목록)는 `arch` 프로젝트(node)가 돈다(#11)
+  src/__arch__/              금지 패턴 래칫(`forbidden-patterns.spec` — 파일별 횟수 기준선, 늘면 실패·줄면 낮춰야 통과) + 소스 그래프. `arch` 프로젝트(#11)
   .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
   stories/                   페이지 스토리 — `Pages/Gallery`(옛 apps/ds-gallery 통째, Light·Dark) · `Pages/Workbench`(제품 화면 복제) · ThemePair · Matrix
   vrt/                       Playwright 시각 회귀 — storybook-static/index.json 의 `vrt` 태그 스토리 × 라이트/다크. 기준선은 도커로만(scripts/vrt-update.sh)
-  tsconfig.stories.json      stories·.storybook·vrt 의 엄격 검사. 빌드·app-profile 밖에 두어 d.ts 로 새지 않게 한다
+  tsconfig.json              엄격 프로필 한 벌(src 전량, 스펙·스토리 제외) — tsdown dts 가 읽는다. app-profile(느슨한 2차 검사)은 하는 일이 없어 지웠다(#11)
+  tsconfig.test.json         스펙·__arch__ 를 같은 엄격도로 검사. `exclude` 가 래칫(줄어들기만 한다, 오늘 비어 있다)
+  tsconfig.stories.json      stories·.storybook·vrt 의 엄격 검사. 빌드 tsconfig 밖에 두어 d.ts 로 새지 않게 한다
   tsdown.config.ts           unbundle ESM + d.ts + CSS 복사. banner 로 "use client" 를 붙이지 않는다 — 파일 첫 줄에 직접 둔다
 packages/typescript-config/  tsconfig 프리셋(@buildos/typescript-config, 발행 안 함)
 scripts/vrt-update.sh        VRT 기준선 갱신 — CI 와 같은 playwright:v1.63.0-noble 이미지 안에서만(macOS PNG 는 기준선이 아니다)
@@ -68,15 +72,21 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 pnpm install           # pnpm 10, Node 24
 pnpm storybook         # 카탈로그 (6006) — Pages/Workbench · Pages/Gallery 로 캔버스/크롬 경계와 다크를 눈으로 확인
 pnpm storybook:build   # storybook-static (--test) — VRT 와 CI storybook job 의 입력
-pnpm typecheck         # 엄격 프로필 + app 프로필 + stories 프로필
+pnpm typecheck         # 엄격 프로필(src) + test 프로필(스펙·__arch__) + stories 프로필
 pnpm lint              # ESLint 10 — 기준선(eslint-suppressions.json) 밖 신규 위반만 실패
-pnpm test              # vitest unit 프로젝트(jsdom) + packages/eslint-rules 의 RuleTester
+pnpm test              # vitest unit(jsdom) + arch(node: 래칫·토큰·패키지 계약) 프로젝트 + packages/eslint-rules 의 RuleTester
 pnpm build             # tsdown → packages/ui/dist
 pnpm verify            # typecheck + lint + test + build — PR 전 한 번
 pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(Phase A 는 'todo')
 pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
 cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics legacy   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
 ```
+
+**래칫 스펙.** `src/__arch__/forbidden-patterns.spec.ts` 는 토큰 밖 리터럴(tsx 대괄호 px/ms · Tailwind 기본 사다리 · CSS px/hex/ms · JS ms)·
+`forwardRef`·비-cva 삼항·불리언 data 속성·도메인 어휘를 **파일별 횟수 기준선**으로 붙든다. 실제 횟수가 기준선과 같아야 통과한다 —
+늘면 새 위반이고, 줄이면 같은 PR 에서 기준선을 낮춘다(0 이면 줄을 지운다). 토큰 쪽도 같은 모양이다: `references.spec` 의
+`KNOWN_INLINE_LITERALS`(`@theme inline` 의 리터럴 4개)와 미참조 원시 18개 스냅샷, `tokens-snapshot.spec` 의 해석 맵(Phase B 생성기의 비교
+기준 — 토큰 값을 바꾸는 PR 만 `-u` 로 갱신한다), `rsc-directives.spec` 의 `"use client"` 파일 목록, `public-api.spec` 의 배럴 export 목록.
 
 **린트 기준선.** 루트 `eslint.config.js`(플러그인 + 로컬 규칙 `ds/*`, `packages/eslint-rules/`)의 모든 규칙은 error 이고,
 첫 실행의 위반은 `eslint-suppressions.json`(ESLint bulk suppressions)이 덮는다 — 계획의 «warn + 기준선» 은 suppressions 가
