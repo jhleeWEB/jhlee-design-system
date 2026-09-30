@@ -11,7 +11,7 @@ import { cn } from "../cn";
  * 이 구분을 흐리면 사용자가 「저장을 눌러야 하나」를 매번 다시 판단해야 한다. */
 
 const box = [
-  "peer flex shrink-0 items-center justify-center border transition-colors duration-100",
+  "peer flex shrink-0 items-center justify-center border transition-colors duration-fast",
   "rounded-chip border-line-strong bg-surface-2",
   "data-[state=checked]:border-accent data-[state=checked]:bg-accent data-[state=checked]:text-accent-ink",
   "data-[state=indeterminate]:border-accent data-[state=indeterminate]:bg-accent data-[state=indeterminate]:text-accent-ink",
@@ -80,7 +80,7 @@ export const Switch = forwardRef<HTMLButtonElement, React.ComponentPropsWithoutR
       data-slot="switch"
       className={cn(
         "peer inline-flex h-9 w-16 shrink-0 items-center rounded-full border border-line-strong bg-line-strong p-px",
-        "transition-colors duration-100 motion-reduce:transition-none",
+        "transition-colors duration-fast motion-reduce:transition-none",
         "data-[state=checked]:border-accent data-[state=checked]:bg-accent",
         "focus-visible:focus-ring focus-visible:outline-none",
         "disabled:pointer-events-none disabled:opacity-45",
@@ -92,7 +92,7 @@ export const Switch = forwardRef<HTMLButtonElement, React.ComponentPropsWithoutR
       <RadixSwitch.Thumb
         className={cn(
           "block size-7 rounded-full bg-surface shadow-chip",
-          "transition-transform duration-100 motion-reduce:transition-none",
+          "transition-transform duration-fast motion-reduce:transition-none",
           "data-[state=checked]:translate-x-7",
         )}
       />

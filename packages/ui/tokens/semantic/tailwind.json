@@ -1,13 +1,11 @@
 {
-  "$description": "Tailwind @theme inline 매핑 — 모드가 갈리는 값은 반드시 var(--chrome-*|--canvas-*) 참조(혼용 규칙 ④). 리터럴 넷(transparent · current · white · black)은 references.spec 의 KNOWN_INLINE_LITERALS 와 같고 Phase B 가 지운다. 이름은 오늘의 이례(--color-chrome ← chrome.bg · --color-tooltip ← chrome.tooltip-bg)를 그대로 적는다 — 기계적 대응은 B5.",
+  "$description": "Tailwind @theme inline 매핑 — 모드가 갈리는 값은 반드시 var(--chrome-*|--canvas-*) 참조(혼용 규칙 ④). 리터럴은 0 이다(#18): white·black 은 모드와 무관하게 고정인 캔버스 흰색·잉크를 가리키고, transparent·current 는 Tailwind 4 가 --color-* 없이도 내는 키워드라(bg-transparent · text-current, 컴파일 실측) 적지 않는다. 이름은 오늘의 이례(--color-chrome ← chrome.bg · --color-tooltip ← chrome.tooltip-bg)를 그대로 적는다 — 기계적 대응은 B5.",
   "$extensions": { "sds": { "scope": "theme-inline" } },
   "color": {
     "$type": "color",
     "$extensions": { "sds": { "reset": true } },
-    "transparent": { "$value": "transparent" },
-    "current": { "$value": "currentColor" },
-    "white": { "$value": "#ffffff" },
-    "black": { "$value": "#1a1a1a" },
+    "white": { "$value": "{canvas.bg}", "$description": "모드와 무관한 흰색 — solid 버튼의 글자처럼 다크에서도 희어야 하는 자리. 캔버스 흰색과 같은 고정값이다." },
+    "black": { "$value": "{canvas.ink}", "$description": "모드와 무관한 검정 — 캔버스 잉크와 같은 고정값." },
     "canvas": { "$value": "{canvas.bg}" },
     "canvas-surface": { "$value": "{canvas.surface}" },
     "canvas-line": { "$value": "{canvas.line}" },
@@ -39,16 +37,25 @@
     "tooltip": { "$value": "{chrome.tooltip-bg}" },
     "tooltip-ink": { "$value": "{chrome.tooltip-ink}" },
     "ok": { "$value": "{chrome.ok}" },
-    "warn": { "$value": "{chrome.warn}" },
-    "danger": { "$value": "{chrome.danger}" },
+    "ok-hover": { "$value": "{chrome.ok-hover}" },
+    "ok-ink": { "$value": "{chrome.ok-ink}" },
     "ok-soft": { "$value": "{chrome.ok-soft}" },
+    "ok-line": { "$value": "{chrome.ok-line}" },
+    "warn": { "$value": "{chrome.warn}" },
+    "warn-hover": { "$value": "{chrome.warn-hover}" },
+    "warn-ink": { "$value": "{chrome.warn-ink}" },
     "warn-soft": { "$value": "{chrome.warn-soft}" },
-    "danger-soft": { "$value": "{chrome.danger-soft}" }
+    "warn-line": { "$value": "{chrome.warn-line}" },
+    "danger": { "$value": "{chrome.danger}" },
+    "danger-hover": { "$value": "{chrome.danger-hover}" },
+    "danger-ink": { "$value": "{chrome.danger-ink}" },
+    "danger-soft": { "$value": "{chrome.danger-soft}" },
+    "danger-line": { "$value": "{chrome.danger-line}" }
   },
   "font": {
     "$type": "fontFamily",
-    "$description": "Instrument Sans(제목에서 성격이 나오고 13px 본문에서 버틴다) · Geist Mono(tabular 기본). 한글 폴백은 base 의 스택을 잇는다.",
-    "sans": { "$value": "\"Instrument Sans\", {sans}" },
-    "mono": { "$value": "\"Geist Mono\", {mono}" }
+    "$description": "Instrument Sans(제목에서 성격이 나오고 13px 본문에서 버틴다) · Geist Mono(tabular 기본). 한글 폴백은 --font-stack-* 을 잇는다.",
+    "sans": { "$value": "\"Instrument Sans\", {font-stack.sans}" },
+    "mono": { "$value": "\"Geist Mono\", {font-stack.mono}" }
   }
 }

@@ -1,13 +1,13 @@
 /* Radix Presence가 서로 다른 애니메이션 이름으로 퇴장을 감지한다.
-   퇴장 180ms는 ToastProvider의 큐 정리 유예 240ms 안에 끝나야 한다. */
+   길이는 토큰(--duration-toast-*)이다 — JS 의 큐 정리 유예(MOTION.toastQueueGraceMs 240)가 같은 정본에서 나오므로 퇴장이 그 안에 끝난다(motion.spec). */
 .ds-toast { --toast-offset-y: 12px; }
 .ds-toast[data-position^="top"] { --toast-offset-y: -12px; }
 .ds-toast[data-state="open"] {
-  animation: ds-toast-enter 220ms var(--ease-out-quick, ease-out) both;
+  animation: ds-toast-enter var(--duration-toast-enter) var(--ease-out-quick, ease-out) both;
 }
 .ds-toast[data-state="closed"] {
   pointer-events: none;
-  animation: ds-toast-exit 180ms ease-in both;
+  animation: ds-toast-exit var(--duration-toast-exit) ease-in both;
 }
 .ds-toast[data-state="open"][data-swipe="move"] {
   animation: none;
@@ -16,9 +16,9 @@
 .ds-toast[data-state="open"][data-swipe="cancel"] {
   animation: none;
   transform: translate3d(0, 0, 0);
-  transition: transform 180ms var(--ease-out-quick, ease-out);
+  transition: transform var(--duration-toast-exit) var(--ease-out-quick, ease-out);
 }
-.ds-toast[data-swipe="end"] { animation: ds-toast-swipe-exit 180ms ease-out both; }
+.ds-toast[data-swipe="end"] { animation: ds-toast-swipe-exit var(--duration-toast-exit) ease-out both; }
 
 @keyframes ds-toast-enter {
   from { opacity: 0; transform: translate3d(0, var(--toast-offset-y), 0); }

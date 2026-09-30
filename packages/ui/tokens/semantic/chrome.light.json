@@ -1,5 +1,5 @@
 {
-  "$description": "크롬 — UI 가 사는 면, 라이트 기준값. 값은 전부 원시 참조여야 하지만 accent-ink · overlay · selection-fill · scrim 넷은 오늘 리터럴이다(B4 가 원시로 옮긴다).",
+  "$description": "크롬 — UI 가 사는 면, 라이트 기준값. 판정 3색은 톤마다 다섯 역할(DEFAULT · hover · ink · soft · line)을 원시 사다리에서 고른다(#18) — 역할의 뜻과 대비 근거는 primitive/color.json 의 각 단에 있다. accent-ink · overlay · selection-fill · scrim 넷은 아직 리터럴이다.",
   "$extensions": { "sds": { "scope": "chrome" } },
   "chrome": {
     "$type": "color",
@@ -25,11 +25,20 @@
     "focus": { "$value": "{palette.azure.500}" },
     "tooltip-bg": { "$value": "{palette.cool.900}", "$description": "툴팁만 면을 뒤집는다 — «일시적이고 내 것이 아니다»." },
     "tooltip-ink": { "$value": "{palette.cool.25}" },
-    "ok": { "$value": "{ok}" },
-    "warn": { "$value": "{warn}" },
-    "danger": { "$value": "{danger}" },
-    "ok-soft": { "$value": "{ok-pale}" },
-    "warn-soft": { "$value": "{warn-pale}" },
-    "danger-soft": { "$value": "{danger-pale}" }
+    "ok": { "$value": "{palette.moss.500}", "$description": "판정 «통과» — 채움(solid) · 글자(text)." },
+    "ok-hover": { "$value": "{palette.moss.700}", "$description": "solid 의 hover — 글자(ink) 대비가 4.5:1 위에 남도록 어둡힌다." },
+    "ok-ink": { "$value": "{palette.cool.0}", "$description": "solid 위의 글자 — 흰색 4.78:1." },
+    "ok-soft": { "$value": "{palette.moss.50}", "$description": "옅은 면 — 배지 · 알림 바탕." },
+    "ok-line": { "$value": "{palette.moss.400}", "$description": "테두리 — 면 위 3:1(비텍스트 경계). 옛 border-ok/35 · /40 혼용을 이것 하나로." },
+    "warn": { "$value": "{palette.amber.500}" },
+    "warn-hover": { "$value": "{palette.amber.600}" },
+    "warn-ink": { "$value": "{palette.cool.950}", "$description": "amber 위의 흰 글자는 3.79:1 — 어두운 글자(4.91:1)만 4.5 를 넘는다." },
+    "warn-soft": { "$value": "{palette.amber.50}" },
+    "warn-line": { "$value": "{palette.amber.400}" },
+    "danger": { "$value": "{palette.rust.500}" },
+    "danger-hover": { "$value": "{palette.rust.700}" },
+    "danger-ink": { "$value": "{palette.cool.0}", "$description": "흰색 5.18:1." },
+    "danger-soft": { "$value": "{palette.rust.50}" },
+    "danger-line": { "$value": "{palette.rust.300}" }
   }
 }

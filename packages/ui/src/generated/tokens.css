@@ -2,38 +2,6 @@
  * 정본: packages/ui/tokens/ 의 DTCG JSON → tokens/build.mjs · 재생성 `pnpm tokens:build` · 최신성 `pnpm tokens:check` (#15) */
 
 :root {
-  /* base.json */
-  --black: #1a1a1a;
-  --dark: #2a2a2a;
-  --charcoal: #3a3a3a;
-  --mid: #6b6b6b;
-  --steel: #8a8a8a;
-  --silver: #ababab;
-  --light: #d5d5d5;
-  --pale: #ebebeb;
-  --offwhite: #f4f4f4;
-  --white: #ffffff;
-  --ink: var(--black);
-  --ink-2: var(--charcoal);
-  --muted: var(--mid);
-  --line: #dcdcdc;
-  --line-strong: #bfbfbf;
-  --bg: var(--offwhite);
-  --surface: var(--white);
-  --surface-2: #fafafa;
-  --ok: #17834d;
-  --warn: #b87409;
-  --danger: #c2410c;
-  --ok-pale: #e9f4ee;
-  --warn-pale: #fdf3e2;
-  --danger-pale: #fbeae3;
-  --panel-w: 300px;
-  --inspect-w: 340px;
-  --topbar-h: 56px;
-  --gap: 1px;
-  --sans: "Noto Sans KR", Pretendard, "Apple SD Gothic Neo", system-ui, -apple-system, sans-serif;
-  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-
   /* primitive/color.json */
   --palette-cool-0: #ffffff;
   --palette-cool-25: #f9fbfc;
@@ -67,53 +35,106 @@
   --palette-mono-800: #27272a;
   --palette-mono-900: #18181b;
   --palette-mono-950: #09090b;
-  --color-cool-0: var(--palette-cool-0);
-  --color-cool-25: var(--palette-cool-25);
-  --color-cool-50: var(--palette-cool-50);
-  --color-cool-100: var(--palette-cool-100);
-  --color-cool-150: var(--palette-cool-150);
-  --color-cool-200: var(--palette-cool-200);
-  --color-cool-300: var(--palette-cool-300);
-  --color-cool-400: var(--palette-cool-400);
-  --color-cool-500: var(--palette-cool-500);
-  --color-cool-600: var(--palette-cool-600);
-  --color-cool-700: var(--palette-cool-700);
-  --color-cool-800: var(--palette-cool-800);
-  --color-cool-900: var(--palette-cool-900);
-  --color-cool-950: var(--palette-cool-950);
-  --color-azure-50: var(--palette-azure-50);
-  --color-azure-100: var(--palette-azure-100);
-  --color-azure-200: var(--palette-azure-200);
-  --color-azure-500: var(--palette-azure-500);
-  --color-azure-600: var(--palette-azure-600);
-  --color-azure-700: var(--palette-azure-700);
-  --color-mono-0: var(--palette-mono-0);
-  --color-mono-50: var(--palette-mono-50);
-  --color-mono-100: var(--palette-mono-100);
-  --color-mono-200: var(--palette-mono-200);
-  --color-mono-300: var(--palette-mono-300);
-  --color-mono-400: var(--palette-mono-400);
-  --color-mono-500: var(--palette-mono-500);
-  --color-mono-600: var(--palette-mono-600);
-  --color-mono-700: var(--palette-mono-700);
-  --color-mono-800: var(--palette-mono-800);
-  --color-mono-900: var(--palette-mono-900);
-  --color-mono-950: var(--palette-mono-950);
+  --palette-gray-0: #ffffff;
+  --palette-gray-50: #fafafa;
+  --palette-gray-100: #f4f4f4;
+  --palette-gray-150: #ebebeb;
+  --palette-gray-200: #dcdcdc;
+  --palette-gray-250: #d5d5d5;
+  --palette-gray-300: #bfbfbf;
+  --palette-gray-400: #ababab;
+  --palette-gray-500: #8a8a8a;
+  --palette-gray-600: #6b6b6b;
+  --palette-gray-700: #3a3a3a;
+  --palette-gray-800: #2a2a2a;
+  --palette-gray-900: #1a1a1a;
+  --palette-moss-50: #e9f4ee;
+  --palette-moss-200: #61bc8d;
+  --palette-moss-300: #4cb37e;
+  --palette-moss-400: #1eaa64;
+  --palette-moss-500: #17834d;
+  --palette-moss-600: #317351;
+  --palette-moss-700: #12693e;
+  --palette-moss-900: #12261c;
+  --palette-amber-50: #fdf3e2;
+  --palette-amber-200: #dea957;
+  --palette-amber-300: #d99c3d;
+  --palette-amber-400: #d0830a;
+  --palette-amber-500: #b87409;
+  --palette-amber-600: #b16f09;
+  --palette-amber-700: #895e1b;
+  --palette-amber-900: #2a2113;
+  --palette-rust-50: #fbeae3;
+  --palette-rust-200: #e68a67;
+  --palette-rust-300: #f26c35;
+  --palette-rust-400: #e2764d;
+  --palette-rust-500: #c2410c;
+  --palette-rust-600: #ad441c;
+  --palette-rust-700: #a5370a;
+  --palette-rust-900: #2b1913;
+
+  /* primitive/dimension.json */
+  --size-icon-sm: 12px;
+  --size-icon-md: 16px;
+  --size-icon-lg: 20px;
+  --size-control-sm: 30px;
+  --size-control-md: 36px;
+  --size-control-lg: 44px;
+  --size-rail: 64px;
+  --size-strip: 36px;
+  --size-scrollbar: 6px;
+  --space-hairline: 1px;
+  --space-card-gap: 12px;
+  --space-panel-inset: 12px;
+  --space-card-inset: 16px;
+
+  /* primitive/motion.json */
+  --duration-instant: 0ms;
+  --duration-fast: 100ms;
+  --duration-base: 150ms;
+  --duration-slow: 200ms;
+
+  /* primitive/typography.json */
+  --font-stack-sans: "Noto Sans KR", Pretendard, "Apple SD Gothic Neo", system-ui, -apple-system, sans-serif;
+  --font-stack-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
 
   /* semantic/canvas.json */
-  --canvas-bg: #ffffff;
+  --canvas-bg: var(--palette-gray-0);
   --canvas-plan-bg: #f4f4f2;
-  --canvas-surface: #fafafa;
-  --canvas-line: #dcdcdc;
-  --canvas-line-strong: #bfbfbf;
-  --canvas-ink: #1a1a1a;
-  --canvas-ink-2: #3a3a3a;
-  --canvas-muted: #6b6b6b;
-  --canvas-grid: #ebebeb;
+  --canvas-surface: var(--palette-gray-50);
+  --canvas-line: var(--palette-gray-200);
+  --canvas-line-strong: var(--palette-gray-300);
+  --canvas-ink: var(--palette-gray-900);
+  --canvas-ink-2: var(--palette-gray-700);
+  --canvas-muted: var(--palette-gray-600);
+  --canvas-grid: var(--palette-gray-150);
+
+  /* semantic/layer.json */
+  --layer-raised: 1;
+  --layer-sticky: 10;
+  --layer-scrim: 40;
+  --layer-modal: 41;
+  --layer-popover: 50;
+  --layer-toast: 60;
+  --layer-tooltip: 70;
 
   /* component/collapse.json */
-  --motion-collapse-duration: 200ms;
+  --duration-collapse: var(--duration-slow);
+  --motion-collapse-duration: var(--duration-collapse);
   --motion-collapse-easing: var(--ease-out-quick);
+
+  /* component/scroll.json */
+  --duration-scrollbar-hide-delay: 500ms;
+  --duration-scrollbar-fade: 200ms;
+
+  /* component/toast.json */
+  --duration-toast-enter: 220ms;
+  --duration-toast-exit: 180ms;
+  --duration-toast-queue-grace: 240ms;
+  --duration-toast-default: 4200ms;
+
+  /* component/tooltip.json */
+  --duration-tooltip-delay: 350ms;
 }
 
 /* 크롬 — 라이트가 기준값. [data-theme="light"] 를 함께 두는 이유: 전역이 다크일 때 라이트 서브트리가 라이트로 돌아오려면 값이 그 요소에 직접 선언돼야 한다. */
@@ -141,12 +162,21 @@
   --chrome-focus: var(--palette-azure-500);
   --chrome-tooltip-bg: var(--palette-cool-900);
   --chrome-tooltip-ink: var(--palette-cool-25);
-  --chrome-ok: var(--ok);
-  --chrome-warn: var(--warn);
-  --chrome-danger: var(--danger);
-  --chrome-ok-soft: var(--ok-pale);
-  --chrome-warn-soft: var(--warn-pale);
-  --chrome-danger-soft: var(--danger-pale);
+  --chrome-ok: var(--palette-moss-500);
+  --chrome-ok-hover: var(--palette-moss-700);
+  --chrome-ok-ink: var(--palette-cool-0);
+  --chrome-ok-soft: var(--palette-moss-50);
+  --chrome-ok-line: var(--palette-moss-400);
+  --chrome-warn: var(--palette-amber-500);
+  --chrome-warn-hover: var(--palette-amber-600);
+  --chrome-warn-ink: var(--palette-cool-950);
+  --chrome-warn-soft: var(--palette-amber-50);
+  --chrome-warn-line: var(--palette-amber-400);
+  --chrome-danger: var(--palette-rust-500);
+  --chrome-danger-hover: var(--palette-rust-700);
+  --chrome-danger-ink: var(--palette-cool-0);
+  --chrome-danger-soft: var(--palette-rust-50);
+  --chrome-danger-line: var(--palette-rust-300);
   color-scheme: light;
 }
 
@@ -175,12 +205,21 @@
     --chrome-focus: #6fb0ff;
     --chrome-tooltip-bg: #eaedf3;
     --chrome-tooltip-ink: #0e1116;
-    --chrome-ok: #4cb37e;
-    --chrome-warn: #d99c3d;
-    --chrome-danger: #e2764d;
-    --chrome-ok-soft: #12261c;
-    --chrome-warn-soft: #2a2113;
-    --chrome-danger-soft: #2b1913;
+    --chrome-ok: var(--palette-moss-300);
+    --chrome-ok-hover: var(--palette-moss-200);
+    --chrome-ok-ink: var(--palette-cool-950);
+    --chrome-ok-soft: var(--palette-moss-900);
+    --chrome-ok-line: var(--palette-moss-600);
+    --chrome-warn: var(--palette-amber-300);
+    --chrome-warn-hover: var(--palette-amber-200);
+    --chrome-warn-ink: var(--palette-cool-950);
+    --chrome-warn-soft: var(--palette-amber-900);
+    --chrome-warn-line: var(--palette-amber-700);
+    --chrome-danger: var(--palette-rust-400);
+    --chrome-danger-hover: var(--palette-rust-200);
+    --chrome-danger-ink: var(--palette-cool-950);
+    --chrome-danger-soft: var(--palette-rust-900);
+    --chrome-danger-line: var(--palette-rust-600);
     color-scheme: dark;
   }
 }
@@ -210,17 +249,26 @@
   --chrome-focus: #6fb0ff;
   --chrome-tooltip-bg: #eaedf3;
   --chrome-tooltip-ink: #0e1116;
-  --chrome-ok: #4cb37e;
-  --chrome-warn: #d99c3d;
-  --chrome-danger: #e2764d;
-  --chrome-ok-soft: #12261c;
-  --chrome-warn-soft: #2a2113;
-  --chrome-danger-soft: #2b1913;
+  --chrome-ok: var(--palette-moss-300);
+  --chrome-ok-hover: var(--palette-moss-200);
+  --chrome-ok-ink: var(--palette-cool-950);
+  --chrome-ok-soft: var(--palette-moss-900);
+  --chrome-ok-line: var(--palette-moss-600);
+  --chrome-warn: var(--palette-amber-300);
+  --chrome-warn-hover: var(--palette-amber-200);
+  --chrome-warn-ink: var(--palette-cool-950);
+  --chrome-warn-soft: var(--palette-amber-900);
+  --chrome-warn-line: var(--palette-amber-700);
+  --chrome-danger: var(--palette-rust-400);
+  --chrome-danger-hover: var(--palette-rust-200);
+  --chrome-danger-ink: var(--palette-cool-950);
+  --chrome-danger-soft: var(--palette-rust-900);
+  --chrome-danger-line: var(--palette-rust-600);
   color-scheme: dark;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --motion-collapse-duration: 0ms;
+    --duration-collapse: 0ms;
   }
 }

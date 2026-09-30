@@ -1,9 +1,11 @@
 {
-  "$description": "스크롤바 — 실제 활동이 멈추고 500ms 뒤 200ms 동안 사라진다(CLAUDE.md 의 ScrollArea 계약). 오늘은 TS 상수로만 나간다. theme.css 의 opacity 200ms 는 B3 가 참조로 바꾼다.",
-  "$extensions": { "sds": { "scope": "ts" } },
-  "scroll": {
+  "$description": "스크롤바 — 실제 활동이 멈추고 500ms 뒤 200ms 동안 사라진다(ScrollArea 계약). 지연은 JS(MOTION.scrollHideDelayMs)가 재고 페이드는 theme.css 의 .ds-scroll-area-scrollbar 가 --duration-scrollbar-fade 로 읽는다 — 같은 토큰이라 둘이 갈릴 수 없다.",
+  "$extensions": { "sds": { "scope": "root" } },
+  "duration": {
     "$type": "duration",
-    "hide-delay": { "$value": "500ms", "$extensions": { "sds": { "ts": "scrollHideDelayMs" } } },
-    "fade": { "$value": "200ms", "$extensions": { "sds": { "ts": "scrollFadeMs" } } }
+    "scrollbar": {
+      "hide-delay": { "$value": "500ms", "$extensions": { "sds": { "ts": "scrollHideDelayMs" } } },
+      "fade": { "$value": "200ms", "$extensions": { "sds": { "ts": "scrollFadeMs" } } }
+    }
   }
 }

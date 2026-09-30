@@ -12,7 +12,7 @@ export const DropdownMenuSub = Radix.Sub;
 export const DropdownMenuRadioGroup = Radix.RadioGroup;
 
 const surface = [
-  "z-50 min-w-[168px] overflow-hidden rounded-float border border-line bg-surface p-2",
+  "z-popover min-w-[168px] overflow-hidden rounded-float border border-line bg-surface p-2",
   "text-body text-ink shadow-pop animate-in-pop focus-visible:outline-none",
 ].join(" ");
 

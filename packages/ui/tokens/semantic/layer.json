@@ -1,5 +1,5 @@
 {
-  "$description": "층위 — radius · shadow 사다리. shipped 캔버스 툴(tldraw)의 라이브 DOM 값을 이 제품의 밀도로 누른 것(theme.css 주석). z-index · corner 는 B4. reset 은 Tailwind 기본 사다리를 지워 역할 이름만 남긴다.",
+  "$description": "층위 — radius · shadow 사다리(Tailwind @theme)와 z-index 층(:root --layer-* + 생성 @utility z-*, #18). radius·shadow 는 shipped 캔버스 툴(tldraw)의 라이브 DOM 값을 이 제품의 밀도로 누른 것. reset 은 Tailwind 기본 사다리를 지워 역할 이름만 남긴다. corner(스쿼클)는 Part 3.",
   "$extensions": { "sds": { "scope": "theme" } },
   "radius": {
     "$type": "dimension",
@@ -20,5 +20,17 @@
     "card": { "$value": "0 1px 2px rgb(25 31 40 / 0.04), 0 4px 12px rgb(25 31 40 / 0.05)" },
     "pop": { "$value": "0 2px 6px rgb(25 31 40 / 0.06), 0 12px 28px rgb(25 31 40 / 0.10), 0 0 0 1px rgb(25 31 40 / 0.05)", "$description": "3·4단은 inset 헤어라인을 그림자 안에 넣는다 — 부유 레이어가 테두리를 따로 그리지 않게." },
     "modal": { "$value": "0 8px 20px rgb(25 31 40 / 0.10), 0 28px 64px rgb(25 31 40 / 0.16), 0 0 0 1px rgb(25 31 40 / 0.05)" }
+  },
+  "layer": {
+    "$type": "number",
+    "$description": "z-index 층 — 이름이 곧 순서다. 오늘 모든 오버레이가 z-50 하나라 겹치는 순서가 DOM 순서(포털이 붙는 순)에 달렸다. scrim(40) 바로 위에 modal(41)이 서고, 그 위에 팝오버 → 토스트 → 툴팁이 선다.",
+    "$extensions": { "sds": { "scope": "root", "utility": { "prefix": "z", "properties": ["z-index"] } } },
+    "raised": { "$value": 1, "$description": "같은 스택 안에서 한 칸 위 — 고정 헤더 · 카드 위의 조치 버튼." },
+    "sticky": { "$value": 10, "$description": "스크롤을 따라 붙는 것 — 표 머리 · 상단바." },
+    "scrim": { "$value": 40, "$description": "모달·서랍의 어둡히는 막." },
+    "modal": { "$value": 41, "$description": "모달 · 서랍 본체 — 자기 scrim 바로 위." },
+    "popover": { "$value": 50, "$description": "팝오버 · 드롭다운 · 셀렉트 — 모달 안에서도 떠야 한다." },
+    "toast": { "$value": 60 },
+    "tooltip": { "$value": 70, "$description": "무엇 위에서도 보인다 — 가장 일시적인 것이 가장 위." }
   }
 }

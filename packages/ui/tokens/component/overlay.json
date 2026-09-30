@@ -1,0 +1,23 @@
+{
+  "$description": "오버레이 폭 — Tailwind --container-* 네임스페이스라 max-w-dialog-md · w-drawer-sm 이 그대로 나온다(#18). 값은 오늘 컴포넌트가 대괄호로 들고 있는 리터럴(Modal.variants 380/560/880/1180 · Drawer.variants 280/400/620 · DropdownMenu 168 · Popover 180/360)을 이름으로 옮긴 것이다. 컴포넌트가 이것을 쓰게 바꾸는 것은 B5·D.",
+  "$extensions": { "sds": { "scope": "theme" } },
+  "container": {
+    "$type": "dimension",
+    "dialog": {
+      "sm": { "$value": "380px", "$description": "확인 대화상자." },
+      "md": { "$value": "560px", "$description": "폼 모달 — 기본." },
+      "lg": { "$value": "880px" },
+      "xl": { "$value": "1180px", "$description": "표·비교 화면 모달." }
+    },
+    "drawer": {
+      "sm": { "$value": "280px" },
+      "md": { "$value": "400px" },
+      "lg": { "$value": "620px" }
+    },
+    "menu": { "$value": "168px", "$description": "드롭다운 메뉴 최소 폭." },
+    "popover": {
+      "min": { "$value": "180px" },
+      "max": { "$value": "360px" }
+    }
+  }
+}

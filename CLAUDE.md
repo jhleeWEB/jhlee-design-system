@@ -16,29 +16,30 @@
 
 ```
 packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown 산출물(커밋하지 않는다)
-  tokens/                    **DTCG JSON 정본** — 사람이 토큰을 편집하는 유일한 곳(#15). `base.json`(tokens.css 의 base 30, 이름 불변이라 아직 legacy 가 아니다) ·
-                             `primitive/{color,dimension,typography,motion}` · `semantic/{canvas,chrome.light,chrome.dark,layer,tailwind}` ·
-                             `component/{control,collapse,toast,scroll,tooltip}` · `legacy.json`(빈 골격, B4). 파일 머리 `$extensions.sds.scope` 가
-                             생성물의 어느 블록으로 나가는지 정한다(root · chrome · theme · theme-inline · ts · legacy). `schema.ts`(zod)가 모양과
-                             파일 사이 약속(alias 존재 · chrome 은 light/dark 둘 다 · canvas 는 light 만, `canvas.dark.json` 은 존재가 곧 실패)을 검사하고,
-                             `build.mjs` 가 Style Dictionary 4 + 우리 포맷 3(`formats/{css-vars,tailwind-theme,ts-consts}.mjs`)으로 생성물을 쓴다.
-                             다크는 source 가 아니라 options 로 읽어 두 다크 블록에 같은 본문을 찍는다
-  src/generated/             **생성물 — 손으로 고치지 않는다.** `tokens.css`(:root · 크롬 라이트/다크 · reduced-motion) · `theme.tailwind.css`(@theme · @theme inline) ·
-                             `legacy.css` · `tokens.ts`(MOTION) · `ladders.ts`(LADDERS). 커밋하며 `pnpm tokens:check` 가 최신성을 강제한다(CI unit job · verify).
-                             **아직 연결하지 않았다**(B3) — 아래 손 CSS 가 여전히 정본이고 `generated-parity.spec` 이 «생성물 해석 맵 == 손 CSS 해석 맵» 을 증명한다.
-                             유일한 의도된 차이는 원시의 새 이름 `--palette-*`(옛 `--color-{hue}-*` 는 alias). 래칫·ESLint jsdoc 대상이 아니다
-  src/tokens/motion.ts       JS 가 읽는 시간 상수 `MOTION`(접기 200 · 토스트 220/180/240/4200 · 스크롤바 500/200 · 툴팁 350) — Toast·ScrollArea·Tooltip 이 쓴다(B1, #15).
-                             `motion.spec` 이 CSS(toast.css · theme.css)의 ms 와 대조한다. 공개 API 는 아니다(배럴 export 없음). B3 가 생성물 `tokens.ts` 로 대체한다
-  src/tokens.css             base 토큰(회색조·판정색·셸 치수·글꼴) + 원칙을 강제하는 요소 규칙
-  src/theme.css              방향 C — --canvas-*(라이트 고정·radius 0·무채색) / --chrome-*(듀얼 테마), Tailwind v4 @theme 매핑,
-                             @source "./" 자기 등록, 컴포넌트 CSS(@import)
+  tokens/                    **DTCG JSON 정본** — 사람이 토큰을 편집하는 유일한 곳(#15 · #18). `primitive/{color,dimension,typography,motion}`(리터럴이 사는 유일한 층 —
+                             `--palette-{cool,azure,mono,gray,moss,amber,rust}` · 치수·간격·시간 4단·굵기·자간·글꼴 스택) · `semantic/{canvas,chrome.light,chrome.dark,layer,tailwind}`
+                             (값은 전부 참조; 판정 3색은 톤마다 DEFAULT/hover/ink/soft/line, `layer` 는 z-index 층) · `component/{control,collapse,toast,scroll,tooltip,overlay}` ·
+                             `legacy.json`(옛 base 이름 `--ink`·`--gap`·`--size-gap`·`--color-{hue}-*` → 새 정본 alias, 전부 `$deprecated`, 값은 옛 것과 같다, 제거는 major).
+                             파일 머리(또는 그룹)의 `$extensions.sds.scope` 가 생성물의 어느 블록으로 나가는지 정한다(root · chrome · theme · theme-inline · legacy);
+                             그룹의 `sds.utility` 는 생성 `@utility`(z-* · duration-*), `sds.reset` 은 `--<ns>-*: initial`, 토큰의 `sds.ts` 는 MOTION 키다.
+                             `schema.ts`(zod)가 모양과 파일 사이 약속(alias 존재 · chrome 은 light/dark 둘 다 · canvas 는 light 만, `canvas.dark.json` 은 존재가 곧 실패 ·
+                             legacy 는 $deprecated 만이고 새 정본은 옛 이름을 참조하지 않는다)을 검사하고, `build.mjs` 가 Style Dictionary 4 + 우리 포맷 3
+                             (`formats/{css-vars,tailwind-theme,ts-consts}.mjs`)으로 생성물을 쓴다. 다크는 source 가 아니라 options 로 읽어 두 다크 블록에 같은 본문을 찍는다
+  src/generated/             **생성물 — 손으로 고치지 않는다.** `tokens.css`(:root · 크롬 라이트/다크 · reduced-motion) · `legacy.css`(옛 이름 alias) ·
+                             `theme.tailwind.css`(@theme · @theme inline · 생성 @utility) · `tokens.ts`(MOTION) · `ladders.ts`(LADDERS). 커밋하며 `pnpm tokens:check` 가
+                             최신성을 강제한다(CI unit job · verify). **연결돼 있다**(B3, #18) — 아래 `tokens.css`·`theme.css` 가 @import 로, `cn.ts` 가 import 로 소비한다.
+                             tsdown 이 dist/generated/ 로 복사한다(상대 @import 가 tarball 안에서 살아야 한다). 래칫·ESLint jsdoc 대상이 아니다
+  src/tokens/motion.ts       `generated/tokens.ts` 의 `MOTION` 재수출 껍데기(@deprecated) — Toast·ScrollArea·Tooltip 은 생성물을 직접 import 한다(B1 #15 → B3 #18)
+  src/tokens.css             `generated/{tokens,legacy}.css` 재수출 + 원칙을 강제하는 요소 규칙(box-sizing · body · 컨트롤 radius 0 · .num). 값은 없다
+  src/theme.css              tokens.css + `generated/theme.tailwind.css` 재수출, @source "./" 자기 등록, 컴포넌트 CSS(@import), keyframes,
+                             손 @utility(tnum · focus-ring · on-canvas · h-ctl* · w-rail · gap-shell), `.ds-*` 컴포넌트 규칙. 값은 없다 — 방향 C(캔버스/크롬)의 «왜» 는 머리 주석
   src/{primitives,overlay,feedback,navigation,data}/   DS 컴포넌트(Tailwind 유틸 + cva + Radix)
   src/**/Name.variants.ts    컴포넌트의 cva 한 벌 — `"use client"` 없음(서버에서 호출 가능). 컴포넌트가 import 하고 층 배럴이 `*Variants` 를 export
   src/legacy/                `./legacy` 서브패스 — 3열 작업대 셸·컨트롤·DesignSystemProvider·shell.css(#10). 격리·동결: ESLint ignores,
                              래칫 제외. 루트 배럴은 같은 이름을 지정자별 @deprecated 로 한 마이너 재export 하고 다음 마이너에 `feat!:` 로 지운다
   src/**/*.stories.tsx       컴포넌트 옆 스토리 — 3스토리 계약(Default · Variants · ThemeContrast, `stories-contract.spec` 이 검사, 본보기 Button)
-  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트, 15 스펙). `tokens/`(postcss 토큰 모델 + 사다리·참조·다크 동일·해석 맵 스냅샷 +
-                             motion 상수 대조 · 정본 스키마 · 생성물 동일성, #15)과
+  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트, 15 스펙). `tokens/`(배포 CSS 다섯 파일의 postcss 토큰 모델 + 사다리·cn 동작 ·
+                             참조 무결성·미참조 원시 · MOTION↔CSS 대조 · 정본 스키마, #15 · #18)과
                              `package/`(exports · "use client" 집합 · 공개 API 목록)는 `arch` 프로젝트(node)가 돈다(#11)
   src/__arch__/              금지 패턴 래칫(`forbidden-patterns.spec` — 파일별 횟수 기준선, 늘면 실패·줄면 낮춰야 통과) + 소스 그래프. `arch` 프로젝트(#11)
   .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
@@ -61,7 +62,8 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
   그 밖은 전부 크롬(듀얼 테마·작은 radius·부유 레이어에만 그림자).
 - **유채색은 판정에만**(base 원칙 2) — 액센트 azure `#0869e1` 은 «지금 고른 것·주된 동작», 판정색은 «통과했는가». 상태는 항상 텍스트와 병기한다.
 - **수치는 mono + tabular-nums**(원칙 3).
-- **토큰 밖 값을 쓰지 않는다.** 색·간격·반경·글자·시간은 theme.css 의 사다리(`rounded-control`, `text-body`, `shadow-pop`, `h-ctl` …)만. 리터럴(hex·px·ms)이 필요하면 토큰을 더한다.
+- **토큰 밖 값을 쓰지 않는다.** 색·간격·반경·글자·시간·층위는 사다리(`rounded-control`, `text-body`, `shadow-pop`, `h-ctl`, `font-semibold`, `z-toast`, `duration-fast` …)만.
+  리터럴(hex·px·ms)이 필요하면 `tokens/` JSON 에 토큰을 더한다. 옛 base 이름(`--ink`·`--gap`)은 legacy alias 다 — 새 코드는 쓰지 않는다.
 - **모든 크롬 모서리는 연속 곡률(스쿼클)을 향한다.** CSS `corner-shape` 진행형 향상 — 미지원 엔진(2026-09: Safari 정식·Firefox 정식)은 원호로 떨어지며 그것이 허용된 폴백이다. 원형·pill 은 원호 유지. (도입은 docs/plan Part 3.)
 - **클라이언트 경계.** 훅·핸들러·컨텍스트·Radix 를 쓰는 파일은 첫 줄에 `"use client"`. 배럴(index.ts)·cn·canvas-metrics·순수 표시 컴포넌트에는 없다.
 - **JS 에서 CSS 를 import 하지 않는다.** 컴포넌트 CSS 는 theme.css 가 `@import` 한다.
@@ -100,11 +102,11 @@ cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tm
 
 **래칫 스펙.** `src/__arch__/forbidden-patterns.spec.ts` 는 토큰 밖 리터럴(tsx 대괄호 px/ms · Tailwind 기본 사다리 · CSS px/hex/ms · JS ms)·
 `forwardRef`·비-cva 삼항·불리언 data 속성·도메인 어휘를 **파일별 횟수 기준선**으로 붙든다. 실제 횟수가 기준선과 같아야 통과한다 —
-늘면 새 위반이고, 줄이면 같은 PR 에서 기준선을 낮춘다(0 이면 줄을 지운다). 토큰 쪽도 같은 모양이다: `references.spec` 의
-`KNOWN_INLINE_LITERALS`(`@theme inline` 의 리터럴 4개)와 미참조 원시 18개 스냅샷, `tokens-snapshot.spec` 의 해석 맵(Phase B 생성기의 비교
-기준 — 토큰 값을 바꾸는 PR 만 `-u` 로 갱신한다), `rsc-directives.spec` 의 `"use client"` 파일 목록, `public-api.spec` 의 배럴 export 목록.
-토큰 값을 바꾸는 PR 은 **JSON 정본과 손 CSS 를 함께** 고치고 `pnpm tokens:build` 를 돌린다 — `generated-parity.spec` 이 둘의 해석 맵을 라이트·다크
-전량 비교하므로 한쪽만 고치면 빨갛다(B3 가 손 CSS 를 생성물로 바꿔 끼우면 그 이중 편집이 끝난다).
+늘면 새 위반이고, 줄이면 같은 PR 에서 기준선을 낮춘다(0 이면 줄을 지운다). `legacy-alias-use`(옛 이름 `var(--ink)` 등의 사용, 목록은 legacy.json 에서 읽는다)도
+같은 래칫이다(#18). 토큰 쪽도 같은 모양이다: `references.spec` 의 `KNOWN_INLINE_LITERALS`(`@theme inline` 의 리터럴 — #18 에서 0)와 미참조 원시 17개 스냅샷,
+`rsc-directives.spec` 의 `"use client"` 파일 목록, `public-api.spec` 의 배럴 export 목록.
+토큰은 **JSON 정본만** 고치고 `pnpm tokens:build` 를 돌려 생성물을 함께 커밋한다 — `tokens:check` 가 생성물의 최신성을, VRT 가 픽셀을 지킨다.
+새 토큰은 값·출처·대비 근거를 `$description` 에 적는다.
 
 **린트 기준선.** 루트 `eslint.config.js`(플러그인 + 로컬 규칙 `ds/*`, `packages/eslint-rules/`)의 모든 규칙은 error 이고,
 첫 실행의 위반은 `eslint-suppressions.json`(ESLint bulk suppressions)이 덮는다 — 계획의 «warn + 기준선» 은 suppressions 가

@@ -10,7 +10,7 @@ export const buttonVariants = cva(
     "inline-flex items-center justify-center gap-3 whitespace-nowrap",
     "font-sans text-control leading-none",
     /* preflight 가 없으므로 `border` 만으로는 UA 테두리 스타일이 남는다 — solid 를 명시한다. */
-    "cursor-pointer appearance-none rounded-control border border-solid transition-colors duration-100",
+    "cursor-pointer appearance-none rounded-control border border-solid transition-colors duration-fast",
     "focus-visible:focus-ring focus-visible:outline-none",
     "disabled:pointer-events-none disabled:opacity-45",
     "aria-disabled:pointer-events-none aria-disabled:opacity-45",

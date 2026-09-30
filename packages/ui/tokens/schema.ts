@@ -3,7 +3,8 @@
  *
  * `tokens/**\/*.json` 은 사람이 편집하는 유일한 곳이고, 여기서 틀린 것은 생성물을 거쳐 소비자 화면에 **조용히** 도착한다 — 정의 없는
  * alias 는 브라우저가 속성을 무효로 만들어 민짜로 렌더되고, 다크에 빠진 크롬 토큰은 라이트 색으로 남는다. 그래서 파일 모양(zod)과
- * 파일 사이의 약속(alias 존재 · chrome 은 light/dark 둘 다 · canvas 는 light 만)을 생성 전에 검사한다. `build.mjs` 가 매번 부르고
+ * 파일 사이의 약속(alias 존재 · chrome 은 light/dark 둘 다 · canvas 는 light 만 · legacy 는 $deprecated 만이고 아무도 그것을 참조하지 않는다)을
+ * 생성 전에 검사한다. `build.mjs` 가 매번 부르고
  * `schema.spec` 이 실제 정본과 가짜 입력으로 검출기를 증명한다.
  *
  * Node 가 직접 실행한다(build.mjs 가 `./schema.ts` 를 import — Node 24 의 type stripping). 그래서 지워지는 문법만 쓴다:
@@ -14,8 +15,8 @@ import { join, relative, sep } from "node:path";
 
 import { z } from "zod";
 
-/** 토큰이 어느 생성물의 어느 블록으로 나가는가 — 파일 머리의 `$extensions.sds.scope` 가 정하고 안의 토큰이 물려받는다. */
-export const SCOPES = ["root", "chrome", "theme", "theme-inline", "ts", "legacy"] as const;
+/** 토큰이 어느 생성물의 어느 블록으로 나가는가 — 파일 머리의 `$extensions.sds.scope` 가 정하고 그룹·토큰이 물려받거나 덮는다(dimension.json 의 size 그룹처럼). */
+export const SCOPES = ["root", "chrome", "theme", "theme-inline", "legacy"] as const;
 /** 스코프 이름. */
 export type Scope = (typeof SCOPES)[number];
 
@@ -31,8 +32,11 @@ export const CHROME_LIGHT_FILE = "semantic/chrome.light.json";
 /** 캔버스 — 다크 파일이 없다는 것이 곧 계약이다. */
 export const CANVAS_FILE = "semantic/canvas.json";
 
+/** 옛 이름의 alias 만 사는 파일 — 여기 토큰은 전부 `$deprecated` 이고, 다른 파일은 여기 토큰을 참조할 수 없다(#18). */
+export const LEGACY_FILE = "legacy.json";
+
 /** 생성물 순서 — 층이 낮은 것부터. 같은 층 안에서는 경로 오름차순. */
-const LAYER_ORDER = ["base.json", "primitive/", "semantic/", "component/", "legacy.json"] as const;
+const LAYER_ORDER = ["primitive/", "semantic/", "component/", LEGACY_FILE] as const;
 
 const NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const REF = /^\{[a-z0-9.-]+\}$/;
@@ -40,10 +44,19 @@ const REF_ANYWHERE = /\{([a-z0-9.-]+)\}/g;
 const TS_IDENT = /^[a-z][A-Za-z0-9]*Ms$/;
 const META_KEYS = new Set(["$description", "$type", "$extensions", "$value", "$deprecated"]);
 
+/** 생성 `@utility` — 그룹에 붙이면 안의 토큰마다 `@utility <prefix>-<이름> { <property>: var(--…); }` 가 나온다(혼용 규칙 ⑤ «@utility 는 생성»). */
+const utilitySchema = z.strictObject({
+  prefix: z.string().regex(NAME, "prefix 는 kebab-case"),
+  /** 여러 개면 전부 같은 var() 를 받는다 — Tailwind 의 duration-* 가 `--tw-duration` 과 `transition-duration` 둘을 쓰는 모양. */
+  properties: z.array(z.string().min(1)).min(1),
+});
+
 const sdsSchema = z.strictObject({
   scope: z.enum(SCOPES).optional(),
   /** 그룹에만 — `--<ns>-*: initial` 로 Tailwind 기본 사다리를 지운다(혼용 규칙 ③·④). */
   reset: z.boolean().optional(),
+  /** 그룹에만 — 안의 토큰마다 생성 `@utility`(z-* · duration-*). Tailwind 네임스페이스가 아닌 값을 유틸리티로 내는 유일한 길이다. */
+  utility: utilitySchema.optional(),
   /** 토큰에만 — `generated/tokens.ts` 의 `MOTION` 키. duration 만. */
   ts: z.string().regex(TS_IDENT, "MOTION 키는 lowerCamel + Ms 접미(예: collapseMs)").optional(),
   /** 토큰에만 — `@media (prefers-reduced-motion: reduce)` 에서의 값. */
@@ -51,7 +64,7 @@ const sdsSchema = z.strictObject({
 });
 const extensionsSchema = z.looseObject({ sds: sdsSchema.optional() });
 
-const dimension = z.string().regex(/^(?:\{[a-z0-9.-]+\}|0|\d+(?:\.\d+)?(?:px|em|rem))$/, "dimension 은 0 · <n>px|em|rem · {alias}");
+const dimension = z.string().regex(/^(?:\{[a-z0-9.-]+\}|0|-?\d+(?:\.\d+)?(?:px|em|rem))$/, "dimension 은 0 · [-]<n>px|em|rem · {alias}");
 const valueSchemas: Readonly<Record<TokenType, z.ZodType>> = {
   color: z
     .string()
@@ -132,6 +145,8 @@ export function referencesIn(value: TokenValue): string[] {
 interface Inherited {
   readonly type: TokenType | undefined;
   readonly sds: SdsExtension;
+  /** 그룹의 `$deprecated` 는 안의 토큰이 물려받는다 — legacy.json 이 파일 머리에 한 번 적는다. */
+  readonly deprecated: boolean | string | undefined;
 }
 
 function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[], counter: { n: number }): void {
@@ -156,10 +171,13 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
     if (!ext.success) errors.push(`${where}: $extensions — ${ext.error.issues.map(i => `${i.path.join(".")}: ${i.message}`).join("; ")}`);
     const own: SdsExtension = ext.success ? (ext.data.sds ?? {}) : {};
     const isToken = "$value" in node;
+    if (node.$deprecated !== undefined && typeof node.$deprecated !== "boolean" && typeof node.$deprecated !== "string") errors.push(`${where}: $deprecated 는 boolean 또는 문자열`);
+    const deprecated = node.$deprecated !== undefined ? (node.$deprecated as boolean | string) : inherited.deprecated;
 
     if (isToken) {
       if (path.length === 0) errors.push(`${where}: 파일 머리는 토큰일 수 없다`);
       if (own.reset !== undefined) errors.push(`${where}: reset 은 그룹에만 둔다`);
+      if (own.utility !== undefined) errors.push(`${where}: utility 는 그룹에만 둔다`);
       if (!type) errors.push(`${where}: $type 이 없다(자기 것도, 물려받은 것도)`);
       const sds = { ...inherited.sds, ...own };
       if (type) {
@@ -169,8 +187,7 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
         if (sds.reducedMotion !== undefined && type !== "duration" && type !== "animation") errors.push(`${where}: sds.reducedMotion 은 duration·animation 에만 붙는다`);
       }
       if (sds.reset && sds.scope !== "theme" && sds.scope !== "theme-inline") errors.push(`${where}: reset 은 theme · theme-inline 스코프에서만 뜻이 있다`);
-      if (sds.scope === "ts" && sds.ts === undefined) errors.push(`${where}: ts 스코프 토큰은 sds.ts 이름이 있어야 어딘가로 나간다`);
-      if (node.$deprecated !== undefined && typeof node.$deprecated !== "boolean" && typeof node.$deprecated !== "string") errors.push(`${where}: $deprecated 는 boolean 또는 문자열`);
+      if (sds.utility && sds.scope === "legacy") errors.push(`${where}: legacy 이름으로 유틸리티를 내지 않는다`);
       if (node.$description !== undefined && typeof node.$description !== "string") errors.push(`${where}: $description 은 문자열`);
       for (const key of Object.keys(node)) if (!key.startsWith("$")) errors.push(`${where}: 토큰 안에 자식 «${key}» 을 둘 수 없다`);
       out.push({
@@ -181,13 +198,13 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
         sds: { ...sds, scope: sds.scope ?? "root" },
         order: counter.n++,
         ...(typeof node.$description === "string" ? { description: node.$description } : {}),
-        ...(node.$deprecated !== undefined ? { deprecated: node.$deprecated as boolean | string } : {}),
+        ...(deprecated !== undefined ? { deprecated } : {}),
       });
       return;
     }
 
     if (own.ts !== undefined || own.reducedMotion !== undefined) errors.push(`${where}: ts · reducedMotion 은 토큰에만 둔다`);
-    const next: Inherited = { type, sds: { ...inherited.sds, ...own } };
+    const next: Inherited = { type, sds: { ...inherited.sds, ...own }, deprecated };
     for (const [key, child] of Object.entries(node)) {
       if (key.startsWith("$")) continue;
       if (!isObject(child)) {
@@ -197,7 +214,7 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
       visit(child, [...path, key], next);
     }
   };
-  visit(root, [], { type: undefined, sds: scope ? { scope } : {} });
+  visit(root, [], { type: undefined, sds: scope ? { scope } : {}, deprecated: undefined });
 }
 
 /**
@@ -272,6 +289,19 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
     if (!chromeLight.has(key(t))) errors.push(`${DARK_FILE}: ${key(t)} 가 라이트에 없다`);
   }
   for (const k of chromeLight) if (!darkSeen.has(k) && DARK_FILE in files) errors.push(`${DARK_FILE}: ${k} 의 다크 값이 없다 — 빠진 토큰은 다크에서 라이트 색으로 남는다`);
+
+  // legacy — 옛 이름은 LEGACY_FILE 에만, 전부 $deprecated, 그리고 새 정본은 옛 이름을 참조하지 않는다(alias 는 밖으로만 향한다).
+  const legacyKeys = new Set(light.filter(t => t.file === LEGACY_FILE).map(key));
+  for (const t of light) {
+    if (t.file === LEGACY_FILE) {
+      if (t.deprecated === undefined || t.deprecated === false) errors.push(`${LEGACY_FILE}: ${key(t)} 는 $deprecated 여야 한다 — 이 파일은 옛 이름만 산다`);
+      if (t.sds.scope !== "legacy") errors.push(`${LEGACY_FILE}: ${key(t)} 의 스코프는 legacy 여야 한다`);
+      continue;
+    }
+    if (t.sds.scope === "legacy") errors.push(`${t.file}: legacy 스코프는 ${LEGACY_FILE} 만 쓴다 — ${key(t)}`);
+    for (const ref of referencesIn(t.value)) if (legacyKeys.has(ref)) errors.push(`${t.file}: ${key(t)} → {${ref}} 는 옛 이름이다 — 새 정본은 legacy 를 참조하지 않는다`);
+  }
+  for (const t of dark) for (const ref of referencesIn(t.value)) if (legacyKeys.has(ref)) errors.push(`${DARK_FILE}: ${key(t)} → {${ref}} 는 옛 이름이다`);
 
   const tsNames = new Map<string, string>();
   for (const t of light) {

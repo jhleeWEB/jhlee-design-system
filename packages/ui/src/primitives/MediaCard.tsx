@@ -12,7 +12,7 @@ import { mediaCardVariants, mediaCardMediaVariants } from "./MediaCard.variants"
  * 카드 전체를 `<button>` 으로 감싸면 그 안의 조치 버튼이 **버튼 안의 버튼**이 되어 무효한
  * HTML 이 되고, 스크린리더가 카드 내용을 전부 버튼 이름으로 읽는다. 그래서 제목에 붙는
  * 얇은 버튼 하나를 카드 전체로 늘리는 방식(stretched link)을 쓴다 — 접근 이름은 제목이고,
- * `actions` 는 그 위(z-1)에 떠서 자기 클릭을 유지한다.
+ * `actions` 는 그 위(z-raised)에 떠서 자기 클릭을 유지한다.
  *
  * ── 썸네일이 없을 때 ─────────────────────────────────────────────────────────
  * 자리를 회색 네모로 채우지 않는다. 빈 썸네일은 「아직 안 불러왔다」로 읽혀서
@@ -79,7 +79,7 @@ export function MediaCard({
           style={horizontal ? { width: mediaWidth } : undefined}
         >
           {media}
-          {mediaOverlay ? <div className="absolute left-2 top-2 z-1">{mediaOverlay}</div> : null}
+          {mediaOverlay ? <div className="absolute left-2 top-2 z-raised">{mediaOverlay}</div> : null}
         </div>
       ) : null}
 
@@ -95,7 +95,7 @@ export function MediaCard({
                 data-slot="media-card-select"
                 type="button"
                 onClick={onSelect}
-                /* 카드 전체로 늘어나는 얇은 버튼. 조치들은 z-1 로 그 위에 뜬다. */
+                /* 카드 전체로 늘어나는 얇은 버튼. 조치들은 z-raised 로 그 위에 뜬다. */
                 className={cn(
                   "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
                   "cursor-pointer text-left after:absolute after:inset-0 after:content-['']",
@@ -117,7 +117,7 @@ export function MediaCard({
         {meta ? <div className="flex flex-wrap items-center gap-1.5">{meta}</div> : null}
 
         {actions ? (
-          <div className={cn("relative z-1 flex items-center gap-2", horizontal ? "mt-auto" : "mt-1")}>
+          <div className={cn("relative z-raised flex items-center gap-2", horizontal ? "mt-auto" : "mt-1")}>
             {actions}
           </div>
         ) : null}

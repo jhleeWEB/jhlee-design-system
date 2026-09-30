@@ -7,7 +7,7 @@ import { cva } from "../cn";
 /** 서랍 패널의 변형 — `side` 와 `size` 의 조합이 폭·높이를 정한다. */
 export const drawerVariants = cva(
   [
-    "fixed z-50 flex flex-col overflow-hidden bg-surface shadow-modal",
+    "fixed z-modal flex flex-col overflow-hidden bg-surface shadow-modal",
     "text-body text-ink focus-visible:outline-none",
   ],
   {

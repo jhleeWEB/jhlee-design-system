@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState, type ComponentPropsWithoutRef
 import { ScrollArea as Radix } from "radix-ui";
 
 import { cn } from "../cn";
-import { MOTION } from "../tokens/motion";
+import { MOTION } from "../generated/tokens";
 
 // 뷰포트와 스크롤바의 고정 구조는 DS가 소유하므로 Root/Viewport의 asChild는 지원하지 않는다.
 export interface ScrollAreaProps extends Omit<ComponentPropsWithRef<typeof Radix.Root>, "type" | "scrollHideDelay" | "asChild"> {

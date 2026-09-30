@@ -46,7 +46,7 @@ export function ModalContent({
     <Dialog.Portal>
       <Dialog.Overlay
         data-slot="modal-scrim"
-        className="fixed inset-0 z-50 bg-scrim animate-in-fade"
+        className="fixed inset-0 z-scrim bg-scrim animate-in-fade"
       />
       <Dialog.Content
         data-slot="modal"

@@ -4,9 +4,6 @@
 @theme {
   --spacing: 4px;
 
-  --size-rail: 64px;
-  --size-gap: 12px;
-
   --ease-out-quick: cubic-bezier(0.22, 0.8, 0.3, 1);
 
   --animate-in-pop: pop 0.14s var(--ease-out-quick);
@@ -30,7 +27,15 @@
   --text-display: 26px;
   --text-display--line-height: 1.16;
 
+  --tracking-*: initial;
+  --tracking-tight: -0.025em;
   --tracking-caps: 0.09em;
+
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
   --radius-*: initial;
   --radius-none: 0;
@@ -48,17 +53,26 @@
   --shadow-pop: 0 2px 6px rgb(25 31 40 / 0.06), 0 12px 28px rgb(25 31 40 / 0.10), 0 0 0 1px rgb(25 31 40 / 0.05);
   --shadow-modal: 0 8px 20px rgb(25 31 40 / 0.10), 0 28px 64px rgb(25 31 40 / 0.16), 0 0 0 1px rgb(25 31 40 / 0.05);
 
-  --height-ctl-sm: 30px;
-  --height-ctl: 36px;
-  --height-ctl-lg: 44px;
+  --height-ctl-sm: var(--size-control-sm);
+  --height-ctl: var(--size-control-md);
+  --height-ctl-lg: var(--size-control-lg);
+
+  --container-dialog-sm: 380px;
+  --container-dialog-md: 560px;
+  --container-dialog-lg: 880px;
+  --container-dialog-xl: 1180px;
+  --container-drawer-sm: 280px;
+  --container-drawer-md: 400px;
+  --container-drawer-lg: 620px;
+  --container-menu: 168px;
+  --container-popover-min: 180px;
+  --container-popover-max: 360px;
 }
 
 @theme inline {
   --color-*: initial;
-  --color-transparent: transparent;
-  --color-current: currentColor;
-  --color-white: #ffffff;
-  --color-black: #1a1a1a;
+  --color-white: var(--canvas-bg);
+  --color-black: var(--canvas-ink);
   --color-canvas: var(--canvas-bg);
   --color-canvas-surface: var(--canvas-surface);
   --color-canvas-line: var(--canvas-line);
@@ -90,14 +104,62 @@
   --color-tooltip: var(--chrome-tooltip-bg);
   --color-tooltip-ink: var(--chrome-tooltip-ink);
   --color-ok: var(--chrome-ok);
-  --color-warn: var(--chrome-warn);
-  --color-danger: var(--chrome-danger);
+  --color-ok-hover: var(--chrome-ok-hover);
+  --color-ok-ink: var(--chrome-ok-ink);
   --color-ok-soft: var(--chrome-ok-soft);
+  --color-ok-line: var(--chrome-ok-line);
+  --color-warn: var(--chrome-warn);
+  --color-warn-hover: var(--chrome-warn-hover);
+  --color-warn-ink: var(--chrome-warn-ink);
   --color-warn-soft: var(--chrome-warn-soft);
+  --color-warn-line: var(--chrome-warn-line);
+  --color-danger: var(--chrome-danger);
+  --color-danger-hover: var(--chrome-danger-hover);
+  --color-danger-ink: var(--chrome-danger-ink);
   --color-danger-soft: var(--chrome-danger-soft);
+  --color-danger-line: var(--chrome-danger-line);
 
-  --font-sans: "Instrument Sans", var(--sans);
-  --font-mono: "Geist Mono", var(--mono);
+  --font-sans: "Instrument Sans", var(--font-stack-sans);
+  --font-mono: "Geist Mono", var(--font-stack-mono);
+}
+
+/* 생성 유틸리티 — Tailwind 네임스페이스가 아닌 :root 토큰(--layer-* · --duration-*)을 클래스로 낸다. */
+@utility duration-instant {
+  --tw-duration: var(--duration-instant);
+  transition-duration: var(--duration-instant);
+}
+@utility duration-fast {
+  --tw-duration: var(--duration-fast);
+  transition-duration: var(--duration-fast);
+}
+@utility duration-base {
+  --tw-duration: var(--duration-base);
+  transition-duration: var(--duration-base);
+}
+@utility duration-slow {
+  --tw-duration: var(--duration-slow);
+  transition-duration: var(--duration-slow);
+}
+@utility z-raised {
+  z-index: var(--layer-raised);
+}
+@utility z-sticky {
+  z-index: var(--layer-sticky);
+}
+@utility z-scrim {
+  z-index: var(--layer-scrim);
+}
+@utility z-modal {
+  z-index: var(--layer-modal);
+}
+@utility z-popover {
+  z-index: var(--layer-popover);
+}
+@utility z-toast {
+  z-index: var(--layer-toast);
+}
+@utility z-tooltip {
+  z-index: var(--layer-tooltip);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,7 +2,7 @@
 import { Tooltip as Radix } from "radix-ui";
 
 import { cn } from "../cn";
-import { MOTION } from "../tokens/motion";
+import { MOTION } from "../generated/tokens";
 
 /* 툴팁 — **면을 뒤집는다**(밝은 UI 위의 어두운 팝). 「일시적이고 내 것이 아니다」를 그것이 말한다.
  * shipped 캔버스 툴들이 공통으로 쓰는 관행이라 토큰(`--chrome-tooltip-*`)으로 못 박아 뒀다.
@@ -55,7 +55,7 @@ export function Tooltip({
           align={align}
           sideOffset={sideOffset}
           className={cn(
-            "z-50 flex items-center gap-3 rounded-float bg-tooltip px-3 py-2",
+            "z-tooltip flex items-center gap-3 rounded-float bg-tooltip px-3 py-2",
             "text-label text-tooltip-ink shadow-pop animate-in-pop",
             "select-none",
           )}

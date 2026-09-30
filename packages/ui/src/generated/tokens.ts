@@ -1,22 +1,30 @@
 /* 생성물 — 손으로 고치지 않는다.
  * 정본: packages/ui/tokens/ 의 DTCG JSON → tokens/build.mjs · 재생성 `pnpm tokens:build` · 최신성 `pnpm tokens:check` (#15) */
 
-/** 시간 상수(ms) — tokens/**.json 의 duration 가운데 `$extensions.sds.ts` 가 붙은 것. CSS 쪽 짝은 같은 토큰에서 나온다. */
+/** 시간 상수(ms) — tokens/**.json 의 duration 가운데 `$extensions.sds.ts` 가 붙은 것. CSS 쪽 짝(--duration-*)은 같은 토큰에서 나온다. */
 export const MOTION = {
-  /** motion.collapse.duration — 200ms */
+  /** duration.instant — 0ms */
+  instantMs: 0,
+  /** duration.fast — 100ms */
+  fastMs: 100,
+  /** duration.base — 150ms */
+  baseMs: 150,
+  /** duration.slow — 200ms */
+  slowMs: 200,
+  /** duration.collapse — 200ms */
   collapseMs: 200,
-  /** scroll.hide-delay — 500ms */
+  /** duration.scrollbar.hide-delay — 500ms */
   scrollHideDelayMs: 500,
-  /** scroll.fade — 200ms */
+  /** duration.scrollbar.fade — 200ms */
   scrollFadeMs: 200,
-  /** toast.enter — 220ms */
+  /** duration.toast.enter — 220ms */
   toastEnterMs: 220,
-  /** toast.exit — 180ms */
+  /** duration.toast.exit — 180ms */
   toastExitMs: 180,
-  /** toast.queue-grace — 240ms */
+  /** duration.toast.queue-grace — 240ms */
   toastQueueGraceMs: 240,
-  /** toast.default — 4200ms */
+  /** duration.toast.default — 4200ms */
   toastDefaultMs: 4200,
-  /** tooltip.delay — 350ms */
+  /** duration.tooltip.delay — 350ms */
   tooltipDelayMs: 350,
 } as const;

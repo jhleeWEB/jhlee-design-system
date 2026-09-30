@@ -8,7 +8,7 @@ import { cva } from "../cn";
 export const inputVariants = cva(
   [
     "w-full min-w-0 border bg-surface-2 text-ink",
-    "rounded-control transition-colors duration-100",
+    "rounded-control transition-colors duration-fast",
     "placeholder:text-disabled",
     "focus-visible:focus-ring focus-visible:outline-none",
     "disabled:pointer-events-none disabled:opacity-45",
