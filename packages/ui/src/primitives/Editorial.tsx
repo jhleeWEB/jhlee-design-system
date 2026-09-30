@@ -18,7 +18,7 @@ export function Eyebrow({
     <div
       data-slot="eyebrow"
       className={cn(
-        "flex items-baseline gap-2 font-mono text-micro uppercase tracking-caps text-muted-foreground select-none",
+        "flex items-baseline gap-2 font-mono text-micro tracking-caps text-muted-foreground uppercase select-none",
         className,
       )}
       {...rest}
@@ -26,7 +26,9 @@ export function Eyebrow({
       {step ? (
         <>
           <span className="text-foreground-2">{step}</span>
-          <span aria-hidden="true" className="text-foreground-disabled">/</span>
+          <span aria-hidden="true" className="text-foreground-disabled">
+            /
+          </span>
         </>
       ) : null}
       <span>{children}</span>
@@ -43,10 +45,7 @@ export function DisplayHeading({
   return (
     <Tag
       data-slot="display-heading"
-      className={cn(
-        "text-display font-semibold tracking-[-0.015em] text-balance text-foreground",
-        className,
-      )}
+      className={cn("text-display font-semibold tracking-[-0.015em] text-balance text-foreground", className)}
       {...rest}
     />
   );
@@ -57,7 +56,7 @@ export function Lede({ className, ...rest }: React.HTMLAttributes<HTMLParagraphE
   return (
     <p
       data-slot="lede"
-      className={cn("max-w-[42ch] text-body leading-relaxed text-muted-foreground", className)}
+      className={cn("leading-relaxed max-w-[42ch] text-body text-muted-foreground", className)}
       {...rest}
     />
   );

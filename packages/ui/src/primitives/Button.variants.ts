@@ -46,13 +46,34 @@ export const buttonVariants = cva(
          이게 없으면 `variant="link" size="sm"` 이 30px 높이와 12px 패딩을 달고 나와
          글자처럼 보여야 할 것이 칩이 된다(#1202 의 적대적 검토가 잡았다). */
       { variant: "link", class: "h-auto px-0 py-0" },
-      { variant: "solid", tone: "neutral", class: "border-border-strong bg-muted text-foreground hover:bg-secondary" },
-      { variant: "solid", tone: "primary", class: "border-primary bg-primary text-primary-foreground hover:border-primary-hover hover:bg-primary-hover" },
-      { variant: "solid", tone: "destructive", class: "border-destructive bg-destructive text-white hover:brightness-110" },
+      {
+        variant: "solid",
+        tone: "neutral",
+        class: "border-border-strong bg-muted text-foreground hover:bg-secondary",
+      },
+      {
+        variant: "solid",
+        tone: "primary",
+        class:
+          "border-primary bg-primary text-primary-foreground hover:border-primary-hover hover:bg-primary-hover",
+      },
+      {
+        variant: "solid",
+        tone: "destructive",
+        class: "border-destructive bg-destructive text-white hover:brightness-110",
+      },
       { variant: "outline", tone: "neutral", class: "border-border-strong text-foreground hover:bg-muted" },
       { variant: "outline", tone: "primary", class: "border-primary text-primary hover:bg-accent" },
-      { variant: "outline", tone: "destructive", class: "border-destructive text-destructive hover:bg-destructive-soft" },
-      { variant: "ghost", tone: "neutral", class: "text-muted-foreground hover:bg-muted hover:text-foreground" },
+      {
+        variant: "outline",
+        tone: "destructive",
+        class: "border-destructive text-destructive hover:bg-destructive-soft",
+      },
+      {
+        variant: "ghost",
+        tone: "neutral",
+        class: "text-muted-foreground hover:bg-muted hover:text-foreground",
+      },
       { variant: "ghost", tone: "primary", class: "text-primary hover:bg-accent" },
       { variant: "ghost", tone: "destructive", class: "text-destructive hover:bg-destructive-soft" },
       { variant: "link", tone: "neutral", class: "text-foreground" },

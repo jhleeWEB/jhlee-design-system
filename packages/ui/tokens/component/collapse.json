@@ -3,7 +3,10 @@
   "$extensions": { "sds": { "scope": "root" } },
   "duration": {
     "$type": "duration",
-    "collapse": { "$value": "{duration.slow}", "$extensions": { "sds": { "ts": "collapseMs", "reducedMotion": "0ms" } } }
+    "collapse": {
+      "$value": "{duration.slow}",
+      "$extensions": { "sds": { "ts": "collapseMs", "reducedMotion": "0ms" } }
+    }
   },
   "motion": {
     "collapse": {

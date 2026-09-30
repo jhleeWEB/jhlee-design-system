@@ -10,7 +10,14 @@ export const BackButton = forwardRef<HTMLButtonElement, Omit<ButtonProps, "asChi
   ref,
 ) {
   return (
-    <Button ref={ref} type={type} variant={variant} size={size} className={cn("gap-2 [&_svg]:size-4", className)} {...props}>
+    <Button
+      ref={ref}
+      type={type}
+      variant={variant}
+      size={size}
+      className={cn("gap-2 [&_svg]:size-4", className)}
+      {...props}
+    >
       <LuArrowLeft size={16} strokeWidth={2} aria-hidden="true" focusable={false} />
       {children}
     </Button>

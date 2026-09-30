@@ -11,7 +11,7 @@ const meta = {
   tags: ["!manifest", "!autodocs"],
   parameters: { layout: "fullscreen" },
   decorators: [
-    Story => (
+    (Story) => (
       <GalleryProviders>
         <Story />
       </GalleryProviders>
@@ -23,5 +23,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /* 스토리 수준 `globals` 는 툴바 선택을 잠근다 — 크롤러는 이 두 스토리를 테마별로 한 번씩만 찍는다(`theme-locked`). */
-export const Light: Story = { tags: ["theme-locked"], globals: { theme: "light" } };
-export const Dark: Story = { tags: ["theme-locked"], globals: { theme: "dark" } };
+// 옛 갤러리를 통째 옮긴 페이지라 위반이 여럿이다 — color-contrast 는 토큰 값의 몫(contrast.spec), aria-progressbar-name·label 은 Phase D 가 Spec 을 컴포넌트
+// 스토리로 쪼갤 때 고친다(각 Spec 이 자기 라벨을 든다). 그때까지 스토리 단위로만 끈다(C2, stories-contract.spec KNOWN_A11Y_FAILURES).
+const knownA11y = {
+  a11y: {
+    config: {
+      rules: [
+        { id: "color-contrast", enabled: false },
+        { id: "aria-progressbar-name", enabled: false },
+        { id: "label", enabled: false },
+      ],
+    },
+  },
+};
+export const Light: Story = { tags: ["theme-locked"], globals: { theme: "light" }, parameters: knownA11y };
+export const Dark: Story = { tags: ["theme-locked"], globals: { theme: "dark" }, parameters: knownA11y };

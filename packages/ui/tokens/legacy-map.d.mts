@@ -12,6 +12,12 @@ export interface ClassRestriction {
   readonly fix: string;
   readonly message: string;
 }
-export function legacyRenames(tokens: readonly FlatToken[], renames: Readonly<Record<string, string>>): LegacyRenameMap;
-export function legacyClassRenames(map: LegacyRenameMap, options?: { lintSafe?: boolean }): ClassRestriction[];
+export function legacyRenames(
+  tokens: readonly FlatToken[],
+  renames: Readonly<Record<string, string>>,
+): LegacyRenameMap;
+export function legacyClassRenames(
+  map: LegacyRenameMap,
+  options?: { lintSafe?: boolean },
+): ClassRestriction[];
 export function legacyClassRestrictions(map: LegacyRenameMap): ClassRestriction[];

@@ -55,6 +55,58 @@ const STORIES_MISSING: readonly string[] = [
 
 const REQUIRED_EXPORTS = ["Default", "Variants", "ThemeContrast"] as const;
 
+/** 패키지 루트 — `stories/`(페이지 스토리)도 a11y 래칫의 대상이다. */
+const PKG = resolve(SRC, "..");
+
+/**
+ * addon-a11y 가 `test: 'error'` 라 위반이 있는 스토리는 실패한다(C2). 알려진 위반은 **그 스토리의** `parameters.a11y.config.rules` 로만 끄고
+ * 여기 적는다 — `파일#스토리` → 끈 규칙 id. 첫 실행 실측(2026-09-30). **줄어들기만 한다**: 위반을 고치면 스토리의 rules 와 여기서 함께 지운다.
+ * 메타(파일 머리)에서 규칙을 끄는 것은 금지다 — 파일의 모든 스토리가 한꺼번에 빠져나가기 때문이다.
+ */
+const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
+  "src/primitives/Button.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Button.stories.tsx#Variants": ["color-contrast"],
+  "stories/Gallery.stories.tsx#Dark": ["aria-progressbar-name", "color-contrast", "label"],
+  "stories/Gallery.stories.tsx#Light": ["aria-progressbar-name", "color-contrast", "label"],
+  "stories/Radius.stories.tsx#Components": ["aria-hidden-focus", "color-contrast"],
+  "stories/Radius.stories.tsx#Ladder": ["color-contrast"],
+  "stories/Workbench.stories.tsx#Default": ["aria-progressbar-name", "color-contrast"],
+};
+
+/** `{ id: "x", enabled: false }` 로 끈 규칙 id — 규칙 배열이 변수로 빠져 있어도(Gallery 의 knownA11y) 같은 파일 안이면 잡힌다. */
+function disabledRules(block: string): string[] {
+  return [...block.matchAll(/\{\s*id:\s*"([a-z0-9-]+)",\s*enabled:\s*false\s*\}/g)].map((m) => m[1]!).sort();
+}
+
+/** 파일을 `export const` 단위로 잘라 스토리마다 끈 규칙을 모은다. 상수로 뺀 규칙 목록(Gallery 의 knownA11y)은 그 상수를 참조하는 스토리에 귀속한다. */
+function a11yExemptions(file: string): Record<string, string[]> {
+  const text = readFileSync(file, "utf8");
+  const parts = text.split(/^(?=export const )/m);
+  const head = parts[0] ?? "";
+  // 머리의 최상위 문장(`const x = …`)마다 — 다음 최상위 선언(const · type · function · export)이나 파일 끝까지가 한 문장이다.
+  // 정규식으로 `};` 를 찾으면 `const meta = { … } satisfies Meta` 가 다음 상수까지 삼킨다(첫 실측) — 그래서 선언 경계로 자른다.
+  const constRules: Record<string, string[]> = {};
+  const statements = head.split(/^(?=(?:const|type|function|export|interface) )/m);
+  for (const statement of statements) {
+    const name = /^const (\w+)/.exec(statement)?.[1];
+    if (!name) continue;
+    const rules = disabledRules(statement);
+    if (rules.length) constRules[name] = rules;
+  }
+  const out: Record<string, string[]> = {};
+  for (const part of parts.slice(1)) {
+    const name = /^export const (\w+)/.exec(part)?.[1];
+    if (!name) continue;
+    const inline = disabledRules(part);
+    const viaConst = Object.entries(constRules).flatMap(([id, rules]) =>
+      new RegExp(`\\b${id}\\b`).test(part) ? rules : [],
+    );
+    const rules = [...new Set([...inline, ...viaConst])].sort();
+    if (rules.length) out[name] = rules;
+  }
+  return out;
+}
+
 /** 배럴을 따라가며 «컴포넌트를 내보내는 모듈» 을 모은다.
  *  컴포넌트 = PascalCase 값 export. 타입·`*Variants`·훅(camelCase)·`GRID_TARGET_PX` 같은 UPPER_CASE 상수는 아니다. */
 function componentModules(barrel: string, out = new Set<string>()): Set<string> {
@@ -66,16 +118,18 @@ function componentModules(barrel: string, out = new Set<string>()): Set<string> 
   for (const m of text.matchAll(/export\s*\{([^}]*)\}\s*from\s*"(\.[^"]+)"/g)) {
     const names = m[1]!
       .split(",")
-      .map(s => s.trim())
-      .filter(s => s && !s.startsWith("type "));
-    const hasComponent = names.some(n => /^[A-Z][a-z]/.test(n) && !n.endsWith("Variants"));
+      .map((s) => s.trim())
+      .filter((s) => s && !s.startsWith("type "));
+    const hasComponent = names.some((n) => /^[A-Z][a-z]/.test(n) && !n.endsWith("Variants"));
     if (hasComponent) out.add(relative(SRC, resolveModule(dir, m[2]!, false)).replace(/\.tsx?$/, ""));
   }
   return out;
 }
 
 function resolveModule(dir: string, spec: string, barrelOnly: boolean): string {
-  const candidates = barrelOnly ? [`${spec}/index.ts`, `${spec}.ts`] : [`${spec}.tsx`, `${spec}.ts`, `${spec}/index.ts`];
+  const candidates = barrelOnly
+    ? [`${spec}/index.ts`, `${spec}.ts`]
+    : [`${spec}.tsx`, `${spec}.ts`, `${spec}/index.ts`];
   for (const c of candidates) {
     const p = resolve(dir, c);
     if (existsSync(p)) return p;
@@ -101,20 +155,64 @@ describe("스토리 계약", () => {
   });
 
   it("컴포넌트 모듈마다 stories 가 있거나 STORIES_MISSING 에 적혀 있다", () => {
-    const missing = modules.filter(m => !existsSync(join(SRC, `${m}.stories.tsx`)) && !STORIES_MISSING.includes(m));
+    const missing = modules.filter(
+      (m) => !existsSync(join(SRC, `${m}.stories.tsx`)) && !STORIES_MISSING.includes(m),
+    );
     expect(missing, "새 컴포넌트는 stories 와 함께 만든다").toEqual([]);
   });
 
   it("STORIES_MISSING 은 줄어들기만 한다 — stories 가 생긴 항목·배럴에 없는 항목은 지운다", () => {
-    const stale = STORIES_MISSING.filter(m => existsSync(join(SRC, `${m}.stories.tsx`)) || !modules.includes(m));
+    const stale = STORIES_MISSING.filter(
+      (m) => existsSync(join(SRC, `${m}.stories.tsx`)) || !modules.includes(m),
+    );
     expect(stale).toEqual([]);
     expect([...STORIES_MISSING]).toEqual([...STORIES_MISSING].sort());
   });
 
-  it.each(storyFiles(SRC).map(f => [relative(SRC, f), f] as const))("%s 는 Default · Variants · ThemeContrast 를 내보낸다", (_name, file) => {
-    const text = readFileSync(file, "utf8");
-    for (const name of REQUIRED_EXPORTS) {
-      expect(text, `export const ${name}`).toMatch(new RegExp(`export const ${name}\\b`));
-    }
+  it.each(storyFiles(SRC).map((f) => [relative(SRC, f), f] as const))(
+    "%s 는 Default · Variants · ThemeContrast 를 내보낸다",
+    (_name, file) => {
+      const text = readFileSync(file, "utf8");
+      for (const name of REQUIRED_EXPORTS) {
+        expect(text, `export const ${name}`).toMatch(new RegExp(`export const ${name}\\b`));
+      }
+    },
+  );
+});
+
+describe("a11y 래칫(addon-a11y test: 'error')", () => {
+  const files = [...storyFiles(SRC), ...storyFiles(join(PKG, "stories"))].map(
+    (f) => [relative(PKG, f), f] as const,
+  );
+  const actual: Record<string, readonly string[]> = {};
+  for (const [name, file] of files) {
+    for (const [story, rules] of Object.entries(a11yExemptions(file))) actual[`${name}#${story}`] = rules;
+  }
+
+  it("메타(파일 머리)에서 axe 규칙을 끄지 않는다 — 스토리 단위로만", () => {
+    const offenders = files.filter(([, file]) => {
+      const text = readFileSync(file, "utf8");
+      const meta = text.slice(text.indexOf("const meta"), text.indexOf("export default meta"));
+      return /enabled:\s*false/.test(meta);
+    });
+    expect(offenders.map(([name]) => name)).toEqual([]);
+  });
+
+  it("규칙을 끈 스토리 ⊆ KNOWN_A11Y_FAILURES (같은 규칙 집합)", () => {
+    const fresh = Object.entries(actual).filter(
+      ([key, rules]) => JSON.stringify(rules) !== JSON.stringify(KNOWN_A11Y_FAILURES[key]),
+    );
+    expect(
+      fresh,
+      "새로 끈 스토리·규칙 — 위반을 고치거나(권장) 실측 뒤 KNOWN_A11Y_FAILURES 에 적는다",
+    ).toEqual([]);
+  });
+
+  it("KNOWN_A11Y_FAILURES 는 줄어들기만 한다 — 더는 끄지 않는 스토리는 지운다", () => {
+    const stale = Object.keys(KNOWN_A11Y_FAILURES).filter((key) => !(key in actual));
+    expect(stale).toEqual([]);
+    const keys = Object.keys(KNOWN_A11Y_FAILURES);
+    expect(keys).toEqual([...keys].sort());
+    for (const rules of Object.values(KNOWN_A11Y_FAILURES)) expect([...rules]).toEqual([...rules].sort());
   });
 });

@@ -38,16 +38,26 @@
 
 /* 진입 애니메이션의 keyframes — 길이·곡선은 @theme 의 --animate-* 가 든다. */
 @keyframes pop {
-  from { opacity: 0; transform: translateY(4px) scale(0.985); }
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.985);
+  }
 }
 @keyframes fade {
-  from { opacity: 0; }
+  from {
+    opacity: 0;
+  }
 }
 @keyframes rise {
-  from { opacity: 0; transform: translateY(8px); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 @keyframes shimmer {
-  to { background-position: -200% 0; }
+  to {
+    background-position: -200% 0;
+  }
 }
 
 /* ── 손 유틸리티 ───────────────────────────────────────────────────────────────
@@ -73,76 +83,197 @@
 
 /* 컨트롤 높이와 셸 치수. `--height-*`·`--size-*` 는 Tailwind 네임스페이스가 아니라 유틸리티가 자동으로 나오지 않는다 —
    몇 개뿐이므로 손으로 낸다. 아이콘 전용 버튼이 정사각이 되도록 w- 도 함께 둔다. 이름 목록은 cn.ts 의 HAND_UTILITIES 와 같아야 한다(ladders.spec). */
-@utility w-rail { width: var(--size-rail); }
-@utility gap-shell { gap: var(--space-card-gap); }
+@utility w-rail {
+  width: var(--size-rail);
+}
+@utility gap-shell {
+  gap: var(--space-card-gap);
+}
 
 /* 오버레이의 유동 치수 — 뷰포트에서 여백(--space-dialog-gutter-*)만큼 물러난다. 상한은 Tailwind 의 max-w-dialog-* · max-w-drawer-*(--container-*)가
    맡으므로 «유동 폭 + 상한» 이 옛 `w-[min(560px,calc(100vw-24px))]` 와 같은 결과다(#22). 폭·높이 토큰이 아니라 «규칙» 이라 손으로 낸다. */
-@utility w-dialog-fluid { width: calc(100vw - 2 * var(--space-dialog-gutter-x)); }
-@utility h-dialog-fluid { height: calc(100dvh - 2 * var(--space-dialog-gutter-y)); }
-@utility max-h-dialog-fluid { max-height: calc(100dvh - 2 * var(--space-dialog-gutter-y)); }
-@utility max-w-popover-fluid { max-width: min(var(--container-popover-max), calc(100vw - 2 * var(--space-dialog-gutter-x))); }
+@utility w-dialog-fluid {
+  width: calc(100vw - 2 * var(--space-dialog-gutter-x));
+}
+@utility h-dialog-fluid {
+  height: calc(100dvh - 2 * var(--space-dialog-gutter-y));
+}
+@utility max-h-dialog-fluid {
+  max-height: calc(100dvh - 2 * var(--space-dialog-gutter-y));
+}
+@utility max-w-popover-fluid {
+  max-width: min(var(--container-popover-max), calc(100vw - 2 * var(--space-dialog-gutter-x)));
+}
 
-@utility h-ctl-sm { height: var(--height-ctl-sm); }
-@utility h-ctl { height: var(--height-ctl); }
-@utility h-ctl-lg { height: var(--height-ctl-lg); }
-@utility w-ctl-sm { width: var(--height-ctl-sm); }
-@utility w-ctl { width: var(--height-ctl); }
-@utility w-ctl-lg { width: var(--height-ctl-lg); }
+@utility h-ctl-sm {
+  height: var(--height-ctl-sm);
+}
+@utility h-ctl {
+  height: var(--height-ctl);
+}
+@utility h-ctl-lg {
+  height: var(--height-ctl-lg);
+}
+@utility w-ctl-sm {
+  width: var(--height-ctl-sm);
+}
+@utility w-ctl {
+  width: var(--height-ctl);
+}
+@utility w-ctl-lg {
+  width: var(--height-ctl-lg);
+}
 
 /* ── 컴포넌트 규칙 ─────────────────────────────────────────────────────────────
-   접기 모션은 카드·아코디언·뷰 패널이 같은 길이와 곡선(--motion-collapse-*)을 읽는다. */
-.ds-accordion { min-width: 0; }
-.ds-accordion-item { min-width: 0; border: 1px solid var(--chrome-border); border-radius: var(--radius-lg); background: var(--chrome-card); color: var(--chrome-foreground); }
-.ds-accordion-header { display: flex; margin: 0; }
-.ds-accordion-trigger {
-  display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0;
-  border: 0; border-radius: var(--radius-lg); padding: 10px 12px;
-  background: transparent; color: inherit; font: inherit; font-size: var(--text-control); font-weight: 600;
-  text-align: left; cursor: pointer;
+   접기 모션은 카드·아코디언·뷰 패널이 같은 길이와 곡선(--motion-collapse-*)을 읽는다.
+   간격은 Tailwind 사다리(--spacing 4px)의 배수로 적는다 — 유틸리티(gap-2 · px-3)와 같은 값이고 stylelint 가 px 리터럴을 막는다(C4). */
+.ds-accordion {
+  min-width: 0;
 }
-.ds-accordion-trigger:focus-visible { outline: 2px solid var(--chrome-ring); outline-offset: 2px; }
-.ds-accordion-trigger:disabled { cursor: default; opacity: .45; }
-.ds-accordion-trigger-label { display: flex; flex: 1; min-width: 0; align-items: center; gap: 8px; }
-.ds-accordion-chevron { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); transition: rotate var(--motion-collapse-duration) var(--motion-collapse-easing); }
-.ds-accordion-trigger[data-state="open"] .ds-accordion-chevron { rotate: 180deg; }
-.ds-accordion-content { min-width: 0; }
+.ds-accordion-item {
+  min-width: 0;
+  border: 1px solid var(--chrome-border);
+  border-radius: var(--radius-lg);
+  background: var(--chrome-card);
+  color: var(--chrome-foreground);
+}
+.ds-accordion-header {
+  display: flex;
+  margin: 0;
+}
+.ds-accordion-trigger {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  border-radius: var(--radius-lg);
+  padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 3);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-control);
+  font-weight: var(--font-weight-semibold);
+  text-align: left;
+  cursor: pointer;
+}
+.ds-accordion-trigger:focus-visible {
+  outline: 2px solid var(--chrome-ring);
+  outline-offset: 2px;
+}
+.ds-accordion-trigger:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+.ds-accordion-trigger-label {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
+}
+.ds-accordion-chevron {
+  flex: none;
+  width: var(--size-icon-md);
+  height: var(--size-icon-md);
+  transition: rotate var(--motion-collapse-duration) var(--motion-collapse-easing);
+}
+.ds-accordion-trigger[data-state="open"] .ds-accordion-chevron {
+  rotate: 180deg;
+}
+.ds-accordion-content {
+  min-width: 0;
+}
 .ds-accordion-motion {
-  display: grid; grid-template-rows: 1fr; min-width: 0; opacity: 1; visibility: visible;
-  transition: grid-template-rows var(--motion-collapse-duration) var(--motion-collapse-easing), opacity var(--motion-collapse-duration) var(--motion-collapse-easing), visibility 0s;
+  display: grid;
+  grid-template-rows: 1fr;
+  min-width: 0;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows var(--motion-collapse-duration) var(--motion-collapse-easing),
+    opacity var(--motion-collapse-duration) var(--motion-collapse-easing),
+    visibility 0s;
 }
 .ds-accordion-content[data-state="closed"] > .ds-accordion-motion {
-  grid-template-rows: 0fr; opacity: 0; visibility: hidden;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
   transition-delay: 0s, 0s, var(--motion-collapse-duration);
 }
-.ds-accordion-content-clip { min-height: 0; min-width: 0; overflow: hidden; }
-.ds-accordion-content-body { min-width: 0; padding: 4px 12px 12px; }
+.ds-accordion-content-clip {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+.ds-accordion-content-body {
+  min-width: 0;
+  padding: var(--spacing) calc(var(--spacing) * 3) calc(var(--spacing) * 3);
+}
 
 /* 스크롤 크롬은 내용 위에만 겹친다. 너비를 예약하지 않고 실제 활동이 끝난 뒤 사라진다 — 지연은 JS(MOTION.scrollHideDelayMs), 페이드는 여기. */
-.ds-scroll-area { min-width: 0; min-height: 0; }
-.ds-scroll-area-viewport {
-  flex: 1 1 auto; min-width: 0; min-height: 0; width: 100%; max-height: inherit;
-  overscroll-behavior: contain; scrollbar-gutter: auto;
+.ds-scroll-area {
+  min-width: 0;
+  min-height: 0;
 }
-.ds-scroll-area-viewport > div { display: block !important; }
+.ds-scroll-area-viewport {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  max-height: inherit;
+  overscroll-behavior: contain;
+  scrollbar-gutter: auto;
+}
+.ds-scroll-area-viewport > div {
+  display: block !important;
+}
 .ds-scroll-area-scrollbar {
-  z-index: 1; display: flex; touch-action: none; user-select: none;
-  padding: 0; background: transparent; opacity: 0; pointer-events: none;
+  z-index: 1;
+  display: flex;
+  touch-action: none;
+  user-select: none;
+  padding: 0;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
   transition: opacity var(--duration-scrollbar-fade) ease;
 }
-.ds-scroll-area-scrollbar[data-orientation="vertical"] { width: var(--size-scrollbar); }
-.ds-scroll-area-scrollbar[data-orientation="horizontal"] { height: var(--size-scrollbar); flex-direction: column; }
-.ds-scroll-area[data-scroll-active="true"] > .ds-scroll-area-scrollbar:has([data-slot="scroll-area-thumb"]) {
-  opacity: 1; pointer-events: auto; transition: none;
+.ds-scroll-area-scrollbar[data-orientation="vertical"] {
+  width: var(--size-scrollbar);
 }
-.ds-scroll-area-thumb { position: relative; flex: 1; border-radius: 999px; background: var(--chrome-border-strong); }
+.ds-scroll-area-scrollbar[data-orientation="horizontal"] {
+  height: var(--size-scrollbar);
+  flex-direction: column;
+}
+.ds-scroll-area[data-scroll-active="true"] > .ds-scroll-area-scrollbar:has([data-slot="scroll-area-thumb"]) {
+  opacity: 1;
+  pointer-events: auto;
+  transition: none;
+}
+.ds-scroll-area-thumb {
+  position: relative;
+  flex: 1;
+  border-radius: var(--radius-full);
+  background: var(--chrome-border-strong);
+}
 @media (prefers-reduced-motion: reduce) {
-  .ds-scroll-area-scrollbar { transition: none; }
+  .ds-scroll-area-scrollbar {
+    transition: none;
+  }
 }
 @media print {
-  .ds-scroll-area, .ds-scroll-area-viewport, [data-slot="data-table"]:has(.ds-scroll-area) {
-    display: block !important; height: auto !important; min-height: 0 !important;
-    max-height: none !important; overflow: visible !important;
+  .ds-scroll-area,
+  .ds-scroll-area-viewport,
+  [data-slot="data-table"]:has(.ds-scroll-area) {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
-  .ds-scroll-area-scrollbar { display: none !important; }
+  .ds-scroll-area-scrollbar {
+    display: none !important;
+  }
 }

@@ -97,7 +97,15 @@ const ICON = {
 
 function Icon({ d }: { d: string }) {
   return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d={d} />
     </svg>
   );
@@ -108,42 +116,96 @@ function SitePlan() {
   return (
     <svg viewBox="0 0 520 300" className="absolute inset-0 size-full" aria-label="Site plan">
       <g stroke="var(--canvas-grid)" strokeWidth={0.7}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => (
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
           <line key={`v${i}`} x1={i * 52} y1={0} x2={i * 52} y2={300} />
         ))}
-        {[1, 2, 3, 4, 5].map(i => (
+        {[1, 2, 3, 4, 5].map((i) => (
           <line key={`h${i}`} x1={0} y1={i * 50} x2={520} y2={i * 50} />
         ))}
       </g>
-      <polygon points="58,40 452,30 466,258 72,270" fill="var(--canvas-bg)" stroke="var(--canvas-ink-2)" strokeWidth={1.4} />
-      <polygon points="86,64 424,55 436,232 100,243" fill="none" stroke="var(--canvas-muted)" strokeWidth={1} strokeDasharray="6 4" />
-      <rect x="104" y="82" width="312" height="132" fill="var(--canvas-muted)" opacity={0.12} stroke="var(--canvas-muted)" strokeWidth={0.8} />
+      <polygon
+        points="58,40 452,30 466,258 72,270"
+        fill="var(--canvas-bg)"
+        stroke="var(--canvas-ink-2)"
+        strokeWidth={1.4}
+      />
+      <polygon
+        points="86,64 424,55 436,232 100,243"
+        fill="none"
+        stroke="var(--canvas-muted)"
+        strokeWidth={1}
+        strokeDasharray="6 4"
+      />
+      <rect
+        x="104"
+        y="82"
+        width="312"
+        height="132"
+        fill="var(--canvas-muted)"
+        opacity={0.12}
+        stroke="var(--canvas-muted)"
+        strokeWidth={0.8}
+      />
       <rect x="126" y="98" width="84" height="100" fill="var(--canvas-ink-2)" opacity={0.7} />
-      <rect x="266" y="92" width="84" height="100" fill="var(--chrome-selection-fill)" stroke="var(--chrome-selection-stroke)" strokeWidth={1.8} />
+      <rect
+        x="266"
+        y="92"
+        width="84"
+        height="100"
+        fill="var(--chrome-selection-fill)"
+        stroke="var(--chrome-selection-stroke)"
+        strokeWidth={1.8}
+      />
       <g stroke="var(--canvas-ink-2)" strokeWidth={0.9}>
         <line x1="210" y1="214" x2="266" y2="214" />
         <line x1="210" y1="206" x2="210" y2="222" />
         <line x1="266" y1="206" x2="266" y2="222" />
       </g>
-      <text x="216" y="234" fontFamily="var(--mono)" fontSize={11} fill="var(--canvas-ink-2)">12.4 m</text>
-      <text x="134" y="116" fontFamily="var(--mono)" fontSize={12} fill="var(--canvas-ink)">A</text>
-      <text x="274" y="110" fontFamily="var(--mono)" fontSize={12} fill="var(--canvas-ink)">B</text>
+      <text x="216" y="234" fontFamily="var(--mono)" fontSize={11} fill="var(--canvas-ink-2)">
+        12.4 m
+      </text>
+      <text x="134" y="116" fontFamily="var(--mono)" fontSize={12} fill="var(--canvas-ink)">
+        A
+      </text>
+      <text x="274" y="110" fontFamily="var(--mono)" fontSize={12} fill="var(--canvas-ink)">
+        B
+      </text>
     </svg>
   );
 }
 
-
 /* 카드 썸네일 — 후보마다 다른 배치가 보여야 카드가 «고르는 것» 으로 읽힌다. */
 function PlanThumb({ seed }: { seed: number }) {
   const towers = [
-    [[22, 30, 26, 44], [56, 26, 26, 44]],
-    [[20, 24, 22, 52], [46, 34, 22, 40], [72, 24, 18, 52]],
-    [[26, 28, 48, 20], [26, 54, 48, 22]],
+    [
+      [22, 30, 26, 44],
+      [56, 26, 26, 44],
+    ],
+    [
+      [20, 24, 22, 52],
+      [46, 34, 22, 40],
+      [72, 24, 18, 52],
+    ],
+    [
+      [26, 28, 48, 20],
+      [26, 54, 48, 22],
+    ],
   ][seed % 3]!;
   return (
     <svg viewBox="0 0 110 74" className="absolute inset-0 size-full bg-canvas" aria-hidden="true">
-      <polygon points="8,8 102,5 105,69 11,72" fill="var(--canvas-surface)" stroke="var(--canvas-ink-2)" strokeWidth={1} />
-      <polygon points="15,15 95,12 98,62 18,65" fill="none" stroke="var(--canvas-muted)" strokeWidth={0.7} strokeDasharray="3 2.5" />
+      <polygon
+        points="8,8 102,5 105,69 11,72"
+        fill="var(--canvas-surface)"
+        stroke="var(--canvas-ink-2)"
+        strokeWidth={1}
+      />
+      <polygon
+        points="15,15 95,12 98,62 18,65"
+        fill="none"
+        stroke="var(--canvas-muted)"
+        strokeWidth={0.7}
+        strokeDasharray="3 2.5"
+      />
       {towers.map(([x, y, w, h], i) => (
         <rect key={i} x={x} y={y} width={w} height={h} fill="var(--canvas-ink-2)" opacity={0.72} />
       ))}
@@ -191,19 +253,40 @@ function MassingView() {
   return (
     <svg viewBox="0 0 420 300" className="absolute inset-0 size-full" aria-label="Massing view">
       <g stroke="var(--canvas-line)" strokeWidth={0.7}>
-        {[0, 1, 2, 3, 4].map(i => (
+        {[0, 1, 2, 3, 4].map((i) => (
           <line key={i} x1={40 + i * 24} y1={276} x2={130 + i * 24} y2={238} />
         ))}
       </g>
       {[podium, ...towers].map((b, i) => (
         <g key={i}>
-          <polygon points={b.front} fill="var(--canvas-ink-2)" opacity={i === 0 ? 0.24 : 0.58} stroke="var(--canvas-ink-2)" strokeWidth={0.8} />
-          <polygon points={b.side} fill="var(--canvas-ink-2)" opacity={i === 0 ? 0.34 : 0.78} stroke="var(--canvas-ink-2)" strokeWidth={0.8} />
-          <polygon points={b.top} fill="var(--canvas-surface)" stroke="var(--canvas-ink-2)" strokeWidth={0.8} />
+          <polygon
+            points={b.front}
+            fill="var(--canvas-ink-2)"
+            opacity={i === 0 ? 0.24 : 0.58}
+            stroke="var(--canvas-ink-2)"
+            strokeWidth={0.8}
+          />
+          <polygon
+            points={b.side}
+            fill="var(--canvas-ink-2)"
+            opacity={i === 0 ? 0.34 : 0.78}
+            stroke="var(--canvas-ink-2)"
+            strokeWidth={0.8}
+          />
+          <polygon
+            points={b.top}
+            fill="var(--canvas-surface)"
+            stroke="var(--canvas-ink-2)"
+            strokeWidth={0.8}
+          />
         </g>
       ))}
-      <text x="112" y="176" fontFamily="var(--mono)" fontSize={11} fill="var(--canvas-bg)">A</text>
-      <text x="222" y="164" fontFamily="var(--mono)" fontSize={11} fill="var(--canvas-bg)">B</text>
+      <text x="112" y="176" fontFamily="var(--mono)" fontSize={11} fill="var(--canvas-bg)">
+        A
+      </text>
+      <text x="222" y="164" fontFamily="var(--mono)" fontSize={11} fill="var(--canvas-bg)">
+        B
+      </text>
     </svg>
   );
 }
@@ -222,12 +305,20 @@ export function Workbench() {
         <div className="grid size-7 place-items-center rounded-[7px] bg-primary font-mono text-micro font-medium text-primary-foreground">
           BO
         </div>
-        <span className="text-title font-semibold tracking-[-0.01em] text-foreground">Residential Studio</span>
-        <span className="font-mono text-micro uppercase tracking-caps text-muted-foreground">BuildOS / India</span>
+        <span className="text-title font-semibold tracking-[-0.01em] text-foreground">
+          Residential Studio
+        </span>
+        <span className="font-mono text-micro tracking-caps text-muted-foreground uppercase">
+          BuildOS / India
+        </span>
         <span className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" size="sm">Regulation lab ↗</Button>
+          <Button variant="ghost" size="sm">
+            Regulation lab ↗
+          </Button>
           <Button size="sm">Open</Button>
-          <Button size="sm" variant="solid" tone="primary">Save scheme ↓</Button>
+          <Button size="sm" variant="solid" tone="primary">
+            Save scheme ↓
+          </Button>
         </span>
       </header>
 
@@ -249,12 +340,14 @@ export function Workbench() {
           />
           <Separator orientation="vertical" className="h-4" />
           {panels.anyCollapsed ? (
-            <Button variant="ghost" size="sm" onClick={panels.expandAll}>Expand all</Button>
+            <Button variant="ghost" size="sm" onClick={panels.expandAll}>
+              Expand all
+            </Button>
           ) : (
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => SIDE_PANELS.forEach(id => panels.setCollapsed(id, true))}
+              onClick={() => SIDE_PANELS.forEach((id) => panels.setCollapsed(id, true))}
             >
               Focus canvas
             </Button>
@@ -281,7 +374,7 @@ export function Workbench() {
         <Card
           className="w-[290px] shrink-0 overflow-y-auto overscroll-contain"
           collapsed={panels.isCollapsed("brief")}
-          onCollapsedChange={v => panels.setCollapsed("brief", v)}
+          onCollapsedChange={(v) => panels.setCollapsed("brief", v)}
           collapseTo="strip"
           collapsedLabel="Planning brief"
           collapsedSignal={<StatusDot tone="warning" label="3 to be verified" />}
@@ -290,13 +383,15 @@ export function Workbench() {
           <div className="flex flex-col gap-4 p-5">
             <div className="flex flex-col gap-2.5">
               <div className="flex items-start gap-2">
-                <Eyebrow step="01" className="flex-1">Planning brief</Eyebrow>
+                <Eyebrow step="01" className="flex-1">
+                  Planning brief
+                </Eyebrow>
                 <CardCollapse />
               </div>
               <DisplayHeading>Make the plot work.</DisplayHeading>
               <Lede>
-                Set the programme, the deal model and the tower count. Every candidate is judged
-                against the same jurisdiction pack.
+                Set the programme, the deal model and the tower count. Every candidate is judged against the
+                same jurisdiction pack.
               </Lede>
             </div>
 
@@ -330,16 +425,22 @@ export function Workbench() {
                 ]}
               />
               <div className="flex flex-wrap gap-1.5">
-                <Badge tone="success" dot>FSI-01 pass</Badge>
-                <Badge tone="warning" dot>3 TBV</Badge>
+                <Badge tone="success" dot>
+                  FSI-01 pass
+                </Badge>
+                <Badge tone="warning" dot>
+                  3 TBV
+                </Badge>
               </div>
             </div>
 
             <Button variant="solid" tone="primary" size="lg" className="w-full">
               Generate schemes →
             </Button>
-            <Button size="lg" className="w-full">Compare schemes</Button>
-            <p className="text-label leading-relaxed text-muted-foreground">
+            <Button size="lg" className="w-full">
+              Compare schemes
+            </Button>
+            <p className="leading-relaxed text-label text-muted-foreground">
               Generate returns one checked scheme. Compare explores alternatives and takes longer.
             </p>
           </div>
@@ -349,7 +450,7 @@ export function Workbench() {
         <Card
           className="min-w-0 flex-1"
           collapsed={panels.isCollapsed("plan")}
-          onCollapsedChange={v => panels.setCollapsed("plan", v)}
+          onCollapsedChange={(v) => panels.setCollapsed("plan", v)}
           collapseTo="strip"
           collapsedLabel="2D plan"
           side="left"
@@ -360,23 +461,34 @@ export function Workbench() {
               <SitePlan />
             </div>
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
-              <div className="on-canvas flex items-center gap-1 rounded-lg border border-border p-1 shadow-pop">
+              <div className="flex items-center gap-1 rounded-lg border border-border p-1 shadow-pop on-canvas">
                 <Tooltip label="Zoom to fit" shortcut="⇧2">
-                  <Button size="icon-sm" variant="ghost" aria-label="Zoom to fit"><Icon d={ICON.plan} /></Button>
+                  <Button size="icon-sm" variant="ghost" aria-label="Zoom to fit">
+                    <Icon d={ICON.plan} />
+                  </Button>
                 </Tooltip>
                 <Separator orientation="vertical" className="mx-0.5 h-4" />
-                <span className="tnum px-2 text-label text-muted-foreground">1 : 500</span>
+                <span className="px-2 tnum text-label text-muted-foreground">1 : 500</span>
                 <Separator orientation="vertical" className="mx-0.5 h-4" />
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button size="sm" variant="ghost">Legend</Button>
+                    <Button size="sm" variant="ghost">
+                      Legend
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent side="top" align="end" className="w-auto">
                     <SectionLabel className="mb-2.5">Categories</SectionLabel>
                     <ul className="flex flex-col gap-2 text-body text-foreground-2">
-                      {[["Tower", "var(--canvas-ink-2)"], ["Podium", "var(--canvas-muted)"], ["Setback", "var(--canvas-muted)"]].map(([l, c]) => (
+                      {[
+                        ["Tower", "var(--canvas-ink-2)"],
+                        ["Podium", "var(--canvas-muted)"],
+                        ["Setback", "var(--canvas-muted)"],
+                      ].map(([l, c]) => (
                         <li key={l} className="flex items-center gap-2">
-                          <i className="size-2.5 shrink-0 border border-canvas-line" style={{ background: c }} />
+                          <i
+                            className="size-2.5 shrink-0 border border-canvas-line"
+                            style={{ background: c }}
+                          />
                           {l}
                         </li>
                       ))}
@@ -393,7 +505,7 @@ export function Workbench() {
         <Card
           className="min-w-0 flex-1"
           collapsed={panels.isCollapsed("model")}
-          onCollapsedChange={v => panels.setCollapsed("model", v)}
+          onCollapsedChange={(v) => panels.setCollapsed("model", v)}
           collapseTo="strip"
           collapsedLabel="3D model"
           side="right"
@@ -404,10 +516,14 @@ export function Workbench() {
               <MassingView />
             </div>
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
-              <div className="on-canvas flex items-center gap-1 rounded-lg border border-border p-1 shadow-pop">
-                <Button size="sm" variant="ghost">Orbit</Button>
+              <div className="flex items-center gap-1 rounded-lg border border-border p-1 shadow-pop on-canvas">
+                <Button size="sm" variant="ghost">
+                  Orbit
+                </Button>
                 <Separator orientation="vertical" className="mx-0.5 h-4" />
-                <Button size="sm" variant="ghost">Cutaway</Button>
+                <Button size="sm" variant="ghost">
+                  Cutaway
+                </Button>
               </div>
             </div>
           </CardWell>
@@ -417,7 +533,7 @@ export function Workbench() {
         <Card
           className="w-[250px] shrink-0 overflow-y-auto overscroll-contain"
           collapsed={panels.isCollapsed("inspect")}
-          onCollapsedChange={v => panels.setCollapsed("inspect", v)}
+          onCollapsedChange={(v) => panels.setCollapsed("inspect", v)}
           collapseTo="strip"
           collapsedLabel="Inspect"
           collapsedSignal={<StatusDot tone="destructive" label="PK-04 fail" />}
@@ -447,7 +563,9 @@ export function Workbench() {
                 <span className="text-muted-foreground">218 of 266 bays</span>
                 <span className="tnum font-medium text-destructive">−48</span>
               </div>
-              <Badge tone="destructive" dot>PK-04 fail</Badge>
+              <Badge tone="destructive" dot>
+                PK-04 fail
+              </Badge>
             </div>
           </div>
         </Card>
@@ -478,10 +596,49 @@ function ToastRow() {
   const { toast } = useToast();
   return (
     <>
-      <Button onClick={() => toast({ tone: "success", title: "Scheme generated", description: "2 towers · 168 units · balance 1,302 m²" })}>Success</Button>
-      <Button onClick={() => toast({ tone: "warning", title: "Candidate 4 needs review", description: "Parking short by 48 bays — PK-04 fail", action: { label: "Inspect", altText: "Inspect candidate 4", onSelect: () => {} } })}>With action</Button>
-      <Button onClick={() => toast({ tone: "destructive", title: "Export failed", description: "The jurisdiction pack has 3 unresolved placeholders.", duration: 0 })}>Sticky failure</Button>
-      <Button variant="ghost" onClick={() => { for (let i = 1; i <= 5; i++) toast({ title: `Queued job ${i}` }); }}>Overflow the queue</Button>
+      <Button
+        onClick={() =>
+          toast({
+            tone: "success",
+            title: "Scheme generated",
+            description: "2 towers · 168 units · balance 1,302 m²",
+          })
+        }
+      >
+        Success
+      </Button>
+      <Button
+        onClick={() =>
+          toast({
+            tone: "warning",
+            title: "Candidate 4 needs review",
+            description: "Parking short by 48 bays — PK-04 fail",
+            action: { label: "Inspect", altText: "Inspect candidate 4", onSelect: () => {} },
+          })
+        }
+      >
+        With action
+      </Button>
+      <Button
+        onClick={() =>
+          toast({
+            tone: "destructive",
+            title: "Export failed",
+            description: "The jurisdiction pack has 3 unresolved placeholders.",
+            duration: 0,
+          })
+        }
+      >
+        Sticky failure
+      </Button>
+      <Button
+        variant="ghost"
+        onClick={() => {
+          for (let i = 1; i <= 5; i++) toast({ title: `Queued job ${i}` });
+        }}
+      >
+        Overflow the queue
+      </Button>
     </>
   );
 }
@@ -501,25 +658,33 @@ export function Gallery() {
 
       <div className="mx-auto max-w-[1180px] px-4 pb-16">
         <Card className="mt-6">
-          <div className="flex flex-col gap-2 px-6 pb-2 pt-6">
+          <div className="flex flex-col gap-2 px-6 pt-6 pb-2">
             <Eyebrow step="02">Component reference</Eyebrow>
             <DisplayHeading as="h2">Every piece, one surface.</DisplayHeading>
             <Lede className="max-w-[56ch]">
-              The screen above is built from exactly these. Toggle Dark in the context row — the
-              chrome inverts and the drawing stays white, because print and colour-blind safety
-              live on that surface.
+              The screen above is built from exactly these. Toggle Dark in the context row — the chrome
+              inverts and the drawing stays white, because print and colour-blind safety live on that surface.
             </Lede>
           </div>
 
-          <Spec name="Button" note="variant × tone × size. asChild renders any element with the button's clothes.">
-            <Button variant="solid" tone="primary">Generate</Button>
+          <Spec
+            name="Button"
+            note="variant × tone × size. asChild renders any element with the button's clothes."
+          >
+            <Button variant="solid" tone="primary">
+              Generate
+            </Button>
             <Button>Reload</Button>
             <Button variant="ghost">Cancel</Button>
-            <Button variant="solid" tone="destructive">Delete parcel</Button>
+            <Button variant="solid" tone="destructive">
+              Delete parcel
+            </Button>
             <Button tone="destructive">Clear</Button>
             <Button loading>Solving</Button>
             <Button disabled>Unavailable</Button>
-            <Button variant="link" tone="primary" asChild><a href="#ref">As a link</a></Button>
+            <Button variant="link" tone="primary" asChild>
+              <a href="#ref">As a link</a>
+            </Button>
             <ButtonGroup>
               <Button size="sm">Plan</Button>
               <Button size="sm">Model</Button>
@@ -527,7 +692,10 @@ export function Gallery() {
             </ButtonGroup>
           </Spec>
 
-          <Spec name="Input" note="Numeric fields carry mono + tabular-nums so digits never shift under a slider.">
+          <Spec
+            name="Input"
+            note="Numeric fields carry mono + tabular-nums so digits never shift under a slider."
+          >
             <Input placeholder="Scheme name" className="w-[190px]" />
             <Input numeric defaultValue="21" suffix="fl" className="w-[110px]" />
             <Input numeric defaultValue="38,420" suffix="m²" className="w-[140px]" />
@@ -536,16 +704,32 @@ export function Gallery() {
           </Spec>
 
           <Spec name="Choice" note="Checkbox is independent, radio is one-of, switch applies immediately.">
-            <label className="flex items-center gap-2 text-body"><Checkbox checked={checked} onCheckedChange={v => setChecked(v === true)} />Keep reservations</label>
+            <label className="flex items-center gap-2 text-body">
+              <Checkbox checked={checked} onCheckedChange={(v) => setChecked(v === true)} />
+              Keep reservations
+            </label>
             <RadioGroup value={regime} onValueChange={setRegime} className="flex gap-4">
-              <label className="flex items-center gap-2 text-body"><RadioGroupItem value="fsi" /> FSI regime</label>
-              <label className="flex items-center gap-2 text-body"><RadioGroupItem value="setback" /> Setback regime</label>
+              <label className="flex items-center gap-2 text-body">
+                <RadioGroupItem value="fsi" /> FSI regime
+              </label>
+              <label className="flex items-center gap-2 text-body">
+                <RadioGroupItem value="setback" /> Setback regime
+              </label>
             </RadioGroup>
-            <label className="flex items-center gap-2 text-body"><Switch defaultChecked />Podium deck</label>
+            <label className="flex items-center gap-2 text-body">
+              <Switch defaultChecked />
+              Podium deck
+            </label>
           </Spec>
 
-          <Spec name="ScrollArea" note="6px overlay scrollbars reserve no space. Scroll to reveal; after 500ms at rest, they fade out over 200ms.">
-            <ScrollArea className="h-[160px] w-full max-w-[400px] rounded-md border border-border" viewportProps={{ "aria-label": "Scroll area example", tabIndex: 0 }}>
+          <Spec
+            name="ScrollArea"
+            note="6px overlay scrollbars reserve no space. Scroll to reveal; after 500ms at rest, they fade out over 200ms."
+          >
+            <ScrollArea
+              className="h-[160px] w-full max-w-[400px] rounded-md border border-border"
+              viewportProps={{ "aria-label": "Scroll area example", tabIndex: 0 }}
+            >
               <div className="min-w-[540px] divide-y divide-border">
                 {Array.from({ length: 12 }, (_, index) => (
                   <div key={index} className="flex justify-between gap-8 px-4 py-3">
@@ -557,30 +741,63 @@ export function Gallery() {
             </ScrollArea>
           </Spec>
 
-          <Spec name="Badge" note="State is never colour alone — a badge always carries its word. Dashed means to-be-verified.">
+          <Spec
+            name="Badge"
+            note="State is never colour alone — a badge always carries its word. Dashed means to-be-verified."
+          >
             <Badge>Draft</Badge>
-            <Badge tone="success" dot>FSI-01 pass</Badge>
-            <Badge tone="warning" dot>3 unresolved</Badge>
-            <Badge tone="destructive" dot>PK-04 fail</Badge>
-            <Badge tone="primary" provisional>TBV</Badge>
-            <span className="flex items-center gap-2 text-body text-muted-foreground"><StatusDot tone="destructive" label="Failing" /> StatusDot needs a name</span>
+            <Badge tone="success" dot>
+              FSI-01 pass
+            </Badge>
+            <Badge tone="warning" dot>
+              3 unresolved
+            </Badge>
+            <Badge tone="destructive" dot>
+              PK-04 fail
+            </Badge>
+            <Badge tone="primary" provisional>
+              TBV
+            </Badge>
+            <span className="flex items-center gap-2 text-body text-muted-foreground">
+              <StatusDot tone="destructive" label="Failing" /> StatusDot needs a name
+            </span>
             <Kbd>⌘K</Kbd>
           </Spec>
 
-          <Spec name="Loading" note="Spinner says running; progress says how far; skeleton holds the exact height the value will take.">
+          <Spec
+            name="Loading"
+            note="Spinner says running; progress says how far; skeleton holds the exact height the value will take."
+          >
             <Spinner />
             <Spinner size="lg" tone="primary" label="Solving" />
-            <div className="w-[190px]"><Progress value={68} /></div>
-            <div className="w-[190px]"><Progress value={104} tone="destructive" /></div>
-            <div className="w-[190px]"><Progress value={null} /></div>
-            <Button onClick={() => { setLoading(true); window.setTimeout(() => setLoading(false), 2400); }}>Toggle skeleton</Button>
+            <div className="w-[190px]">
+              <Progress value={68} />
+            </div>
+            <div className="w-[190px]">
+              <Progress value={104} tone="destructive" />
+            </div>
+            <div className="w-[190px]">
+              <Progress value={null} />
+            </div>
+            <Button
+              onClick={() => {
+                setLoading(true);
+                window.setTimeout(() => setLoading(false), 2400);
+              }}
+            >
+              Toggle skeleton
+            </Button>
             <Card elevation="flat" pad="md" className="w-[240px]">
-              {loading ? <SkeletonText lines={3} /> : (
-                <DescriptionList rows={[
-                  { k: "Permitted", v: "38,420 m²", numeric: true },
-                  { k: "Consumed", v: "37,118 m²", numeric: true },
-                  { k: "Balance", v: "1,302 m²", numeric: true, provisional: true },
-                ]} />
+              {loading ? (
+                <SkeletonText lines={3} />
+              ) : (
+                <DescriptionList
+                  rows={[
+                    { k: "Permitted", v: "38,420 m²", numeric: true },
+                    { k: "Consumed", v: "37,118 m²", numeric: true },
+                    { k: "Balance", v: "1,302 m²", numeric: true, provisional: true },
+                  ]}
+                />
               )}
             </Card>
             {loading ? <Skeleton shape="circle" h={28} /> : <StatusDot tone="success" label="Ready" />}
@@ -592,40 +809,72 @@ export function Gallery() {
 
           <Spec name="Alert" note="Stays in the flow. An icon rides along so the meaning survives greyscale.">
             <div className="flex w-full flex-col gap-3">
-              <Alert tone="info" title="Placeholder values in this pack">11 figures are marked TBV. The balance below is not a determination.</Alert>
-              <Alert tone="warning" title="Height limit reached" action={<Button size="sm">Show rule</Button>}>Full-storey height is 65.8 m against a 65 m limit — ALL-HT-04.</Alert>
-              <Alert tone="destructive" title="Parking short by 48 bays">PK-04 fails. Increase basement levels or reduce the unit count.</Alert>
+              <Alert tone="info" title="Placeholder values in this pack">
+                11 figures are marked TBV. The balance below is not a determination.
+              </Alert>
+              <Alert
+                tone="warning"
+                title="Height limit reached"
+                action={<Button size="sm">Show rule</Button>}
+              >
+                Full-storey height is 65.8 m against a 65 m limit — ALL-HT-04.
+              </Alert>
+              <Alert tone="destructive" title="Parking short by 48 bays">
+                PK-04 fails. Increase basement levels or reduce the unit count.
+              </Alert>
             </div>
           </Spec>
 
-          <Spec name="Overlay" note="One backdrop replaces five hand-rolled families. Focus trap, scroll lock and portal come with it.">
+          <Spec
+            name="Overlay"
+            note="One backdrop replaces five hand-rolled families. Focus trap, scroll lock and portal come with it."
+          >
             <Modal>
-              <ModalTrigger asChild><Button>Open modal</Button></ModalTrigger>
+              <ModalTrigger asChild>
+                <Button>Open modal</Button>
+              </ModalTrigger>
               <ModalContent size="md">
-                <ModalHeader title="Apply scheme 03" description="Two towers · 21 storeys · a podium deck replaces the current layout." />
+                <ModalHeader
+                  title="Apply scheme 03"
+                  description="Two towers · 21 storeys · a podium deck replaces the current layout."
+                />
                 <ModalBody>
                   <div className="flex flex-col gap-4">
-                    <label className="flex items-center justify-between gap-4 text-body">Keep existing reservations<Switch defaultChecked /></label>
-                    <label className="flex items-center justify-between gap-4 text-body">Revision label<Input defaultValue="r-03" className="w-[130px]" /></label>
+                    <label className="flex items-center justify-between gap-4 text-body">
+                      Keep existing reservations
+                      <Switch defaultChecked />
+                    </label>
+                    <label className="flex items-center justify-between gap-4 text-body">
+                      Revision label
+                      <Input defaultValue="r-03" className="w-[130px]" />
+                    </label>
                     <Alert tone="warning" title="This replaces the saved layout" />
                   </div>
                 </ModalBody>
                 <ModalFooter>
                   <Button variant="ghost">Cancel</Button>
-                  <Button variant="solid" tone="primary">Apply scheme</Button>
+                  <Button variant="solid" tone="primary">
+                    Apply scheme
+                  </Button>
                 </ModalFooter>
               </ModalContent>
             </Modal>
-            <Button tone="destructive" onClick={() => setConfirm(true)}>Confirm dialog</Button>
+            <Button tone="destructive" onClick={() => setConfirm(true)}>
+              Confirm dialog
+            </Button>
             <Button onClick={() => setDrawer(true)}>Drawer</Button>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild><Button>Menu</Button></DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
+                <Button>Menu</Button>
+              </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 <DropdownMenuLabel>Scheme</DropdownMenuLabel>
                 <DropdownMenuItem shortcut="⌘D">Duplicate</DropdownMenuItem>
                 <DropdownMenuItem shortcut="⌘E">Export RVT</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem tone="destructive" shortcut="⌫">Delete scheme</DropdownMenuItem>
+                <DropdownMenuItem tone="destructive" shortcut="⌫">
+                  Delete scheme
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Tooltip label="Tooltips flip the surface — dark on light" shortcut="?">
@@ -633,29 +882,68 @@ export function Gallery() {
             </Tooltip>
           </Spec>
 
-          <Spec name="DataTable" note="These tables are schedules. The total row is first-class, numeric cells are right-aligned mono, and only one column sorts at a time.">
+          <Spec
+            name="DataTable"
+            note="These tables are schedules. The total row is first-class, numeric cells are right-aligned mono, and only one column sorts at a time."
+          >
             <Card elevation="flat" className="w-full overflow-hidden">
               <DataTable
                 caption="Tower schedule"
                 className="max-h-[180px]"
                 rows={TOWER_ROWS}
-                rowKey={r => r.tower}
+                rowKey={(r) => r.tower}
                 selectedKey={picked}
-                onSelect={key => setPicked(key)}
+                onSelect={(key) => setPicked(key)}
                 stickyHeader
                 columns={[
-                  { key: "tower", header: "Tower", sortValue: r => r.tower, total: "Total" },
-                  { key: "storeys", header: "Storeys", numeric: true, sortValue: r => r.storeys, cell: r => r.storeys || "—" },
-                  { key: "units", header: "Units", numeric: true, sortValue: r => r.units, cell: r => r.units || "—", total: num(168) },
-                  { key: "builtUp", header: "Built-up", numeric: true, sortValue: r => r.builtUp, cell: r => `${num(r.builtUp)} m²`, total: `${num(41978)} m²` },
-                  { key: "parking", header: "Bays", numeric: true, sortValue: r => r.parking, total: num(266) },
+                  { key: "tower", header: "Tower", sortValue: (r) => r.tower, total: "Total" },
+                  {
+                    key: "storeys",
+                    header: "Storeys",
+                    numeric: true,
+                    sortValue: (r) => r.storeys,
+                    cell: (r) => r.storeys || "—",
+                  },
+                  {
+                    key: "units",
+                    header: "Units",
+                    numeric: true,
+                    sortValue: (r) => r.units,
+                    cell: (r) => r.units || "—",
+                    total: num(168),
+                  },
+                  {
+                    key: "builtUp",
+                    header: "Built-up",
+                    numeric: true,
+                    sortValue: (r) => r.builtUp,
+                    cell: (r) => `${num(r.builtUp)} m²`,
+                    total: `${num(41978)} m²`,
+                  },
+                  {
+                    key: "parking",
+                    header: "Bays",
+                    numeric: true,
+                    sortValue: (r) => r.parking,
+                    total: num(266),
+                  },
                   {
                     key: "verdict",
                     header: "Verdict",
-                    cell: r =>
-                      r.verdict === "pass" ? <Badge tone="success" dot>pass</Badge>
-                      : r.verdict === "tbv" ? <Badge tone="warning" dot>2 TBV</Badge>
-                      : <Badge tone="destructive" dot>PK-04</Badge>,
+                    cell: (r) =>
+                      r.verdict === "pass" ? (
+                        <Badge tone="success" dot>
+                          pass
+                        </Badge>
+                      ) : r.verdict === "tbv" ? (
+                        <Badge tone="warning" dot>
+                          2 TBV
+                        </Badge>
+                      ) : (
+                        <Badge tone="destructive" dot>
+                          PK-04
+                        </Badge>
+                      ),
                   },
                 ]}
               />
@@ -671,7 +959,7 @@ export function Gallery() {
                 loading
                 loadingRows={3}
                 rows={[] as readonly TowerRow[]}
-                rowKey={r => r.tower}
+                rowKey={(r) => r.tower}
                 columns={[
                   { key: "tower", header: "Tower" },
                   { key: "storeys", header: "Storeys", numeric: true },
@@ -682,43 +970,118 @@ export function Gallery() {
             </Card>
           </Spec>
 
-          <Spec name="Table (primitive)" note="For hand-assembled tables. Radius stays 0 — a table is canvas vocabulary.">
+          <Spec
+            name="Table (primitive)"
+            note="For hand-assembled tables. Radius stays 0 — a table is canvas vocabulary."
+          >
             <Card elevation="flat" className="w-full overflow-hidden">
               <Table>
-                <Thead><Tr><Th>Tower</Th><Th numeric>Storeys</Th><Th numeric>Units</Th><Th numeric>Built-up</Th><Th>Verdict</Th></Tr></Thead>
+                <Thead>
+                  <Tr>
+                    <Th>Tower</Th>
+                    <Th numeric>Storeys</Th>
+                    <Th numeric>Units</Th>
+                    <Th numeric>Built-up</Th>
+                    <Th>Verdict</Th>
+                  </Tr>
+                </Thead>
                 <Tbody>
-                  <Tr><Td>A</Td><Td numeric>21</Td><Td numeric>84</Td><Td numeric>18,204</Td><Td><Badge tone="success" dot>pass</Badge></Td></Tr>
-                  <Tr selected><Td>B</Td><Td numeric>21</Td><Td numeric>84</Td><Td numeric>18,914</Td><Td><Badge tone="warning" dot>2 TBV</Badge></Td></Tr>
-                  <Tr><Td>Podium</Td><Td numeric>2</Td><Td numeric>—</Td><Td numeric tone="destructive">−48</Td><Td><Badge tone="destructive" dot>PK-04</Badge></Td></Tr>
+                  <Tr>
+                    <Td>A</Td>
+                    <Td numeric>21</Td>
+                    <Td numeric>84</Td>
+                    <Td numeric>18,204</Td>
+                    <Td>
+                      <Badge tone="success" dot>
+                        pass
+                      </Badge>
+                    </Td>
+                  </Tr>
+                  <Tr selected>
+                    <Td>B</Td>
+                    <Td numeric>21</Td>
+                    <Td numeric>84</Td>
+                    <Td numeric>18,914</Td>
+                    <Td>
+                      <Badge tone="warning" dot>
+                        2 TBV
+                      </Badge>
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Podium</Td>
+                    <Td numeric>2</Td>
+                    <Td numeric>—</Td>
+                    <Td numeric tone="destructive">
+                      −48
+                    </Td>
+                    <Td>
+                      <Badge tone="destructive" dot>
+                        PK-04
+                      </Badge>
+                    </Td>
+                  </Tr>
                 </Tbody>
               </Table>
             </Card>
           </Spec>
 
-          <Spec name="MediaCard — vertical" note="Thumbnail on top, for picking between several. Selection changes colour, not border width — width would shift the whole grid by a pixel.">
+          <Spec
+            name="MediaCard — vertical"
+            note="Thumbnail on top, for picking between several. Selection changes colour, not border width — width would shift the whole grid by a pixel."
+          >
             <CardGrid min="212px" className="w-full">
-              {[0, 1, 2].map(i => (
+              {[0, 1, 2].map((i) => (
                 <MediaCard
                   key={i}
                   media={<PlanThumb seed={i} />}
-                  mediaOverlay={<Badge tone={i === 1 ? "warning" : "success"} dot>{i === 1 ? "2 TBV" : "pass"}</Badge>}
+                  mediaOverlay={
+                    <Badge tone={i === 1 ? "warning" : "success"} dot>
+                      {i === 1 ? "2 TBV" : "pass"}
+                    </Badge>
+                  }
                   eyebrow={`Candidate 0${i + 1}`}
-                  title={["Twin tower, north podium", "Triple slab, split core", "Paired slab, deck above"][i]}
-                  description={["Two towers on a shared podium; the north edge keeps the fire loop.", "Three slabs share one core bank; spacing is tightest at the west corner.", "Two long slabs with amenity on the deck; parking runs under both."][i]}
-                  meta={<>
-                    <span className="tnum text-label text-muted-foreground">{[168, 186, 154][i]} units</span>
-                    <span className="text-foreground-disabled">·</span>
-                    <span className="tnum text-label text-muted-foreground">FSI {[3.28, 3.33, 3.02][i]!.toFixed(2)}</span>
-                  </>}
+                  title={
+                    ["Twin tower, north podium", "Triple slab, split core", "Paired slab, deck above"][i]
+                  }
+                  description={
+                    [
+                      "Two towers on a shared podium; the north edge keeps the fire loop.",
+                      "Three slabs share one core bank; spacing is tightest at the west corner.",
+                      "Two long slabs with amenity on the deck; parking runs under both.",
+                    ][i]
+                  }
+                  meta={
+                    <>
+                      <span className="tnum text-label text-muted-foreground">
+                        {[168, 186, 154][i]} units
+                      </span>
+                      <span className="text-foreground-disabled">·</span>
+                      <span className="tnum text-label text-muted-foreground">
+                        FSI {[3.28, 3.33, 3.02][i]!.toFixed(2)}
+                      </span>
+                    </>
+                  }
                   selected={picked === `c${i}`}
                   onSelect={() => setPicked(`c${i}`)}
-                  actions={<Button size="sm" variant={picked === `c${i}` ? "solid" : "outline"} tone={picked === `c${i}` ? "primary" : "neutral"}>{picked === `c${i}` ? "Applied" : "Apply"}</Button>}
+                  actions={
+                    <Button
+                      size="sm"
+                      variant={picked === `c${i}` ? "solid" : "outline"}
+                      tone={picked === `c${i}` ? "primary" : "neutral"}
+                    >
+                      {picked === `c${i}` ? "Applied" : "Apply"}
+                    </Button>
+                  }
                 />
               ))}
             </CardGrid>
           </Spec>
 
-          <Spec name="MediaCard — horizontal" note="Thumbnail beside, when a list has to stay short — the parcel pool, saved revisions.">
+          <Spec
+            name="MediaCard — horizontal"
+            note="Thumbnail beside, when a list has to stay short — the parcel pool, saved revisions."
+          >
             <div className="flex w-full flex-col gap-3">
               <MediaCard
                 orientation="horizontal"
@@ -726,8 +1089,24 @@ export function Gallery() {
                 eyebrow="in-mh-mumbai · DCPR 2034"
                 title="Dahisar East, plot 44/2"
                 description="4,812 m² · redevelopment · FSI 3.33 with premium and TDR."
-                meta={<><Badge tone="success" dot>pack verified</Badge><Badge tone="primary" provisional>TDR TBV</Badge></>}
-                actions={<><Button size="sm">Open</Button><Button size="sm" variant="ghost">Duplicate</Button></>}
+                meta={
+                  <>
+                    <Badge tone="success" dot>
+                      pack verified
+                    </Badge>
+                    <Badge tone="primary" provisional>
+                      TDR TBV
+                    </Badge>
+                  </>
+                }
+                actions={
+                  <>
+                    <Button size="sm">Open</Button>
+                    <Button size="sm" variant="ghost">
+                      Duplicate
+                    </Button>
+                  </>
+                }
                 onSelect={() => setPicked("plot-44")}
                 selected={picked === "plot-44"}
               />
@@ -738,28 +1117,51 @@ export function Gallery() {
                 mediaWidth="96px"
                 title="Keshavnagar, plot 12"
                 description="2,140 m² · outright · UDCPR 2020."
-                meta={<Badge tone="warning" dot>3 TBV</Badge>}
-                actions={<Button size="sm" variant="ghost">Open</Button>}
+                meta={
+                  <Badge tone="warning" dot>
+                    3 TBV
+                  </Badge>
+                }
+                actions={
+                  <Button size="sm" variant="ghost">
+                    Open
+                  </Button>
+                }
               />
             </div>
           </Spec>
 
-          <Spec name="MediaCard — no thumbnail" note="With no media the slot disappears entirely. A grey placeholder reads as “not loaded yet”, which is a different thing from “there is none”.">
+          <Spec
+            name="MediaCard — no thumbnail"
+            note="With no media the slot disappears entirely. A grey placeholder reads as “not loaded yet”, which is a different thing from “there is none”."
+          >
             <CardGrid min="228px" className="w-full">
               <MediaCard
                 eyebrow="Revision r-03"
                 title="Podium deck added"
                 description="Half of the first tower floor converted to amenity, per the podium rule."
                 meta={<span className="tnum text-label text-muted-foreground">2026-09-21 · jhlee</span>}
-                actions={<Button size="sm" variant="ghost">Restore</Button>}
+                actions={
+                  <Button size="sm" variant="ghost">
+                    Restore
+                  </Button>
+                }
               />
               <MediaCard
                 elevation="flat"
                 eyebrow="Revision r-02"
                 title="Tower B moved 1.4 m east"
                 description="Spacing check passed at 12.4 m after the move."
-                meta={<Badge tone="success" dot>pass</Badge>}
-                actions={<Button size="sm" variant="ghost">Restore</Button>}
+                meta={
+                  <Badge tone="success" dot>
+                    pass
+                  </Badge>
+                }
+                actions={
+                  <Button size="sm" variant="ghost">
+                    Restore
+                  </Button>
+                }
               />
               <MediaCard
                 elevation="flush"
@@ -771,55 +1173,86 @@ export function Gallery() {
             </CardGrid>
           </Spec>
 
-          <Spec name="Accordion" note="Compose Root, Item, Header, Trigger and Content. Single or multiple sections, controlled or uncontrolled. Arrow keys move between headers; drafts stay mounted when closed.">
+          <Spec
+            name="Accordion"
+            note="Compose Root, Item, Header, Trigger and Content. Single or multiple sections, controlled or uncontrolled. Arrow keys move between headers; drafts stay mounted when closed."
+          >
             <div className="flex w-full flex-wrap gap-4">
-              <Accordion type="single" collapsible defaultValue="programme" className="min-w-[240px] flex-1 space-y-2">
+              <Accordion
+                type="single"
+                collapsible
+                defaultValue="programme"
+                className="min-w-[240px] flex-1 space-y-2"
+              >
                 <AccordionItem value="programme">
-                  <AccordionHeader><AccordionTrigger>Programme</AccordionTrigger></AccordionHeader>
+                  <AccordionHeader>
+                    <AccordionTrigger>Programme</AccordionTrigger>
+                  </AccordionHeader>
                   <AccordionContent>
-                    <label className="flex flex-col gap-2">Scheme name<Input aria-label="Accordion draft" defaultValue="Tower A" /></label>
+                    <label className="flex flex-col gap-2">
+                      Scheme name
+                      <Input aria-label="Accordion draft" defaultValue="Tower A" />
+                    </label>
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="checks">
-                  <AccordionHeader><AccordionTrigger>Checks</AccordionTrigger></AccordionHeader>
-                  <AccordionContent>One section opens at a time. Close and reopen the programme to keep editing the same draft.</AccordionContent>
+                  <AccordionHeader>
+                    <AccordionTrigger>Checks</AccordionTrigger>
+                  </AccordionHeader>
+                  <AccordionContent>
+                    One section opens at a time. Close and reopen the programme to keep editing the same
+                    draft.
+                  </AccordionContent>
                 </AccordionItem>
               </Accordion>
-              <Accordion type="multiple" defaultValue={["height", "parking"]} className="min-w-[240px] flex-1 space-y-2">
+              <Accordion
+                type="multiple"
+                defaultValue={["height", "parking"]}
+                className="min-w-[240px] flex-1 space-y-2"
+              >
                 <AccordionItem value="height">
-                  <AccordionHeader><AccordionTrigger>Height</AccordionTrigger></AccordionHeader>
+                  <AccordionHeader>
+                    <AccordionTrigger>Height</AccordionTrigger>
+                  </AccordionHeader>
                   <AccordionContent>21 residential floors · 2.95 m per floor</AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="parking">
-                  <AccordionHeader><AccordionTrigger>Parking</AccordionTrigger></AccordionHeader>
+                  <AccordionHeader>
+                    <AccordionTrigger>Parking</AccordionTrigger>
+                  </AccordionHeader>
                   <AccordionContent>Multiple sections can stay open together.</AccordionContent>
                 </AccordionItem>
               </Accordion>
             </div>
           </Spec>
 
-          <Spec name="Collapse" note="Cards and view panels share a 200ms transition. Side by side collapses to a vertical tab; stacked collapses to the header. Reduced motion switches instantly.">
+          <Spec
+            name="Collapse"
+            note="Cards and view panels share a 200ms transition. Side by side collapses to a vertical tab; stacked collapses to the header. Reduced motion switches instantly."
+          >
             <div className="flex w-full flex-col gap-2">
               <Card
                 elevation="flat"
                 collapsed={stack.isCollapsed("ledger")}
-                onCollapsedChange={v => stack.setCollapsed("ledger", v)}
+                onCollapsedChange={(v) => stack.setCollapsed("ledger", v)}
                 collapseTo="header"
                 collapsedLabel="FSI ledger"
                 header={<CardHeader title="FSI ledger" meta="3 rows" />}
               >
                 <div className="px-4 pb-4">
-                  <DescriptionList rows={[
-                    { k: "Permitted", v: "38,420 m²", numeric: true },
-                    { k: "Consumed", v: "37,118 m²", numeric: true },
-                    { k: "Balance", v: "1,302 m²", numeric: true, provisional: true },
-                  ]} />
+                  <DescriptionList
+                    rows={[
+                      { k: "Permitted", v: "38,420 m²", numeric: true },
+                      { k: "Consumed", v: "37,118 m²", numeric: true },
+                      { k: "Balance", v: "1,302 m²", numeric: true, provisional: true },
+                    ]}
+                  />
                 </div>
               </Card>
               <Card
                 elevation="flat"
                 collapsed={stack.isCollapsed("notes")}
-                onCollapsedChange={v => stack.setCollapsed("notes", v)}
+                onCollapsedChange={(v) => stack.setCollapsed("notes", v)}
                 collapseTo="header"
                 collapsedLabel="Pack notes"
                 header={<CardHeader title="Pack notes" meta="in-mh-mumbai" />}
@@ -830,11 +1263,11 @@ export function Gallery() {
                   </Alert>
                 </div>
               </Card>
-              <p className="text-label leading-relaxed text-muted-foreground">
-                Collapsing never removes the way back — a collapsed card keeps its header row or its
-                vertical tab, and that strip is the control that restores it. Content is hidden, never
-                unmounted, so scroll position and half-typed values survive the round trip.
-                The workbench above uses the vertical-tab shape; press <b>Focus canvas</b> to see it.
+              <p className="leading-relaxed text-label text-muted-foreground">
+                Collapsing never removes the way back — a collapsed card keeps its header row or its vertical
+                tab, and that strip is the control that restores it. Content is hidden, never unmounted, so
+                scroll position and half-typed values survive the round trip. The workbench above uses the
+                vertical-tab shape; press <b>Focus canvas</b> to see it.
               </p>
             </div>
           </Spec>
@@ -845,13 +1278,19 @@ export function Gallery() {
                 icon={<Icon d={ICON.site} />}
                 title="No parcel selected"
                 description="Pick a parcel from the pool or draw one, then the programme and layout become available."
-                action={<Button variant="solid" tone="primary">Choose a parcel</Button>}
+                action={
+                  <Button variant="solid" tone="primary">
+                    Choose a parcel
+                  </Button>
+                }
               />
             </Card>
           </Spec>
 
           <div id="ref" className="border-t border-border px-6 py-5">
-            <Breadcrumb items={[{ label: "Design system", onSelect: () => {} }, { label: "Component reference" }]} />
+            <Breadcrumb
+              items={[{ label: "Design system", onSelect: () => {} }, { label: "Component reference" }]}
+            />
           </div>
         </Card>
       </div>
@@ -871,13 +1310,15 @@ export function Gallery() {
           <DrawerBody>
             <div className="flex flex-col gap-4">
               <SectionLabel>Figures</SectionLabel>
-              <DescriptionList rows={[
-                { k: "Base FSI", v: "1.33", numeric: true },
-                { k: "Premium FSI", v: "1.00", numeric: true, provisional: true },
-                { k: "TDR", v: "0.65", numeric: true, provisional: true },
-                { k: "Front setback", v: "6.0 m", numeric: true },
-                { k: "Carpet definition", v: "MOFA" },
-              ]} />
+              <DescriptionList
+                rows={[
+                  { k: "Base FSI", v: "1.33", numeric: true },
+                  { k: "Premium FSI", v: "1.00", numeric: true, provisional: true },
+                  { k: "TDR", v: "0.65", numeric: true, provisional: true },
+                  { k: "Front setback", v: "6.0 m", numeric: true },
+                  { k: "Carpet definition", v: "MOFA" },
+                ]}
+              />
               <Alert tone="info" title="3 placeholders in this pack">
                 Values with a dashed underline have not been verified against the source.
               </Alert>

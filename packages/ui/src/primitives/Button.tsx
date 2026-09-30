@@ -1,5 +1,14 @@
 "use client";
-import { cloneElement, forwardRef, isValidElement, type ButtonHTMLAttributes, type HTMLAttributes, type KeyboardEvent, type ReactElement, type SyntheticEvent } from "react";
+import {
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  type ButtonHTMLAttributes,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type ReactElement,
+  type SyntheticEvent,
+} from "react";
 import { Slot } from "radix-ui";
 
 import { cn, type VariantProps } from "../cn";
@@ -14,8 +23,7 @@ import { Spinner } from "../feedback/Spinner";
  * 버튼»(채움 빨강) 둘 다였는데, 한 축으로 합치면 그 중 하나를 표현할 수 없다. */
 
 export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    Omit<VariantProps<typeof buttonVariants>, "tone"> {
+  extends ButtonHTMLAttributes<HTMLButtonElement>, Omit<VariantProps<typeof buttonVariants>, "tone"> {
   /**
    * 톤 — `neutral`(기본) · `primary`(주된 동작) · `destructive`(파괴적 동작).
    * @deprecated 옛 키 `accent` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
@@ -31,10 +39,12 @@ const preventActivation = (event: SyntheticEvent) => {
   event.preventDefault();
   event.stopPropagation();
 };
-const guardKeyActivation = <T extends HTMLElement>(handler?: (event: KeyboardEvent<T>) => void) => (event: KeyboardEvent<T>) => {
-  if (event.key === "Enter" || event.key === " ") preventActivation(event);
-  else handler?.(event);
-};
+const guardKeyActivation =
+  <T extends HTMLElement>(handler?: (event: KeyboardEvent<T>) => void) =>
+  (event: KeyboardEvent<T>) => {
+    if (event.key === "Enter" || event.key === " ") preventActivation(event);
+    else handler?.(event);
+  };
 const guardedKeyboardProps = <T extends HTMLElement>(props: HTMLAttributes<T>) => ({
   onKeyDown: guardKeyActivation(props.onKeyDown),
   onKeyDownCapture: guardKeyActivation(props.onKeyDownCapture),
@@ -63,17 +73,25 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
 ) {
   const Comp = asChild ? Slot.Root : "button";
   const blocked = Boolean(disabled || loading);
-  const child = asChild && blocked && isValidElement(children)
-    ? cloneElement(children as ReactElement<HTMLAttributes<HTMLElement> & { disabled?: boolean | undefined; href?: string | undefined }>, {
-      ...disabledSlotProps,
-      ...guardedKeyboardProps(children.props as HTMLAttributes<HTMLElement>),
-      disabled: children.type === "a" ? undefined : true,
-      ...(children.type === "a" ? {
-        href: undefined,
-        role: (children.props as HTMLAttributes<HTMLElement>).role ?? "link",
-      } : {}),
-    })
-    : children;
+  const child =
+    asChild && blocked && isValidElement(children)
+      ? cloneElement(
+          children as ReactElement<
+            HTMLAttributes<HTMLElement> & { disabled?: boolean | undefined; href?: string | undefined }
+          >,
+          {
+            ...disabledSlotProps,
+            ...guardedKeyboardProps(children.props as HTMLAttributes<HTMLElement>),
+            disabled: children.type === "a" ? undefined : true,
+            ...(children.type === "a"
+              ? {
+                  href: undefined,
+                  role: (children.props as HTMLAttributes<HTMLElement>).role ?? "link",
+                }
+              : {}),
+          },
+        )
+      : children;
   return (
     <Comp
       ref={ref}
@@ -95,10 +113,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
 });
 
 /* 버튼 묶음 — 사이 경계를 하나로 접어 «한 덩어리» 로 읽히게 한다. */
-export function ButtonGroup({
-  className,
-  ...rest
-}: React.HTMLAttributes<HTMLDivElement>) {
+export function ButtonGroup({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       role="group"

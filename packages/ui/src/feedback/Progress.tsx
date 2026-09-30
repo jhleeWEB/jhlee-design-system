@@ -11,7 +11,8 @@ import { progressVariants, type ProgressTone } from "./Progress.variants";
  * (FSI · 주차 · 어메니티 면제 상한) 그때 100% 를 넘는 것은 실패다. 색이 그 사실을 함께 말한다. */
 
 export interface ProgressProps
-  extends React.ComponentPropsWithoutRef<typeof RadixProgress.Root>,
+  extends
+    React.ComponentPropsWithoutRef<typeof RadixProgress.Root>,
     Omit<VariantProps<typeof progressVariants>, "tone"> {
   /**
    * 톤 — `primary`(기본) · `success` · `warning` · `destructive` · `neutral`.

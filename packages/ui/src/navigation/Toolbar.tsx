@@ -14,7 +14,7 @@ export function Toolbar({
       className={cn(
         "flex min-w-0 items-center gap-3",
         onCanvas
-          ? "on-canvas rounded-lg border border-border p-2 shadow-pop"
+          ? "rounded-lg border border-border p-2 shadow-pop on-canvas"
           : "border-b border-border bg-card px-4 py-3",
         className,
       )}

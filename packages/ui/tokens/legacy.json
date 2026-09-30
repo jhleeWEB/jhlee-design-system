@@ -1,40 +1,120 @@
 {
   "$description": "옛 이름 — 소비자 계약이라 이름은 지키고 값은 새 정본을 가리키는 alias 로만 남는다(계획 §2.2 «alias 이행», #18). 값은 옛 tokens.css·theme.css 와 같다 — alias 가 픽셀을 바꾸면 그것은 이행이 아니라 회귀다. 그래서 --ink 는 --chrome-foreground(#191f28)가 아니라 같은 값(#1a1a1a)의 palette.gray.900 을 가리킨다. 여기 있는 이름을 패키지 소스가 쓰면 forbidden-patterns 의 legacy-alias-use 래칫에 잡힌다. 제거는 major. B5(#22)부터 이 파일이 세 출력의 원천이다: ① generated/legacy.css 의 CSS 변수 alias(scope legacy → :root) ② generated/theme.tailwind.css 의 옛 유틸 이름 alias(토큰별 scope theme · theme-inline — 새 어휘와 글자가 겹치지 않는 것만) ③ eslint/legacy-classes.json 의 코드모드 표(no-restricted-classes 의 {pattern, fix}). 파일 머리 renames 는 alias 를 둘 수 없는 개명이다 — --chrome-accent(옛 azure)는 새 이름 chrome.accent(옅은 면)와 글자가 같고, --chrome-muted(옛 회색 글자)는 새 이름 chrome.muted(면)와 같다. 그 둘은 CSS 변수도 유틸도 alias 없이 코드모드(③ 과 scripts/codemod-css-vars.mjs)로만 옮긴다.",
-  "$extensions": { "sds": { "scope": "legacy", "renames": { "chrome.accent": "chrome.primary", "chrome.muted": "chrome.muted-foreground" } } },
+  "$extensions": {
+    "sds": {
+      "scope": "legacy",
+      "renames": { "chrome.accent": "chrome.primary", "chrome.muted": "chrome.muted-foreground" }
+    }
+  },
   "$deprecated": "옛 base 이름. 제거는 major.",
-  "black": { "$type": "color", "$value": "{palette.gray.900}", "$deprecated": "palette.gray.900 — 도면 잉크는 canvas.ink." },
+  "black": {
+    "$type": "color",
+    "$value": "{palette.gray.900}",
+    "$deprecated": "palette.gray.900 — 도면 잉크는 canvas.ink."
+  },
   "dark": { "$type": "color", "$value": "{palette.gray.800}", "$deprecated": "palette.gray.800." },
-  "charcoal": { "$type": "color", "$value": "{palette.gray.700}", "$deprecated": "palette.gray.700 — 도면은 canvas.ink-2." },
-  "mid": { "$type": "color", "$value": "{palette.gray.600}", "$deprecated": "palette.gray.600 — 도면은 canvas.muted." },
+  "charcoal": {
+    "$type": "color",
+    "$value": "{palette.gray.700}",
+    "$deprecated": "palette.gray.700 — 도면은 canvas.ink-2."
+  },
+  "mid": {
+    "$type": "color",
+    "$value": "{palette.gray.600}",
+    "$deprecated": "palette.gray.600 — 도면은 canvas.muted."
+  },
   "steel": { "$type": "color", "$value": "{palette.gray.500}", "$deprecated": "palette.gray.500." },
   "silver": { "$type": "color", "$value": "{palette.gray.400}", "$deprecated": "palette.gray.400." },
   "light": { "$type": "color", "$value": "{palette.gray.250}", "$deprecated": "palette.gray.250." },
-  "pale": { "$type": "color", "$value": "{palette.gray.150}", "$deprecated": "palette.gray.150 — 도면 격자는 canvas.grid." },
+  "pale": {
+    "$type": "color",
+    "$value": "{palette.gray.150}",
+    "$deprecated": "palette.gray.150 — 도면 격자는 canvas.grid."
+  },
   "offwhite": { "$type": "color", "$value": "{palette.gray.100}", "$deprecated": "palette.gray.100." },
-  "white": { "$type": "color", "$value": "{palette.gray.0}", "$deprecated": "palette.gray.0 — 도면 바탕은 canvas.bg, 크롬 카드는 chrome.surface." },
-  "ink": { "$type": "color", "$value": "{palette.gray.900}", "$deprecated": "크롬 글자는 chrome.ink(#191f28 — 값이 다르다), 도면 글자는 canvas.ink." },
-  "ink-2": { "$type": "color", "$value": "{palette.gray.700}", "$deprecated": "chrome.ink-2 또는 canvas.ink-2." },
-  "muted": { "$type": "color", "$value": "{palette.gray.600}", "$deprecated": "chrome.muted 또는 canvas.muted." },
-  "line": { "$type": "color", "$value": "{palette.gray.200}", "$deprecated": "chrome.line 또는 canvas.line." },
-  "line-strong": { "$type": "color", "$value": "{palette.gray.300}", "$deprecated": "chrome.line-strong 또는 canvas.line-strong." },
-  "bg": { "$type": "color", "$value": "{palette.gray.100}", "$deprecated": "페이지 바닥은 chrome.bg(#eff1f7 — 값이 다르다)." },
-  "surface": { "$type": "color", "$value": "{palette.gray.0}", "$deprecated": "chrome.surface 또는 canvas.bg." },
-  "surface-2": { "$type": "color", "$value": "{palette.gray.50}", "$deprecated": "chrome.surface-2(#f9fbfc — 값이 다르다) 또는 canvas.surface." },
+  "white": {
+    "$type": "color",
+    "$value": "{palette.gray.0}",
+    "$deprecated": "palette.gray.0 — 도면 바탕은 canvas.bg, 크롬 카드는 chrome.surface."
+  },
+  "ink": {
+    "$type": "color",
+    "$value": "{palette.gray.900}",
+    "$deprecated": "크롬 글자는 chrome.ink(#191f28 — 값이 다르다), 도면 글자는 canvas.ink."
+  },
+  "ink-2": {
+    "$type": "color",
+    "$value": "{palette.gray.700}",
+    "$deprecated": "chrome.ink-2 또는 canvas.ink-2."
+  },
+  "muted": {
+    "$type": "color",
+    "$value": "{palette.gray.600}",
+    "$deprecated": "chrome.muted 또는 canvas.muted."
+  },
+  "line": {
+    "$type": "color",
+    "$value": "{palette.gray.200}",
+    "$deprecated": "chrome.line 또는 canvas.line."
+  },
+  "line-strong": {
+    "$type": "color",
+    "$value": "{palette.gray.300}",
+    "$deprecated": "chrome.line-strong 또는 canvas.line-strong."
+  },
+  "bg": {
+    "$type": "color",
+    "$value": "{palette.gray.100}",
+    "$deprecated": "페이지 바닥은 chrome.bg(#eff1f7 — 값이 다르다)."
+  },
+  "surface": {
+    "$type": "color",
+    "$value": "{palette.gray.0}",
+    "$deprecated": "chrome.surface 또는 canvas.bg."
+  },
+  "surface-2": {
+    "$type": "color",
+    "$value": "{palette.gray.50}",
+    "$deprecated": "chrome.surface-2(#f9fbfc — 값이 다르다) 또는 canvas.surface."
+  },
   "ok": { "$type": "color", "$value": "{palette.moss.500}", "$deprecated": "chrome.ok." },
   "warn": { "$type": "color", "$value": "{palette.amber.500}", "$deprecated": "chrome.warn." },
   "danger": { "$type": "color", "$value": "{palette.rust.500}", "$deprecated": "chrome.danger." },
   "ok-pale": { "$type": "color", "$value": "{palette.moss.50}", "$deprecated": "chrome.ok-soft." },
   "warn-pale": { "$type": "color", "$value": "{palette.amber.50}", "$deprecated": "chrome.warn-soft." },
   "danger-pale": { "$type": "color", "$value": "{palette.rust.50}", "$deprecated": "chrome.danger-soft." },
-  "panel-w": { "$type": "dimension", "$value": "300px", "$deprecated": "legacy shell.css 의 3열 셸 전용 — 새 이름 없음." },
-  "inspect-w": { "$type": "dimension", "$value": "340px", "$deprecated": "legacy shell.css 의 3열 셸 전용 — 새 이름 없음." },
-  "topbar-h": { "$type": "dimension", "$value": "56px", "$deprecated": "legacy shell.css 의 3열 셸 전용 — 새 이름 없음." },
+  "panel-w": {
+    "$type": "dimension",
+    "$value": "300px",
+    "$deprecated": "legacy shell.css 의 3열 셸 전용 — 새 이름 없음."
+  },
+  "inspect-w": {
+    "$type": "dimension",
+    "$value": "340px",
+    "$deprecated": "legacy shell.css 의 3열 셸 전용 — 새 이름 없음."
+  },
+  "topbar-h": {
+    "$type": "dimension",
+    "$value": "56px",
+    "$deprecated": "legacy shell.css 의 3열 셸 전용 — 새 이름 없음."
+  },
   "gap": { "$type": "dimension", "$value": "{space.hairline}", "$deprecated": "space.hairline." },
-  "sans": { "$type": "fontFamily", "$value": "{font-stack.sans}", "$deprecated": "font-stack.sans(폴백 스택) 또는 Tailwind font-sans." },
-  "mono": { "$type": "fontFamily", "$value": "{font-stack.mono}", "$deprecated": "font-stack.mono(폴백 스택) 또는 Tailwind font-mono." },
+  "sans": {
+    "$type": "fontFamily",
+    "$value": "{font-stack.sans}",
+    "$deprecated": "font-stack.sans(폴백 스택) 또는 Tailwind font-sans."
+  },
+  "mono": {
+    "$type": "fontFamily",
+    "$value": "{font-stack.mono}",
+    "$deprecated": "font-stack.mono(폴백 스택) 또는 Tailwind font-mono."
+  },
   "size": {
     "$type": "dimension",
-    "gap": { "$value": "{space.card-gap}", "$deprecated": "space.card-gap — gap-shell 유틸리티가 아직 이것을 읽는다." }
+    "gap": {
+      "$value": "{space.card-gap}",
+      "$deprecated": "space.card-gap — gap-shell 유틸리티가 아직 이것을 읽는다."
+    }
   },
   "chrome": {
     "$type": "color",
@@ -95,30 +175,69 @@
     "overlay": { "$value": "{chrome.popover}", "$extensions": { "sds": { "scope": "theme-inline" } } },
     "ink": { "$value": "{chrome.foreground}", "$extensions": { "sds": { "scope": "theme-inline" } } },
     "ink-2": { "$value": "{chrome.foreground-2}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "disabled": { "$value": "{chrome.foreground-disabled}", "$extensions": { "sds": { "scope": "theme-inline" } } },
+    "disabled": {
+      "$value": "{chrome.foreground-disabled}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
     "line": { "$value": "{chrome.border}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "line-strong": { "$value": "{chrome.border-strong}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "accent-hover": { "$value": "{chrome.primary-hover}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "accent-ink": { "$value": "{chrome.primary-foreground}", "$extensions": { "sds": { "scope": "theme-inline" } } },
+    "line-strong": {
+      "$value": "{chrome.border-strong}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
+    "accent-hover": {
+      "$value": "{chrome.primary-hover}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
+    "accent-ink": {
+      "$value": "{chrome.primary-foreground}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
     "accent-soft": { "$value": "{chrome.accent}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "accent-track": { "$value": "{chrome.primary-track}", "$extensions": { "sds": { "scope": "theme-inline" } } },
+    "accent-track": {
+      "$value": "{chrome.primary-track}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
     "focus": { "$value": "{chrome.ring}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "tooltip-ink": { "$value": "{chrome.tooltip-foreground}", "$extensions": { "sds": { "scope": "theme-inline" } } },
+    "tooltip-ink": {
+      "$value": "{chrome.tooltip-foreground}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
     "ok": { "$value": "{chrome.success}", "$extensions": { "sds": { "scope": "theme-inline" } } },
     "ok-hover": { "$value": "{chrome.success-hover}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "ok-ink": { "$value": "{chrome.success-foreground}", "$extensions": { "sds": { "scope": "theme-inline" } } },
+    "ok-ink": {
+      "$value": "{chrome.success-foreground}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
     "ok-soft": { "$value": "{chrome.success-soft}", "$extensions": { "sds": { "scope": "theme-inline" } } },
     "ok-line": { "$value": "{chrome.success-line}", "$extensions": { "sds": { "scope": "theme-inline" } } },
     "warn": { "$value": "{chrome.warning}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "warn-hover": { "$value": "{chrome.warning-hover}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "warn-ink": { "$value": "{chrome.warning-foreground}", "$extensions": { "sds": { "scope": "theme-inline" } } },
+    "warn-hover": {
+      "$value": "{chrome.warning-hover}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
+    "warn-ink": {
+      "$value": "{chrome.warning-foreground}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
     "warn-soft": { "$value": "{chrome.warning-soft}", "$extensions": { "sds": { "scope": "theme-inline" } } },
     "warn-line": { "$value": "{chrome.warning-line}", "$extensions": { "sds": { "scope": "theme-inline" } } },
     "danger": { "$value": "{chrome.destructive}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "danger-hover": { "$value": "{chrome.destructive-hover}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "danger-ink": { "$value": "{chrome.destructive-foreground}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "danger-soft": { "$value": "{chrome.destructive-soft}", "$extensions": { "sds": { "scope": "theme-inline" } } },
-    "danger-line": { "$value": "{chrome.destructive-line}", "$extensions": { "sds": { "scope": "theme-inline" } } },
+    "danger-hover": {
+      "$value": "{chrome.destructive-hover}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
+    "danger-ink": {
+      "$value": "{chrome.destructive-foreground}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
+    "danger-soft": {
+      "$value": "{chrome.destructive-soft}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
+    "danger-line": {
+      "$value": "{chrome.destructive-line}",
+      "$extensions": { "sds": { "scope": "theme-inline" } }
+    },
     "cool": {
       "0": { "$value": "{palette.cool.0}" },
       "25": { "$value": "{palette.cool.25}" },

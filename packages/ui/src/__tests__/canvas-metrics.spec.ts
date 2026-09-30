@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { GRID_MAJOR_EVERY, GRID_MAX_DIVISIONS, GRID_TARGET_PX, gridPitchM, niceScale } from "../canvas-metrics";
+import {
+  GRID_MAJOR_EVERY,
+  GRID_MAX_DIVISIONS,
+  GRID_TARGET_PX,
+  gridPitchM,
+  niceScale,
+} from "../canvas-metrics";
 
 const zooms = [0.01, 0.03, 0.1, 0.25, 0.5, 1, 2.5, 6, 12, 20];
 
@@ -20,7 +26,7 @@ describe("공유 도면 눈금", () => {
     for (const mpp of zooms) {
       for (const extent of [40, mpp * 510, mpp * 1_020, 900, 50_000]) {
         const pitchM = gridPitchM(mpp, extent);
-        expect(pitchM * GRID_MAX_DIVISIONS / 2).toBeGreaterThanOrEqual(extent);
+        expect((pitchM * GRID_MAX_DIVISIONS) / 2).toBeGreaterThanOrEqual(extent);
         expect(pitchM).toBeGreaterThanOrEqual(gridPitchM(mpp));
       }
     }
@@ -56,7 +62,9 @@ describe("공유 축척 막대", () => {
   });
 
   it("잘못된 축척이나 목표 폭을 실제 거리처럼 표시하지 않는다", () => {
-    for (const mpp of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) expect(niceScale(mpp)).toEqual({ lengthM: 0, px: 0 });
-    for (const target of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) expect(niceScale(1, target)).toEqual({ lengthM: 0, px: 0 });
+    for (const mpp of [0, -1, Number.NaN, Number.POSITIVE_INFINITY])
+      expect(niceScale(mpp)).toEqual({ lengthM: 0, px: 0 });
+    for (const target of [0, -1, Number.NaN, Number.POSITIVE_INFINITY])
+      expect(niceScale(1, target)).toEqual({ lengthM: 0, px: 0 });
   });
 });

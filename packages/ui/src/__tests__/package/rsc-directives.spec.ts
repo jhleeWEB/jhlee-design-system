@@ -15,7 +15,7 @@ import { SRC_ROOT, sourceGraph, type SourceFileInfo } from "../../__arch__/sourc
 const DIRECTIVE = '"use client";';
 const DIST = join(SRC_ROOT, "..", "dist");
 
-const sources = [...sourceGraph().values()].filter(f => !f.excluded && f.kind !== "css");
+const sources = [...sourceGraph().values()].filter((f) => !f.excluded && f.kind !== "css");
 
 /** 첫 줄이 지시문인가 — 주석보다 앞, 따옴표는 큰따옴표. tsdown 이 그대로 옮기는 형태다. */
 const hasDirective = (file: SourceFileInfo): boolean => (file.text.split("\n")[0] ?? "").trim() === DIRECTIVE;
@@ -33,13 +33,23 @@ function clientReasons(file: SourceFileInfo): string[] {
   return reasons;
 }
 
-const shouldBeClient = sources.filter(f => clientReasons(f).length > 0).map(f => f.path).sort();
-const isClient = sources.filter(hasDirective).map(f => f.path).sort();
+const shouldBeClient = sources
+  .filter((f) => clientReasons(f).length > 0)
+  .map((f) => f.path)
+  .sort();
+const isClient = sources
+  .filter(hasDirective)
+  .map((f) => f.path)
+  .sort();
 
 describe('"use client"', () => {
   it("훅·핸들러·컨텍스트·radix-ui 를 쓰는 파일 집합이 지시문 파일 집합과 같다", () => {
-    const missing = shouldBeClient.filter(p => !isClient.includes(p)).map(p => `${p}: ${clientReasons(sourceGraph().get(p)!).join("·")} 인데 "use client" 가 없다`);
-    const spurious = isClient.filter(p => !shouldBeClient.includes(p)).map(p => `${p}: 클라이언트 근거가 없는데 "use client" 가 있다`);
+    const missing = shouldBeClient
+      .filter((p) => !isClient.includes(p))
+      .map((p) => `${p}: ${clientReasons(sourceGraph().get(p)!).join("·")} 인데 "use client" 가 없다`);
+    const spurious = isClient
+      .filter((p) => !shouldBeClient.includes(p))
+      .map((p) => `${p}: 클라이언트 근거가 없는데 "use client" 가 있다`);
     expect(missing).toEqual([]);
     expect(spurious).toEqual([]);
   });
@@ -78,13 +88,18 @@ describe('"use client"', () => {
 
   it("배럴 · cn · canvas-metrics · *.variants.ts 에는 지시문이 없다", () => {
     for (const file of sources) {
-      const pure = /(^|\/)index\.ts$/.test(file.path) || file.path === "cn.ts" || file.path === "canvas-metrics.ts" || file.path.endsWith(".variants.ts");
+      const pure =
+        /(^|\/)index\.ts$/.test(file.path) ||
+        file.path === "cn.ts" ||
+        file.path === "canvas-metrics.ts" ||
+        file.path.endsWith(".variants.ts");
       if (pure) expect(hasDirective(file), file.path).toBe(false);
     }
   });
 
   it("지시문 파일에는 export * 가 없다", () => {
-    for (const file of sources) if (hasDirective(file)) expect(file.code, file.path).not.toMatch(/^\s*export\s+\*\s+from/m);
+    for (const file of sources)
+      if (hasDirective(file)) expect(file.code, file.path).not.toMatch(/^\s*export\s+\*\s+from/m);
   });
 
   it("dist 가 있으면 같은 경로의 첫 줄에 지시문이 남아 있다", () => {
@@ -94,7 +109,10 @@ describe('"use client"', () => {
       const out = join(DIST, file.path.replace(/\.tsx?$/, ".js"));
       if (!existsSync(out)) continue; // 배럴에 닿지 않는 파일은 산출물이 없다
       const first = (readFileSync(out, "utf8").split("\n")[0] ?? "").trim();
-      expect(first === DIRECTIVE, `${out}: ${hasDirective(file) ? "지시문이 사라졌다" : "지시문이 생겼다"}`).toBe(hasDirective(file));
+      expect(
+        first === DIRECTIVE,
+        `${out}: ${hasDirective(file) ? "지시문이 사라졌다" : "지시문이 생겼다"}`,
+      ).toBe(hasDirective(file));
     }
   });
 });

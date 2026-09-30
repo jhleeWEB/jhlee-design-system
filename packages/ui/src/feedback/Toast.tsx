@@ -20,7 +20,6 @@ import { MOTION } from "../generated/tokens";
  * Radix 의 `Toast` 를 쓰는 이유는 스와이프 해제·포커스 복귀·`aria-live` 처리가 이미 옳기
  * 때문이다. 우리가 얹는 것은 큐와 외형뿐이다. */
 
-
 export interface ToastOptions extends Omit<VariantProps<typeof toastVariants>, "tone"> {
   /**
    * 톤 — `neutral`(기본) · `success` · `warning` · `destructive`.
@@ -85,32 +84,38 @@ export function ToastProvider({
        큐 상태에서 정리해야 명시적 dismiss와 개수 제한도 같은 퇴장 수명을 갖는다. */
     for (const item of queue) {
       if (item.open || removalTimers.current.has(item.id)) continue;
-      removalTimers.current.set(item.id, setTimeout(() => {
-        removalTimers.current.delete(item.id);
-        setQueue(prev => prev.filter(toast => toast.id !== item.id));
-      }, MOTION.toastQueueGraceMs));
+      removalTimers.current.set(
+        item.id,
+        setTimeout(() => {
+          removalTimers.current.delete(item.id);
+          setQueue((prev) => prev.filter((toast) => toast.id !== item.id));
+        }, MOTION.toastQueueGraceMs),
+      );
     }
   }, [queue]);
-  useEffect(() => () => {
-    for (const timer of removalTimers.current.values()) clearTimeout(timer);
-    removalTimers.current.clear();
-  }, []);
+  useEffect(
+    () => () => {
+      for (const timer of removalTimers.current.values()) clearTimeout(timer);
+      removalTimers.current.clear();
+    },
+    [],
+  );
 
   const dismiss = useCallback((id: number) => {
-    setQueue(prev => prev.map(t => (t.id === id ? { ...t, open: false } : t)));
+    setQueue((prev) => prev.map((t) => (t.id === id ? { ...t, open: false } : t)));
   }, []);
 
   const toast = useCallback(
     (options: ToastOptions) => {
       const id = ++nextId.current;
-      setQueue(prev => {
+      setQueue((prev) => {
         const next = [...prev, { ...options, id, open: true }];
         /* 넘치는 만큼 오래된 것을 «닫힘» 으로 표시한다. 배열에서 바로 빼면 퇴장 애니메이션이
            끊기고, Radix 가 포커스를 복귀시킬 대상을 잃는다. */
-        const over = next.filter(t => t.open).length - limit;
+        const over = next.filter((t) => t.open).length - limit;
         if (over <= 0) return next;
         let closed = 0;
-        return next.map(t => (t.open && closed++ < over ? { ...t, open: false } : t));
+        return next.map((t) => (t.open && closed++ < over ? { ...t, open: false } : t));
       });
       return id;
     },
@@ -123,7 +128,7 @@ export function ToastProvider({
     <ToastContext.Provider value={api}>
       <RadixToast.Provider duration={duration === 0 ? Infinity : duration} swipeDirection="right">
         {children}
-        {queue.map(item => (
+        {queue.map((item) => (
           <RadixToast.Root
             data-slot="toast"
             data-position={position}
@@ -131,8 +136,10 @@ export function ToastProvider({
             open={item.open}
             /* Radix 의 `duration` 은 필수 number 라 `undefined` 를 넘기면 타입이 깨진다.
                값이 없을 때는 Provider 의 기본값이 이겨야 하므로 **prop 자체를 빼야** 한다. */
-            {...(item.duration === undefined ? {} : { duration: item.duration === 0 ? Infinity : item.duration })}
-            onOpenChange={open => {
+            {...(item.duration === undefined
+              ? {}
+              : { duration: item.duration === 0 ? Infinity : item.duration })}
+            onOpenChange={(open) => {
               if (open) return;
               dismiss(item.id);
             }}
@@ -141,20 +148,30 @@ export function ToastProvider({
             <div className="min-w-0 flex-1 self-center [overflow-wrap:anywhere]">
               <RadixToast.Title className="font-semibold">{item.title}</RadixToast.Title>
               {item.description ? (
-                <RadixToast.Description className="m-0 mt-1 leading-relaxed text-muted-foreground">
+                <RadixToast.Description className="leading-relaxed m-0 mt-1 text-muted-foreground">
                   {item.description}
                 </RadixToast.Description>
               ) : null}
               {item.action ? (
                 <RadixToast.Action asChild altText={item.action.altText} onClick={item.action.onSelect}>
-                  <Button data-slot="toast-action" size="sm" className="mt-3 h-auto min-h-[30px] max-w-full whitespace-normal py-1">
+                  <Button
+                    data-slot="toast-action"
+                    size="sm"
+                    className="mt-3 h-auto min-h-[30px] max-w-full py-1 whitespace-normal"
+                  >
                     {item.action.label}
                   </Button>
                 </RadixToast.Action>
               ) : null}
             </div>
             <RadixToast.Close asChild>
-              <Button data-slot="toast-close" variant="ghost" size="icon-sm" aria-label="Dismiss" className="shrink-0 [&_svg]:size-4">
+              <Button
+                data-slot="toast-close"
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Dismiss"
+                className="shrink-0 [&_svg]:size-4"
+              >
                 <LuX size={16} aria-hidden="true" focusable={false} />
               </Button>
             </RadixToast.Close>

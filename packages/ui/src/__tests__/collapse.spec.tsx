@@ -36,27 +36,44 @@ afterEach(() => {
 const card = () => host.querySelector('[data-slot="card"]')!;
 
 describe("Card — strip 접기", () => {
-  it.each(["w-[290px] shrink-0", "min-w-0 flex-1"])("접는 동안 펼침 치수 %s를 지워 버리지 않는다", className => {
-    const draw = (collapsed: boolean) => render(
-      <Card className={className} style={{ maxWidth: 600 }} collapsed={collapsed} onCollapsedChange={() => {}} collapseTo="strip" collapsedLabel="Planning brief">
-        <CardWell>body</CardWell>
-      </Card>,
-    );
-    draw(false);
-    const original = card();
-    for (const collapsed of [true, false]) {
-      draw(collapsed);
-      expect(card()).toBe(original);
-      expect(card().getAttribute("data-collapse-to")).toBe("strip");
-      expect(card().getAttribute("data-collapsed")).toBe(collapsed ? "true" : null);
-      for (const token of className.split(" ")) expect(card().classList.contains(token)).toBe(true);
-      expect((card() as HTMLElement).style.maxWidth).toBe("600px");
-    }
-  });
+  it.each(["w-[290px] shrink-0", "min-w-0 flex-1"])(
+    "접는 동안 펼침 치수 %s를 지워 버리지 않는다",
+    (className) => {
+      const draw = (collapsed: boolean) =>
+        render(
+          <Card
+            className={className}
+            style={{ maxWidth: 600 }}
+            collapsed={collapsed}
+            onCollapsedChange={() => {}}
+            collapseTo="strip"
+            collapsedLabel="Planning brief"
+          >
+            <CardWell>body</CardWell>
+          </Card>,
+        );
+      draw(false);
+      const original = card();
+      for (const collapsed of [true, false]) {
+        draw(collapsed);
+        expect(card()).toBe(original);
+        expect(card().getAttribute("data-collapse-to")).toBe("strip");
+        expect(card().getAttribute("data-collapsed")).toBe(collapsed ? "true" : null);
+        for (const token of className.split(" ")) expect(card().classList.contains(token)).toBe(true);
+        expect((card() as HTMLElement).style.maxWidth).toBe("600px");
+      }
+    },
+  );
 
   it("펼쳐 있으면 호출처의 폭이 산다", () => {
     render(
-      <Card className="w-[290px] shrink-0" collapsed={false} onCollapsedChange={() => {}} collapseTo="strip" collapsedLabel="Planning brief">
+      <Card
+        className="w-[290px] shrink-0"
+        collapsed={false}
+        onCollapsedChange={() => {}}
+        collapseTo="strip"
+        collapsedLabel="Planning brief"
+      >
         <CardWell>body</CardWell>
       </Card>,
     );
@@ -99,7 +116,12 @@ describe("Card — strip 접기", () => {
   it("누르면 펼침을 요청한다", () => {
     const seen: boolean[] = [];
     render(
-      <Card collapsed onCollapsedChange={v => seen.push(v)} collapseTo="strip" collapsedLabel="Planning brief">
+      <Card
+        collapsed
+        onCollapsedChange={(v) => seen.push(v)}
+        collapseTo="strip"
+        collapsedLabel="Planning brief"
+      >
         <CardWell>body</CardWell>
       </Card>,
     );
@@ -112,18 +134,28 @@ describe("Card — strip 접기", () => {
   it("헤더의 공통 아이콘과 전체 strip을 왕복해도 포커스와 본문을 보존한다", () => {
     function Example() {
       const [collapsed, setCollapsed] = useState(false);
-      return <Card collapsed={collapsed} onCollapsedChange={next => {
-        // 실제 브라우저는 inert로 바뀐 strip의 포커스를 effect 전에 해제할 수 있다.
-        if (!next) (document.activeElement as HTMLElement).blur();
-        setCollapsed(next);
-      }} collapseTo="strip" collapsedLabel="Model view" side="right">
-        <CardHeader title="Model" />
-        <input defaultValue="draft" />
-      </Card>;
+      return (
+        <Card
+          collapsed={collapsed}
+          onCollapsedChange={(next) => {
+            // 실제 브라우저는 inert로 바뀐 strip의 포커스를 effect 전에 해제할 수 있다.
+            if (!next) (document.activeElement as HTMLElement).blur();
+            setCollapsed(next);
+          }}
+          collapseTo="strip"
+          collapsedLabel="Model view"
+          side="right"
+        >
+          <CardHeader title="Model" />
+          <input defaultValue="draft" />
+        </Card>
+      );
     }
     render(<Example />);
-    const headerButton = host.querySelector<HTMLButtonElement>('[data-slot="card-header"] [data-slot="card-collapse"]')!;
-    const strip = host.querySelector<HTMLButtonElement>('[data-card-strip]')!;
+    const headerButton = host.querySelector<HTMLButtonElement>(
+      '[data-slot="card-header"] [data-slot="card-collapse"]',
+    )!;
+    const strip = host.querySelector<HTMLButtonElement>("[data-card-strip]")!;
     const input = host.querySelector("input")!;
     const body = document.getElementById(headerButton.getAttribute("aria-controls")!)!;
     expect(headerButton.getAttribute("aria-label")).toBe("Collapse the Model view");
@@ -131,7 +163,10 @@ describe("Card — strip 접기", () => {
     expect(headerButton.querySelector("svg")?.getAttribute("stroke-width")).toBe("2");
     expect(strip.querySelector("svg")?.getAttribute("stroke-width")).toBe("2");
     input.value = "half typed";
-    act(() => { headerButton.focus(); headerButton.click(); });
+    act(() => {
+      headerButton.focus();
+      headerButton.click();
+    });
     expect(card().getAttribute("data-collapsed")).toBe("true");
     expect(document.activeElement).toBe(strip);
     expect(strip.getAttribute("aria-expanded")).toBe("false");
@@ -149,13 +184,20 @@ describe("Card — strip 접기", () => {
 
   it("보기 전용 헤더는 자동 버튼만 생략하고 strip과 본문 구조는 유지한다", () => {
     const seen: boolean[] = [];
-    render(<Card collapsed onCollapsedChange={value => seen.push(value)} collapseTo="strip" collapsedLabel="Model">
-      <CardHeader title="Model" collapseButton={false} />
-      <input defaultValue="draft" />
-    </Card>);
+    render(
+      <Card
+        collapsed
+        onCollapsedChange={(value) => seen.push(value)}
+        collapseTo="strip"
+        collapsedLabel="Model"
+      >
+        <CardHeader title="Model" collapseButton={false} />
+        <input defaultValue="draft" />
+      </Card>,
+    );
     expect(host.querySelector('[data-slot="card-header"] button')).toBeNull();
     expect(host.querySelector('[data-slot="card-content"] input')).not.toBeNull();
-    const strip = host.querySelector<HTMLButtonElement>('[data-card-strip]')!;
+    const strip = host.querySelector<HTMLButtonElement>("[data-card-strip]")!;
     expect(strip.getAttribute("aria-label")).toBe("Expand Model");
     act(() => strip.click());
     expect(seen).toEqual([false]);
@@ -169,9 +211,16 @@ describe("Card — header 접기", () => {
     }
     function Example() {
       const [collapsed, setCollapsed] = useState(false);
-      return <Card collapsed={collapsed} onCollapsedChange={setCollapsed} collapsedLabel="Draft" header={<DraftHeader />}>
-        <input aria-label="Draft name" defaultValue="original" />
-      </Card>;
+      return (
+        <Card
+          collapsed={collapsed}
+          onCollapsedChange={setCollapsed}
+          collapsedLabel="Draft"
+          header={<DraftHeader />}
+        >
+          <input aria-label="Draft name" defaultValue="original" />
+        </Card>
+      );
     }
     render(<Example />);
     const header = host.querySelector('[data-slot="card-header"]')!;
@@ -219,12 +268,15 @@ describe("Card — header 접기", () => {
   });
 
   it("본문 ARIA 대상과 입력 DOM을 접기 전후 동일하게 보존한다", () => {
-    const renderCard = (collapsed: boolean) => render(
-      <Card collapsed={collapsed} onCollapsedChange={() => {}} collapsedLabel="Draft">
-        <CardHeader title="Draft" />
-        <div><input defaultValue="original" /></div>
-      </Card>,
-    );
+    const renderCard = (collapsed: boolean) =>
+      render(
+        <Card collapsed={collapsed} onCollapsedChange={() => {}} collapsedLabel="Draft">
+          <CardHeader title="Draft" />
+          <div>
+            <input defaultValue="original" />
+          </div>
+        </Card>,
+      );
     renderCard(false);
     const button = host.querySelector('[data-slot="card-header"] button')!;
     const body = document.getElementById(button.getAttribute("aria-controls")!)!;
@@ -244,13 +296,21 @@ describe("Card — header 접기", () => {
   it("중첩 Fragment의 머리줄은 남기고 같은 지역 key의 입력도 따로 보존한다", () => {
     function Example() {
       const [collapsed, setCollapsed] = useState(false);
-      return <Card collapsed={collapsed} onCollapsedChange={setCollapsed} collapsedLabel="Draft">
-        <>
-          <><CardHeader title="Draft" /></>
-          <Fragment key="first"><input key="draft" aria-label="First" defaultValue="first" /></Fragment>
-          <Fragment key="second"><input key="draft" aria-label="Second" defaultValue="second" /></Fragment>
-        </>
-      </Card>;
+      return (
+        <Card collapsed={collapsed} onCollapsedChange={setCollapsed} collapsedLabel="Draft">
+          <>
+            <>
+              <CardHeader title="Draft" />
+            </>
+            <Fragment key="first">
+              <input key="draft" aria-label="First" defaultValue="first" />
+            </Fragment>
+            <Fragment key="second">
+              <input key="draft" aria-label="Second" defaultValue="second" />
+            </Fragment>
+          </>
+        </Card>
+      );
     }
     render(<Example />);
     const header = host.querySelector('[data-slot="card-header"]')!;
@@ -276,59 +336,92 @@ describe("Card — header 접기", () => {
 });
 
 describe("Card — 접기 중 본문과 포커스 수명", () => {
-  it.each(["strip", "header"] as const)("%s 왕복에도 입력·지역 상태·스크롤과 ARIA 대상을 보존한다", collapseTo => {
-    let mounts = 0;
-    function Body() {
-      const [count, setCount] = useState(0);
-      useEffect(() => { mounts++; }, []);
-      return <div data-test-scroll style={{ overflow: "auto", height: 80 }}>
-        <input defaultValue="draft" />
-        <button data-counter onClick={() => setCount(value => value + 1)}>{count}</button>
-        <div style={{ height: 400 }}>Long content</div>
-      </div>;
-    }
-    const draw = (collapsed: boolean) => render(<Card collapsed={collapsed} onCollapsedChange={() => {}} collapseTo={collapseTo} collapsedLabel="Draft">
-      <CardHeader title="Draft" /><Body />
-    </Card>);
-    draw(false);
-    const content = host.querySelector<HTMLElement>('[data-slot="card-content"]')!;
-    const input = content.querySelector("input")!;
-    const scroll = content.querySelector<HTMLElement>('[data-test-scroll]')!;
-    const counter = content.querySelector<HTMLButtonElement>('[data-counter]')!;
-    const initialMounts = mounts;
-    input.value = "half typed";
-    scroll.scrollTop = 48;
-    (card() as HTMLElement).scrollTop = 120;
-    act(() => counter.click());
-    for (const collapsed of [true, false, true, false]) {
-      draw(collapsed);
-      expect(host.querySelector('[data-slot="card-content"]')).toBe(content);
-      expect(content.querySelector("input")).toBe(input);
-      expect(input.value).toBe("half typed");
-      expect(scroll.scrollTop).toBe(48);
-      expect((card() as HTMLElement).scrollTop).toBe(collapseTo === "strip" && collapsed ? 0 : 120);
-      expect(counter.textContent).toBe("1");
-      expect(mounts).toBe(initialMounts);
-      for (const trigger of host.querySelectorAll('[data-slot="card-collapse"]')) {
-        expect(document.getElementById(trigger.getAttribute("aria-controls")!)).toBe(content);
+  it.each(["strip", "header"] as const)(
+    "%s 왕복에도 입력·지역 상태·스크롤과 ARIA 대상을 보존한다",
+    (collapseTo) => {
+      let mounts = 0;
+      function Body() {
+        const [count, setCount] = useState(0);
+        useEffect(() => {
+          mounts++;
+        }, []);
+        return (
+          <div data-test-scroll style={{ overflow: "auto", height: 80 }}>
+            <input defaultValue="draft" />
+            <button data-counter onClick={() => setCount((value) => value + 1)}>
+              {count}
+            </button>
+            <div style={{ height: 400 }}>Long content</div>
+          </div>
+        );
       }
-    }
-  });
-
-  it.each(["strip", "header"] as const)("%s 외부 접기는 내부 포커스를 남아 있는 접기 버튼으로 돌린다", collapseTo => {
-    const draw = (collapsed: boolean) => render(<Card collapsed={collapsed} onCollapsedChange={() => {}} collapseTo={collapseTo} collapsedLabel="Draft">
-      <CardHeader title="Draft" /><input />
-    </Card>);
-    draw(false);
-    host.querySelector("input")!.focus();
-    draw(true);
-    const trigger = collapseTo === "strip" ? host.querySelector('[data-card-strip]') : host.querySelector('[data-slot="card-header"] button');
-    expect(document.activeElement).toBe(trigger);
-    if (collapseTo === "strip") {
+      const draw = (collapsed: boolean) =>
+        render(
+          <Card
+            collapsed={collapsed}
+            onCollapsedChange={() => {}}
+            collapseTo={collapseTo}
+            collapsedLabel="Draft"
+          >
+            <CardHeader title="Draft" />
+            <Body />
+          </Card>,
+        );
       draw(false);
-      expect(document.activeElement).toBe(host.querySelector('[data-slot="card-header"] button'));
-    }
-  });
+      const content = host.querySelector<HTMLElement>('[data-slot="card-content"]')!;
+      const input = content.querySelector("input")!;
+      const scroll = content.querySelector<HTMLElement>("[data-test-scroll]")!;
+      const counter = content.querySelector<HTMLButtonElement>("[data-counter]")!;
+      const initialMounts = mounts;
+      input.value = "half typed";
+      scroll.scrollTop = 48;
+      (card() as HTMLElement).scrollTop = 120;
+      act(() => counter.click());
+      for (const collapsed of [true, false, true, false]) {
+        draw(collapsed);
+        expect(host.querySelector('[data-slot="card-content"]')).toBe(content);
+        expect(content.querySelector("input")).toBe(input);
+        expect(input.value).toBe("half typed");
+        expect(scroll.scrollTop).toBe(48);
+        expect((card() as HTMLElement).scrollTop).toBe(collapseTo === "strip" && collapsed ? 0 : 120);
+        expect(counter.textContent).toBe("1");
+        expect(mounts).toBe(initialMounts);
+        for (const trigger of host.querySelectorAll('[data-slot="card-collapse"]')) {
+          expect(document.getElementById(trigger.getAttribute("aria-controls")!)).toBe(content);
+        }
+      }
+    },
+  );
+
+  it.each(["strip", "header"] as const)(
+    "%s 외부 접기는 내부 포커스를 남아 있는 접기 버튼으로 돌린다",
+    (collapseTo) => {
+      const draw = (collapsed: boolean) =>
+        render(
+          <Card
+            collapsed={collapsed}
+            onCollapsedChange={() => {}}
+            collapseTo={collapseTo}
+            collapsedLabel="Draft"
+          >
+            <CardHeader title="Draft" />
+            <input />
+          </Card>,
+        );
+      draw(false);
+      host.querySelector("input")!.focus();
+      draw(true);
+      const trigger =
+        collapseTo === "strip"
+          ? host.querySelector("[data-card-strip]")
+          : host.querySelector('[data-slot="card-header"] button');
+      expect(document.activeElement).toBe(trigger);
+      if (collapseTo === "strip") {
+        draw(false);
+        expect(document.activeElement).toBe(host.querySelector('[data-slot="card-header"] button'));
+      }
+    },
+  );
 });
 
 describe("Card — 접히지 않는 카드", () => {
@@ -350,9 +443,18 @@ describe("Card — 접히지 않는 카드", () => {
 describe("Card — ref와 이벤트 합성", () => {
   it("외부 ref와 내부 strip 측정이 동일한 루트를 사용하고 해제된다", () => {
     const ref = createRef<HTMLDivElement>();
-    render(<Card ref={ref} collapsed={false} onCollapsedChange={() => {}} collapseTo="strip" collapsedLabel="Draft" header={<CardHeader title="Draft" />}>
-      <input />
-    </Card>);
+    render(
+      <Card
+        ref={ref}
+        collapsed={false}
+        onCollapsedChange={() => {}}
+        collapseTo="strip"
+        collapsedLabel="Draft"
+        header={<CardHeader title="Draft" />}
+      >
+        <input />
+      </Card>,
+    );
     expect(ref.current).toBe(card());
     expect(ref.current?.hasAttribute("data-card-flexible")).toBe(true);
     expect(ref.current?.querySelector('[data-slot="card-content"] [data-slot="card-header"]')).not.toBeNull();
@@ -362,12 +464,17 @@ describe("Card — ref와 이벤트 합성", () => {
 
   it("추가 클릭 핸들러를 먼저 부르고 preventDefault일 때만 접기를 취소한다", () => {
     const seen: string[] = [];
-    const draw = (cancel: boolean) => render(<Card collapsed={false} onCollapsedChange={() => seen.push("collapse")}>
-      <CardCollapse onClick={event => {
-        seen.push("click");
-        if (cancel) event.preventDefault();
-      }} />
-    </Card>);
+    const draw = (cancel: boolean) =>
+      render(
+        <Card collapsed={false} onCollapsedChange={() => seen.push("collapse")}>
+          <CardCollapse
+            onClick={(event) => {
+              seen.push("click");
+              if (cancel) event.preventDefault();
+            }}
+          />
+        </Card>,
+      );
     draw(false);
     act(() => host.querySelector<HTMLButtonElement>("button")!.click());
     expect(seen).toEqual(["click", "collapse"]);

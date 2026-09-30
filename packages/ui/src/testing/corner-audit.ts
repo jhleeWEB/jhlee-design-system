@@ -41,7 +41,8 @@ export const CONCENTRIC_PREFIX = "calc(var(--radius-";
 const RADIUS_PROP = /^border(?:-(?:top|bottom)-(?:left|right)|-(?:start|end)-(?:start|end))?-radius$/;
 /** 토큰 밖 길이 — 0 은 길이가 아니다(캔버스). */
 const LENGTH_LITERAL = /(?<![\w.-])(?!0(?:px|%|rem|em)?(?![\d.]))\d*\.?\d+(?:px|%|rem|em)/;
-const ARBITRARY_ROUNDED = /\brounded(?:-(?:t|r|b|l|tl|tr|br|bl|s|e|ss|se|es|ee))?-(\[[^\]\n]*\]|\([^)\n]*\))/g;
+const ARBITRARY_ROUNDED =
+  /\brounded(?:-(?:t|r|b|l|tl|tr|br|bl|s|e|ss|se|es|ee))?-(\[[^\]\n]*\]|\([^)\n]*\))/g;
 
 interface CssDeclaration {
   readonly selector: string;
@@ -52,8 +53,12 @@ interface CssDeclaration {
 
 /** 주석을 같은 길이의 공백으로 덮는다 — 줄 번호가 원본과 같다. */
 function blankComments(text: string, lineComments: boolean): string {
-  let out = text.replace(/\/\*[\s\S]*?\*\//g, m => m.replace(/[^\n]/g, " "));
-  if (lineComments) out = out.replace(/(^|[^:\\])\/\/[^\n]*/g, (m, lead: string) => lead + " ".repeat(m.length - lead.length));
+  let out = text.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "));
+  if (lineComments)
+    out = out.replace(
+      /(^|[^:\\])\/\/[^\n]*/g,
+      (m, lead: string) => lead + " ".repeat(m.length - lead.length),
+    );
   return out;
 }
 
@@ -80,13 +85,19 @@ function parseCss(text: string): CssDeclaration[] {
       const top = stack[stack.length - 1];
       const colon = prelude.indexOf(":");
       if (top && colon > 0 && !top.selector.startsWith("@")) {
-        top.decls.push({ prop: prelude.slice(0, colon).trim().toLowerCase(), value: prelude.slice(colon + 1).trim(), line: lineOf(code, preludeStart + (prelude.length - prelude.trimStart().length)) });
+        top.decls.push({
+          prop: prelude.slice(0, colon).trim().toLowerCase(),
+          value: prelude.slice(colon + 1).trim(),
+          line: lineOf(code, preludeStart + (prelude.length - prelude.trimStart().length)),
+        });
       }
       prelude = "";
       preludeStart = i + 1;
       if (ch === "}") {
         const block = stack.pop();
-        if (block) for (const d of block.decls) out.push({ selector: block.selector, prop: d.prop, value: d.value, line: d.line });
+        if (block)
+          for (const d of block.decls)
+            out.push({ selector: block.selector, prop: d.prop, value: d.value, line: d.line });
       }
     } else {
       prelude += ch;
@@ -100,13 +111,27 @@ function auditCss(source: CornerSource): CornerFinding[] {
   for (const d of parseCss(source.text)) {
     if (d.prop.startsWith("--")) continue; // 토큰 정의는 리터럴이 사는 유일한 자리다
     if (d.prop === "corner-shape") {
-      findings.push({ rule: "corner-shape", path: source.path, line: d.line, text: `corner-shape: ${d.value}`, message: "corner-shape is not used — the design system dropped squircle corners (1px borders look thicker at the corner in Chromium); use plain border-radius tokens." });
+      findings.push({
+        rule: "corner-shape",
+        path: source.path,
+        line: d.line,
+        text: `corner-shape: ${d.value}`,
+        message:
+          "corner-shape is not used — the design system dropped squircle corners (1px borders look thicker at the corner in Chromium); use plain border-radius tokens.",
+      });
       continue;
     }
     if (!RADIUS_PROP.test(d.prop)) continue;
     const value = d.value.replace(/\s+/g, " ");
     if (!value.startsWith(CONCENTRIC_PREFIX) && LENGTH_LITERAL.test(value)) {
-      findings.push({ rule: "raw-radius", path: source.path, line: d.line, text: `${d.prop}: ${value}`, message: "Raw radius — use var(--radius-sm|md|lg|xl|full) or the concentric form calc(var(--radius-…) - padding)." });
+      findings.push({
+        rule: "raw-radius",
+        path: source.path,
+        line: d.line,
+        text: `${d.prop}: ${value}`,
+        message:
+          "Raw radius — use var(--radius-sm|md|lg|xl|full) or the concentric form calc(var(--radius-…) - padding).",
+      });
     }
   }
   return findings;
@@ -118,14 +143,23 @@ function auditClasses(source: CornerSource): CornerFinding[] {
   for (const m of code.matchAll(ARBITRARY_ROUNDED)) {
     const inner = m[1]!.slice(1, -1);
     if (inner.startsWith(CONCENTRIC_PREFIX)) continue;
-    findings.push({ rule: "arbitrary-rounded", path: source.path, line: lineOf(code, m.index), text: m[0], message: "Arbitrary radius class — use rounded-sm|md|lg|xl|full; the only allowed arbitrary form is the concentric rounded-[calc(var(--radius-…)-…)]." });
+    findings.push({
+      rule: "arbitrary-rounded",
+      path: source.path,
+      line: lineOf(code, m.index),
+      text: m[0],
+      message:
+        "Arbitrary radius class — use rounded-sm|md|lg|xl|full; the only allowed arbitrary form is the concentric rounded-[calc(var(--radius-…)-…)].",
+    });
   }
   return findings;
 }
 
 /** 파일 묶음을 검사해 위반 목록을 낸다 — 경로 → 줄 순. */
 export function auditCorners(sources: readonly CornerSource[]): CornerFinding[] {
-  const findings = sources.flatMap(source => (source.path.endsWith(".css") ? auditCss(source) : auditClasses(source)));
+  const findings = sources.flatMap((source) =>
+    source.path.endsWith(".css") ? auditCss(source) : auditClasses(source),
+  );
   return findings.sort((a, b) => a.path.localeCompare(b.path) || a.line - b.line);
 }
 

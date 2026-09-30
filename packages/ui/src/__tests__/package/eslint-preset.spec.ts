@@ -19,7 +19,14 @@ function linter(fix = false): ESLint {
     fix,
     overrideConfigFile: true,
     overrideConfig: [
-      { files: ["**/*.jsx"], languageOptions: { ecmaVersion: 2024, sourceType: "module", parserOptions: { ecmaFeatures: { jsx: true } } } },
+      {
+        files: ["**/*.jsx"],
+        languageOptions: {
+          ecmaVersion: 2024,
+          sourceType: "module",
+          parserOptions: { ecmaFeatures: { jsx: true } },
+        },
+      },
       ...squircleDesignSystem({ entryPoint: ENTRY, files: ["**/*.jsx"], styleIgnores: ["**/scene/**"] }),
     ],
   });
@@ -27,14 +34,16 @@ function linter(fix = false): ESLint {
 
 async function lint(code: string, filePath = "src/App.jsx"): Promise<{ rules: string[]; fixed: string }> {
   const [result] = await linter().lintText(code, { filePath });
-  const rules = result!.messages.map(m => m.ruleId ?? m.message).sort();
+  const rules = result!.messages.map((m) => m.ruleId ?? m.message).sort();
   const [fixedResult] = await linter(true).lintText(code, { filePath });
   return { rules, fixed: fixedResult!.output ?? code };
 }
 
 describe("eslint 프리셋", { timeout: 60_000 }, () => {
   it("깨끗한 조립은 통과한다 — 토큰 유틸 · DS 컴포넌트 · 새 tone", async () => {
-    const { rules } = await lint('export const A = () => <Button tone="primary" className="rounded-md bg-card text-body gap-3 p-4 shadow-pop">x</Button>;');
+    const { rules } = await lint(
+      'export const A = () => <Button tone="primary" className="rounded-md bg-card text-body gap-3 p-4 shadow-pop">x</Button>;',
+    );
     expect(rules).toEqual([]);
   });
 
@@ -45,24 +54,30 @@ describe("eslint 프리셋", { timeout: 60_000 }, () => {
 
   it("Tailwind 기본 사다리(text-sm · bg-gray-100)는 no-unknown-classes — CSS 없이 조용히 무시되는 클래스", async () => {
     const { rules } = await lint('export const A = () => <div className="text-sm bg-gray-100" />;');
-    expect(rules.filter(r => r === "better-tailwindcss/no-unknown-classes")).toHaveLength(2);
+    expect(rules.filter((r) => r === "better-tailwindcss/no-unknown-classes")).toHaveLength(2);
   });
 
   it("옛 이름(text-ink · bg-accent-hover · rounded-control)은 no-restricted-classes 이고 --fix 가 개명한다", async () => {
-    const { rules, fixed } = await lint('export const A = () => <div className="text-ink bg-accent-hover rounded-control" />;');
-    expect(rules.filter(r => r === "better-tailwindcss/no-restricted-classes")).toHaveLength(3);
+    const { rules, fixed } = await lint(
+      'export const A = () => <div className="text-ink bg-accent-hover rounded-control" />;',
+    );
+    expect(rules.filter((r) => r === "better-tailwindcss/no-restricted-classes")).toHaveLength(3);
     expect(fixed).toContain('className="text-foreground bg-primary-hover rounded-md"');
   });
 
   it("hex · 임의 단위 · 격자 밖 간격은 no-restricted-classes", async () => {
-    const { rules } = await lint('export const A = () => <div className="bg-[#0869e1] w-[12px] gap-1.5 p-7" />;');
-    expect(rules.filter(r => r === "better-tailwindcss/no-restricted-classes")).toHaveLength(4);
+    const { rules } = await lint(
+      'export const A = () => <div className="bg-[#0869e1] w-[12px] gap-1.5 p-7" />;',
+    );
+    expect(rules.filter((r) => r === "better-tailwindcss/no-restricted-classes")).toHaveLength(4);
   });
 
   it("인라인 색·테두리 style 은 no-restricted-syntax — scene/ 은 뺀다", async () => {
     const code = 'export const A = () => <div style={{ color: "red", background: "#fff", width: 12 }} />;';
-    expect((await lint(code)).rules.filter(r => r === "no-restricted-syntax")).toHaveLength(2);
-    expect((await lint(code, "src/scene/Canvas.jsx")).rules.filter(r => r === "no-restricted-syntax")).toHaveLength(0);
+    expect((await lint(code)).rules.filter((r) => r === "no-restricted-syntax")).toHaveLength(2);
+    expect(
+      (await lint(code, "src/scene/Canvas.jsx")).rules.filter((r) => r === "no-restricted-syntax"),
+    ).toHaveLength(0);
   });
 
   it("옛 tone 키는 ds/legacy-tone 이고 --fix 가 새 키로 바꾼다", async () => {
@@ -79,8 +94,10 @@ describe("eslint 프리셋", { timeout: 60_000 }, () => {
         ...squircleDesignSystem({ entryPoint: ENTRY, files: ["**/*.jsx"], severity: "warn" }),
       ],
     });
-    const [result] = await eslint.lintText("export const A = () => <button>x</button>;", { filePath: "a.jsx" });
-    expect(result!.messages.map(m => m.severity)).toEqual([1]);
+    const [result] = await eslint.lintText("export const A = () => <button>x</button>;", {
+      filePath: "a.jsx",
+    });
+    expect(result!.messages.map((m) => m.severity)).toEqual([1]);
   });
 });
 
@@ -88,15 +105,15 @@ describe("프리셋의 원천", () => {
   it("옛 tone 표는 tone.ts 와 같다 — 갈리면 --fix 가 런타임과 다른 키를 쓴다", () => {
     const source = readFileSync(fileURLToPath(new URL("../../lib/tone.ts", import.meta.url)), "utf8");
     const block = /const LEGACY_TONES = \{([\s\S]*?)\} as const/.exec(source)?.[1] ?? "";
-    const fromSource = Object.fromEntries([...block.matchAll(/(\w+):\s*"(\w+)"/g)].map(m => [m[1], m[2]]));
+    const fromSource = Object.fromEntries([...block.matchAll(/(\w+):\s*"(\w+)"/g)].map((m) => [m[1], m[2]]));
     expect(fromSource).toEqual({ ...LEGACY_TONES });
   });
 
   it("제한 패턴은 개명 표(생성물) 뒤에 hex · 색 함수 · 단위 · 간격 넷이다", () => {
     const patterns = restrictedClassPatterns();
-    const renames = patterns.filter(p => p.fix);
+    const renames = patterns.filter((p) => p.fix);
     expect(renames.length).toBeGreaterThan(30);
-    expect(patterns.slice(renames.length).map(p => p.message)).toEqual([
+    expect(patterns.slice(renames.length).map((p) => p.message)).toEqual([
       "Hex colour in a class — use a colour token.",
       "Raw colour function in a class — use a colour token.",
       "Unit literal in a class — use a token utility.",

@@ -28,7 +28,9 @@ const LEGACY_TONES = {
 export type LegacyTone = keyof typeof LEGACY_TONES;
 
 /** `T` 에 대응하는 옛 키만 — `LegacyToneOf<"neutral" | "primary" | "destructive">` 는 `"accent" | "danger" | "default" | "current"` 다. */
-export type LegacyToneOf<T extends string> = { [K in LegacyTone]: (typeof LEGACY_TONES)[K] extends T ? K : never }[LegacyTone];
+export type LegacyToneOf<T extends string> = {
+  [K in LegacyTone]: (typeof LEGACY_TONES)[K] extends T ? K : never;
+}[LegacyTone];
 
 /** 컴포넌트 prop 이 받는 것 — 새 키 `T` 와 그에 대응하는 옛 키. */
 export type ToneInput<T extends string> = T | LegacyToneOf<T>;
@@ -38,7 +40,12 @@ export type ToneInput<T extends string> = T | LegacyToneOf<T>;
  * 반환 타입이 `Exclude<T, LegacyTone>` 인 이유: `T` 는 prop 의 합집합(새 키 + 옛 키)으로 추론되고, 결과에서 옛 키만 벗겨 내면 컴포넌트의
  * 부분집합이 남는다 — `ToneInput<T>` 로 받으면 TS 가 `T` 를 합집합 전체로 추론해 옛 키가 결과 타입에 남았다(실측).
  */
-export function normalizeTone<T extends string>(tone: T | null | undefined): Exclude<T, LegacyTone> | undefined {
+export function normalizeTone<T extends string>(
+  tone: T | null | undefined,
+): Exclude<T, LegacyTone> | undefined {
   if (tone === null || tone === undefined) return undefined;
-  return (Object.hasOwn(LEGACY_TONES, tone) ? LEGACY_TONES[tone as LegacyTone] : tone) as Exclude<T, LegacyTone>;
+  return (Object.hasOwn(LEGACY_TONES, tone) ? LEGACY_TONES[tone as LegacyTone] : tone) as Exclude<
+    T,
+    LegacyTone
+  >;
 }

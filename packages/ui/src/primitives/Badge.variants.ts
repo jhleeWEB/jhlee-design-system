@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "../cn";
 
 /** 배지의 변형 — `tone` 과 `provisional`(TBV 점선). */
 export const badgeVariants = cva(
-  "inline-flex items-center gap-2 whitespace-nowrap rounded-sm border px-3 py-px text-label leading-normal",
+  "leading-normal inline-flex items-center gap-2 rounded-sm border px-3 py-px text-label whitespace-nowrap",
   {
     variants: {
       tone: {

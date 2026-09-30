@@ -8,8 +8,7 @@ import { spinnerVariants, type SpinnerTone } from "./Spinner.variants";
  * 작은 크기에서 링이 찌그러지는데, 이 제품의 기본 크기는 12–16px 라 그게 그대로 보인다. */
 
 export interface SpinnerProps
-  extends React.SVGAttributes<SVGSVGElement>,
-    Omit<VariantProps<typeof spinnerVariants>, "tone"> {
+  extends React.SVGAttributes<SVGSVGElement>, Omit<VariantProps<typeof spinnerVariants>, "tone"> {
   /**
    * 톤 — `neutral`(기본, 글자색을 따른다) · `primary` · `muted`.
    * @deprecated 옛 키 `current` · `accent` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
@@ -32,12 +31,7 @@ export function Spinner({ className, size, tone, label, ...rest }: SpinnerProps)
       {...rest}
     >
       <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="2" opacity="0.2" />
-      <path
-        d="M8 1.5A6.5 6.5 0 0 1 14.5 8"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
+      <path d="M8 1.5A6.5 6.5 0 0 1 14.5 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }

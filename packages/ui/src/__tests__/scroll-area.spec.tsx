@@ -3,8 +3,12 @@ import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ScrollArea } from "../navigation/ScrollArea";
 
-const advance = (ms: number) => act(() => { vi.advanceTimersByTime(ms); });
-const slot = (container: HTMLElement, name: string) => container.querySelector<HTMLDivElement>(`[data-slot="scroll-area${name ? `-${name}` : ""}"]`)!;
+const advance = (ms: number) =>
+  act(() => {
+    vi.advanceTimersByTime(ms);
+  });
+const slot = (container: HTMLElement, name: string) =>
+  container.querySelector<HTMLDivElement>(`[data-slot="scroll-area${name ? `-${name}` : ""}"]`)!;
 const shown = (container: HTMLElement) => slot(container, "").getAttribute("data-scroll-active") === "true";
 const captureDescriptors = new Map<string, PropertyDescriptor | undefined>();
 
@@ -12,7 +16,10 @@ beforeEach(() => {
   vi.useFakeTimers();
   class TestPointerEvent extends MouseEvent {
     readonly pointerId: number;
-    constructor(type: string, init: PointerEventInit = {}) { super(type, init); this.pointerId = init.pointerId ?? 1; }
+    constructor(type: string, init: PointerEventInit = {}) {
+      super(type, init);
+      this.pointerId = init.pointerId ?? 1;
+    }
   }
   vi.stubGlobal("PointerEvent", TestPointerEvent);
   for (const method of ["setPointerCapture", "releasePointerCapture", "hasPointerCapture"]) {
@@ -34,7 +41,11 @@ afterEach(() => {
 
 describe("활동 중에만 나타나는 오버레이 스크롤바", () => {
   it("호버만으로 나타나지 않고 마지막 스크롤의 정확히 500ms 뒤 숨기기 시작한다", () => {
-    const { container } = render(<ScrollArea><p>Content</p></ScrollArea>);
+    const { container } = render(
+      <ScrollArea>
+        <p>Content</p>
+      </ScrollArea>,
+    );
     fireEvent.pointerEnter(slot(container, ""));
     advance(1000);
     expect(shown(container)).toBe(false);
@@ -49,7 +60,11 @@ describe("활동 중에만 나타나는 오버레이 스크롤바", () => {
   });
 
   it("추가 스크롤은 대기시간을 마지막 이벤트부터 다시 센다", () => {
-    const { container } = render(<ScrollArea><p>Content</p></ScrollArea>);
+    const { container } = render(
+      <ScrollArea>
+        <p>Content</p>
+      </ScrollArea>,
+    );
     const viewport = slot(container, "viewport");
     fireEvent.scroll(viewport);
     advance(400);
@@ -61,7 +76,11 @@ describe("활동 중에만 나타나는 오버레이 스크롤바", () => {
   });
 
   it("막대를 끌 때는 멈춰도 유지하고 바깥에서 놓은 뒤 500ms 후 사라진다", () => {
-    const { container } = render(<ScrollArea><p>Content</p></ScrollArea>);
+    const { container } = render(
+      <ScrollArea>
+        <p>Content</p>
+      </ScrollArea>,
+    );
     fireEvent.scroll(slot(container, "viewport"));
     fireEvent.pointerDown(slot(container, "scrollbar"), { button: 0, pointerId: 7 });
     advance(900);
@@ -77,7 +96,11 @@ describe("활동 중에만 나타나는 오버레이 스크롤바", () => {
   });
 
   it("드래그 취소도 표시 잠금을 해제한다", () => {
-    const { container } = render(<ScrollArea><p>Content</p></ScrollArea>);
+    const { container } = render(
+      <ScrollArea>
+        <p>Content</p>
+      </ScrollArea>,
+    );
     fireEvent.pointerDown(slot(container, "scrollbar"), { button: 0, pointerId: 3 });
     fireEvent.pointerCancel(window, { pointerId: 3 });
     advance(500);
@@ -87,8 +110,22 @@ describe("활동 중에만 나타나는 오버레이 스크롤바", () => {
   it("실제 viewport ref와 onScroll을 전달하고 축 변경에도 같은 노드를 유지한다", () => {
     const viewportRef = createRef<HTMLDivElement>();
     const targets: EventTarget[] = [];
-    const props = { viewportRef, viewportClassName: "viewport-owner", viewportProps: { className: "viewport-props", "aria-label": "Scrollable results", onScroll: (event: React.UIEvent<HTMLDivElement>) => { targets.push(event.currentTarget); } } };
-    const { container, rerender, unmount } = render(<ScrollArea {...props} id="results"><p>Content</p></ScrollArea>);
+    const props = {
+      viewportRef,
+      viewportClassName: "viewport-owner",
+      viewportProps: {
+        className: "viewport-props",
+        "aria-label": "Scrollable results",
+        onScroll: (event: React.UIEvent<HTMLDivElement>) => {
+          targets.push(event.currentTarget);
+        },
+      },
+    };
+    const { container, rerender, unmount } = render(
+      <ScrollArea {...props} id="results">
+        <p>Content</p>
+      </ScrollArea>,
+    );
     const viewport = slot(container, "viewport");
     expect(viewportRef.current).toBe(viewport);
     expect(viewport.getAttribute("aria-label")).toBe("Scrollable results");
@@ -97,7 +134,11 @@ describe("활동 중에만 나타나는 오버레이 스크롤바", () => {
     fireEvent.scroll(viewport);
     expect(targets).toEqual([viewport]);
     expect(container.querySelectorAll('[data-slot="scroll-area-scrollbar"]')).toHaveLength(2);
-    rerender(<ScrollArea {...props} orientation="horizontal"><p>Content</p></ScrollArea>);
+    rerender(
+      <ScrollArea {...props} orientation="horizontal">
+        <p>Content</p>
+      </ScrollArea>,
+    );
     expect(viewportRef.current).toBe(viewport);
     expect(container.querySelectorAll('[data-orientation="vertical"]')).toHaveLength(0);
     expect(container.querySelectorAll('[data-orientation="horizontal"]')).toHaveLength(1);
@@ -106,12 +147,20 @@ describe("활동 중에만 나타나는 오버레이 스크롤바", () => {
   });
 
   it("언마운트하면 숨김 타이머와 바깥 드래그 리스너를 정리한다", () => {
-    const scrolling = render(<ScrollArea><p>Content</p></ScrollArea>);
+    const scrolling = render(
+      <ScrollArea>
+        <p>Content</p>
+      </ScrollArea>,
+    );
     fireEvent.scroll(slot(scrolling.container, "viewport"));
     expect(vi.getTimerCount()).toBeGreaterThan(0);
     scrolling.unmount();
     expect(vi.getTimerCount()).toBe(0);
-    const dragging = render(<ScrollArea><p>Content</p></ScrollArea>);
+    const dragging = render(
+      <ScrollArea>
+        <p>Content</p>
+      </ScrollArea>,
+    );
     fireEvent.pointerDown(slot(dragging.container, "scrollbar"), { button: 0, pointerId: 2 });
     dragging.unmount();
     expect(vi.getTimerCount()).toBe(0);

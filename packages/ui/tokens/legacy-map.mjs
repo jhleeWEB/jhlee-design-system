@@ -6,8 +6,9 @@
  * scripts/codemod-css-vars.mjs 가 `var(--chrome-*)`·`var(--radius-*)` 를 바꾼다. 표를 두 곳에 손으로 적으면 하나가 뒤처진다. */
 import { LEGACY_FILE } from "./schema.ts";
 
-const singleRef = value => (typeof value === "string" && /^\{[a-z0-9.-]+\}$/.test(value) ? value.slice(1, -1) : null);
-const cssName = path => `--${path.split(".").join("-")}`;
+const singleRef = (value) =>
+  typeof value === "string" && /^\{[a-z0-9.-]+\}$/.test(value) ? value.slice(1, -1) : null;
+const cssName = (path) => `--${path.split(".").join("-")}`;
 
 /**
  * @param {readonly import("./schema.ts").FlatToken[]} tokens  validateTokenSources 의 tokens
@@ -45,10 +46,11 @@ export function legacyRenames(tokens, renames) {
 }
 
 /** 색을 받는 Tailwind 유틸 접두 — 이 목록 밖(`w-line` 같은 우연의 일치)은 건드리지 않는다. */
-const COLOR_UTILITIES = "bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow";
+const COLOR_UTILITIES =
+  "bg|text|border|border-[trblxyse]|ring|ring-offset|inset-ring|outline|fill|stroke|divide|from|via|to|placeholder|caret|accent|decoration|shadow";
 /** 반경 유틸 접두 — 모서리별 변형까지. */
 const RADIUS_UTILITIES = "rounded(?:-(?:t|r|b|l|s|e|tl|tr|bl|br|ss|se|es|ee))?";
-const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 /** 긴 이름 우선 — `accent-soft` 가 `accent` 보다 먼저 매치되게(패턴이 앵커돼 있어도 순서를 읽는 사람에게 분명하다). */
 const longestFirst = ([a], [b]) => b.length - a.length || a.localeCompare(b);
 
@@ -63,14 +65,14 @@ const longestFirst = ([a], [b]) => b.length - a.length || a.localeCompare(b);
  * 몫이고(lintSafe: false), 린트 표(lintSafe: true)는 목적지가 다시 출발지가 되지 않는 이름만 든다(legacy-map.spec 이 그 성질을 검사한다).
  */
 export function legacyClassRenames(map, { lintSafe = false } = {}) {
-  const colorEntries = Object.entries(map.colors).filter(([from]) => !lintSafe || !(from in RENAME_SOURCES(map)));
-  const colors = colorEntries
-    .sort(longestFirst)
-    .map(([from, to]) => ({
-      pattern: `^((?:[^\\s:]+:)*)(${COLOR_UTILITIES})-${escape(from)}((?:/\\d+)?)$`,
-      fix: `$1$2-${to}$3`,
-      message: `\`${from}\` was renamed to \`${to}\` — shadcn vocabulary (#22); run eslint --fix.`,
-    }));
+  const colorEntries = Object.entries(map.colors).filter(
+    ([from]) => !lintSafe || !(from in RENAME_SOURCES(map)),
+  );
+  const colors = colorEntries.sort(longestFirst).map(([from, to]) => ({
+    pattern: `^((?:[^\\s:]+:)*)(${COLOR_UTILITIES})-${escape(from)}((?:/\\d+)?)$`,
+    fix: `$1$2-${to}$3`,
+    message: `\`${from}\` was renamed to \`${to}\` — shadcn vocabulary (#22); run eslint --fix.`,
+  }));
   const radius = Object.entries(map.radius)
     .sort(longestFirst)
     .map(([from, to]) => ({
@@ -82,7 +84,12 @@ export function legacyClassRenames(map, { lintSafe = false } = {}) {
 }
 
 /** renames 에서 온 유틸 이름(accent · muted) — legacyRenames 는 alias 토큰과 renames 를 합쳐 주므로 여기서 다시 가른다. */
-const RENAME_SOURCES = map => Object.fromEntries(Object.keys(map.colors).filter(from => map.colors[from] !== undefined && map.renameSources.includes(from)).map(k => [k, true]));
+const RENAME_SOURCES = (map) =>
+  Object.fromEntries(
+    Object.keys(map.colors)
+      .filter((from) => map.colors[from] !== undefined && map.renameSources.includes(from))
+      .map((k) => [k, true]),
+  );
 
 /** `better-tailwindcss/no-restricted-classes` 의 `restrict` 항목 — 린트에 안전한 표(renames 제외). */
-export const legacyClassRestrictions = map => legacyClassRenames(map, { lintSafe: true });
+export const legacyClassRestrictions = (map) => legacyClassRenames(map, { lintSafe: true });

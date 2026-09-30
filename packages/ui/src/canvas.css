@@ -10,4 +10,6 @@
   font-weight: 400;
 }
 .ds-canvas-scale > rect,
-.ds-canvas-scale > text { fill: currentColor; }
+.ds-canvas-scale > text {
+  fill: currentColor;
+}

@@ -15,7 +15,10 @@
   "tracking": {
     "$type": "dimension",
     "$extensions": { "sds": { "reset": true } },
-    "tight": { "$value": "-0.025em", "$description": "들머리 제목 — Tailwind 의 tracking-tight 값 그대로(이름만 남긴다)." },
+    "tight": {
+      "$value": "-0.025em",
+      "$description": "들머리 제목 — Tailwind 의 tracking-tight 값 그대로(이름만 남긴다)."
+    },
     "caps": { "$value": "0.09em", "$description": "대문자 미세라벨 전용 — eyebrow · 섹션 라벨." }
   },
   "font-weight": {
@@ -31,7 +34,9 @@
     "$type": "fontFamily",
     "$extensions": { "sds": { "scope": "root" } },
     "$description": "한글 폴백까지 든 시스템 스택 — 옛 --sans · --mono. Tailwind 의 --font-sans 는 «Instrument Sans» 를 이 앞에 붙인다(semantic/tailwind.json). 원칙 3(수치는 mono + tabular-nums)의 .num 과 tnum 이 mono 스택을 직접 읽는다.",
-    "sans": { "$value": "\"Noto Sans KR\", Pretendard, \"Apple SD Gothic Neo\", system-ui, -apple-system, sans-serif" },
+    "sans": {
+      "$value": "\"Noto Sans KR\", Pretendard, \"Apple SD Gothic Neo\", system-ui, -apple-system, sans-serif"
+    },
     "mono": { "$value": "ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Consolas, monospace" }
   }
 }

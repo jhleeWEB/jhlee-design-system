@@ -65,15 +65,7 @@ export interface SidebarItemProps extends React.ButtonHTMLAttributes<HTMLButtonE
   shortcut?: string;
 }
 
-export function SidebarItem({
-  className,
-  icon,
-  label,
-  active,
-  badge,
-  shortcut,
-  ...rest
-}: SidebarItemProps) {
+export function SidebarItem({ className, icon, label, active, badge, shortcut, ...rest }: SidebarItemProps) {
   const { collapsed } = useContext(Ctx);
   const button = (
     <button
@@ -82,7 +74,7 @@ export function SidebarItem({
       aria-current={active ? "page" : undefined}
       aria-label={collapsed ? label : undefined}
       className={cn(
-        "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit cursor-pointer",
+        "font-inherit cursor-pointer appearance-none border-0 bg-transparent p-0 text-inherit",
         "flex h-ctl-lg shrink-0 items-center gap-4 rounded-md border border-solid border-transparent",
         "text-control text-muted-foreground transition-colors duration-fast",
         "hover:bg-muted hover:text-foreground",
@@ -128,7 +120,7 @@ export function SidebarGroup({
       {collapsed ? (
         <hr aria-label={label} className="my-2 w-8 self-center border-0 border-t border-border" />
       ) : (
-        <div className="px-3 pb-1 pt-3 font-mono text-micro uppercase tracking-caps text-muted-foreground">
+        <div className="px-3 pt-3 pb-1 font-mono text-micro tracking-caps text-muted-foreground uppercase">
           {label}
         </div>
       )}
@@ -143,12 +135,12 @@ export function useSidebarCollapse(initial = false) {
   return {
     collapsed,
     setCollapsed,
-    toggle: () => setCollapsed(c => !c),
+    toggle: () => setCollapsed((c) => !c),
     /* 토글 버튼에 그대로 펴 넣는다. */
     triggerProps: {
       "aria-expanded": !collapsed,
       "aria-label": collapsed ? "Expand sidebar" : "Collapse sidebar",
-      onClick: () => setCollapsed(c => !c),
+      onClick: () => setCollapsed((c) => !c),
     } as const,
   };
 }

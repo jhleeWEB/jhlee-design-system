@@ -18,10 +18,9 @@ import { mediaCardVariants, mediaCardMediaVariants } from "./MediaCard.variants"
  * 자리를 회색 네모로 채우지 않는다. 빈 썸네일은 「아직 안 불러왔다」로 읽혀서
  * 「원래 없다」와 구별되지 않는다. `media` 가 없으면 그 칸 자체가 사라진다. */
 
-
-
 export interface MediaCardProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "title" | "onSelect">,
+  extends
+    Omit<React.HTMLAttributes<HTMLDivElement>, "title" | "onSelect">,
     VariantProps<typeof mediaCardVariants> {
   title: React.ReactNode;
   /** 제목 위 작은 라벨 — "Candidate 03" · "Dahisar". */
@@ -81,13 +80,13 @@ export function MediaCard({
           style={horizontal ? { width: mediaWidth } : undefined}
         >
           {media}
-          {mediaOverlay ? <div className="absolute left-2 top-2 z-raised">{mediaOverlay}</div> : null}
+          {mediaOverlay ? <div className="absolute top-2 left-2 z-raised">{mediaOverlay}</div> : null}
         </div>
       ) : null}
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 p-4">
         {eyebrow ? (
-          <div className="font-mono text-micro uppercase tracking-caps text-muted-foreground">{eyebrow}</div>
+          <div className="font-mono text-micro tracking-caps text-muted-foreground uppercase">{eyebrow}</div>
         ) : null}
 
         <div className="min-w-0">
@@ -99,10 +98,10 @@ export function MediaCard({
                 onClick={onSelect}
                 /* 카드 전체로 늘어나는 얇은 버튼. 조치들은 z-raised 로 그 위에 뜬다. */
                 className={cn(
-                  "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
+                  "font-inherit appearance-none border-0 bg-transparent p-0 text-inherit",
                   "cursor-pointer text-left after:absolute after:inset-0 after:content-['']",
                   /* 링은 카드 반경을 따른다 — raised 는 그대로, flat 은 1px 테두리 안쪽(inset-0 은 패딩 상자)이라 헤어라인만큼 뺀다. flush 는 각지다. */
-                  "group-data-[elevation=raised]:after:rounded-lg group-data-[elevation=flat]:after:rounded-[calc(var(--radius-lg)-var(--space-hairline))]",
+                  "group-data-[elevation=flat]:after:rounded-[calc(var(--radius-lg)-var(--space-hairline))] group-data-[elevation=raised]:after:rounded-lg",
                   "focus-visible:outline-none",
                   "focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ring",
                 )}
@@ -114,7 +113,7 @@ export function MediaCard({
             )}
           </h3>
           {description ? (
-            <p className="mt-1 line-clamp-2 text-body leading-relaxed text-muted-foreground">{description}</p>
+            <p className="leading-relaxed mt-1 line-clamp-2 text-body text-muted-foreground">{description}</p>
           ) : null}
         </div>
 

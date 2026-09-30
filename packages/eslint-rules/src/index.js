@@ -19,7 +19,9 @@ import noMagicMs from "./rules/no-magic-ms.js";
 const plugin = {
   meta: { name: "@buildos/eslint-rules", version: "0.1.0" },
   rules: {
-    "no-boolean-string-data-attr": /** @type {import("eslint").Rule.RuleModule} */ (/** @type {unknown} */ (noBooleanStringDataAttr)),
+    "no-boolean-string-data-attr": /** @type {import("eslint").Rule.RuleModule} */ (
+      /** @type {unknown} */ (noBooleanStringDataAttr)
+    ),
     "legacy-tone": legacyTone,
     "no-forward-ref": noForwardRef,
     "no-literal-style-value": noLiteralStyleValue,

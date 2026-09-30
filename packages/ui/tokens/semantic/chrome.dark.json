@@ -19,7 +19,10 @@
     "primary-foreground": { "$value": "#061018" },
     "primary-track": { "$value": "#1a2b42" },
     "accent": { "$value": "#14243a" },
-    "accent-foreground": { "$value": "#4d9bff", "$description": "옛 조합 bg-accent-soft + text-accent 의 다크 글자색 그대로." },
+    "accent-foreground": {
+      "$value": "#4d9bff",
+      "$description": "옛 조합 bg-accent-soft + text-accent 의 다크 글자색 그대로."
+    },
     "selection-fill": { "$value": "rgb(77 155 255 / 0.20)" },
     "selection-stroke": { "$value": "#4d9bff" },
     "scrim": { "$value": "rgb(0 0 0 / 0.60)" },
@@ -43,8 +46,14 @@
     "destructive-line": { "$value": "{palette.rust.600}" },
     "info": { "$value": "#4d9bff", "$description": "다크 primary 와 같은 값." },
     "info-hover": { "$value": "#6fb0ff" },
-    "info-foreground": { "$value": "{palette.cool.950}", "$description": "#4d9bff 위의 흰 글자는 2.82:1 — 어두운 글자 6.60:1." },
+    "info-foreground": {
+      "$value": "{palette.cool.950}",
+      "$description": "#4d9bff 위의 흰 글자는 2.82:1 — 어두운 글자 6.60:1."
+    },
     "info-soft": { "$value": "#14243a" },
-    "info-line": { "$value": "#005fd8", "$description": "다크 card(#161a21) 위 3.01:1 까지 어둡힌 값(#4d9bff 의 HSL 밝기 42%)." }
+    "info-line": {
+      "$value": "#005fd8",
+      "$description": "다크 card(#161a21) 위 3.01:1 까지 어둡힌 값(#4d9bff 의 HSL 밝기 42%)."
+    }
   }
 }

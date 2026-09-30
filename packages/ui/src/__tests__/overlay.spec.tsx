@@ -1,4 +1,4 @@
-import { StrictMode, act  } from "react";
+import { StrictMode, act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -96,7 +96,7 @@ describe("Modal", () => {
        인라인 `overflow` 가 아니라 **속성 + 주입 스타일시트**로 잠근다(실제 DOM 을 찍어 확인).
        `body.style.overflow` 를 보면 영원히 빈 문자열이라 이 검사가 공허해진다. */
     expect(document.body.getAttribute("data-scroll-locked")).toBe("1");
-    const locked = [...document.querySelectorAll("style")].some(node =>
+    const locked = [...document.querySelectorAll("style")].some((node) =>
       /body\[data-scroll-locked\][^}]*overflow:\s*hidden/.test(node.textContent ?? ""),
     );
     expect(locked).toBe(true);
@@ -162,7 +162,7 @@ describe("ConfirmDialog", () => {
     const dialog = document.querySelector('[data-slot="confirm-dialog"]');
     expect(dialog?.getAttribute("role")).toBe("alertdialog");
     /* 실행 버튼은 「OK」가 아니라 무슨 일이 일어나는지를 적는다 — 이 규칙이 문서에만 남지 않게 한다. */
-    const labels = [...document.querySelectorAll("button")].map(b => b.textContent);
+    const labels = [...document.querySelectorAll("button")].map((b) => b.textContent);
     expect(labels).toContain("Delete parcel");
     expect(labels).not.toContain("OK");
   });

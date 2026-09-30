@@ -4,8 +4,17 @@ export const GRID_MAJOR_EVERY = 5;
 export const GRID_MAX_DIVISIONS = 240;
 
 /** 목표 화면 폭 안에 드는 1·2·5 계열 길이를 고른다. 길이는 m, 반환 폭은 CSS px다. */
-export function niceScale(metresPerPixel: number, targetPx = 120): { readonly lengthM: number; readonly px: number } {
-  if (!(metresPerPixel > 0) || !Number.isFinite(metresPerPixel) || !(targetPx > 0) || !Number.isFinite(targetPx)) return { lengthM: 0, px: 0 };
+export function niceScale(
+  metresPerPixel: number,
+  targetPx = 120,
+): { readonly lengthM: number; readonly px: number } {
+  if (
+    !(metresPerPixel > 0) ||
+    !Number.isFinite(metresPerPixel) ||
+    !(targetPx > 0) ||
+    !Number.isFinite(targetPx)
+  )
+    return { lengthM: 0, px: 0 };
   const rawM = metresPerPixel * targetPx;
   if (!Number.isFinite(rawM)) return { lengthM: 0, px: 0 };
   const power = 10 ** Math.floor(Math.log10(rawM));
@@ -29,8 +38,9 @@ function ladderAtLeast(value: number): number {
 export function gridPitchM(metresPerPixel: number, halfExtentM = 0): number {
   const safeMpp = Number.isFinite(metresPerPixel) && metresPerPixel > 0 ? metresPerPixel : 1;
   const visual = niceScale(safeMpp, GRID_TARGET_PX).lengthM || 1;
-  const coverage = Number.isFinite(halfExtentM) && halfExtentM > 0
-    ? ladderAtLeast((2 * halfExtentM) / GRID_MAX_DIVISIONS)
-    : 0;
+  const coverage =
+    Number.isFinite(halfExtentM) && halfExtentM > 0
+      ? ladderAtLeast((2 * halfExtentM) / GRID_MAX_DIVISIONS)
+      : 0;
   return Math.max(visual, coverage);
 }

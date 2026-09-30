@@ -17,7 +17,8 @@ export const DrawerClose = Dialog.Close;
 
 /** 포털 수명은 DS가 소유한다. 비모달 동작은 Drawer의 modal={false} 한 곳에서 설정한다. */
 export interface DrawerContentProps
-  extends Omit<React.ComponentPropsWithRef<typeof Dialog.Content>, "forceMount">,
+  extends
+    Omit<React.ComponentPropsWithRef<typeof Dialog.Content>, "forceMount">,
     VariantProps<typeof drawerVariants> {
   /** 모달성은 바꾸지 않고 스크림만 숨긴다. 비모달 Drawer에는 Radix가 스크림을 렌더하지 않는다. */
   showOverlay?: boolean;
@@ -33,14 +34,8 @@ export function DrawerContent({
 }: DrawerContentProps) {
   return (
     <Dialog.Portal>
-      {showOverlay ? (
-        <Dialog.Overlay className="fixed inset-0 z-scrim bg-scrim animate-in-fade" />
-      ) : null}
-      <Dialog.Content
-        data-slot="drawer"
-        className={cn(drawerVariants({ side, size }), className)}
-        {...rest}
-      >
+      {showOverlay ? <Dialog.Overlay className="fixed inset-0 z-scrim animate-in-fade bg-scrim" /> : null}
+      <Dialog.Content data-slot="drawer" className={cn(drawerVariants({ side, size }), className)} {...rest}>
         {children}
       </Dialog.Content>
     </Dialog.Portal>
@@ -65,11 +60,11 @@ export function DrawerHeader({
       {...rest}
     >
       <div className="min-w-0 flex-1">
-        <Dialog.Title className="m-0 text-title font-semibold leading-snug text-foreground">
+        <Dialog.Title className="leading-snug m-0 text-title font-semibold text-foreground">
           {title}
         </Dialog.Title>
         {description ? (
-          <Dialog.Description className="mt-1 leading-relaxed text-muted-foreground">
+          <Dialog.Description className="leading-relaxed mt-1 text-muted-foreground">
             {description}
           </Dialog.Description>
         ) : null}
@@ -78,7 +73,14 @@ export function DrawerHeader({
           div 의 prop 으로 갔는데, JSX 의 명시적 자식이 그 prop 을 덮어 소비자 children 이 조용히 사라졌다(#10). */}
       {children}
       <Dialog.Close asChild>
-        <Button data-slot="dialog-close" type="button" variant="ghost" size="icon-sm" aria-label="Close" className="-mr-2 -mt-1 shrink-0 [&_svg]:size-4">
+        <Button
+          data-slot="dialog-close"
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Close"
+          className="-mt-1 -mr-2 shrink-0 [&_svg]:size-4"
+        >
           <LuX size={16} strokeWidth={2} aria-hidden="true" focusable={false} />
         </Button>
       </Dialog.Close>
@@ -86,7 +88,12 @@ export function DrawerHeader({
   );
 }
 
-export function DrawerBody({ className, onScroll, onScrollCapture, ...rest }: React.ComponentPropsWithRef<"div">) {
+export function DrawerBody({
+  className,
+  onScroll,
+  onScrollCapture,
+  ...rest
+}: React.ComponentPropsWithRef<"div">) {
   return (
     <ScrollArea className="min-h-0 min-w-0 flex-auto" viewportProps={{ onScroll, onScrollCapture }}>
       <div data-slot="drawer-body" className={cn("px-6 py-5", className)} {...rest} />

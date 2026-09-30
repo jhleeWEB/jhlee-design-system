@@ -17,25 +17,41 @@ import { loadTokenModel, type TokenScope } from "./model";
 const model = loadTokenModel();
 
 const namesIn = (scope: TokenScope, prefix: string): string[] =>
-  [...new Set(model.tokens.filter(t => t.scope === scope && t.name.startsWith(prefix)).map(t => t.name))].sort();
+  [
+    ...new Set(model.tokens.filter((t) => t.scope === scope && t.name.startsWith(prefix)).map((t) => t.name)),
+  ].sort();
 /** 정본 크롬 토큰만 — legacy.css 의 `--chrome-<옛>: var(--chrome-<새>)` alias(#22)는 :root 에 살지만 다크 블록에 짝이 없는 것이 정상이다. */
 const chromeNamesIn = (scope: TokenScope): string[] =>
-  [...new Set(model.tokens.filter(t => t.scope === scope && t.file === "generated/tokens.css" && t.name.startsWith("--chrome-")).map(t => t.name))].sort();
+  [
+    ...new Set(
+      model.tokens
+        .filter(
+          (t) => t.scope === scope && t.file === "generated/tokens.css" && t.name.startsWith("--chrome-"),
+        )
+        .map((t) => t.name),
+    ),
+  ].sort();
 
 /** `@theme` 의 `--<ns>-<name>` 에서 `<name>` 만 — `--text-body--line-height` 같은 부속 키는 사다리가 아니다. */
 const ladder = (ns: string): string[] =>
   namesIn("theme", `--${ns}-`)
-    .map(n => n.slice(ns.length + 3))
-    .filter(n => !n.includes("--"))
+    .map((n) => n.slice(ns.length + 3))
+    .filter((n) => !n.includes("--"))
     .sort();
 
-const utilitiesIn = (file: string): string[] => model.utilities.filter(u => u.file === file).map(u => u.name).sort();
+const utilitiesIn = (file: string): string[] =>
+  model.utilities
+    .filter((u) => u.file === file)
+    .map((u) => u.name)
+    .sort();
 const HAND = "theme.css";
 const GENERATED = "generated/theme.tailwind.css";
 
 describe("방향 C — 캔버스와 크롬의 분리", () => {
   it("다크 블록은 --canvas-* 를 하나도 건드리지 않는다", () => {
-    expect(model.tokens.filter(t => t.scope === "dark-media" || t.scope === "dark-attr").length).toBeGreaterThan(0);
+    expect(
+      model.tokens.filter((t) => t.scope === "dark-media" || t.scope === "dark-attr").length,
+    ).toBeGreaterThan(0);
     expect(namesIn("dark-media", "--canvas-")).toEqual([]);
     expect(namesIn("dark-attr", "--canvas-")).toEqual([]);
   });
@@ -48,7 +64,9 @@ describe("방향 C — 캔버스와 크롬의 분리", () => {
   });
 
   it("legacy.css 의 옛 크롬 이름은 전부 정본 크롬 토큰을 가리킨다 — 다크도 그 참조를 따라 갈린다(#22)", () => {
-    const aliases = model.tokens.filter(t => t.file === "generated/legacy.css" && t.name.startsWith("--chrome-"));
+    const aliases = model.tokens.filter(
+      (t) => t.file === "generated/legacy.css" && t.name.startsWith("--chrome-"),
+    );
     expect(aliases.length).toBeGreaterThan(20);
     const canonical = new Set(chromeNamesIn("root"));
     for (const t of aliases) {
@@ -59,19 +77,19 @@ describe("방향 C — 캔버스와 크롬의 분리", () => {
   });
 
   it("캔버스 토큰은 :root 한 곳에서만 한 번씩 정의된다", () => {
-    const canvas = model.tokens.filter(t => t.name.startsWith("--canvas-"));
+    const canvas = model.tokens.filter((t) => t.name.startsWith("--canvas-"));
     expect(canvas.length).toBeGreaterThan(0);
     for (const t of canvas) expect(t.scope, t.name).toBe("root");
-    const names = canvas.map(t => t.name);
+    const names = canvas.map((t) => t.name);
     expect(names).toEqual([...new Set(names)]);
-    expect(model.tokens.filter(t => t.name === "--canvas-bg")).toHaveLength(1);
+    expect(model.tokens.filter((t) => t.name === "--canvas-bg")).toHaveLength(1);
   });
 });
 
 describe("사다리", () => {
   it("Tailwind 기본 사다리를 지워 역할 이름만 남긴다", () => {
     /* 남겨 두면 `rounded-lg`·`text-red-500`·`font-black` 이 계속 존재하고 「radius 는 역할이 정한다」·「유채색은 판정에만」이 관습에 진다. */
-    const reset = (namespace: string) => model.resets.find(r => r.namespace === namespace)?.scope;
+    const reset = (namespace: string) => model.resets.find((r) => r.namespace === namespace)?.scope;
     expect(reset("--radius")).toBe("theme");
     expect(reset("--shadow")).toBe("theme");
     expect(reset("--text")).toBe("theme");
@@ -82,13 +100,26 @@ describe("사다리", () => {
 
   it("생성물 LADDERS 가 @theme 의 사다리와 네임스페이스마다 같다", () => {
     /* ladders.ts 와 theme.tailwind.css 는 같은 정본에서 나오지만 다른 포맷이다 — 포맷 하나가 네임스페이스를 빠뜨리면 여기서 드러난다. */
-    for (const ns of ["radius", "shadow", "text", "animate", "ease", "tracking", "font-weight", "height", "container"] as const) {
+    for (const ns of [
+      "radius",
+      "shadow",
+      "text",
+      "animate",
+      "ease",
+      "tracking",
+      "font-weight",
+      "height",
+      "container",
+    ] as const) {
       expect([...LADDERS[ns]].sort(), ns).toEqual(ladder(ns));
     }
   });
 
   it("생성 @utility 는 layer(z-*) · duration(duration-*) 사다리 그대로다 — 손으로 더하지 않는다(혼용 규칙 ⑤)", () => {
-    const expected = [...LADDERS.layer.map(n => `z-${n}`), ...LADDERS.duration.map(n => `duration-${n}`)].sort();
+    const expected = [
+      ...LADDERS.layer.map((n) => `z-${n}`),
+      ...LADDERS.duration.map((n) => `duration-${n}`),
+    ].sort();
     expect(utilitiesIn(GENERATED)).toEqual(expected);
   });
 
@@ -116,13 +147,32 @@ describe("사다리", () => {
 
   it("@theme 이 initial 로 지운 네임스페이스 집합 == cn.ts 의 override 집합 — 하나가 빠지면 그 사다리의 충돌 해소가 조용히 꺼진다(#22)", () => {
     /* `--color-*: initial` 은 @theme inline 의 것이고 twMerge 는 색 클래스를 이름과 무관하게 같은 그룹으로 보므로 override 대상이 아니다. */
-    const resets = model.resets.filter(r => r.scope === "theme").map(r => r.namespace.slice(2)).sort();
-    expect(resets).toEqual(Object.keys(TW_MERGE_CONFIG.override.theme).filter(ns => resets.includes(ns)).sort());
-    expect(Object.keys(TW_MERGE_CONFIG.override.theme).sort()).toEqual([...new Set([...resets, "animate", "ease"])].sort());
+    const resets = model.resets
+      .filter((r) => r.scope === "theme")
+      .map((r) => r.namespace.slice(2))
+      .sort();
+    expect(resets).toEqual(
+      Object.keys(TW_MERGE_CONFIG.override.theme)
+        .filter((ns) => resets.includes(ns))
+        .sort(),
+    );
+    expect(Object.keys(TW_MERGE_CONFIG.override.theme).sort()).toEqual(
+      [...new Set([...resets, "animate", "ease"])].sort(),
+    );
     /* 생성물 LADDERS 의 네임스페이스는 전부 어딘가(override · extend.theme · classGroups)에 실려 있다 — height 는 h/w 로, layer 는 z 로, duration 은 duration 으로. */
-    const covered = new Set([...Object.keys(TW_MERGE_CONFIG.override.theme), ...Object.keys(TW_MERGE_CONFIG.extend.theme), "height", "layer", "duration"]);
+    const covered = new Set([
+      ...Object.keys(TW_MERGE_CONFIG.override.theme),
+      ...Object.keys(TW_MERGE_CONFIG.extend.theme),
+      "height",
+      "layer",
+      "duration",
+    ]);
     for (const ns of Object.keys(LADDERS)) expect(covered.has(ns), ns).toBe(true);
-    for (const ns of Object.keys(TW_MERGE_CONFIG.override.theme) as (keyof typeof LADDERS)[]) expect([...TW_MERGE_CONFIG.override.theme[ns as keyof typeof TW_MERGE_CONFIG.override.theme]], ns).toEqual([...LADDERS[ns]]);
+    for (const ns of Object.keys(TW_MERGE_CONFIG.override.theme) as (keyof typeof LADDERS)[])
+      expect(
+        [...TW_MERGE_CONFIG.override.theme[ns as keyof typeof TW_MERGE_CONFIG.override.theme]],
+        ns,
+      ).toEqual([...LADDERS[ns]]);
   });
 });
 
@@ -142,7 +192,7 @@ describe("cn — 사다리마다 뒤엣것이 이긴다", () => {
     duration: ["duration"],
   };
 
-  it.each(Object.keys(LADDERS) as (keyof typeof LADDERS)[])("%s", ns => {
+  it.each(Object.keys(LADDERS) as (keyof typeof LADDERS)[])("%s", (ns) => {
     const names = LADDERS[ns];
     for (const prefix of PREFIXES[ns]) {
       for (let i = 1; i < names.length; i++) {

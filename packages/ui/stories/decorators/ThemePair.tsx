@@ -6,9 +6,14 @@ import type { ReactNode } from "react";
 export function ThemePair({ children }: { children: ReactNode }) {
   return (
     <div className="grid grid-cols-2 gap-0 font-sans text-body">
-      {(["light", "dark"] as const).map(theme => (
-        <section key={theme} data-theme={theme} data-testid={`theme-${theme}`} className="flex flex-col gap-3 bg-background p-6 text-foreground">
-          <span className="font-mono text-micro uppercase tracking-caps text-muted-foreground">{theme}</span>
+      {(["light", "dark"] as const).map((theme) => (
+        <section
+          key={theme}
+          data-theme={theme}
+          data-testid={`theme-${theme}`}
+          className="flex flex-col gap-3 bg-background p-6 text-foreground"
+        >
+          <span className="font-mono text-micro tracking-caps text-muted-foreground uppercase">{theme}</span>
           <div className="flex flex-wrap items-start gap-3">{children}</div>
         </section>
       ))}

@@ -33,37 +33,50 @@ export function SegmentedControl<T extends string | number>({
   className?: string;
   disabled?: boolean;
 }) {
-  const enabled = options.filter(option => !option.disabled);
-  const tabStop = disabled ? undefined : enabled.find(option => option.value === value) ?? enabled[0];
+  const enabled = options.filter((option) => !option.disabled);
+  const tabStop = disabled ? undefined : (enabled.find((option) => option.value === value) ?? enabled[0]);
   return (
     <div
       data-slot="segmented"
       role="radiogroup"
       aria-label={label}
       aria-disabled={disabled || undefined}
-      onKeyDown={event => {
-        if (disabled || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      onKeyDown={(event) => {
+        if (
+          disabled ||
+          event.defaultPrevented ||
+          event.altKey ||
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey
+        )
+          return;
         if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
-        const target = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[role="radio"]') : null;
+        const target =
+          event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[role="radio"]') : null;
         if (!target || target.disabled) return;
-        const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]:not(:disabled)'));
+        const buttons = Array.from(
+          event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]:not(:disabled)'),
+        );
         // 외부 제어 값의 반영이 늦어도 연속 키 입력은 실제 포커스에서 계속 이동해야 한다.
         const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
         if (index < 0 || enabled.length === 0) return;
         const delta = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : -1;
-        const next = event.key === "Home" ? 0 : event.key === "End" ? enabled.length - 1 : (index + delta + enabled.length) % enabled.length;
+        const next =
+          event.key === "Home"
+            ? 0
+            : event.key === "End"
+              ? enabled.length - 1
+              : (index + delta + enabled.length) % enabled.length;
         const option = enabled[next];
         if (!option) return;
         event.preventDefault();
         onChange(option.value);
         buttons[next]?.focus();
       }}
-      className={cn(
-        "inline-flex shrink-0 items-center rounded-md bg-primary-track p-0.5",
-        className,
-      )}
+      className={cn("inline-flex shrink-0 items-center rounded-md bg-primary-track p-0.5", className)}
     >
-      {options.map(option => {
+      {options.map((option) => {
         const active = option.value === value;
         return (
           <button
@@ -76,16 +89,14 @@ export function SegmentedControl<T extends string | number>({
             tabIndex={option === tabStop ? 0 : -1}
             onClick={() => onChange(option.value)}
             className={cn(
-              "appearance-none border-0 bg-transparent font-inherit",
+              "font-inherit appearance-none border-0 bg-transparent",
               /* 동심원 — 안쪽 반경 = 바깥(rounded-md) − 패딩(p-0.5) = 8 − 2 = 6px(#26). 스쿼클 폐기(#36) 뒤에도 값이 옛 rounded-sm 과 같아 그대로 둔다 —
                  바깥 토큰이 바뀌면 안쪽이 따라가는 것이 임의값 6px 보다 낫다. */
               "cursor-pointer rounded-[calc(var(--radius-md)-var(--spacing)*0.5)] px-3 font-medium transition-colors duration-fast",
               "focus-visible:focus-ring focus-visible:outline-none",
               "disabled:pointer-events-none disabled:opacity-45",
               size === "sm" ? "h-6 text-label" : "h-7 text-control",
-              active
-                ? "bg-card text-primary shadow-chip"
-                : "text-muted-foreground hover:text-foreground-2",
+              active ? "bg-card text-primary shadow-chip" : "text-muted-foreground hover:text-foreground-2",
             )}
           >
             {option.label}

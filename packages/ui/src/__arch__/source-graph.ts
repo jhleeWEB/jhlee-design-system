@@ -84,7 +84,8 @@ function commentRanges(sf: ts.SourceFile): readonly (readonly [number, number])[
 
 function blankRanges(text: string, ranges: readonly (readonly [number, number])[]): string {
   const chars = text.split("");
-  for (const [pos, end] of ranges) for (let i = pos; i < end; i++) if (chars[i] !== "\n" && chars[i] !== "\r") chars[i] = " ";
+  for (const [pos, end] of ranges)
+    for (let i = pos; i < end; i++) if (chars[i] !== "\n" && chars[i] !== "\r") chars[i] = " ";
   return chars.join("");
 }
 
@@ -103,7 +104,13 @@ export function parseSource(path: string, text: string): SourceFileInfo {
   const excluded = isExcludedPath(path);
   if (path.endsWith(".css")) return { path, excluded, kind: "css", code: blankCssComments(text), text };
   const kind = path.endsWith(".tsx") ? "tsx" : "ts";
-  const sf = ts.createSourceFile(path, text, ts.ScriptTarget.ES2022, true, kind === "tsx" ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+  const sf = ts.createSourceFile(
+    path,
+    text,
+    ts.ScriptTarget.ES2022,
+    true,
+    kind === "tsx" ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+  );
   return { path, excluded, kind, code: blankRanges(text, commentRanges(sf)), text };
 }
 
@@ -113,7 +120,9 @@ let cache: ReadonlyMap<string, SourceFileInfo> | null = null;
 export function sourceGraph(): ReadonlyMap<string, SourceFileInfo> {
   if (cache) return cache;
   const map = new Map<string, SourceFileInfo>();
-  for (const path of listFiles()) if (/\.(tsx?|css)$/.test(path)) map.set(path, parseSource(path, readFileSync(join(SRC_ROOT, path), "utf8")));
+  for (const path of listFiles())
+    if (/\.(tsx?|css)$/.test(path))
+      map.set(path, parseSource(path, readFileSync(join(SRC_ROOT, path), "utf8")));
   cache = map;
   return map;
 }
@@ -127,5 +136,5 @@ export function lineOf(code: string, index: number): number {
 
 /** 정규식의 모든 일치를 위치와 함께 낸다. */
 export function matches(code: string, re: RegExp): readonly Located[] {
-  return [...code.matchAll(re)].map(m => ({ text: m[0], line: lineOf(code, m.index) }));
+  return [...code.matchAll(re)].map((m) => ({ text: m[0], line: lineOf(code, m.index) }));
 }

@@ -10,7 +10,15 @@
  *
  * 화면 문자열(콘솔 출력)은 영어다 — 소비자가 보는 글자이기 때문이다.
  */
-import { existsSync, mkdirSync, readFileSync, readdirSync, realpathSync, statSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -49,7 +57,10 @@ export interface SyncResult {
  * 관리 블록을 넣거나 바꾼다. 표식이 있으면 그 사이만 바꾸고, 없으면 파일 끝에 빈 줄 하나 뒤에 붙인다.
  * 순수 함수 — 스펙이 파일 없이 검사한다.
  */
-export function upsertBlock(existing: string | null, block: string): { readonly text: string; readonly status: FileStatus } {
+export function upsertBlock(
+  existing: string | null,
+  block: string,
+): { readonly text: string; readonly status: FileStatus } {
   const managed = `${BEGIN}\n${block.trimEnd()}\n${END}\n`;
   if (existing === null) return { text: managed, status: "created" };
   const begin = existing.indexOf(BEGIN);
@@ -92,9 +103,14 @@ export function defaultPackageDir(): string {
 /** AGENTS.md 블록 upsert + 스킬 복사. */
 export function sync(options: SyncOptions): SyncResult {
   const packageDir = options.packageDir ?? defaultPackageDir();
-  const pkg = JSON.parse(readFileSync(join(packageDir, "package.json"), "utf8")) as { name: string; version: string };
+  const pkg = JSON.parse(readFileSync(join(packageDir, "package.json"), "utf8")) as {
+    name: string;
+    version: string;
+  };
   const agentDir = join(packageDir, "agent");
-  const block = readFileSync(join(agentDir, "AGENTS.block.md"), "utf8").replaceAll("{{name}}", pkg.name).replaceAll("{{version}}", pkg.version);
+  const block = readFileSync(join(agentDir, "AGENTS.block.md"), "utf8")
+    .replaceAll("{{name}}", pkg.name)
+    .replaceAll("{{version}}", pkg.version);
 
   const agentsFile = join(options.cwd, "AGENTS.md");
   const existing = existsSync(agentsFile) ? readFileSync(agentsFile, "utf8") : null;
@@ -106,10 +122,12 @@ export function sync(options: SyncOptions): SyncResult {
 
   const skillSource = join(agentDir, "skills", "squircle-ds");
   const skillDir = join(options.cwd, ".claude", "skills", "squircle-ds");
-  const skillFiles = walk(skillSource).map(file => {
+  const skillFiles = walk(skillSource).map((file) => {
     const rel = relative(skillSource, file);
     const target = join(skillDir, rel);
-    const text = readFileSync(file, "utf8").replaceAll("{{name}}", pkg.name).replaceAll("{{version}}", pkg.version);
+    const text = readFileSync(file, "utf8")
+      .replaceAll("{{name}}", pkg.name)
+      .replaceAll("{{version}}", pkg.version);
     return { path: rel, status: writeIfChanged(target, text) };
   });
 
@@ -123,7 +141,9 @@ const USAGE = `Usage: sds-agent sync [--cwd <dir>]
 `;
 
 /** 인자 파싱 — 순수 함수라 스펙이 본다. 모르는 인자는 오류다(오타를 조용히 무시하지 않는다). */
-export function parseArgs(argv: readonly string[]): { readonly command: "sync" | "help"; readonly cwd: string } | { readonly error: string } {
+export function parseArgs(
+  argv: readonly string[],
+): { readonly command: "sync" | "help"; readonly cwd: string } | { readonly error: string } {
   let command: "sync" | "help" | null = null;
   let cwd = process.cwd();
   for (let i = 0; i < argv.length; i++) {
@@ -152,7 +172,8 @@ export function main(argv: readonly string[]): number {
   }
   const result = sync({ cwd: parsed.cwd });
   console.log(`AGENTS.md: ${result.agents} (${result.agentsFile})`);
-  for (const file of result.skillFiles) console.log(`skill: ${file.status} ${join(".claude/skills/squircle-ds", file.path)}`);
+  for (const file of result.skillFiles)
+    console.log(`skill: ${file.status} ${join(".claude/skills/squircle-ds", file.path)}`);
   return 0;
 }
 

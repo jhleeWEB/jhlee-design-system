@@ -19,7 +19,10 @@ export interface PanelLayout<K extends string> {
   /** 하나라도 접혀 있는가 — 「전부 펼치기」 버튼을 띄울지 판단하는 자리. */
   anyCollapsed: boolean;
   /** 토글 버튼에 그대로 펴 넣는다. */
-  triggerProps: (id: K, title: string) => {
+  triggerProps: (
+    id: K,
+    title: string,
+  ) => {
     "aria-expanded": boolean;
     "aria-label": string;
     onClick: () => void;
@@ -34,7 +37,7 @@ export function usePanelLayout<K extends string>(
   const initial = options?.initial;
 
   const [collapsed, setState] = useState<Record<K, boolean>>(() => {
-    const base = Object.fromEntries(ids.map(id => [id, initial?.[id] ?? false])) as Record<K, boolean>;
+    const base = Object.fromEntries(ids.map((id) => [id, initial?.[id] ?? false])) as Record<K, boolean>;
     if (!storageKey) return base;
     try {
       const raw = window.localStorage.getItem(storageKey);
@@ -62,7 +65,7 @@ export function usePanelLayout<K extends string>(
 
   const apply = useCallback(
     (update: (prev: Record<K, boolean>) => Record<K, boolean>) => {
-      setState(prev => {
+      setState((prev) => {
         const next = update(prev);
         persist(next);
         return next;
@@ -73,15 +76,15 @@ export function usePanelLayout<K extends string>(
 
   return useMemo<PanelLayout<K>>(() => {
     const isCollapsed = (id: K) => collapsed[id] === true;
-    const setCollapsed = (id: K, value: boolean) => apply(prev => ({ ...prev, [id]: value }));
+    const setCollapsed = (id: K, value: boolean) => apply((prev) => ({ ...prev, [id]: value }));
     return {
       collapsed,
       isCollapsed,
       setCollapsed,
-      toggle: (id: K) => apply(prev => ({ ...prev, [id]: !prev[id] })),
-      collapseAll: () => apply(() => Object.fromEntries(ids.map(id => [id, true])) as Record<K, boolean>),
-      expandAll: () => apply(() => Object.fromEntries(ids.map(id => [id, false])) as Record<K, boolean>),
-      anyCollapsed: ids.some(id => collapsed[id] === true),
+      toggle: (id: K) => apply((prev) => ({ ...prev, [id]: !prev[id] })),
+      collapseAll: () => apply(() => Object.fromEntries(ids.map((id) => [id, true])) as Record<K, boolean>),
+      expandAll: () => apply(() => Object.fromEntries(ids.map((id) => [id, false])) as Record<K, boolean>),
+      anyCollapsed: ids.some((id) => collapsed[id] === true),
       triggerProps: (id: K, title: string) => ({
         "aria-expanded": !isCollapsed(id),
         "aria-label": `${isCollapsed(id) ? "Expand" : "Collapse"} ${title}`,

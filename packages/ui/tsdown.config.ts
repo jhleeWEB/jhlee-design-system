@@ -9,7 +9,14 @@ export default defineConfig({
   // legacy/index 는 별도 entry 다 — 루트 배럴의 @deprecated 재export 와 같은 파일을 가리키므로 unbundle 에서 중복 없이 dist/legacy/ 에 놓인다(#10).
   // testing/index 는 소비 레포의 __arch__ 래칫이 부르는 검사기(corner-audit, #26 · 규칙은 #36 에서 «corner-shape 금지» 로) — 배럴에 닿지 않으므로 별도 entry 다.
   // eslint/index 는 소비자 린트 프리셋(`./eslint` 서브패스), agent/cli 는 bin `sds-agent` — 둘 다 배럴에 닿지 않는 별도 entry 다(#31).
-  entry: ["src/index.ts", "src/legacy/index.ts", "src/canvas-metrics.ts", "src/testing/index.ts", "src/eslint/index.ts", "src/agent/cli.ts"],
+  entry: [
+    "src/index.ts",
+    "src/legacy/index.ts",
+    "src/canvas-metrics.ts",
+    "src/testing/index.ts",
+    "src/eslint/index.ts",
+    "src/agent/cli.ts",
+  ],
   format: "esm",
   platform: "neutral",
   unbundle: true,
@@ -34,9 +41,21 @@ export default defineConfig({
   ],
   // 파일 단위 "use client" 는 unbundle 에서 보존된다(dist 25파일 실측). rolldown 의 «번들에서 의미가 안 지켜질 수 있다» 경고만 끈다.
   inputOptions: { checks: { moduleLevelDirective: false } },
-  external: [
-    /^react($|\/)/, /^react-dom($|\/)/, /^radix-ui($|\/)/, /^react-icons($|\/)/, "class-variance-authority", "clsx", "tailwind-merge",
-    // 프리셋의 optional peer — 소비자가 설치한 것을 쓴다(#31). bin(agent/cli)의 node 내장 모듈은 platform neutral 이라 명시해야 경고가 없다.
-    /^eslint($|\/)/, /^eslint-plugin-react($|\/)/, /^eslint-plugin-better-tailwindcss($|\/)/, /^node:/,
-  ],
+  // peer·dependencies 는 번들하지 않는다 — `external` 은 0.23 에서 폐기됐고 `deps.neverBundle` 이 정식 이름이다(#13).
+  deps: {
+    neverBundle: [
+      /^react($|\/)/,
+      /^react-dom($|\/)/,
+      /^radix-ui($|\/)/,
+      /^react-icons($|\/)/,
+      "class-variance-authority",
+      "clsx",
+      "tailwind-merge",
+      // 프리셋의 optional peer — 소비자가 설치한 것을 쓴다(#31). bin(agent/cli)의 node 내장 모듈은 platform neutral 이라 명시해야 경고가 없다.
+      /^eslint($|\/)/,
+      /^eslint-plugin-react($|\/)/,
+      /^eslint-plugin-better-tailwindcss($|\/)/,
+      /^node:/,
+    ],
+  },
 });

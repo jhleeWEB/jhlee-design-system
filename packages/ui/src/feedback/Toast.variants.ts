@@ -8,7 +8,7 @@ import { cva, type VariantProps } from "../cn";
 export const toastVariants = cva(
   [
     "ds-toast group pointer-events-auto relative flex w-full items-start gap-3",
-    "rounded-lg border border-solid border-l-3 bg-card p-4 shadow-pop",
+    "rounded-lg border border-l-3 border-solid bg-card p-4 shadow-pop",
     "text-body text-foreground",
   ],
   {

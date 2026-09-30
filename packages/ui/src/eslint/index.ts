@@ -62,16 +62,37 @@ export interface SquircleDesignSystemOptions {
 
 /** raw 요소 → DS 컴포넌트. `dialog` 는 Modal/Drawer/ConfirmDialog, `table` 은 Table/DataTable 이다. */
 const FORBIDDEN_ELEMENTS: readonly { element: string; message: string }[] = [
-  { element: "button", message: "Use <Button> from @jhleeweb/squircle-design-system instead of a raw <button>." },
-  { element: "input", message: "Use <Input> / <Checkbox> / <Switch> / <RadioGroupItem> from @jhleeweb/squircle-design-system instead of a raw <input>." },
-  { element: "select", message: "Use <Select> from @jhleeweb/squircle-design-system instead of a raw <select>." },
-  { element: "textarea", message: "Use <Textarea> from @jhleeweb/squircle-design-system instead of a raw <textarea>." },
-  { element: "dialog", message: "Use <Modal> / <Drawer> / <ConfirmDialog> from @jhleeweb/squircle-design-system instead of a raw <dialog>." },
-  { element: "table", message: "Use <Table> / <DataTable> from @jhleeweb/squircle-design-system instead of a raw <table>." },
+  {
+    element: "button",
+    message: "Use <Button> from @jhleeweb/squircle-design-system instead of a raw <button>.",
+  },
+  {
+    element: "input",
+    message:
+      "Use <Input> / <Checkbox> / <Switch> / <RadioGroupItem> from @jhleeweb/squircle-design-system instead of a raw <input>.",
+  },
+  {
+    element: "select",
+    message: "Use <Select> from @jhleeweb/squircle-design-system instead of a raw <select>.",
+  },
+  {
+    element: "textarea",
+    message: "Use <Textarea> from @jhleeweb/squircle-design-system instead of a raw <textarea>.",
+  },
+  {
+    element: "dialog",
+    message:
+      "Use <Modal> / <Drawer> / <ConfirmDialog> from @jhleeweb/squircle-design-system instead of a raw <dialog>.",
+  },
+  {
+    element: "table",
+    message: "Use <Table> / <DataTable> from @jhleeweb/squircle-design-system instead of a raw <table>.",
+  },
 ];
 
 /** `style={{ … }}` 에서 막는 키 — 색·면·테두리·그림자. 치수(width·transform)는 캔버스 계산에 쓰이므로 두지 않는다. */
-const STYLE_KEYS = "color|background|backgroundColor|border|borderColor|borderTop|borderRight|borderBottom|borderLeft|outline|outlineColor|boxShadow|fill|stroke";
+const STYLE_KEYS =
+  "color|background|backgroundColor|border|borderColor|borderTop|borderRight|borderBottom|borderLeft|outline|outlineColor|boxShadow|fill|stroke";
 
 /**
  * `no-restricted-classes` 의 전체 패턴 — 옛 이름 개명(생성물 `legacy-classes.json`)이 앞에 와서 개명이 다른 진단보다 먼저 보인다.
@@ -82,11 +103,20 @@ export function restrictedClassPatterns(): RestrictedClass[] {
     ...(legacyClasses as RestrictedClass[]),
     // raw 색 — hex 와 색 함수. 크롬의 색은 토큰 유틸뿐이다(계획 §2.5-d).
     { pattern: "^.*\\[#[0-9a-fA-F]{3,8}\\]$", message: "Hex colour in a class — use a colour token." },
-    { pattern: "^.*\\[(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\\(.*\\]$", message: "Raw colour function in a class — use a colour token." },
+    {
+      pattern: "^.*\\[(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\\(.*\\]$",
+      message: "Raw colour function in a class — use a colour token.",
+    },
     // 임의 단위 — px·rem·em·ms 는 토큰 밖 값이다.
-    { pattern: "^.*\\[[^\\]]*\\d+(?:\\.\\d+)?(?:px|rem|em|ms)[^\\]]*\\]$", message: "Unit literal in a class — use a token utility." },
+    {
+      pattern: "^.*\\[[^\\]]*\\d+(?:\\.\\d+)?(?:px|rem|em|ms)[^\\]]*\\]$",
+      message: "Unit literal in a class — use a token utility.",
+    },
     // 간격 격자 — 4px 기반, 허용 스텝 화이트리스트. 간격 계열에만.
-    { pattern: spacingOffGridPattern(), message: `Spacing step off the 4px grid — allowed steps are ${spacingStepsLabel()} (px = 4 × step).` },
+    {
+      pattern: spacingOffGridPattern(),
+      message: `Spacing step off the 4px grid — allowed steps are ${spacingStepsLabel()} (px = 4 × step).`,
+    },
   ];
 }
 
@@ -119,7 +149,10 @@ export function squircleDesignSystem(options: SquircleDesignSystemOptions): Lint
       settings: { "better-tailwindcss": { entryPoint: options.entryPoint } },
       rules: {
         // `ds-*` 는 theme.css 가 @import 하는 컴포넌트 CSS 의 클래스다 — 토큰 밖 유틸리티가 아니라 DS 자신의 훅이다.
-        "better-tailwindcss/no-unknown-classes": [severity, { entryPoint: options.entryPoint, ignore: ["^ds-"], detectComponentClasses: true }],
+        "better-tailwindcss/no-unknown-classes": [
+          severity,
+          { entryPoint: options.entryPoint, ignore: ["^ds-"], detectComponentClasses: true },
+        ],
         "better-tailwindcss/no-restricted-classes": [severity, { restrict: restrictedClassPatterns() }],
       },
     },
@@ -132,7 +165,8 @@ export function squircleDesignSystem(options: SquircleDesignSystemOptions): Lint
           severity,
           {
             selector: `JSXAttribute[name.name="style"] > JSXExpressionContainer > ObjectExpression > Property[key.name=/^(?:${STYLE_KEYS})$/]`,
-            message: "Inline colour/border style — use a token utility class (bg-* text-* border-* shadow-*) instead.",
+            message:
+              "Inline colour/border style — use a token utility class (bg-* text-* border-* shadow-*) instead.",
           },
         ],
       },

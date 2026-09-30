@@ -6,11 +6,26 @@
  * llms.txt 는 llmstxt.org 형식(H1 · 인용 요약 · H2 절 · 링크 목록)이고 «shadcn 과 다른 점» 은 저장소 `docs/design-tokens.md` 를 그대로 싣는다 —
  * 그 문서가 정본이고 여기서는 복사만 한다(두 곳에 적으면 하나가 뒤처진다).
  */
-import { existsSync, mkdirSync, readFileSync, readdirSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { buildManifest, IMPORT_PATH, PKG_DIR, type Manifest, type ManifestComponent, type ManifestProp } from "./build-manifest.ts";
+import {
+  buildManifest,
+  IMPORT_PATH,
+  PKG_DIR,
+  type Manifest,
+  type ManifestComponent,
+  type ManifestProp,
+} from "./build-manifest.ts";
 
 /** 저장소 루트의 «shadcn 과 다른 점» 정본. */
 export const DIFFERENCES_DOC = join(PKG_DIR, "..", "..", "docs", "design-tokens.md");
@@ -31,8 +46,10 @@ export function differencesSection(source: string): string {
 
 function propsTable(props: readonly ManifestProp[]): string {
   if (props.length === 0) return "_(DS 가 더하는 prop 없음 — 물려받는 속성만)_\n";
-  const rows = props.map(p => {
-    const values = p.values.length ? " " + p.values.map(v => `${code(v.value)}${v.doc ? ` — ${cell(v.doc)}` : ""}`).join(" · ") : "";
+  const rows = props.map((p) => {
+    const values = p.values.length
+      ? " " + p.values.map((v) => `${code(v.value)}${v.doc ? ` — ${cell(v.doc)}` : ""}`).join(" · ")
+      : "";
     const description = p.values.length && p.description ? "" : cell(p.description);
     return `| ${code(p.name)} | ${cell(code(p.type))} | ${p.required ? "예" : ""} | ${cell(code(p.default))} | ${description}${values ? `${description ? " " : ""}값:${values}` : ""} |`;
   });
@@ -42,7 +59,14 @@ function propsTable(props: readonly ManifestProp[]): string {
 function componentSection(c: ManifestComponent, level: number): string {
   const h = "#".repeat(level);
   const lines: string[] = [`${h} ${c.name}`, ""];
-  const meta = [c.kind === "hook" ? "훅" : c.client ? '클라이언트 컴포넌트(`"use client"` — 서버 컴포넌트에서 렌더할 수 없다)' : "서버에서도 렌더 가능(지시문 없음)", `원본 \`${c.source}\``];
+  const meta = [
+    c.kind === "hook"
+      ? "훅"
+      : c.client
+        ? '클라이언트 컴포넌트(`"use client"` — 서버 컴포넌트에서 렌더할 수 없다)'
+        : "서버에서도 렌더 가능(지시문 없음)",
+    `원본 \`${c.source}\``,
+  ];
   lines.push(meta.join(" · "), "");
   if (c.deprecated) lines.push(`> **@deprecated** ${c.deprecated}`, "");
   if (c.description) lines.push(c.description, "");
@@ -54,7 +78,7 @@ function componentSection(c: ManifestComponent, level: number): string {
 
 /** 루트 하나의 문서 — 부품은 같은 파일의 하위 절이다. */
 export function renderComponentDoc(root: ManifestComponent, parts: readonly ManifestComponent[]): string {
-  const names = [root.name, ...parts.map(p => p.name)];
+  const names = [root.name, ...parts.map((p) => p.name)];
   const lines = [
     `# ${root.name}`,
     "",
@@ -65,21 +89,31 @@ export function renderComponentDoc(root: ManifestComponent, parts: readonly Mani
     componentSection(root, 2),
   ];
   if (parts.length) {
-    lines.push("## 부품", "", `\`data-slot\` 로 자기 이름을 DOM 에 남기는 평탄 이름의 부품이다 — 부품 먼저, 래퍼는 설탕.`, "");
+    lines.push(
+      "## 부품",
+      "",
+      `\`data-slot\` 로 자기 이름을 DOM 에 남기는 평탄 이름의 부품이다 — 부품 먼저, 래퍼는 설탕.`,
+      "",
+    );
     for (const part of parts) lines.push(componentSection(part, 3));
   }
-  return lines.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+  return (
+    lines
+      .join("\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trimEnd() + "\n"
+  );
 }
 
 const list = (items: readonly string[]): string => items.map(code).join(" ");
 
 /** llms.txt 본문. */
 export function renderLlmsTxt(manifest: Manifest, differences: string): string {
-  const byName = new Map(manifest.components.map(c => [c.name, c] as const));
-  const roots = manifest.components.filter(c => c.kind === "component");
-  const hooks = manifest.components.filter(c => c.kind === "hook");
-  const variants = manifest.utilities.filter(u => u.kind === "variants");
-  const others = manifest.utilities.filter(u => u.kind !== "variants");
+  const byName = new Map(manifest.components.map((c) => [c.name, c] as const));
+  const roots = manifest.components.filter((c) => c.kind === "component");
+  const hooks = manifest.components.filter((c) => c.kind === "hook");
+  const variants = manifest.utilities.filter((u) => u.kind === "variants");
+  const others = manifest.utilities.filter((u) => u.kind !== "variants");
   const t = manifest.tokens;
   const describe = (c: ManifestComponent): string => {
     const bits = [c.description.split(/\n|\. /)[0]?.trim() || "(설명 없음 — JSDoc 대기)"];
@@ -121,20 +155,24 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
     ``,
     `## 컴포넌트`,
     ``,
-    ...roots.map(c => `- [${c.name}](${COMPONENT_DOCS_DIR}/${c.name}.md): ${describe(c)}`),
+    ...roots.map((c) => `- [${c.name}](${COMPONENT_DOCS_DIR}/${c.name}.md): ${describe(c)}`),
     ``,
     `## 훅`,
     ``,
-    ...hooks.map(c => `- [${c.name}](${COMPONENT_DOCS_DIR}/${c.name}.md): ${describe(c)}`),
+    ...hooks.map((c) => `- [${c.name}](${COMPONENT_DOCS_DIR}/${c.name}.md): ${describe(c)}`),
     ``,
     `## 유틸리티`,
     ``,
-    ...variants.map(u => {
-      const axes = Object.entries(u.axes ?? {}).map(([axis, values]) => `${axis}(${values.join(" | ")})`).join(" · ");
-      const defaults = Object.entries(u.defaults ?? {}).map(([k, v]) => `${k}=${v}`).join(", ");
+    ...variants.map((u) => {
+      const axes = Object.entries(u.axes ?? {})
+        .map(([axis, values]) => `${axis}(${values.join(" | ")})`)
+        .join(" · ");
+      const defaults = Object.entries(u.defaults ?? {})
+        .map(([k, v]) => `${k}=${v}`)
+        .join(", ");
       return `- \`${u.name}\`: cva — 축 ${axes || "없음"}${defaults ? `; 기본 ${defaults}` : ""}. 서버에서 호출 가능.`;
     }),
-    ...others.map(u => `- \`${u.name}\`: ${u.description.split(/\n|\. /)[0]?.trim() || u.kind}`),
+    ...others.map((u) => `- \`${u.name}\`: ${u.description.split(/\n|\. /)[0]?.trim() || u.kind}`),
     ``,
     `## 토큰 유틸리티 어휘`,
     ``,
@@ -157,13 +195,21 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
     `- \`agent/AGENTS.block.md\` — 소비 레포 AGENTS.md 에 심는 계약(\`npx sds-agent sync\`)`,
   ];
   void byName;
-  return lines.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+  return (
+    lines
+      .join("\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trimEnd() + "\n"
+  );
 }
 
 /** 문서 색인(docs/components/README.md). */
 export function renderIndex(manifest: Manifest): string {
-  const roots = manifest.components.filter(c => c.kind !== "compound");
-  const rows = roots.map(c => `| [${c.name}](${c.name}.md) | ${c.kind} | ${c.client ? "client" : "server ok"} | ${c.parts.length ? c.parts.join(", ") : ""} | ${cell(c.description.split(/\n|\. /)[0] ?? "")} |`);
+  const roots = manifest.components.filter((c) => c.kind !== "compound");
+  const rows = roots.map(
+    (c) =>
+      `| [${c.name}](${c.name}.md) | ${c.kind} | ${c.client ? "client" : "server ok"} | ${c.parts.length ? c.parts.join(", ") : ""} | ${cell(c.description.split(/\n|\. /)[0] ?? "")} |`,
+  );
   return [
     "# 컴포넌트 문서",
     "",
@@ -181,10 +227,12 @@ export function renderDocs(manifest: Manifest, differences: string): Map<string,
   const out = new Map<string, string>();
   out.set("llms.txt", renderLlmsTxt(manifest, differences));
   out.set(`${COMPONENT_DOCS_DIR}/README.md`, renderIndex(manifest));
-  const byName = new Map(manifest.components.map(c => [c.name, c] as const));
+  const byName = new Map(manifest.components.map((c) => [c.name, c] as const));
   for (const c of manifest.components) {
     if (c.kind === "compound") continue;
-    const parts = c.parts.map(name => byName.get(name)).filter((p): p is ManifestComponent => p !== undefined);
+    const parts = c.parts
+      .map((name) => byName.get(name))
+      .filter((p): p is ManifestComponent => p !== undefined);
     out.set(`${COMPONENT_DOCS_DIR}/${c.name}.md`, renderComponentDoc(c, parts));
   }
   return out;
@@ -192,7 +240,11 @@ export function renderDocs(manifest: Manifest, differences: string): Map<string,
 
 function currentDocFiles(): string[] {
   const dir = join(PKG_DIR, COMPONENT_DOCS_DIR);
-  const files = existsSync(dir) ? readdirSync(dir).filter(f => f.endsWith(".md")).map(f => `${COMPONENT_DOCS_DIR}/${f}`) : [];
+  const files = existsSync(dir)
+    ? readdirSync(dir)
+        .filter((f) => f.endsWith(".md"))
+        .map((f) => `${COMPONENT_DOCS_DIR}/${f}`)
+    : [];
   return ["llms.txt", ...files];
 }
 
@@ -207,9 +259,12 @@ export function run(check: boolean): number {
       if (!existsSync(full)) stale.push(`${path}: 없다`);
       else if (readFileSync(full, "utf8") !== text) stale.push(`${path}: 다르다`);
     }
-    for (const path of currentDocFiles()) if (!docs.has(path)) stale.push(`${path}: 매니페스트에 없는 문서가 남아 있다`);
+    for (const path of currentDocFiles())
+      if (!docs.has(path)) stale.push(`${path}: 매니페스트에 없는 문서가 남아 있다`);
     if (stale.length) {
-      console.error(`manifest: 생성 문서가 매니페스트와 다르다 — pnpm manifest:build 로 다시 만들고 함께 커밋한다\n${stale.map(s => ` - ${s}`).join("\n")}`);
+      console.error(
+        `manifest: 생성 문서가 매니페스트와 다르다 — pnpm manifest:build 로 다시 만들고 함께 커밋한다\n${stale.map((s) => ` - ${s}`).join("\n")}`,
+      );
       return 1;
     }
     console.log(`manifest: 생성 문서 ${docs.size}개가 최신이다`);
@@ -221,9 +276,12 @@ export function run(check: boolean): number {
     mkdirSync(dirname(full), { recursive: true });
     writeFileSync(full, text);
   }
-  console.log(`manifest: 생성 문서 ${docs.size}개 → ${relative(PKG_DIR, join(PKG_DIR, "llms.txt"))} · ${COMPONENT_DOCS_DIR}/`);
+  console.log(
+    `manifest: 생성 문서 ${docs.size}개 → ${relative(PKG_DIR, join(PKG_DIR, "llms.txt"))} · ${COMPONENT_DOCS_DIR}/`,
+  );
   return 0;
 }
 
 const invoked = process.argv[1] ? realpathSync(process.argv[1]) : "";
-if (invoked && invoked === fileURLToPath(import.meta.url)) process.exitCode = run(process.argv.includes("--check"));
+if (invoked && invoked === fileURLToPath(import.meta.url))
+  process.exitCode = run(process.argv.includes("--check"));

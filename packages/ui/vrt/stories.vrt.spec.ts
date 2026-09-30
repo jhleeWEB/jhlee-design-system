@@ -7,11 +7,13 @@ import { expect, test } from "@playwright/test";
  * `theme-locked` 스토리(Pages/Gallery 의 Light·Dark)는 스토리 수준 `globals` 가 툴바를 잠가 URL 이 먹지 않는다 — 한 번만 찍는다. */
 type Entry = { id: string; type: string; title: string; name: string; tags?: string[] };
 
-const index = JSON.parse(readFileSync(new URL("../storybook-static/index.json", import.meta.url), "utf8")) as {
+const index = JSON.parse(
+  readFileSync(new URL("../storybook-static/index.json", import.meta.url), "utf8"),
+) as {
   entries: Record<string, Entry>;
 };
 
-const stories = Object.values(index.entries).filter(e => e.type === "story" && e.tags?.includes("vrt"));
+const stories = Object.values(index.entries).filter((e) => e.type === "story" && e.tags?.includes("vrt"));
 const themes = ["light", "dark"] as const;
 
 test.describe("stories", () => {

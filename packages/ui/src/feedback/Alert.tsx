@@ -15,7 +15,8 @@ const GLYPH: Record<AlertTone, string> = {
 };
 
 export interface AlertProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "title">,
+  extends
+    Omit<React.HTMLAttributes<HTMLDivElement>, "title">,
     Omit<VariantProps<typeof alertVariants>, "tone"> {
   /**
    * 톤 — `info`(기본) · `success` · `warning` · `destructive`.
@@ -39,13 +40,7 @@ export function Alert({ className, tone, title, action, children, ...rest }: Ale
     >
       <svg viewBox="0 0 16 16" aria-hidden="true" className="mt-px size-7 shrink-0">
         <circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" strokeWidth="1.3" />
-        <path
-          d={GLYPH[resolved]}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
+        <path d={GLYPH[resolved]} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
       </svg>
       {/* 출처·식별자의 긴 한 단어도 경고의 최소 폭을 늘리지 않게 한다. */}
       <div className="min-w-0 flex-1 [overflow-wrap:anywhere]">

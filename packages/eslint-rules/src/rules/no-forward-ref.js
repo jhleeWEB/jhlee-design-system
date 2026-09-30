@@ -13,7 +13,8 @@ const rule = {
       description: "forwardRef 대신 React 19 의 ref prop 을 쓴다",
     },
     messages: {
-      noForwardRef: "forwardRef is unnecessary in React 19 — take `ref` as a regular prop (`({ ref, ...props }) => …`).",
+      noForwardRef:
+        "forwardRef is unnecessary in React 19 — take `ref` as a regular prop (`({ ref, ...props }) => …`).",
     },
     schema: [],
   },

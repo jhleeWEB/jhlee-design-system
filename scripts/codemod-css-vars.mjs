@@ -30,11 +30,14 @@ if (errors.length) {
 }
 const { cssVars } = legacyRenames(tokens, renames);
 const entries = Object.entries(cssVars).sort(([a], [b]) => b.length - a.length || a.localeCompare(b));
-const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // 한 번의 치환으로 끝낸다 — 규칙마다 따로 돌리면 `--chrome-surface-2 → --chrome-muted` 뒤에 `--chrome-muted → --chrome-muted-foreground` 가
 // 다시 먹어 두 번 개명된다(첫 실행에서 실제로 났다). 대안 앞쪽이 긴 이름이라 `--chrome-accent-soft` 가 `--chrome-accent` 보다 먼저 맞는다.
 // `var(` 뒤(공백 허용)의 이름 + 경계 — `--chrome-ink` 뒤에 `-2` 가 이어지면 다른 이름이다.
-const ONE_PASS = new RegExp(`(var\\(\\s*)(${entries.map(([from]) => escape(from)).join("|")})(?![\\w-])`, "g");
+const ONE_PASS = new RegExp(
+  `(var\\(\\s*)(${entries.map(([from]) => escape(from)).join("|")})(?![\\w-])`,
+  "g",
+);
 
 /** @param {string} text @returns {{ text: string, count: number }} */
 export function codemodCssVars(text) {
@@ -59,7 +62,7 @@ function* walk(path) {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   const dry = args.includes("--dry");
-  const targets = args.filter(a => a !== "--dry");
+  const targets = args.filter((a) => a !== "--dry");
   if (targets.length === 0) {
     console.error("사용법: node scripts/codemod-css-vars.mjs [--dry] <파일|디렉터리>…");
     process.exit(2);
