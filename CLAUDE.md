@@ -56,8 +56,10 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   src/legacy/                `./legacy` 서브패스 — 3열 작업대 셸·컨트롤·DesignSystemProvider·shell.css(#10). 격리·동결: ESLint ignores,
                              래칫 제외. 루트 배럴은 같은 이름을 지정자별 @deprecated 로 한 마이너 재export 하고 다음 마이너에 `feat!:` 로 지운다
   src/**/*.stories.tsx       컴포넌트 옆 스토리 — 3스토리 계약(Default · Variants · ThemeContrast, `stories-contract.spec` 이 검사, 본보기 Button)
-  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트). `render-all.spec`(배럴의 공개 컴포넌트 전부에 공통 계약 — 스토리 `Default` 또는
-                             최소 props 픽스처, `KNOWN_CONTRACT_FAILURES` 래칫) · `documented-contracts.spec`(CLAUDE.md 의 약속을 user-event 로: Input 선행 0 ·
+  src/**/Name.spec.tsx       컴포넌트 옆 spec — 공통 계약(`describeComponentContract(stories, {slot, axes})`, 스토리 `Default` 가 유일한 픽스처)과 그 컴포넌트의
+                             동작 테스트. 훅 옆 `useX.spec.ts` 도 같다. tsconfig.test.json · ESLint tests 프로필이 `src/**/*.spec.{ts,tsx}` 로 잡는다(빌드 tsconfig 밖)
+  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트). `render-all.spec`(불변식: 배럴의 공개 컴포넌트마다 옆 spec 이나 부품 픽스처 중
+                             정확히 하나가 계약을 돈다 + 스토리 `component` 가 아닌 부품의 최소 props 픽스처, 실패 0 — #48) · `documented-contracts.spec`(CLAUDE.md 의 약속을 user-event 로: Input 선행 0 ·
                              0 전체선택 · PanelToggleButton 아이콘) · `stories-contract.spec`(3스토리 + a11y `KNOWN_A11Y_FAILURES` 래칫) · `axe.ts`(axe-core 15줄
                              헬퍼, jsdom 이라 color-contrast·region 은 끈다). `setup.ts` 가 jest-dom 매처를 붙인다. `tokens/`(배포 CSS 의 postcss 토큰 모델 +
                              사다리·cn 동작 · 참조 무결성·미참조 원시 · MOTION↔CSS 대조 · 정본 스키마 · **WCAG 대비 래칫** `contrast.spec`+`contrast-pairs.ts`, #15 · #18 · C2)과
@@ -66,7 +68,8 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              `component-contract.tsx` 는 공통 계약의 검사기(`describeComponentContract(storiesModule, {slot, axes})` · `runContract`) — slot 존재·못 덮음 ·
                              className twMerge · ref DOM 도달 · rest 전달 · 축마다 data-* · axe 0. 폴더별 spec(Phase D)이 스토리를 넘겨 부른다(C3)
   .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
-  stories/                   페이지 스토리 — `Pages/Gallery`(옛 apps/ds-gallery 통째, Light·Dark) · `Pages/Workbench`(제품 화면 복제) · ThemePair · Matrix
+  stories/                   페이지 스토리 — `Pages/Workbench`(제품 화면 복제, 영구 — `workbench/Workbench.tsx`) · `Radius` · ThemePair · Matrix. 옛 apps/ds-gallery 의
+                             컴포넌트 명세 `Pages/Gallery` 는 Phase D 가 컴포넌트 스토리로 나눈 뒤 지웠다(#48)
   vrt/                       Playwright 시각 회귀 — storybook-static/index.json 의 `vrt` 태그 스토리 × 라이트/다크, `maxDiffPixels: 0`(C1). 기준선은 도커로만(scripts/vrt-update.sh).
   tsconfig.json              엄격 프로필 한 벌(src 전량, 스펙·스토리 제외) — tsdown dts 가 읽는다. app-profile(느슨한 2차 검사)은 하는 일이 없어 지웠다(#11)
   tsconfig.test.json         스펙·__arch__ 를 같은 엄격도로 검사. `exclude` 가 래칫(줄어들기만 한다, 오늘 비어 있다)
@@ -106,7 +109,8 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 
 ## 소비자 계약
 
-버전은 1.x 부터다(shadcn 어휘 개명 #25 가 major 를 냈다). 소비 레포는 정확 버전을 고정하고(`"@buildos/ui": "npm:@jhleeweb/squircle-design-system@1.x.y"` 같은 별칭 허용) 갱신은 PR 로 한다.
+버전은 2.x 다(shadcn 어휘 개명 #25 가 1.0.0 을, 스쿼클 폐기 #37 이 2.0.0 을 냈다). 다음 major 3.0.0 은 legacy(`./legacy` 서브패스 · 루트 배럴의 @deprecated 별칭 ·
+옛 이름 alias · `normalizeTone`)를 지우는 D8(#49)이다. 소비 레포는 정확 버전을 고정하고(`"@buildos/ui": "npm:@jhleeweb/squircle-design-system@2.x.y"` 같은 별칭 허용) 갱신은 PR 로 한다.
 
 ```css
 @import "tailwindcss/theme.css" layer(theme);
@@ -124,7 +128,7 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 
 ```bash
 pnpm install           # pnpm 10, Node 24
-pnpm storybook         # 카탈로그 (6006) — Pages/Workbench · Pages/Gallery 로 캔버스/크롬 경계와 다크를 눈으로 확인
+pnpm storybook         # 카탈로그 (6006) — Pages/Workbench 와 컴포넌트 스토리(ThemeContrast)로 캔버스/크롬 경계와 다크를 눈으로 확인
 pnpm storybook:build   # storybook-static (--test) — VRT 와 CI storybook job 의 입력
 pnpm typecheck         # 엄격 프로필(src) + test 프로필(스펙·__arch__) + stories 프로필
 pnpm lint              # ESLint 10 — 기준선(eslint-suppressions.json) 밖 신규 위반만 실패
@@ -150,11 +154,14 @@ cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tm
 늘면 새 위반이고, 줄이면 같은 PR 에서 기준선을 낮춘다(0 이면 줄을 지운다). `legacy-alias-use`(옛 이름 `var(--ink)` 등의 사용, 목록은 legacy.json 에서 읽는다)도
 같은 래칫이다(#18). 토큰 쪽도 같은 모양이다: `references.spec` 의 `KNOWN_INLINE_LITERALS`(`@theme inline` 의 리터럴 — #18 에서 0)와 미참조 원시 17개 스냅샷,
 `rsc-directives.spec` 의 `"use client"` 파일 목록, `public-api.spec` 의 배럴 export 목록, `manifest.spec` 의 `KNOWN_GAPS`(optional prop 의 `@default` 빈자리 ·
-유니언 값의 설명 빈자리 — JSDoc 을 채우면 같은 PR 에서 줄인다, Phase D 끝 0). Phase C 의 래칫 셋(C2·C3, 전부 «없는 실패는 새 위반, 목록에 있는데
-통과하면 지워라»): `contrast.spec` 의 `KNOWN_FAILURES`(WCAG 2.x 미달 쌍, 첫 실측 7 — light 5 · dark 2, 값을 고치는 것은 #20·#24 의 몫) ·
-`render-all.spec` 의 `KNOWN_CONTRACT_FAILURES`(컴포넌트 → 깨지는 검사 id, 첫 실측 81 컴포넌트 — 대부분 `data-slot` 이 `{...rest}` 뒤에 와서 덮이는 slot-locked 와
-cva 축의 `data-*` 미표기, Phase D 가 컴포넌트마다 지운다) · `stories-contract.spec` 의 `KNOWN_A11Y_FAILURES`(axe 규칙을 스토리 단위 `parameters.a11y.config.rules` 로
-끈 스토리, 첫 실측 7 — 메타에서 끄는 것은 금지) · `vitest.config.ts` 의 coverage thresholds(첫 실측 floor−2 — statements 84 · branches 78 · functions 82 · lines 89).
+유니언 값의 설명 빈자리 — JSDoc 을 채우면 같은 PR 에서 줄인다. 첫 실측 139 · 109 → Phase D 뒤 32 · 4, 남은 것은 전부 legacy 라 D8 #49 에서 0). Phase C 의 래칫 셋(C2·C3, 전부
+«없는 실패는 새 위반, 목록에 있는데 통과하면 지워라»): `contrast.spec` 의 `KNOWN_FAILURES`(WCAG 2.x 미달 쌍, 첫 실측 7 — light 5 · dark 2, 2026-10-01 재실측도 7,
+값을 고치는 것은 #55 의 몫) · `stories-contract.spec` 의 `KNOWN_A11Y_FAILURES`(axe 규칙을 스토리 단위 `parameters.a11y.config.rules` 로 끈 스토리 — 메타에서 끄는 것은
+금지. 첫 실측 7 → Phase D 의 새 스토리들이 올려 2026-10-01 재실측 61, 거의 전부 위 미달 토큰의 color-contrast 라 #55 가 토큰과 함께 줄인다) ·
+`vitest.config.ts` 의 coverage thresholds(첫 실측 floor−2 — statements 84 · branches 78 · functions 82 · lines 89).
+`render-all.spec` 의 `KNOWN_CONTRACT_FAILURES`(첫 실측 81 컴포넌트)와 `stories-contract.spec` 의 `STORIES_MISSING` 은 Phase D 가 0 으로 비워 지웠다(#48) —
+이제 «배럴 컴포넌트마다 옆 stories · 옆 spec(또는 부품 픽스처)» 는 예외 없는 불변식이다. 공통 계약의 유일한 예외는 Button 의 slot-locked 이고
+`primitives/Button.spec.tsx` 가 그 자리에서 붙든다 — legacy Select 가 Button 에 `data-slot="select"` 를 넘겨 shell.css 가 그리므로 D8(#49)에서 잠근다.
 토큰은 **JSON 정본만** 고치고 `pnpm tokens:build` 를 돌려 생성물을 함께 커밋한다 — `tokens:check` 가 생성물의 최신성을, VRT 가 픽셀을 지킨다.
 새 토큰은 값·출처·대비 근거를 `$description` 에 적는다.
 
@@ -163,12 +170,14 @@ cva 축의 `data-*` 미표기, Phase D 가 컴포넌트마다 지운다) · `sto
 error 만 덮기 때문에 이 모양이 됐다. **기준선을 늘리는 PR 은 받지 않는다**(`--suppress-all` 재실행 금지). 위반을 고쳐 줄이면
 같은 PR 에서 `pnpm exec eslint . --prune-suppressions` 로 기준선을 낮춘다. `src/legacy/` 는
 기준선이 아니라 ignores 다(#10) — 동결된 코드는 래칫에 태우지 않는다.
-기준선의 실측(2026-09-30, C4 프루닝 뒤 — 죽은 항목 0): 49 파일 350 건, 규칙 14개 — `jsdoc/require-jsdoc` 190 · `better-tailwindcss/no-restricted-classes` 47 ·
-`ds/no-literal-style-value` 36 · `better-tailwindcss/no-unknown-classes` 28 · `ds/no-forward-ref` 14 · `@typescript-eslint/no-unnecessary-type-assertion` 13 ·
-`jsx-a11y/label-has-associated-control` 10 · `react-hooks/immutability` 3 · `@typescript-eslint/no-floating-promises` 2 · `@typescript-eslint/no-unused-vars` 2 ·
-`react-hooks/refs` 2 · `ds/no-boolean-string-data-attr` 1 · `ds/no-magic-ms` 1 · `jsx-a11y/interactive-supports-focus` 1.
-**그 밖의 모든 규칙은 기준선 없이 통과한다** — `ds/legacy-tone`, `jsdoc/require-description`·`check-tag-names`, `import-x/no-cycle`·`no-self-import`·`no-duplicates`,
-`no-restricted-imports`(배럴·테스트 import 금지), 위 둘을 뺀 `jsx-a11y/*`, 위 둘을 뺀 `react-hooks/*`, 위 넷을 뺀 `@typescript-eslint/*`(recommendedTypeChecked), `js.recommended` 전부.
+기준선의 실측(2026-10-01, Phase D 마무리 #48 의 프루닝 뒤 — 죽은 항목 0; 첫 실측 2026-09-30 은 49 파일 350 건 · 규칙 14개): 26 파일 83 건, 규칙 10개 —
+`better-tailwindcss/no-restricted-classes` 25 · `better-tailwindcss/no-unknown-classes` 23 · `@typescript-eslint/no-unnecessary-type-assertion` 13 ·
+`ds/no-literal-style-value` 12 · `jsx-a11y/label-has-associated-control` 3 · `@typescript-eslint/no-floating-promises` 2 · `react-hooks/refs` 2 ·
+`ds/no-forward-ref` 1 · `jsdoc/require-jsdoc` 1 · `jsx-a11y/interactive-supports-focus` 1. 절반 가까이(9 파일)는 `src/__tests__/` 의 옛 스펙이고
+Workbench(`stories/workbench/Workbench.tsx`)가 32 건이다.
+**그 밖의 모든 규칙은 기준선 없이 통과한다** — `ds/legacy-tone` · `ds/no-magic-ms` · `ds/no-boolean-string-data-attr`, `jsdoc/require-description`·`check-tag-names`,
+`import-x/no-cycle`·`no-self-import`·`no-duplicates`, `no-restricted-imports`(배럴·테스트 import 금지), 위 둘을 뺀 `jsx-a11y/*`, 위 하나를 뺀 `react-hooks/*`,
+위 둘을 뺀 `@typescript-eslint/*`(recommendedTypeChecked), `js.recommended` 전부.
 이 규칙들은 새 위반이 곧 실패이므로 승격할 것이 없다. **stylelint** 는 기준선 파일이 없다 — 손 CSS 의 위반은 0 이고(C4 에서 theme.css 의 6건을 같은 값의 토큰으로 옮겼다)
 `legacy/shell.css` 만 warning 122건을 `--max-warnings` 로 붙든다(줄이기만 한다). **Prettier** 는 CI 가 `--check` 만 한다 — 첫 적용 커밋은 `.git-blame-ignore-revs` 에 있다.
 Prettier 의 tailwind 플러그인은 클래스를 **정렬**한다 — 정렬이 뜻을 바꾸는 두 곳을 실측으로 막았다: `src/legacy/` 는 포맷하지 않고(템플릿 리터럴 `" inspect-closed"` 의

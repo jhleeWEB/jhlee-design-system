@@ -2,8 +2,9 @@
  * 매니페스트 게이트(계획 §2.5-c `manifest.spec`, #31) — `scripts/build-manifest.ts` 를 메모리에서 돌려 검사한다(dist 불필요).
  *
  * 네 가지: ① index 의 런타임 export 가 전부 실린다(컴포넌트 ∪ 유틸리티 == `Object.keys(import(index))`) ② optional prop 의 `default` 가 비어 있지 않다
- * ③ 유니언 `values[].doc` 이 비어 있지 않다 ④ `client` 가 실제 `"use client"` 와 같다. ②·③ 은 오늘 JSDoc 이 거의 없어(공개 144 중 `/**` 23,
- * `@default` 0) **KNOWN_GAPS 래칫**이다 — 실제 빈자리 목록이 기준선과 같아야 통과한다. 줄이면 같은 PR 에서 기준선을 낮춘다(Phase D 끝 0).
+ * ③ 유니언 `values[].doc` 이 비어 있지 않다 ④ `client` 가 실제 `"use client"` 와 같다. ②·③ 은 첫 실측(2026-09-30, 공개 144 중 `/**` 23,
+ * `@default` 0 — 빈자리 139 · 109)에서 **KNOWN_GAPS 래칫**으로 시작했다 — 실제 빈자리 목록이 기준선과 같아야 통과한다. 줄이면 같은 PR 에서
+ * 기준선을 낮춘다. Phase D(D1–D5)가 DS 컴포넌트의 JSDoc 을 채워 남은 것은 동결된 legacy 뿐이고(36), D8(#49)이 legacy 와 함께 0 으로 만든다.
  * ①·④ 는 래칫이 아니라 불변식이다.
  */
 import { describe, expect, it } from "vitest";
@@ -20,9 +21,9 @@ import {
 let cached: Manifest | null = null;
 const manifest = (): Manifest => (cached ??= buildManifest());
 
-/** 오늘의 빈자리 — `Component.prop` · `Component.prop=value`. 경로 오름차순. 줄어들기만 한다. 첫 실측(2026-09-30, #31). */
+/** 오늘의 빈자리 — `Component.prop` · `Component.prop=value`. 경로 오름차순. 줄어들기만 한다. 첫 실측(2026-09-30, #31), 재실측(2026-10-01, #48). */
 const KNOWN_GAPS = {
-  // optional prop 인데 `@default` 도 cva defaultVariants 도 없다(139).
+  // optional prop 인데 `@default` 도 cva defaultVariants 도 없다(첫 실측 139 → 32, 전부 legacy).
   default: [
     "AppShell.inspect",
     "AppShell.inspectCollapseTo",
@@ -57,7 +58,7 @@ const KNOWN_GAPS = {
     "TopBar.eyebrow",
     "ViewerPanel.head",
   ],
-  // 유니언 값인데 «`값` — 설명» 줄이 없다(109).
+  // 유니언 값인데 «`값` — 설명» 줄이 없다(첫 실측 109 → 4, 전부 legacy).
   values: [
     "AppShell.inspectCollapseTo=hidden",
     "AppShell.inspectCollapseTo=strip",

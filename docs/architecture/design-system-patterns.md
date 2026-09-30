@@ -119,6 +119,6 @@ pnpm typecheck
 pnpm build
 ```
 
-Storybook(`pnpm storybook`, 포트 6006 — `Pages/Workbench`·`Pages/Gallery`)과 제품 앱에서 레이아웃도 확인한다.
+Storybook(`pnpm storybook`, 포트 6006 — `Pages/Workbench` 와 컴포넌트 스토리)과 제품 앱에서 레이아웃도 확인한다.
 카드 간격·제목·아이콘·모달 크기, 200ms 접기와 reduced-motion, 스크롤 종료 후
 500ms 뒤 페이드하는 6px 오버레이 스크롤바는 기존 시각·동작 계약을 유지한다.

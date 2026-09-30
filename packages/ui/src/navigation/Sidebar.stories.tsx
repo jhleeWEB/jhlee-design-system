@@ -49,7 +49,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  // color-contrast: 항목 배지(`opacity-70` 의 muted 글자, 2.75:1) — 배지 표현을 바꾸면 기존 픽셀(Gallery · Workbench)이 움직여 이 PR 밖이다(#45 보고)
+  // color-contrast: 항목 배지(`opacity-70` 의 muted 글자, 2.75:1) — 배지 표현을 바꾸면 기존 픽셀(Workbench)이 움직여 이 PR 밖이다(#45 보고)
   parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole("navigation", { name: "Main" })).toBeInTheDocument();
@@ -63,7 +63,7 @@ const cases: readonly SidebarProps[] = sideValues.flatMap((side) =>
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: 항목 배지(`opacity-70` 의 muted 글자, 2.75:1) — 배지 표현을 바꾸면 기존 픽셀(Gallery · Workbench)이 움직여 이 PR 밖이다(#45 보고)
+  // color-contrast: 항목 배지(`opacity-70` 의 muted 글자, 2.75:1) — 배지 표현을 바꾸면 기존 픽셀(Workbench)이 움직여 이 PR 밖이다(#45 보고)
   parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: () => (
     <div className="flex items-start gap-6">

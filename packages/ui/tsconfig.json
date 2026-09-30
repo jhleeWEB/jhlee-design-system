@@ -21,6 +21,13 @@
   "include": ["src"],
   // 테스트·아키텍처 가드는 tsconfig.test.json 이, 스토리는 tsconfig.stories.json 이 같은 엄격도로 검사한다.
   // 여기서 빼는 이유는 tsdown dts 가 이 tsconfig 를 읽기 때문이다 — 섞이면 스펙·스토리가 d.ts 로 새어 패키지에 실린다.
-  // 컴포넌트 옆 `Name.spec.tsx`(Phase D 공통 계약)도 같은 이유로 뺀다.
-  "exclude": ["src/__tests__", "src/__arch__", "src/**/*.stories.tsx", "src/**/*.spec.tsx"]
+  // 컴포넌트 옆 `Name.spec.tsx`(Phase D 공통 계약)와 훅 옆 `useX.spec.ts` 도 같은 이유로 뺀다 — `.tsx` 만 적었을 때
+  // `navigation/usePanelLayout.spec.ts` 가 이 빌드 프로필로 새어 있었다(--listFilesOnly 실측, #48).
+  "exclude": [
+    "src/__tests__",
+    "src/__arch__",
+    "src/**/*.stories.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx"
+  ]
 }
