@@ -1,9 +1,9 @@
 /* sds/ts-consts — `generated/tokens.ts`(kind motion) 와 `generated/ladders.ts`(kind ladders).
  *
- *   MOTION   duration 토큰 가운데 `$extensions.sds.ts` 가 붙은 것 → `{ collapseMs: 200, … }`. B1 의 손 `src/tokens/motion.ts` 와 같아야 하고
- *            (generated-parity.spec), B3 가 그 파일을 이것으로 대체한다.
- *   LADDERS  @theme 사다리의 이름 목록(네임스페이스별). cn.ts 의 twMerge 설정이 손으로 적어 둔 것과 같아야 하고, B3 가 cn.ts 를
- *            이것을 import 하게 바꾼다(혼용 규칙 ⑥). */
+ *   MOTION   duration 토큰 가운데 `$extensions.sds.ts` 가 붙은 것 → `{ fastMs: 100, collapseMs: 200, … }`. Toast·ScrollArea·Tooltip 이 읽고
+ *            `src/tokens/motion.ts` 는 이것을 재수출하는 껍데기다(#18). `$deprecated` 토큰은 JSDoc `@deprecated` 로 나간다.
+ *   LADDERS  twMerge(cn.ts)가 충돌을 해소하려면 알아야 하는 역할 이름 — @theme 사다리(네임스페이스별)와 생성 @utility 의 이름(layer → z-* ·
+ *            duration → duration-*). cn.ts 가 이것을 import 한다(혼용 규칙 ⑥). */
 import { byOrder, groupBy, HEADER, sds } from "./shared.mjs";
 
 /** `220ms` · `0.14s` → ms 정수. */
@@ -13,12 +13,19 @@ function toMs(value) {
   return Math.round(Number(m[1]) * (m[2] === "s" ? 1000 : 1));
 }
 
+/** 토큰의 JSDoc 한 줄 — 경로 · 값, `$deprecated` 면 `@deprecated` 태그. */
+function doc(t) {
+  const deprecated = t.$deprecated;
+  const tag = deprecated === undefined || deprecated === false ? "" : ` @deprecated ${typeof deprecated === "string" ? deprecated : ""}`.trimEnd();
+  return `  /** ${t.path.join(".")} — ${t.$value}${tag} */`;
+}
+
 function motion(dictionary) {
   const tokens = dictionary.allTokens.filter(t => sds(t).ts !== undefined).sort(byOrder);
-  const lines = tokens.map(t => `  /** ${t.path.join(".")} — ${t.$value} */\n  ${sds(t).ts}: ${toMs(t.$value)},`);
+  const lines = tokens.map(t => `${doc(t)}\n  ${sds(t).ts}: ${toMs(t.$value)},`);
   return [
     HEADER,
-    "/** 시간 상수(ms) — tokens/**.json 의 duration 가운데 `$extensions.sds.ts` 가 붙은 것. CSS 쪽 짝은 같은 토큰에서 나온다. */",
+    "/** 시간 상수(ms) — tokens/**.json 의 duration 가운데 `$extensions.sds.ts` 가 붙은 것. CSS 쪽 짝(--duration-*)은 같은 토큰에서 나온다. */",
     "export const MOTION = {",
     ...lines,
     "} as const;",
@@ -27,12 +34,13 @@ function motion(dictionary) {
 }
 
 function ladders(dictionary) {
-  const theme = dictionary.allTokens.filter(t => sds(t).scope === "theme" && t.path.length >= 2).sort(byOrder);
-  const groups = groupBy(theme, t => t.path[0]);
-  const lines = [...groups].map(([ns, tokens]) => `  ${ns}: [${tokens.map(t => JSON.stringify(t.path.slice(1).join("-"))).join(", ")}],`);
+  // @theme 사다리 + 생성 @utility 가 있는 네임스페이스. 후자는 :root 토큰이지만 클래스 이름(z-toast)이 되므로 twMerge 가 알아야 한다.
+  const tokens = dictionary.allTokens.filter(t => t.path.length >= 2 && (sds(t).scope === "theme" || sds(t).utility)).sort(byOrder);
+  const groups = groupBy(tokens, t => t.path[0]);
+  const lines = [...groups].map(([ns, list]) => `  ${JSON.stringify(ns)}: [${list.map(t => JSON.stringify(t.path.slice(1).join("-"))).join(", ")}],`);
   return [
     HEADER,
-    "/** Tailwind 테마(@theme) 사다리의 역할 이름 — 네임스페이스별, 정본 순. twMerge(cn.ts)가 충돌을 해소하려면 이 이름들을 알아야 한다. */",
+    "/** 역할 이름 사다리 — 네임스페이스별, 정본 순. @theme 의 것(rounded-* · text-* · font-* …)과 생성 @utility 의 것(layer → z-* · duration → duration-*). twMerge(cn.ts)가 충돌을 해소하려면 이 이름들을 알아야 한다. */",
     "export const LADDERS = {",
     ...lines,
     "} as const;",

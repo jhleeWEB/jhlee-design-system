@@ -336,7 +336,7 @@ export function CardHeader({
                접혀 있을 때는 그것이 유일한 되돌리는 길이므로 항상 진하다. */
             ctx.collapsed
               ? "opacity-100"
-              : "opacity-0 transition-opacity duration-100 group-hover/head:opacity-100 focus-visible:opacity-100",
+              : "opacity-0 transition-opacity duration-fast group-hover/head:opacity-100 focus-visible:opacity-100",
           )}
         >
           <Chevron pointing={ctx.collapsed ? "down" : "up"} />
@@ -369,7 +369,7 @@ export function CardCollapse({ className, onClick, ...rest }: React.ComponentPro
         "hover:bg-surface-2 hover:text-ink focus-visible:focus-ring focus-visible:outline-none",
         ctx.collapsed
           ? "opacity-100"
-          : "opacity-0 transition-opacity duration-100 focus-visible:opacity-100 group-hover/card:opacity-100",
+          : "opacity-0 transition-opacity duration-fast focus-visible:opacity-100 group-hover/card:opacity-100",
         className,
       )}
       {...rest}

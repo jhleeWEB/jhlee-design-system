@@ -1,46 +1,66 @@
 /*
- * 모션 상수 ↔ CSS 대조(계획 §2.4 `motion.spec` · §2.6 B1, #15).
+ * 모션 상수 ↔ CSS 대조(계획 §2.4 `motion.spec` · §2.6 B1, #15 → #18).
  *
- * `tokens/motion.ts` 의 숫자는 CSS 의 ms 와 **같은 값의 두 표기**다 — 토스트 퇴장은 toast.css 가 그리고 큐 정리는 JS 가 하므로,
- * 둘이 갈리면 퇴장 중인 토스트가 큐에서 먼저 빠져 화면에서 뚝 사라진다. 이 스펙은 값의 동일성과 그 사이의 순서 불변식을 붙든다.
- * B3 가 정본을 JSON 으로 옮기면 CSS 와 TS 가 같은 토큰에서 나오고, 그때 이 대조는 `generated-parity.spec` 이 이어받는다.
+ * `generated/tokens.ts` 의 숫자와 `generated/tokens.css` 의 `--duration-*` 는 **같은 토큰의 두 표기**다 — 토스트 퇴장은 toast.css 가 그리고
+ * 큐 정리는 JS 가 하므로, 둘이 갈리면 퇴장 중인 토스트가 큐에서 먼저 빠져 화면에서 뚝 사라진다. 생성기가 둘을 한 정본에서 내지만
+ * 포맷은 둘이라(ts-consts 의 toMs · css-vars), 이 스펙이 값의 동일성과 그 사이의 순서 불변식, 그리고 **CSS 규칙이 실제로 그 토큰을
+ * 읽는지**(toast.css · theme.css 의 ms 리터럴이 되돌아오지 않았는지)를 붙든다.
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { MOTION } from "../../tokens/motion";
+import { MOTION } from "../../generated/tokens";
 import { loadTokenModel, resolvedMap } from "./model";
 
-const css = (file: string): string => readFileSync(fileURLToPath(new URL(`../../${file}`, import.meta.url)), "utf8");
-
-/** `selector { … animation: name 220ms … }` 에서 이름 뒤의 ms — 주석은 걷어내고 본다. */
-function animationMs(source: string, keyframes: string): number {
-  const body = source.replace(/\/\*[\s\S]*?\*\//g, "");
-  const m = body.match(new RegExp(`animation:\\s*${keyframes}\\s+(\\d+)ms`));
-  expect(m, `${keyframes} 의 ms 를 찾지 못했다`).not.toBeNull();
-  return Number(m![1]);
-}
+const css = (file: string): string =>
+  readFileSync(fileURLToPath(new URL(`../../${file}`, import.meta.url)), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
 
 const toast = css("feedback/toast.css");
 const theme = css("theme.css");
 const light = resolvedMap(loadTokenModel(), "light");
+const ms = (name: string): number => {
+  const value = light[name];
+  expect(value, `${name} 이 해석되지 않았다`).toMatch(/^\d+ms$/);
+  return Number(value!.slice(0, -2));
+};
 
-describe("모션 상수 == CSS", () => {
-  it("토스트 등장·퇴장은 toast.css 의 keyframes 길이와 같다", () => {
-    expect(animationMs(toast, "ds-toast-enter")).toBe(MOTION.toastEnterMs);
-    expect(animationMs(toast, "ds-toast-exit")).toBe(MOTION.toastExitMs);
+describe("모션 상수 == CSS 토큰", () => {
+  it("MOTION 의 키마다 --duration-* 가 있고 값이 같다", () => {
+    const pairs: Record<keyof typeof MOTION, string> = {
+      instantMs: "--duration-instant",
+      fastMs: "--duration-fast",
+      baseMs: "--duration-base",
+      slowMs: "--duration-slow",
+      collapseMs: "--duration-collapse",
+      scrollHideDelayMs: "--duration-scrollbar-hide-delay",
+      scrollFadeMs: "--duration-scrollbar-fade",
+      toastEnterMs: "--duration-toast-enter",
+      toastExitMs: "--duration-toast-exit",
+      toastQueueGraceMs: "--duration-toast-queue-grace",
+      toastDefaultMs: "--duration-toast-default",
+      tooltipDelayMs: "--duration-tooltip-delay",
+    };
+    for (const [key, name] of Object.entries(pairs) as [keyof typeof MOTION, string][]) expect(ms(name), key).toBe(MOTION[key]);
   });
 
-  it("접기는 theme.css 의 --motion-collapse-duration 과 같다", () => {
+  it("토스트 등장·퇴장은 toast.css 가 토큰으로 읽는다 — ms 리터럴이 아니다", () => {
+    expect(toast).toMatch(/animation:\s*ds-toast-enter\s+var\(--duration-toast-enter\)/);
+    expect(toast).toMatch(/animation:\s*ds-toast-exit\s+var\(--duration-toast-exit\)/);
+    expect(toast).not.toMatch(/\d+ms/);
+  });
+
+  it("접기는 옛 이름 --motion-collapse-duration 이 --duration-collapse 를 잇고 reduced-motion 에서 0 이 된다", () => {
+    const model = loadTokenModel();
     expect(light["--motion-collapse-duration"]).toBe(`${MOTION.collapseMs}ms`);
+    expect(model.tokens.find(t => t.name === "--motion-collapse-duration")?.refs).toEqual(["--duration-collapse"]);
+    expect(model.tokens.find(t => t.name === "--duration-collapse" && t.scope === "reduced-motion")?.value).toBe("0ms");
   });
 
-  it("스크롤바 페이드는 theme.css 의 .ds-scroll-area-scrollbar 전환과 같다", () => {
-    const rule = theme.match(/\.ds-scroll-area-scrollbar\s*\{[^}]*transition:\s*opacity\s+(\d+)ms/);
-    expect(rule, "스크롤바 transition 을 찾지 못했다").not.toBeNull();
-    expect(Number(rule![1])).toBe(MOTION.scrollFadeMs);
+  it("스크롤바 페이드는 theme.css 의 .ds-scroll-area-scrollbar 가 토큰으로 읽는다", () => {
+    expect(theme).toMatch(/\.ds-scroll-area-scrollbar\s*\{[^}]*transition:\s*opacity\s+var\(--duration-scrollbar-fade\)/);
+    expect(ms("--duration-scrollbar-fade")).toBe(MOTION.scrollFadeMs);
   });
 });
 
@@ -55,10 +75,18 @@ describe("모션 불변식", () => {
     expect(MOTION.scrollFadeMs).toBeLessThanOrEqual(MOTION.scrollHideDelayMs);
   });
 
-  it("모든 값은 양의 정수 ms 다", () => {
+  it("4단은 instant(0) < fast < base < slow 이고 접기는 slow 다", () => {
+    expect(MOTION.instantMs).toBe(0);
+    expect(MOTION.fastMs).toBeLessThan(MOTION.baseMs);
+    expect(MOTION.baseMs).toBeLessThan(MOTION.slowMs);
+    expect(MOTION.collapseMs).toBe(MOTION.slowMs);
+  });
+
+  it("모든 값은 0 이상의 정수 ms 이고 instant 말고는 양수다", () => {
     for (const [name, value] of Object.entries(MOTION)) {
       expect(Number.isInteger(value), name).toBe(true);
-      expect(value, name).toBeGreaterThan(0);
+      expect(value, name).toBeGreaterThanOrEqual(0);
+      if (name !== "instantMs") expect(value, name).toBeGreaterThan(0);
     }
   });
 });

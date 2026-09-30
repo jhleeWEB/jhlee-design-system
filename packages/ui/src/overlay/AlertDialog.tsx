@@ -55,14 +55,14 @@ export function ConfirmDialog({
   return (
     <Radix.Root open={open} onOpenChange={onOpenChange}>
       <Radix.Portal>
-        <Radix.Overlay className="fixed inset-0 z-50 bg-scrim animate-in-fade" />
+        <Radix.Overlay className="fixed inset-0 z-scrim bg-scrim animate-in-fade" />
         <Radix.Content
           // 설명을 소유하므로 없는 ID를 만들지 않는다. 호출자가 지정한 ARIA 연결은 그대로 우선한다.
           aria-describedby={description ? descriptionId : undefined}
           {...contentProps}
           data-slot="confirm-dialog"
           className={cn(
-            "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
+            "fixed left-1/2 top-1/2 z-modal -translate-x-1/2 -translate-y-1/2",
             "flex max-h-[calc(100dvh-32px)] flex-col overflow-hidden [overflow-wrap:anywhere]",
             // 세 갈래 확인은 일반 모달 폭을 쓰고, 좁은 화면의 줄바꿈은 공용 바닥이 맡는다.
             secondaryAction ? "w-[min(560px,calc(100vw-24px))]" : "w-[min(380px,calc(100vw-24px))]",

@@ -18,6 +18,10 @@ export default defineConfig({
   copy: [
     { from: "src/theme.css", to: "dist" },
     { from: "src/tokens.css", to: "dist" },
+    // 생성물 — theme.css · tokens.css 가 `@import "./generated/…"` 로 본다(#18). 디렉터리 깊이를 소스와 같게 유지해야 tarball 안에서도 상대경로가 산다.
+    { from: "src/generated/tokens.css", to: "dist/generated" },
+    { from: "src/generated/legacy.css", to: "dist/generated" },
+    { from: "src/generated/theme.tailwind.css", to: "dist/generated" },
     // shell.css 는 `@import "../tokens.css"` 로 dist/tokens.css 를 본다 — 디렉터리 깊이를 소스와 같게 유지해야 상대경로가 산다.
     { from: "src/legacy/shell.css", to: "dist/legacy" },
     { from: "src/canvas.css", to: "dist" },

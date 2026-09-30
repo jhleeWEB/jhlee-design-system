@@ -7,7 +7,7 @@
  * Style Dictionary 4 를 쓰되(usesDtcg · outputReferences · 참조 해석 · name 변환) 값 직렬화와 블록 조립은 formats/ 의 우리 포맷이 한다 —
  * 목표가 «손 CSS 와 해석 맵이 같다» 라서 SD 의 css 변환군(색 재작성)을 태울 수 없다(formats/shared.mjs 머리).
  * 다크(semantic/chrome.dark.json)는 source 가 아니라 options 로 넘긴다 — 같은 키(chrome.*)를 두 source 에 두면 SD 가 충돌로 본다.
- * 생성물은 커밋한다. 아직 연결하지 않는다(B3) — tokens.css · theme.css · cn.ts 는 손 정본 그대로이고 generated-parity.spec 이 둘의 동일성을 증명한다. */
+ * 생성물은 커밋하고 `src/tokens.css`·`theme.css` 가 @import 로, `cn.ts`·`tokens/motion.ts` 가 import 로 그대로 소비한다(#18). */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -47,7 +47,7 @@ StyleDictionary.registerFormat({ name: "sds/css-vars", format: cssVars });
 StyleDictionary.registerFormat({ name: "sds/tailwind-theme", format: tailwindTheme });
 StyleDictionary.registerFormat({ name: "sds/ts-consts", format: tsConsts });
 
-// 다크는 리터럴이거나 라이트 토큰 참조다 — 스키마가 참조 존재를 봤으므로 여기서는 선언으로만 바꾼다.
+// 다크는 리터럴이거나 원시 참조다 — 스키마가 참조 존재를 봤으므로 여기서는 선언으로만 바꾼다.
 const darkDeclarations = dark.map(t => ({ name: t.path.join("-"), declarations: declarations(t.path.join("-"), t.type, t.value, t.value, true) }));
 
 const sd = new StyleDictionary({

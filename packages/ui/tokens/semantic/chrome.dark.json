@@ -1,5 +1,5 @@
 {
-  "$description": "크롬 다크 — 생성기가 한 번 읽어 @media (prefers-color-scheme: dark) 블록과 [data-theme=dark] 블록에 같은 본문을 찍는다(손 CSS 의 복붙 두 블록을 대체). 오늘은 raw hex — 새 원시 사다리 참조는 B4.",
+  "$description": "크롬 다크 — 생성기가 한 번 읽어 @media (prefers-color-scheme: dark) 블록과 [data-theme=dark] 블록에 같은 본문을 찍는다. 판정 3색은 원시 사다리 참조(값은 옛 다크 hex 그대로), 뉴트럴·액센트는 아직 raw hex 다. 다크에서는 세 톤 모두 solid 위 흰 글자가 4.5:1 을 못 넘어 ink 가 cool.950 이고 hover 는 밝아진다(#18).",
   "$extensions": { "sds": { "scope": "chrome" } },
   "chrome": {
     "$type": "color",
@@ -25,11 +25,20 @@
     "focus": { "$value": "#6fb0ff" },
     "tooltip-bg": { "$value": "#eaedf3" },
     "tooltip-ink": { "$value": "#0e1116" },
-    "ok": { "$value": "#4cb37e" },
-    "warn": { "$value": "#d99c3d" },
-    "danger": { "$value": "#e2764d" },
-    "ok-soft": { "$value": "#12261c" },
-    "warn-soft": { "$value": "#2a2113" },
-    "danger-soft": { "$value": "#2b1913" }
+    "ok": { "$value": "{palette.moss.300}" },
+    "ok-hover": { "$value": "{palette.moss.200}" },
+    "ok-ink": { "$value": "{palette.cool.950}" },
+    "ok-soft": { "$value": "{palette.moss.900}" },
+    "ok-line": { "$value": "{palette.moss.600}" },
+    "warn": { "$value": "{palette.amber.300}" },
+    "warn-hover": { "$value": "{palette.amber.200}" },
+    "warn-ink": { "$value": "{palette.cool.950}" },
+    "warn-soft": { "$value": "{palette.amber.900}" },
+    "warn-line": { "$value": "{palette.amber.700}" },
+    "danger": { "$value": "{palette.rust.400}" },
+    "danger-hover": { "$value": "{palette.rust.200}" },
+    "danger-ink": { "$value": "{palette.cool.950}" },
+    "danger-soft": { "$value": "{palette.rust.900}" },
+    "danger-line": { "$value": "{palette.rust.600}" }
   }
 }

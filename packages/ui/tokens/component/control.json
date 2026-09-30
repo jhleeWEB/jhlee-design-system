@@ -1,10 +1,10 @@
 {
-  "$description": "컨트롤 높이 세 단 — 실측 상단바 버튼 40px · 전면 CTA 50px 을 30/36/44 로 정리(theme.css 주석). @utility h-ctl* 은 theme.css 가 손으로 낸다(혼용 규칙 ⑤의 생성은 B3 이후).",
+  "$description": "컨트롤 높이 — Tailwind @theme 의 옛 이름 --height-ctl*(h-ctl · w-ctl 유틸리티는 theme.css 가 손으로 낸다)이 :root 의 size.control.* 을 참조한다. 값은 30/36/44 그대로이고 개명은 B5.",
   "$extensions": { "sds": { "scope": "theme" } },
   "height": {
     "$type": "dimension",
-    "ctl-sm": { "$value": "30px" },
-    "ctl": { "$value": "36px" },
-    "ctl-lg": { "$value": "44px" }
+    "ctl-sm": { "$value": "{size.control.sm}" },
+    "ctl": { "$value": "{size.control.md}" },
+    "ctl-lg": { "$value": "{size.control.lg}" }
   }
 }

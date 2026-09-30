@@ -77,7 +77,7 @@ export function SegmentedControl<T extends string | number>({
             onClick={() => onChange(option.value)}
             className={cn(
               "appearance-none border-0 bg-transparent font-inherit",
-              "cursor-pointer rounded-[6px] px-3 font-medium transition-colors duration-100",
+              "cursor-pointer rounded-[6px] px-3 font-medium transition-colors duration-fast",
               "focus-visible:focus-ring focus-visible:outline-none",
               "disabled:pointer-events-none disabled:opacity-45",
               size === "sm" ? "h-6 text-label" : "h-7 text-control",

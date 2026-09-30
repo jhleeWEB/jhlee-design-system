@@ -19,8 +19,11 @@
  * 동결된 `legacy/` 도 세지 않는다(countsOf 의 주석).
  * 주석은 걷어내고 센다: theme.css 머리 주석의 `#0869e1` 과 «140ms 를 넘기면 기다림이 된다» 가 위반으로 잡히면 안 된다.
  */
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
+import { LEGACY_FILE, readTokenSources, validateTokenSources } from "../../tokens/schema";
 import { matches, parseSource, sourceGraph, type Located, type SourceFileInfo } from "./source-graph";
 
 interface Pattern {
@@ -43,6 +46,15 @@ function withoutTokenDefinitions(code: string): string {
 }
 
 const cssValues = (file: SourceFileInfo, re: RegExp): readonly Located[] => matches(withoutTokenDefinitions(file.code), re);
+
+/**
+ * legacy.json 의 옛 이름(`--ink` · `--gap` · `--size-gap` · `--color-cool-500` …)을 정본에서 읽어 `var(--이름` 을 잡는 정규식으로 만든다.
+ * 목록을 여기 복사하지 않는 이유: legacy 에 이름이 더해지거나 빠질 때 래칫이 저절로 따라가야 한다.
+ */
+const LEGACY_NAMES = validateTokenSources(readTokenSources(fileURLToPath(new URL("../../tokens/", import.meta.url))))
+  .tokens.filter(t => t.file === LEGACY_FILE)
+  .map(t => `--${t.path.join("-")}`);
+const LEGACY_ALIAS_USE = new RegExp(`var\\(\\s*(?:${LEGACY_NAMES.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})\\s*[,)]`, "g");
 
 const PATTERNS: readonly Pattern[] = [
   {
@@ -67,26 +79,10 @@ const PATTERNS: readonly Pattern[] = [
     why: "duration-100 · z-50 · leading-5 · font-500 · tracking-1 같은 Tailwind 기본 사다리와 rounded-[…] 는 역할 이름이 아니다 — theme.css 가 initial 로 지운 사다리에 역할(duration-fast · z-toast)을 더해 쓴다",
     kinds: ["ts", "tsx"],
     find: file => matches(file.code, /\b(?:duration|z|leading|font|tracking)-\d+\b|\brounded-\[/g),
+    // #18 이 z-50 → z-scrim/z-modal/z-popover/z-toast/z-tooltip, z-1 → z-raised, duration-100/150/200 → duration-fast/base/slow 로 바꿔 24파일 → 3건.
+    // 남은 셋은 같은 값의 토큰이 없다(rounded-[6px] · duration-120 · leading-5) — Phase D 의 몫.
     baseline: {
-      "data/DataTable.tsx": 1,
-      "feedback/Progress.variants.ts": 1,
-      "feedback/Toast.tsx": 1,
-      "navigation/SegmentedControl.tsx": 2,
-      "navigation/Sidebar.tsx": 2,
-      "overlay/AlertDialog.tsx": 2,
-      "overlay/Drawer.tsx": 1,
-      "overlay/Drawer.variants.ts": 1,
-      "overlay/DropdownMenu.tsx": 1,
-      "overlay/Modal.tsx": 1,
-      "overlay/Modal.variants.ts": 1,
-      "overlay/Popover.tsx": 1,
-      "overlay/Tooltip.tsx": 1,
-      "primitives/Button.tsx": 1,
-      "primitives/Button.variants.ts": 1,
-      "primitives/Card.tsx": 2,
-      "primitives/Choice.tsx": 3,
-      "primitives/Input.variants.ts": 1,
-      "primitives/MediaCard.tsx": 2,
+      "navigation/SegmentedControl.tsx": 1,
       "primitives/MediaCard.variants.ts": 1,
       "primitives/Misc.tsx": 1,
     },
@@ -99,7 +95,7 @@ const PATTERNS: readonly Pattern[] = [
     baseline: {
       "canvas.css": 1,
       "feedback/toast.css": 1,
-      "theme.css": 18,
+      "theme.css": 14,
     },
   },
   {
@@ -116,19 +112,18 @@ const PATTERNS: readonly Pattern[] = [
     why: "`.ds-*` CSS 의 ms 는 모션 토큰(`--motion-*`·`--duration-*`)이어야 한다 — 값이 흩어지면 접기·토스트·스크롤바가 서로 다른 박자로 움직인다. 0 과 토큰 정의 자리는 세지 않는다",
     kinds: ["css"],
     find: file => cssValues(file, /(?<![\w.-])(?!0ms\b)\d+(?:\.\d+)?ms\b/g),
+    // toast.css 4 · theme.css 1 은 #18 이 --duration-* 참조로 바꿨다. card-motion.css 의 넷은 var() 의 폴백값이다.
     baseline: {
-      "feedback/toast.css": 4,
       "primitives/card-motion.css": 4,
-      "theme.css": 1,
     },
   },
   {
     id: "js-ms-literal",
-    why: "setTimeout 의 지연과 duration/delayDuration 기본값을 숫자로 적으면 CSS 의 모션 토큰과 JS 상수가 따로 논다(토스트 퇴장 180ms 는 큐 유예 240ms 안에 끝나야 한다) — `tokens/motion.ts` 의 `MOTION` 상수를 쓴다(B1, #15)",
+    why: "setTimeout 의 지연과 duration/delayDuration 기본값을 숫자로 적으면 CSS 의 모션 토큰과 JS 상수가 따로 논다(토스트 퇴장 180ms 는 큐 유예 240ms 안에 끝나야 한다) — 생성물 `generated/tokens.ts` 의 `MOTION` 상수를 쓴다(B1 #15 · B3 #18)",
     kinds: ["ts", "tsx"],
     // `setTimeout(` 부터 처음 만나는 `, <숫자>)` 까지 — 콜백이 여러 줄이어도 지연 인자는 그 뒤에 온다.
     find: file => matches(file.code, /\bsetTimeout\([\s\S]*?,\s*\d+\s*\)|\b(?:delayDuration|skipDelayDuration|duration)\s*=\s*\{?\s*\d+\b/g),
-    // B1(#15)이 세 파일 4건을 `tokens/motion.ts` 의 상수로 바꿔 0 이 됐다 — 기준선이 비어도 검출기 검증(DETECTOR_CASES)은 남는다.
+    // B1(#15)이 세 파일 4건을 MOTION 상수로 바꿔 0 이 됐다 — 기준선이 비어도 검출기 검증(DETECTOR_CASES)은 남는다.
     baseline: {},
   },
   {
@@ -191,6 +186,18 @@ const PATTERNS: readonly Pattern[] = [
     find: file => matches(file.code, /\b(?:parcel|FSI|TBV|verdict)\b|To be verified|필지|법규/g),
     baseline: {
       "data/DescriptionList.tsx": 1,
+    },
+  },
+  {
+    id: "legacy-alias-use",
+    why: "var(--ink) · var(--gap) · var(--size-gap) · var(--color-cool-500) 같은 옛 이름은 legacy.json 의 $deprecated alias 다 — 새 정본 이름(--chrome-* · --canvas-* · --palette-* · --space-* · --font-stack-*)을 쓴다. 옛 이름 제거는 major 이고 그때 이 기준선이 0 이어야 한다(#18)",
+    kinds: ["ts", "tsx", "css"],
+    find: file => matches(file.code, LEGACY_ALIAS_USE),
+    // tokens.css 의 body 바닥·글자색은 같은 값의 새 이름이 없다(chrome.bg · chrome.ink 는 값이 다르다) — B5 의 결정. canvas.css 는 폴백 사슬의 첫 고리다.
+    baseline: {
+      "canvas.css": 2,
+      "navigation/Sidebar.tsx": 1,
+      "tokens.css": 2,
     },
   },
 ];
@@ -280,6 +287,15 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
     path: "primitives/__probe__.tsx",
     source: ["<div data-open={open} data-state={props.state} data-slot=\"card\" data-collapsed={collapsed ? \"\" : undefined} />;", "// data-open={open}"].join("\n"),
     hits: ["data-open={open}", "data-state={props.state}"],
+  },
+  "legacy-alias-use": {
+    path: "primitives/__probe__.css",
+    source: [
+      ".ds-x { color: var(--ink); gap: var( --gap , 1px); background: var(--color-cool-500); }",
+      ".ds-y { color: var(--chrome-ink); border-color: var(--inkwell); width: var(--size-gap-2); }",
+      "/* var(--muted) 는 chrome-muted 로 */",
+    ].join("\n"),
+    hits: ["var(--ink)", "var( --gap ,", "var(--color-cool-500)"],
   },
   "domain-vocabulary": {
     path: "primitives/__probe__.tsx",

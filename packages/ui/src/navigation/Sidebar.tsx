@@ -42,7 +42,7 @@ export function Sidebar({
         aria-label={label}
         className={cn(
           "flex shrink-0 flex-col gap-2 bg-surface p-3",
-          "transition-[width] duration-150 motion-reduce:transition-none",
+          "transition-[width] duration-base motion-reduce:transition-none",
           side === "left" ? "border-r border-line" : "border-l border-line",
           collapsed ? "w-rail items-center" : "w-[var(--panel-w)]",
           className,
@@ -84,7 +84,7 @@ export function SidebarItem({
       className={cn(
         "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit cursor-pointer",
         "flex h-ctl-lg shrink-0 items-center gap-4 rounded-control border border-solid border-transparent",
-        "text-control text-muted transition-colors duration-100",
+        "text-control text-muted transition-colors duration-fast",
         "hover:bg-surface-2 hover:text-ink",
         /* 활성은 **채우지 않고 물들인다.** 참고 화면 실측이 그랬고, 이유가 있다 — 레일은
            상시 보이므로 채워진 액센트 칸이 화면에서 가장 무거운 것이 되어 주 동작 버튼과

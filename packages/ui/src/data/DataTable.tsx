@@ -130,7 +130,7 @@ export function DataTable<Row>({
         >
           {caption}
         </caption>
-        <thead className={cn("bg-surface-2", stickyHeader && "sticky top-0 z-1")}>
+        <thead className={cn("bg-surface-2", stickyHeader && "sticky top-0 z-raised")}>
           <tr>
             {columns.map(column => {
               const active = sort?.key === column.key;

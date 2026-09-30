@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { CANVAS_FILE, DARK_FILE, readTokenSources, sortSourcePaths, validateTokenSources } from "../../../tokens/schema";
+import { CANVAS_FILE, DARK_FILE, LEGACY_FILE, readTokenSources, sortSourcePaths, validateTokenSources } from "../../../tokens/schema";
 
 const sources = readTokenSources(fileURLToPath(new URL("../../../tokens/", import.meta.url)));
 
@@ -27,10 +27,9 @@ describe("정본", () => {
     expect(validateTokenSources(sources).errors).toEqual([]);
   });
 
-  it("정본 파일은 이것이 전부다 — 층 순(base → primitive → semantic → component → legacy)", () => {
+  it("정본 파일은 이것이 전부다 — 층 순(primitive → semantic → component → legacy)", () => {
     expect(sortSourcePaths(Object.keys(sources))).toMatchInlineSnapshot(`
       [
-        "base.json",
         "primitive/color.json",
         "primitive/dimension.json",
         "primitive/motion.json",
@@ -42,6 +41,7 @@ describe("정본", () => {
         "semantic/tailwind.json",
         "component/collapse.json",
         "component/control.json",
+        "component/overlay.json",
         "component/scroll.json",
         "component/toast.json",
         "component/tooltip.json",
@@ -91,7 +91,7 @@ describe("검출기", () => {
   });
 
   it("같은 토큰을 두 파일에 두면 실패", () => {
-    expect(errorsWith({ "primitive/x.json": rootScoped("root", { black: { $type: "color", $value: "#000000" } }) }).join("\n")).toMatch(/black 가 base\.json 에도 있다/);
+    expect(errorsWith({ "primitive/x.json": rootScoped("root", { canvas: { bg: { $type: "color", $value: "#000000" } } }) }).join("\n")).toMatch(/canvas\.bg 가 .* 에도 있다 — 토큰은 한 파일에서 한 번 정의한다/);
   });
 
   it("canvas.dark.json 은 존재 자체가 실패 — 캔버스에 다크는 없다", () => {
@@ -119,10 +119,24 @@ describe("검출기", () => {
     expect(errorsWith({ [DARK_FILE]: dark }).join("\n")).toMatch(/chrome\.extra 가 라이트에 없다/);
   });
 
-  it("sds.ts 는 duration 에만, ts 스코프 토큰은 ts 이름이 있어야, reset 은 그룹에만", () => {
-    expect(errorsWith({ "component/x.json": rootScoped("ts", { x: { $type: "color", $value: "#000000", $extensions: { sds: { ts: "xMs" } } } }) }).join("\n")).toMatch(/sds\.ts 는 duration 에만/);
-    expect(errorsWith({ "component/x.json": rootScoped("ts", { x: { $type: "duration", $value: "1ms" } }) }).join("\n")).toMatch(/ts 스코프 토큰은 sds\.ts 이름이/);
+  it("sds.ts 는 duration 에만, MOTION 키는 한 번, reset · utility 는 그룹에만", () => {
+    expect(errorsWith({ "component/x.json": rootScoped("root", { x: { $type: "color", $value: "#000000", $extensions: { sds: { ts: "xMs" } } } }) }).join("\n")).toMatch(/sds\.ts 는 duration 에만/);
+    expect(errorsWith({ "component/x.json": rootScoped("root", { x: { $type: "duration", $value: "1ms", $extensions: { sds: { ts: "collapseMs" } } } }) }).join("\n")).toMatch(/MOTION\.collapseMs 가 .* 에도 있다/);
     expect(errorsWith({ "component/x.json": rootScoped("theme", { x: { $type: "duration", $value: "1ms", $extensions: { sds: { reset: true } } } }) }).join("\n")).toMatch(/reset 은 그룹에만/);
-    expect(errorsWith({ "component/x.json": rootScoped("ts", { x: { $type: "duration", $value: "1ms", $extensions: { sds: { ts: "collapseMs" } } } }) }).join("\n")).toMatch(/MOTION\.collapseMs 가 .* 에도 있다/);
+    expect(errorsWith({ "component/x.json": rootScoped("root", { x: { $type: "number", $value: 1, $extensions: { sds: { utility: { prefix: "z", properties: ["z-index"] } } } } }) }).join("\n")).toMatch(/utility 는 그룹에만/);
+  });
+
+  it("legacy 는 $deprecated 만 살고, 새 정본은 옛 이름을 참조하지 않는다", () => {
+    /* alias 는 밖으로만 향한다 — 새 토큰이 `{ink}` 를 가리키면 옛 이름을 지울 때(major) 그 토큰이 함께 죽는다. */
+    const legacy = structuredClone(sources[LEGACY_FILE]) as Record<string, unknown>;
+    legacy.fresh = { $type: "color", $value: "{palette.gray.0}", $deprecated: false };
+    expect(errorsWith({ [LEGACY_FILE]: legacy }).join("\n")).toMatch(/fresh 는 \$deprecated 여야 한다/);
+    expect(errorsWith({ "primitive/x.json": rootScoped("root", { x: { $type: "color", $value: "{ink}" } }) }).join("\n")).toMatch(/x → \{ink\} 는 옛 이름이다/);
+    expect(errorsWith({ "primitive/x.json": rootScoped("legacy", { x: { $type: "color", $value: "#000000", $deprecated: true } }) }).join("\n")).toMatch(/legacy 스코프는 legacy\.json 만 쓴다/);
+    expect(errorsWith({ [LEGACY_FILE]: { ...legacy, fresh: undefined, "z-thing": { $type: "number", $value: 1, $extensions: { sds: { utility: { prefix: "z", properties: ["z-index"] } } } } } }).join("\n")).toMatch(/utility 는 그룹에만/);
+  });
+
+  it("음수 치수(tracking-tight)는 dimension 이다", () => {
+    expect(errorsWith({ "primitive/x.json": rootScoped("theme", { x: { $type: "dimension", $value: "-0.025em" } }) }).filter(e => e.includes("x.json"))).toEqual([]);
   });
 });

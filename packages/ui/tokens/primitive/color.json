@@ -1,5 +1,5 @@
 {
-  "$description": "원시 팔레트 — 리터럴이 사는 유일한 색 층. 참고 화면(Office Studio 2000×1070)에서 픽셀로 뽑은 값이다(theme.css 머리 주석). 계획대로 --palette-* 로 내고, 기존 --color-{hue}-* 는 소비자 이름이라 alias 로 남긴다(B5 가 뗀다).",
+  "$description": "원시 팔레트 — 리터럴이 사는 유일한 색 층. cool·azure 는 참고 화면(Office Studio 2000×1070)에서 픽셀로 뽑은 값, mono 는 자매 저장소 globals.css 의 12단, gray 는 옛 base(Hotel v2.0 회색조 + 선 두 단)의 값을 사다리로 편 것(#18). moss·amber·rust 는 판정 3색의 사다리 — 500 이 오늘의 라이트 기본값, 300 이 오늘의 다크 기본값이고 나머지 단은 대비를 계산해 정했다(각 단 $description). 옛 --color-{hue}-* 이름은 legacy.json 의 alias 다.",
   "$extensions": { "sds": { "scope": "root" } },
   "palette": {
     "$type": "color",
@@ -18,7 +18,7 @@
       "700": { "$value": "#3a4150" },
       "800": { "$value": "#262c38" },
       "900": { "$value": "#191f28" },
-      "950": { "$value": "#0f131a" }
+      "950": { "$value": "#0f131a", "$description": "판정색 위의 어두운 글자(ink) — 흰 글자가 4.5:1 을 못 넘는 면(amber 라이트 · 다크 3색) 에 쓴다." }
     },
     "azure": {
       "$description": "액센트 — 실측 #0869e1.",
@@ -43,49 +43,55 @@
       "800": { "$value": "#27272a" },
       "900": { "$value": "#18181b" },
       "950": { "$value": "#09090b" }
-    }
-  },
-  "color": {
-    "$type": "color",
-    "$description": "옛 이름 --color-{hue}-{step} → --palette-* alias. 소비자 이름은 마지막까지 불변(계획 §2.2 «alias 이행»).",
-    "$deprecated": "--palette-* 를 쓴다. B5 에서 지운다.",
-    "cool": {
-      "0": { "$value": "{palette.cool.0}" },
-      "25": { "$value": "{palette.cool.25}" },
-      "50": { "$value": "{palette.cool.50}" },
-      "100": { "$value": "{palette.cool.100}" },
-      "150": { "$value": "{palette.cool.150}" },
-      "200": { "$value": "{palette.cool.200}" },
-      "300": { "$value": "{palette.cool.300}" },
-      "400": { "$value": "{palette.cool.400}" },
-      "500": { "$value": "{palette.cool.500}" },
-      "600": { "$value": "{palette.cool.600}" },
-      "700": { "$value": "{palette.cool.700}" },
-      "800": { "$value": "{palette.cool.800}" },
-      "900": { "$value": "{palette.cool.900}" },
-      "950": { "$value": "{palette.cool.950}" }
     },
-    "azure": {
-      "50": { "$value": "{palette.azure.50}" },
-      "100": { "$value": "{palette.azure.100}" },
-      "200": { "$value": "{palette.azure.200}" },
-      "500": { "$value": "{palette.azure.500}" },
-      "600": { "$value": "{palette.azure.600}" },
-      "700": { "$value": "{palette.azure.700}" }
+    "gray": {
+      "$description": "순회색 — 옛 base 의 회색조 10단(black … white)과 선 두 단(#dcdcdc · #bfbfbf), 한 단 들어간 면(#fafafa)을 밝기 순으로 편 것. 캔버스(도면 면)와 legacy alias 가 참조한다. 값은 옛 tokens.css 그대로다.",
+      "0": { "$value": "#ffffff" },
+      "50": { "$value": "#fafafa" },
+      "100": { "$value": "#f4f4f4" },
+      "150": { "$value": "#ebebeb" },
+      "200": { "$value": "#dcdcdc" },
+      "250": { "$value": "#d5d5d5" },
+      "300": { "$value": "#bfbfbf" },
+      "400": { "$value": "#ababab" },
+      "500": { "$value": "#8a8a8a" },
+      "600": { "$value": "#6b6b6b" },
+      "700": { "$value": "#3a3a3a" },
+      "800": { "$value": "#2a2a2a" },
+      "900": { "$value": "#1a1a1a" }
     },
-    "mono": {
-      "0": { "$value": "{palette.mono.0}" },
-      "50": { "$value": "{palette.mono.50}" },
-      "100": { "$value": "{palette.mono.100}" },
-      "200": { "$value": "{palette.mono.200}" },
-      "300": { "$value": "{palette.mono.300}" },
-      "400": { "$value": "{palette.mono.400}" },
-      "500": { "$value": "{palette.mono.500}" },
-      "600": { "$value": "{palette.mono.600}" },
-      "700": { "$value": "{palette.mono.700}" },
-      "800": { "$value": "{palette.mono.800}" },
-      "900": { "$value": "{palette.mono.900}" },
-      "950": { "$value": "{palette.mono.950}" }
+    "moss": {
+      "$description": "ok(통과). 라이트 500 · 다크 300 은 오늘의 값. 흰 글자가 500 위에서 4.78:1 이라 라이트 ink 는 흰색, 다크 300 위에서는 2.61:1 이라 ink 는 cool.950(7.14:1).",
+      "50": { "$value": "#e9f4ee", "$description": "라이트 soft — 옛 --ok-pale." },
+      "200": { "$value": "#61bc8d", "$description": "다크 hover — 300 을 6% 밝게. cool.950 글자 8.05:1." },
+      "300": { "$value": "#4cb37e", "$description": "다크 기본값 — 옛 다크 --chrome-ok." },
+      "400": { "$value": "#1eaa64", "$description": "라이트 line — 흰 면 위 3.00:1(WCAG 1.4.11 비텍스트 경계)까지 밝힌 값." },
+      "500": { "$value": "#17834d", "$description": "라이트 기본값 — 옛 --ok. 흰 글자 4.78:1." },
+      "600": { "$value": "#317351", "$description": "다크 line — 다크 surface(#161a21) 위 3.07:1 까지 어둡힌 값." },
+      "700": { "$value": "#12693e", "$description": "라이트 hover — 500 을 6% 어둡게. 흰 글자 6.74:1." },
+      "900": { "$value": "#12261c", "$description": "다크 soft — 옛 다크 --chrome-ok-soft." }
+    },
+    "amber": {
+      "$description": "warn(주의). 흰 글자가 라이트 500 위에서 3.79:1 이라 amber 만은 라이트에서도 ink 가 cool.950(4.91:1)이고, 그래서 라이트 hover 는 글자 대비 4.5:1 이 남는 만큼만(2%) 어둡힌다 — 6% 어둡히면 4.22:1 로 떨어진다.",
+      "50": { "$value": "#fdf3e2", "$description": "라이트 soft — 옛 --warn-pale." },
+      "200": { "$value": "#dea957", "$description": "다크 hover — 300 을 6% 밝게. cool.950 글자 8.79:1." },
+      "300": { "$value": "#d99c3d", "$description": "다크 기본값 — 옛 다크 --chrome-warn. cool.950 글자 7.77:1." },
+      "400": { "$value": "#d0830a", "$description": "라이트 line — 흰 면 위 3.03:1 까지 밝힌 값." },
+      "500": { "$value": "#b87409", "$description": "라이트 기본값 — 옛 --warn. cool.950 글자 4.91:1." },
+      "600": { "$value": "#b16f09", "$description": "라이트 hover — 500 을 2% 어둡게. cool.950 글자 4.56:1(더 어둡히면 4.5 아래)." },
+      "700": { "$value": "#895e1b", "$description": "다크 line — 다크 surface 위 3.06:1 까지 어둡힌 값." },
+      "900": { "$value": "#2a2113", "$description": "다크 soft — 옛 다크 --chrome-warn-soft." }
+    },
+    "rust": {
+      "$description": "danger(실패). 흰 글자가 라이트 500 위에서 5.18:1 이라 라이트 ink 는 흰색, 다크 400 위에서는 3.03:1 이라 ink 는 cool.950(6.14:1). 300(라이트 line)과 400(다크 기본값)은 밝기가 거의 같다(0.300 · 0.295) — 사다리 번호는 밝기 순이다.",
+      "50": { "$value": "#fbeae3", "$description": "라이트 soft — 옛 --danger-pale." },
+      "200": { "$value": "#e68a67", "$description": "다크 hover — 400 을 6% 밝게. cool.950 글자 7.26:1." },
+      "300": { "$value": "#f26c35", "$description": "라이트 line — 흰 면 위 3.01:1 까지 밝힌 값." },
+      "400": { "$value": "#e2764d", "$description": "다크 기본값 — 옛 다크 --chrome-danger." },
+      "500": { "$value": "#c2410c", "$description": "라이트 기본값 — 옛 --danger. 흰 글자 5.18:1." },
+      "600": { "$value": "#ad441c", "$description": "다크 line — 다크 surface 위 3.01:1 까지 어둡힌 값." },
+      "700": { "$value": "#a5370a", "$description": "라이트 hover — 500 을 6% 어둡게. 흰 글자 6.67:1." },
+      "900": { "$value": "#2b1913", "$description": "다크 soft — 옛 다크 --chrome-danger-soft." }
     }
   }
 }

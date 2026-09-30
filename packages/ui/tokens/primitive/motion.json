@@ -1,5 +1,5 @@
 {
-  "$description": "모션 곡선과 진입 애니메이션 — 도면 툴에서 애니메이션은 «무엇이 어디서 왔는지» 만 말한다. 140ms 를 넘기면 기다림이 된다. reduced-motion 에서는 전부 none.",
+  "$description": "모션 — 곡선·진입 애니메이션은 Tailwind @theme(animate-* · ease-*), 시간 4단은 :root 의 --duration-* 에 생성 @utility duration-*(Tailwind 의 duration-100 자리)와 TS 상수(MOTION.fastMs …)를 함께 낸다. 도면 툴에서 애니메이션은 «무엇이 어디서 왔는지» 만 말한다 — 140ms 를 넘기면 기다림이 된다. reduced-motion 에서는 전부 none.",
   "$extensions": { "sds": { "scope": "theme" } },
   "ease": {
     "$type": "cubicBezier",
@@ -11,5 +11,14 @@
     "in-fade": { "$value": "fade 0.12s linear", "$extensions": { "sds": { "reducedMotion": "none" } } },
     "in-rise": { "$value": "rise 0.16s {ease.out-quick}", "$extensions": { "sds": { "reducedMotion": "none" } } },
     "shimmer": { "$value": "shimmer 1.25s linear infinite", "$extensions": { "sds": { "reducedMotion": "none" } } }
+  },
+  "duration": {
+    "$type": "duration",
+    "$description": "전환 시간 4단. 컴포넌트가 `duration-fast` 처럼 쓰고, .ds-* CSS 와 JS 는 --duration-* · MOTION 으로 같은 값을 읽는다. 컴포넌트별 시간(toast · collapse · scrollbar · tooltip)은 component/ 에서 같은 네임스페이스로 잇는다.",
+    "$extensions": { "sds": { "scope": "root", "utility": { "prefix": "duration", "properties": ["--tw-duration", "transition-duration"] } } },
+    "instant": { "$value": "0ms", "$extensions": { "sds": { "ts": "instantMs" } } },
+    "fast": { "$value": "100ms", "$description": "색·불투명도 전환 — 옛 duration-100.", "$extensions": { "sds": { "ts": "fastMs" } } },
+    "base": { "$value": "150ms", "$description": "너비·위치 전환 — 옛 duration-150.", "$extensions": { "sds": { "ts": "baseMs" } } },
+    "slow": { "$value": "200ms", "$description": "접기·진행 막대 — 옛 duration-200.", "$extensions": { "sds": { "ts": "slowMs" } } }
   }
 }

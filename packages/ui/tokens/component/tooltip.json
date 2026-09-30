@@ -1,8 +1,10 @@
 {
-  "$description": "툴팁 지연 — Radix delayDuration 기본값. TS 상수로만 나간다.",
-  "$extensions": { "sds": { "scope": "ts" } },
-  "tooltip": {
+  "$description": "툴팁 지연 — Radix delayDuration 기본값. CSS 와 TS(MOTION.tooltipDelayMs) 둘 다로 나간다.",
+  "$extensions": { "sds": { "scope": "root" } },
+  "duration": {
     "$type": "duration",
-    "delay": { "$value": "350ms", "$extensions": { "sds": { "ts": "tooltipDelayMs" } } }
+    "tooltip": {
+      "delay": { "$value": "350ms", "$extensions": { "sds": { "ts": "tooltipDelayMs" } } }
+    }
   }
 }

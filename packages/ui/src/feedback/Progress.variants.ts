@@ -5,7 +5,7 @@ import { cva } from "../cn";
  * 이 파일에는 지시문·훅·Radix 가 없어야 한다. */
 
 /** 진행 막대(indicator)의 변형 — `tone` 이 판정색을 받는다. */
-export const progressVariants = cva("h-full transition-[width] duration-200 motion-reduce:transition-none", {
+export const progressVariants = cva("h-full transition-[width] duration-slow motion-reduce:transition-none", {
   variants: {
     tone: {
       accent: "bg-accent",

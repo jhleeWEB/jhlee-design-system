@@ -34,7 +34,7 @@ export function DrawerContent({
   return (
     <Dialog.Portal>
       {showOverlay ? (
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-scrim animate-in-fade" />
+        <Dialog.Overlay className="fixed inset-0 z-scrim bg-scrim animate-in-fade" />
       ) : null}
       <Dialog.Content
         data-slot="drawer"

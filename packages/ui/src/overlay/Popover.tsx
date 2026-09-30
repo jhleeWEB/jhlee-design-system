@@ -34,7 +34,7 @@ export function PopoverContent({
         data-slot="popover"
         sideOffset={sideOffset}
         className={cn(
-          "z-50 w-(--radix-popover-trigger-width) min-w-[180px] max-w-[min(360px,calc(100vw-24px))]",
+          "z-popover w-(--radix-popover-trigger-width) min-w-[180px] max-w-[min(360px,calc(100vw-24px))]",
           "rounded-float border border-line p-5 shadow-pop",
           "text-body text-ink animate-in-pop focus-visible:outline-none",
           onCanvas ? "on-canvas" : "bg-surface",

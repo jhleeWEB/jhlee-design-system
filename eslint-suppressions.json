@@ -73,12 +73,9 @@
   },
   "packages/ui/src/data/DataTable.tsx": {
     "better-tailwindcss/no-unknown-classes": {
-      "count": 3
-    },
-    "ds/no-boolean-string-data-attr": {
       "count": 1
     },
-    "ds/no-literal-style-value": {
+    "ds/no-boolean-string-data-attr": {
       "count": 1
     },
     "jsdoc/require-jsdoc": {
@@ -91,17 +88,11 @@
     }
   },
   "packages/ui/src/data/Table.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    },
     "jsdoc/require-jsdoc": {
       "count": 9
     }
   },
   "packages/ui/src/feedback/Alert.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    },
     "jsdoc/require-jsdoc": {
       "count": 3
     }
@@ -113,7 +104,7 @@
   },
   "packages/ui/src/feedback/EmptyState.tsx": {
     "better-tailwindcss/no-unknown-classes": {
-      "count": 2
+      "count": 1
     },
     "jsdoc/require-jsdoc": {
       "count": 6
@@ -122,11 +113,6 @@
   "packages/ui/src/feedback/Progress.tsx": {
     "jsdoc/require-jsdoc": {
       "count": 2
-    }
-  },
-  "packages/ui/src/feedback/Progress.variants.ts": {
-    "ds/no-literal-style-value": {
-      "count": 1
     }
   },
   "packages/ui/src/feedback/Skeleton.tsx": {
@@ -152,10 +138,10 @@
       "count": 2
     },
     "better-tailwindcss/no-unknown-classes": {
-      "count": 2
+      "count": 1
     },
     "ds/no-literal-style-value": {
-      "count": 3
+      "count": 2
     },
     "jsdoc/require-jsdoc": {
       "count": 10
@@ -182,7 +168,7 @@
   },
   "packages/ui/src/navigation/Breadcrumb.tsx": {
     "better-tailwindcss/no-unknown-classes": {
-      "count": 2
+      "count": 1
     },
     "jsdoc/require-jsdoc": {
       "count": 6
@@ -198,10 +184,10 @@
       "count": 1
     },
     "better-tailwindcss/no-unknown-classes": {
-      "count": 2
+      "count": 1
     },
     "ds/no-literal-style-value": {
-      "count": 2
+      "count": 1
     },
     "jsdoc/require-jsdoc": {
       "count": 11
@@ -213,9 +199,6 @@
   "packages/ui/src/navigation/Sidebar.tsx": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
-    },
-    "ds/no-literal-style-value": {
-      "count": 2
     },
     "jsdoc/require-jsdoc": {
       "count": 12
@@ -236,10 +219,10 @@
       "count": 3
     },
     "better-tailwindcss/no-unknown-classes": {
-      "count": 3
+      "count": 2
     },
     "ds/no-literal-style-value": {
-      "count": 5
+      "count": 3
     },
     "jsdoc/require-jsdoc": {
       "count": 12
@@ -247,10 +230,7 @@
   },
   "packages/ui/src/overlay/Drawer.tsx": {
     "better-tailwindcss/no-unknown-classes": {
-      "count": 3
-    },
-    "ds/no-literal-style-value": {
-      "count": 1
+      "count": 2
     },
     "jsdoc/require-jsdoc": {
       "count": 2
@@ -261,7 +241,7 @@
       "count": 8
     },
     "ds/no-literal-style-value": {
-      "count": 9
+      "count": 8
     }
   },
   "packages/ui/src/overlay/DropdownMenu.tsx": {
@@ -271,10 +251,7 @@
   },
   "packages/ui/src/overlay/Modal.tsx": {
     "better-tailwindcss/no-unknown-classes": {
-      "count": 3
-    },
-    "ds/no-literal-style-value": {
-      "count": 1
+      "count": 2
     },
     "jsdoc/require-jsdoc": {
       "count": 3
@@ -285,7 +262,7 @@
       "count": 7
     },
     "ds/no-literal-style-value": {
-      "count": 8
+      "count": 7
     }
   },
   "packages/ui/src/overlay/Popover.tsx": {
@@ -293,16 +270,13 @@
       "count": 2
     },
     "ds/no-literal-style-value": {
-      "count": 3
+      "count": 2
     },
     "jsdoc/require-jsdoc": {
       "count": 2
     }
   },
   "packages/ui/src/overlay/Tooltip.tsx": {
-    "ds/no-literal-style-value": {
-      "count": 1
-    },
     "jsdoc/require-jsdoc": {
       "count": 7
     }
@@ -321,24 +295,13 @@
     "ds/no-forward-ref": {
       "count": 1
     },
-    "ds/no-literal-style-value": {
-      "count": 1
-    },
     "jsdoc/require-jsdoc": {
       "count": 4
     }
   },
-  "packages/ui/src/primitives/Button.variants.ts": {
-    "ds/no-literal-style-value": {
-      "count": 1
-    }
-  },
   "packages/ui/src/primitives/Card.tsx": {
     "better-tailwindcss/no-unknown-classes": {
-      "count": 4
-    },
-    "ds/no-literal-style-value": {
-      "count": 2
+      "count": 3
     },
     "jsdoc/require-jsdoc": {
       "count": 12
@@ -350,9 +313,6 @@
   "packages/ui/src/primitives/Choice.tsx": {
     "ds/no-forward-ref": {
       "count": 3
-    },
-    "ds/no-literal-style-value": {
-      "count": 2
     }
   },
   "packages/ui/src/primitives/Editorial.tsx": {
@@ -360,7 +320,7 @@
       "count": 1
     },
     "better-tailwindcss/no-unknown-classes": {
-      "count": 2
+      "count": 1
     },
     "ds/no-literal-style-value": {
       "count": 1
@@ -386,16 +346,8 @@
       "count": 2
     }
   },
-  "packages/ui/src/primitives/Input.variants.ts": {
-    "ds/no-literal-style-value": {
-      "count": 1
-    }
-  },
   "packages/ui/src/primitives/MediaCard.tsx": {
     "better-tailwindcss/no-unknown-classes": {
-      "count": 3
-    },
-    "ds/no-literal-style-value": {
       "count": 2
     },
     "jsdoc/require-jsdoc": {
@@ -434,7 +386,7 @@
       "count": 26
     },
     "better-tailwindcss/no-unknown-classes": {
-      "count": 6
+      "count": 2
     },
     "ds/no-literal-style-value": {
       "count": 26
@@ -444,11 +396,6 @@
     },
     "jsx-a11y/label-has-associated-control": {
       "count": 10
-    }
-  },
-  "packages/ui/stories/helpers/Matrix.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 3
     }
   }
 }

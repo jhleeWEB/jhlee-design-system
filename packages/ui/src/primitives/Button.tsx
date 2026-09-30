@@ -100,7 +100,7 @@ export function ButtonGroup({
       className={cn(
         "inline-flex [&>*]:rounded-none",
         "[&>*:first-child]:rounded-l-control [&>*:last-child]:rounded-r-control",
-        "[&>*+*]:-ml-px [&>*:focus-visible]:relative [&>*:focus-visible]:z-1",
+        "[&>*+*]:-ml-px [&>*:focus-visible]:relative [&>*:focus-visible]:z-raised",
         className,
       )}
       {...rest}
