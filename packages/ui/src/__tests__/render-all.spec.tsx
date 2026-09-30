@@ -24,11 +24,17 @@ import * as TableStories from "../data/Table.stories";
 import * as barrel from "../index";
 import * as legacy from "../legacy/index";
 import * as AlertStories from "../feedback/Alert.stories";
+import * as ConfirmDialogStories from "../overlay/AlertDialog.stories";
+import * as DrawerStories from "../overlay/Drawer.stories";
+import * as DropdownMenuStories from "../overlay/DropdownMenu.stories";
 import * as EmptyStateStories from "../feedback/EmptyState.stories";
+import * as ModalStories from "../overlay/Modal.stories";
+import * as PopoverStories from "../overlay/Popover.stories";
 import * as ProgressStories from "../feedback/Progress.stories";
 import * as SkeletonStories from "../feedback/Skeleton.stories";
 import * as SpinnerStories from "../feedback/Spinner.stories";
 import * as ToastStories from "../feedback/Toast.stories";
+import * as TooltipStories from "../overlay/Tooltip.stories";
 import * as ButtonStories from "../primitives/Button.stories";
 
 /** 오늘 깨지는 검사 — 알파벳순, 줄어들기만 한다. */
@@ -46,43 +52,12 @@ const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
   CardWell: ["slot-locked"],
   Checkbox: ["slot-locked"],
   DisplayHeading: ["slot-locked"],
-  Drawer: ["className", "ref", "rest"],
-  DrawerBody: ["slot-locked"],
-  DrawerClose: ["className", "slot-locked"],
-  DrawerContent: ["axes", "slot-locked"],
-  DrawerHeader: ["slot-locked"],
-  DrawerTrigger: ["className", "slot", "slot-locked"],
-  DropdownMenu: ["className", "ref", "rest"],
-  DropdownMenuCheckboxItem: ["slot", "slot-locked"],
-  DropdownMenuContent: ["slot-locked"],
-  DropdownMenuGroup: ["className", "slot", "slot-locked"],
-  DropdownMenuItem: ["axes", "slot", "slot-locked"],
-  DropdownMenuLabel: ["slot", "slot-locked"],
-  DropdownMenuRadioGroup: ["className", "slot", "slot-locked"],
-  DropdownMenuRadioItem: ["slot", "slot-locked"],
-  DropdownMenuSeparator: ["slot", "slot-locked"],
-  DropdownMenuSub: ["className", "ref", "rest", "slot", "slot-locked"],
-  DropdownMenuSubContent: ["slot", "slot-locked"],
-  DropdownMenuSubTrigger: ["slot", "slot-locked"],
-  DropdownMenuTrigger: ["className", "slot", "slot-locked"],
   Eyebrow: ["slot-locked"],
   Input: ["axes", "slot-locked"],
   Kbd: ["slot-locked"],
   Lede: ["slot-locked"],
   MediaCard: ["axes", "slot-locked"],
-  Modal: ["className", "ref", "rest"],
-  ModalBody: ["slot-locked"],
-  ModalClose: ["className", "slot-locked"],
-  ModalContent: ["axes", "slot-locked"],
-  ModalFooter: ["slot-locked"],
-  ModalHeader: ["slot-locked"],
-  ModalTrigger: ["className", "slot", "slot-locked"],
   PanelToggleButton: ["slot-locked"],
-  Popover: ["className", "ref", "rest"],
-  PopoverAnchor: ["className", "slot", "slot-locked"],
-  PopoverClose: ["className", "slot", "slot-locked"],
-  PopoverContent: ["slot-locked"],
-  PopoverTrigger: ["className", "slot", "slot-locked"],
   RadioGroup: ["className", "slot", "slot-locked"],
   RadioGroupItem: ["slot-locked"],
   SectionLabel: ["slot-locked"],
@@ -97,8 +72,6 @@ const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
   Toolbar: ["slot-locked"],
   ToolbarDivider: ["ref", "rest", "slot", "slot-locked"],
   ToolbarSpacer: ["className", "ref", "rest", "slot", "slot-locked"],
-  Tooltip: ["className", "ref", "rest"],
-  TooltipProvider: ["className", "ref", "rest"],
 };
 
 const {
@@ -118,7 +91,6 @@ const {
   CardHeader,
   CardWell,
   Checkbox,
-  ConfirmDialog,
   DisplayHeading,
   Drawer,
   DrawerBody,
@@ -187,14 +159,20 @@ const {
 const STORY_SUBJECTS: Readonly<Record<string, ContractSubject>> = {
   Alert: storySubject(AlertStories, { slot: "alert", axes: ["tone"] }),
   Button: storySubject(ButtonStories, { slot: "button", axes: ["variant", "tone", "size"] }),
+  ConfirmDialog: storySubject(ConfirmDialogStories, { slot: "confirm-dialog" }),
   DataTable: storySubject(DataTableStories, { slot: "data-table" }),
   DescriptionList: storySubject(DescriptionListStories, { slot: "description-list" }),
+  DrawerContent: storySubject(DrawerStories, { slot: "drawer", axes: ["side", "size"] }),
+  DropdownMenuContent: storySubject(DropdownMenuStories, { slot: "menu" }),
   EmptyState: storySubject(EmptyStateStories, { slot: "empty-state", axes: ["size"] }),
+  ModalContent: storySubject(ModalStories, { slot: "modal", axes: ["size"] }),
+  PopoverContent: storySubject(PopoverStories, { slot: "popover" }),
   Progress: storySubject(ProgressStories, { slot: "progress", axes: ["tone"] }),
   Skeleton: storySubject(SkeletonStories, { slot: "skeleton", axes: ["shape"] }),
   Spinner: storySubject(SpinnerStories, { slot: "spinner", axes: ["size", "tone"] }),
   Table: storySubject(TableStories, { slot: "table" }),
   ToastProvider: storySubject(ToastStories, { slot: "toast-viewport", axes: ["position", "tone"] }),
+  Tooltip: storySubject(TooltipStories, { slot: "tooltip" }),
 };
 
 /* 최소 props 픽스처. 부품(Content·Item…)은 열린 부모 안에 두어 포털까지 렌더한다. 탐침(p)은 검사 대상 컴포넌트에만 펼친다. */
@@ -369,23 +347,10 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   Checkbox: { slot: "checkbox", render: (p) => <Checkbox aria-label="Agree" {...p} /> },
-  ConfirmDialog: {
-    slot: "confirm-dialog",
-    render: (p) => (
-      <ConfirmDialog
-        open
-        onOpenChange={() => {}}
-        title="Delete?"
-        description="This cannot be undone."
-        confirmLabel="Delete"
-        onConfirm={() => {}}
-        {...p}
-      />
-    ),
-  },
   DisplayHeading: { slot: "display-heading", render: (p) => <DisplayHeading {...p}>Heading</DisplayHeading> },
   Drawer: {
     slot: "drawer",
+    noDom: true,
     render: (p) => (
       <Drawer open {...p}>
         <DrawerContent aria-describedby={undefined}>
@@ -396,17 +361,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   },
   DrawerBody: { slot: "drawer-body", render: openDrawer((p) => <DrawerBody {...p}>Body</DrawerBody>) },
   DrawerClose: { slot: "dialog-close", render: openDrawer((p) => <DrawerClose {...p}>Close</DrawerClose>) },
-  DrawerContent: {
-    slot: "drawer",
-    axes: ["side", "size"],
-    render: (p) => (
-      <Drawer open>
-        <DrawerContent aria-describedby={undefined} {...p}>
-          <DrawerHeader title="Title" />
-        </DrawerContent>
-      </Drawer>
-    ),
-  },
   DrawerHeader: { slot: "drawer-header", render: openDrawer((p) => <DrawerHeader title="Second" {...p} />) },
   DrawerTrigger: {
     slot: "dialog-trigger",
@@ -418,6 +372,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   },
   DropdownMenu: {
     slot: "menu",
+    noDom: true,
     render: (p) => (
       <DropdownMenu open {...p}>
         <DropdownMenuTrigger>Menu</DropdownMenuTrigger>
@@ -434,17 +389,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
         Grid
       </DropdownMenuCheckboxItem>
     )),
-  },
-  DropdownMenuContent: {
-    slot: "menu",
-    render: (p) => (
-      <DropdownMenu open>
-        <DropdownMenuTrigger>Menu</DropdownMenuTrigger>
-        <DropdownMenuContent {...p}>
-          <DropdownMenuItem>One</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
   },
   DropdownMenuGroup: {
     slot: "menu-group",
@@ -495,7 +439,8 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     render: openMenu((p) => <DropdownMenuSeparator {...p} />),
   },
   DropdownMenuSub: {
-    slot: "menu-sub",
+    slot: "menu-sub-content",
+    noDom: true,
     render: openMenu((p) => (
       <DropdownMenuSub open {...p}>
         <DropdownMenuSubTrigger>More</DropdownMenuSubTrigger>
@@ -546,6 +491,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   },
   Modal: {
     slot: "modal",
+    noDom: true,
     render: (p) => (
       <Modal open {...p}>
         <ModalContent aria-describedby={undefined}>
@@ -556,17 +502,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   },
   ModalBody: { slot: "modal-body", render: openModal((p) => <ModalBody {...p}>Body</ModalBody>) },
   ModalClose: { slot: "dialog-close", render: openModal((p) => <ModalClose {...p}>Close</ModalClose>) },
-  ModalContent: {
-    slot: "modal",
-    axes: ["size"],
-    render: (p) => (
-      <Modal open>
-        <ModalContent aria-describedby={undefined} {...p}>
-          <ModalHeader title="Title" />
-        </ModalContent>
-      </Modal>
-    ),
-  },
   ModalFooter: { slot: "modal-footer", render: openModal((p) => <ModalFooter {...p}>Footer</ModalFooter>) },
   ModalHeader: { slot: "modal-header", render: openModal((p) => <ModalHeader title="Second" {...p} />) },
   ModalTrigger: {
@@ -583,6 +518,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   },
   Popover: {
     slot: "popover",
+    noDom: true,
     render: (p) => (
       <Popover open {...p}>
         <PopoverTrigger>Open</PopoverTrigger>
@@ -607,17 +543,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
         <PopoverTrigger>Open</PopoverTrigger>
         <PopoverContent aria-label="Details">
           <PopoverClose {...p}>Close</PopoverClose>
-        </PopoverContent>
-      </Popover>
-    ),
-  },
-  PopoverContent: {
-    slot: "popover",
-    render: (p) => (
-      <Popover open>
-        <PopoverTrigger>Open</PopoverTrigger>
-        <PopoverContent aria-label="Details" {...p}>
-          Body
         </PopoverContent>
       </Popover>
     ),
@@ -779,18 +704,9 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       </Toolbar>
     ),
   },
-  Tooltip: {
-    slot: "tooltip",
-    render: (p) => (
-      <TooltipProvider>
-        <Tooltip label="Hint" open {...p}>
-          <barrel.Button>Hover</barrel.Button>
-        </Tooltip>
-      </TooltipProvider>
-    ),
-  },
   TooltipProvider: {
     slot: "tooltip",
+    noDom: true,
     render: (p) => (
       <TooltipProvider {...p}>
         <Tooltip label="Hint" open>

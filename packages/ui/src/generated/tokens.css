@@ -134,6 +134,12 @@
   --motion-collapse-duration: var(--duration-collapse);
   --motion-collapse-easing: var(--ease-out-quick);
 
+  /* component/overlay.json */
+  --size-arrow-popover-width: 10px;
+  --size-arrow-popover-height: 5px;
+  --size-arrow-tooltip-width: 9px;
+  --size-arrow-tooltip-height: 4px;
+
   /* component/scroll.json */
   --duration-scrollbar-hide-delay: 500ms;
   --duration-scrollbar-fade: 200ms;

@@ -158,40 +158,16 @@
   "packages/ui/src/overlay/AlertDialog.tsx": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 2
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 12
     }
   },
   "packages/ui/src/overlay/Drawer.tsx": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 2
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 2
-    }
-  },
-  "packages/ui/src/overlay/DropdownMenu.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 8
     }
   },
   "packages/ui/src/overlay/Modal.tsx": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 2
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 3
-    }
-  },
-  "packages/ui/src/overlay/Popover.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 2
-    }
-  },
-  "packages/ui/src/overlay/Tooltip.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 7
     }
   },
   "packages/ui/src/primitives/Badge.tsx": {

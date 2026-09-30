@@ -15,13 +15,13 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Card](Card.md) | component | client | CardCollapse, CardHeader, CardWell |  |
 | [CardGrid](CardGrid.md) | component | client |  |  |
 | [Checkbox](Checkbox.md) | component | client |  |  |
-| [ConfirmDialog](ConfirmDialog.md) | component | client |  |  |
+| [ConfirmDialog](ConfirmDialog.md) | component | client |  | 확인 대화 — 되돌릴 수 없는 동작 앞에서 묻는다 |
 | [DataTable](DataTable.md) | component | client |  | 명세서 표 — 한 열 정렬 · 행 선택 · 합계 줄 · 줄 높이를 지키는 로딩 |
 | [DescriptionList](DescriptionList.md) | component | server ok |  | 이름-값 목록(`<dl>` 격자) — 이름은 왼쪽에서 말줄임, 값은 오른쪽 정렬. |
 | [DesignSystemProvider](DesignSystemProvider.md) | component | client |  | 레거시 셸·컨트롤을 DS 프리미티브로 그리게 하는 Provider `DesignSystemProvider`. |
 | [DisplayHeading](DisplayHeading.md) | component | server ok |  |  |
-| [Drawer](Drawer.md) | component | client | DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger |  |
-| [DropdownMenu](DropdownMenu.md) | component | client | DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger |  |
+| [Drawer](Drawer.md) | component | client | DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger | 서랍의 루트 — 열림 상태와 모달성(`modal={false}` 면 비모달)을 든다 |
+| [DropdownMenu](DropdownMenu.md) | component | client | DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger | 메뉴의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 |
 | [EmptyState](EmptyState.md) | component | server ok |  | 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다. |
 | [Eyebrow](Eyebrow.md) | component | server ok |  |  |
 | [Field](Field.md) | component | client |  | 레거시 셸 `Field`. |
@@ -32,10 +32,10 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Lede](Lede.md) | component | server ok |  |  |
 | [Legend](Legend.md) | component | client |  | 레거시 셸 `Legend`. |
 | [MediaCard](MediaCard.md) | component | client |  |  |
-| [Modal](Modal.md) | component | client | ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger |  |
+| [Modal](Modal.md) | component | client | ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger | 모달의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 모달성만 든다 |
 | [Panel](Panel.md) | component | client | PanelGroup | 레거시 셸 `Panel`. |
 | [PanelToggleButton](PanelToggleButton.md) | component | client |  |  |
-| [Popover](Popover.md) | component | client | PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger |  |
+| [Popover](Popover.md) | component | client | PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger | 팝오버의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 |
 | [Progress](Progress.md) | component | client |  | 진행 막대 — 값이 있을 때만 쓴다 |
 | [RadioGroup](RadioGroup.md) | component | client | RadioGroupItem |  |
 | [ScrollArea](ScrollArea.md) | component | client |  |  |
@@ -61,7 +61,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [ToastProvider](ToastProvider.md) | component | client |  | 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 |
 | [Toggle](Toggle.md) | component | client |  | 레거시 컨트롤 `Toggle`. |
 | [Toolbar](Toolbar.md) | component | server ok | ToolbarDivider, ToolbarSpacer |  |
-| [Tooltip](Tooltip.md) | component | client | TooltipProvider |  |
+| [Tooltip](Tooltip.md) | component | client | TooltipProvider | 툴팁 — 트리거(`children`) 위에 말풍선(`label`)을 띄운다 |
 | [TopBar](TopBar.md) | component | client |  | 레거시 셸 `TopBar`. |
 | [Tr](Tr.md) | component | server ok |  | 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다. |
 | [usePanelLayout](usePanelLayout.md) | hook | client |  |  |

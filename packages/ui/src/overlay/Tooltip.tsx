@@ -9,24 +9,50 @@ import { MOTION } from "../generated/tokens";
  *
  * 툴팁에는 **조작이 들어가지 않는다.** 버튼·링크가 필요하면 `Popover` 다 — 툴팁은 포커스를
  * 받지 않으므로 그 안의 것을 키보드로 누를 수 없다. */
+
+/** 툴팁 지연을 공유하는 공급자 — 앱(또는 툴바) 루트에 한 번 둔다. 자기 DOM 은 없다(Radix `Tooltip.Provider`). */
 export const TooltipProvider = Radix.Provider;
 
-export interface TooltipProps extends Pick<
-  React.ComponentPropsWithoutRef<typeof Radix.Content>,
-  "side" | "align" | "sideOffset"
+/**
+ * 툴팁의 props — 말풍선(`Tooltip.Content`)의 속성을 그대로 받는다: `className` · `ref` · `data-*` · `aria-*` 는 말풍선에 닿는다.
+ * 트리거는 `children` 이고 말풍선의 내용은 `label` 이다.
+ */
+export interface TooltipProps extends Omit<
+  React.ComponentPropsWithRef<typeof Radix.Content>,
+  "children" | "content" | "asChild" | "forceMount"
 > {
   /** 띄울 대상. 포커스 가능한 요소여야 키보드에서도 보인다. */
   children: React.ReactNode;
+  /** 말풍선의 글 — 짧은 명사구. 조작(버튼·링크)은 넣지 않는다. */
   label: React.ReactNode;
-  /** 오른쪽에 흐리게 붙는 단축키 — "Zoom to fit" + "⇧2". */
   /* `| undefined` 를 명시한다 — `exactOptionalPropertyTypes` 아래에서는 «생략 가능» 과
      «undefined 를 넘겨도 된다» 가 다른 뜻이고, 이 넷은 호출처가 조건부로 넘기는 자리다. */
+  /**
+   * 오른쪽에 흐리게 붙는 단축키 — "Zoom to fit" + "⇧2".
+   * @default undefined
+   */
   shortcut?: string | undefined;
+  /**
+   * 포인터를 올린 뒤 뜨기까지의 지연(ms) — 모션 토큰 `--duration-tooltip-delay`(350ms).
+   * @default MOTION.tooltipDelayMs
+   */
   delayDuration?: number | undefined;
+  /**
+   * 제어 모드의 열림 — 생략하면 포인터·포커스가 연다(비제어).
+   * @default undefined
+   */
   open?: boolean | undefined;
+  /**
+   * 열림이 바뀔 때.
+   * @default undefined
+   */
   onOpenChange?: ((open: boolean) => void) | undefined;
 }
 
+/**
+ * 툴팁 — 트리거(`children`) 위에 말풍선(`label`)을 띄운다. `className` · `ref` · 나머지 속성은 말풍선에 닿는다.
+ * @slot tooltip
+ */
 export function Tooltip({
   children,
   label,
@@ -37,6 +63,8 @@ export function Tooltip({
   delayDuration = MOTION.tooltipDelayMs,
   open,
   onOpenChange,
+  className,
+  ...rest
 }: TooltipProps) {
   return (
     <Radix.Root
@@ -49,7 +77,6 @@ export function Tooltip({
       <Radix.Trigger asChild>{children}</Radix.Trigger>
       <Radix.Portal>
         <Radix.Content
-          data-slot="tooltip"
           side={side}
           align={align}
           sideOffset={sideOffset}
@@ -57,11 +84,15 @@ export function Tooltip({
             "z-tooltip flex items-center gap-3 rounded-lg bg-tooltip px-3 py-2",
             "animate-in-pop text-label text-tooltip-foreground shadow-pop",
             "select-none",
+            className,
           )}
+          {...rest}
+          data-slot="tooltip"
         >
           {label}
           {shortcut ? <kbd className="font-mono text-micro opacity-60">{shortcut}</kbd> : null}
-          <Radix.Arrow className="fill-tooltip" width={9} height={4} />
+          {/* 꼬리 치수는 토큰(--size-arrow-tooltip-*)이 든다 — Radix 의 width/height 속성은 CSS 가 이긴다(jsx-size-number 0). */}
+          <Radix.Arrow className="h-(--size-arrow-tooltip-height) w-(--size-arrow-tooltip-width) fill-tooltip" />
         </Radix.Content>
       </Radix.Portal>
     </Radix.Root>

@@ -74,13 +74,13 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [Card](docs/components/Card.md): (설명 없음 — JSDoc 대기) — 부품: CardCollapse, CardHeader, CardWell — "use client"
 - [CardGrid](docs/components/CardGrid.md): (설명 없음 — JSDoc 대기) — "use client"
 - [Checkbox](docs/components/Checkbox.md): (설명 없음 — JSDoc 대기) — "use client"
-- [ConfirmDialog](docs/components/ConfirmDialog.md): (설명 없음 — JSDoc 대기) — "use client"
+- [ConfirmDialog](docs/components/ConfirmDialog.md): 확인 대화 — 되돌릴 수 없는 동작 앞에서 묻는다 — "use client"
 - [DataTable](docs/components/DataTable.md): 명세서 표 — 한 열 정렬 · 행 선택 · 합계 줄 · 줄 높이를 지키는 로딩 — "use client"
 - [DescriptionList](docs/components/DescriptionList.md): 이름-값 목록(`<dl>` 격자) — 이름은 왼쪽에서 말줄임, 값은 오른쪽 정렬.
 - [DesignSystemProvider](docs/components/DesignSystemProvider.md): 레거시 셸·컨트롤을 DS 프리미티브로 그리게 하는 Provider `DesignSystemProvider`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [DisplayHeading](docs/components/DisplayHeading.md): (설명 없음 — JSDoc 대기)
-- [Drawer](docs/components/Drawer.md): (설명 없음 — JSDoc 대기) — 부품: DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger — "use client"
-- [DropdownMenu](docs/components/DropdownMenu.md): (설명 없음 — JSDoc 대기) — 부품: DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger — "use client"
+- [Drawer](docs/components/Drawer.md): 서랍의 루트 — 열림 상태와 모달성(`modal={false}` 면 비모달)을 든다 — 부품: DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger — "use client"
+- [DropdownMenu](docs/components/DropdownMenu.md): 메뉴의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 — 부품: DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger — "use client"
 - [EmptyState](docs/components/EmptyState.md): 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다.
 - [Eyebrow](docs/components/Eyebrow.md): (설명 없음 — JSDoc 대기)
 - [Field](docs/components/Field.md): 레거시 셸 `Field`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
@@ -91,10 +91,10 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [Lede](docs/components/Lede.md): (설명 없음 — JSDoc 대기)
 - [Legend](docs/components/Legend.md): 레거시 셸 `Legend`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [MediaCard](docs/components/MediaCard.md): (설명 없음 — JSDoc 대기) — "use client"
-- [Modal](docs/components/Modal.md): (설명 없음 — JSDoc 대기) — 부품: ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger — "use client"
+- [Modal](docs/components/Modal.md): 모달의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 모달성만 든다 — 부품: ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger — "use client"
 - [Panel](docs/components/Panel.md): 레거시 셸 `Panel`. — 부품: PanelGroup — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [PanelToggleButton](docs/components/PanelToggleButton.md): (설명 없음 — JSDoc 대기) — "use client"
-- [Popover](docs/components/Popover.md): (설명 없음 — JSDoc 대기) — 부품: PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger — "use client"
+- [Popover](docs/components/Popover.md): 팝오버의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 — 부품: PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger — "use client"
 - [Progress](docs/components/Progress.md): 진행 막대 — 값이 있을 때만 쓴다 — "use client"
 - [RadioGroup](docs/components/RadioGroup.md): (설명 없음 — JSDoc 대기) — 부품: RadioGroupItem — "use client"
 - [ScrollArea](docs/components/ScrollArea.md): (설명 없음 — JSDoc 대기) — "use client"
@@ -120,7 +120,7 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [ToastProvider](docs/components/ToastProvider.md): 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 — "use client"
 - [Toggle](docs/components/Toggle.md): 레거시 컨트롤 `Toggle`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Toolbar](docs/components/Toolbar.md): (설명 없음 — JSDoc 대기) — 부품: ToolbarDivider, ToolbarSpacer
-- [Tooltip](docs/components/Tooltip.md): (설명 없음 — JSDoc 대기) — 부품: TooltipProvider — "use client"
+- [Tooltip](docs/components/Tooltip.md): 툴팁 — 트리거(`children`) 위에 말풍선(`label`)을 띄운다 — 부품: TooltipProvider — "use client"
 - [TopBar](docs/components/TopBar.md): 레거시 셸 `TopBar`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Tr](docs/components/Tr.md): 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다.
 - [ViewerPanel](docs/components/ViewerPanel.md): 레거시 셸 `ViewerPanel`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
@@ -138,6 +138,7 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - `buttonVariants`: cva — 축 variant(solid | outline | ghost | link) · tone(neutral | primary | destructive) · size(sm | md | lg | icon-sm | icon | icon-lg); 기본 variant=outline, tone=neutral, size=md. 서버에서 호출 가능.
 - `cardVariants`: cva — 축 elevation(raised | flat | flush) · pad(none | sm | md | lg); 기본 elevation=raised, pad=none. 서버에서 호출 가능.
 - `drawerVariants`: cva — 축 side(right | left | bottom) · size(sm | md | lg); 기본 side=right, size=md. 서버에서 호출 가능.
+- `dropdownMenuItemVariants`: cva — 축 tone(neutral | destructive); 기본 tone=neutral. 서버에서 호출 가능.
 - `emptyStateVariants`: cva — 축 size(default | compact); 기본 size=default. 서버에서 호출 가능.
 - `inputVariants`: cva — 축 size(sm | md | lg) · invalid(true | false) · numeric(true | false); 기본 size=md, invalid=false, numeric=false. 서버에서 호출 가능.
 - `mediaCardMediaVariants`: cva — 축 orientation(vertical | horizontal) · ratio(16/9 | 4/3 | 1/1 | plan | none); 기본 orientation=vertical, ratio=plan. 서버에서 호출 가능.
