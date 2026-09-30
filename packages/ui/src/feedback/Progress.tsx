@@ -10,27 +10,40 @@ import { progressVariants, type ProgressTone } from "./Progress.variants";
  * `tone` 이 판정색을 받는 이유: 이 제품에서 막대가 차오르는 것은 대개 «허용량 대비 소비» 이고
  * (FSI · 주차 · 어메니티 면제 상한) 그때 100% 를 넘는 것은 실패다. 색이 그 사실을 함께 말한다. */
 
+/** 진행 막대의 props — Radix `Progress.Root` 의 속성(`ref` 포함)을 그대로 받는다. */
 export interface ProgressProps
   extends
-    React.ComponentPropsWithoutRef<typeof RadixProgress.Root>,
+    React.ComponentProps<typeof RadixProgress.Root>,
     Omit<VariantProps<typeof progressVariants>, "tone"> {
   /**
-   * 톤 — `primary`(기본) · `success` · `warning` · `destructive` · `neutral`.
+   * 톤 — 막대의 색. 허용량 대비 소비일 때 판정을 함께 말한다.
+   * - `primary` — 지금 진행 중인 주된 작업(기본)
+   * - `success` — 허용량 안에서 끝났다
+   * - `warning` — 상한에 가깝다
+   * - `destructive` — 상한을 넘었다(100% 초과)
+   * - `neutral` — 판정 없는 단순 채움
+   * @default "primary"
    * @deprecated 옛 키 `accent` · `ok` · `warn` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
    */
   tone?: ToneInput<ProgressTone> | null | undefined;
-  /** 0–100. `null` 이면 미판정(indeterminate)으로 그린다. */
+  /**
+   * 0–100(밖의 값은 잘라 그린다). `null` 이면 미판정(indeterminate)으로 그린다.
+   * @default null
+   */
   value?: number | null;
 }
 
+/** 진행 막대 — 값이 있을 때만 쓴다. 값이 없으면 `Spinner` 다. */
 export function Progress({ className, value = null, tone, ...rest }: ProgressProps) {
   const pct = value === null ? null : Math.max(0, Math.min(100, value));
   return (
     <RadixProgress.Root
-      data-slot="progress"
       value={pct}
       className={cn("relative h-3 w-full overflow-hidden rounded-sm bg-secondary", className)}
       {...rest}
+      /* 슬롯·축은 rest 뒤 — 소비자가 넘긴 data-slot 이 손잡이를 덮지 못하게 한다(공통 계약 slot-locked). */
+      data-slot="progress"
+      data-tone={normalizeTone(tone) ?? "primary"}
     >
       <RadixProgress.Indicator
         className={cn(

@@ -24,5 +24,24 @@ export const toastVariants = cva(
   },
 );
 
+/** 토스트 뷰포트(쌓이는 자리)의 변형 — `position` 이 화면의 어느 모서리에 붙을지 고른다. */
+export const toastViewportVariants = cva(
+  "pointer-events-none fixed z-toast m-0 flex max-h-screen w-(--size-toast) max-w-screen list-none flex-col gap-3 p-4 outline-none",
+  {
+    variants: {
+      position: {
+        "bottom-right": "right-0 bottom-0 items-end",
+        "bottom-center": "bottom-0 left-1/2 -translate-x-1/2 items-center",
+        "top-right": "top-0 right-0 items-end",
+        "top-center": "top-0 left-1/2 -translate-x-1/2 items-center",
+      },
+    },
+    defaultVariants: { position: "bottom-right" },
+  },
+);
+
+/** 토스트 뷰포트의 위치. */
+export type ToastPosition = NonNullable<VariantProps<typeof toastViewportVariants>["position"]>;
+
 /** 토스트가 받는 톤. */
 export type ToastTone = NonNullable<VariantProps<typeof toastVariants>["tone"]>;

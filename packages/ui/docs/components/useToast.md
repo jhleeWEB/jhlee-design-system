@@ -8,4 +8,6 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 훅 · 원본 `src/feedback/Toast.tsx`
 
+가장 가까운 `ToastProvider` 의 큐 — 밖에서 부르면 던진다.
+
 _(DS 가 더하는 prop 없음 — 물려받는 속성만)_

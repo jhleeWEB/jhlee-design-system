@@ -5,7 +5,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | 이름 | 종류 | 경계 | 부품 | 설명 |
 |---|---|---|---|---|
 | [Accordion](Accordion.md) | component | client | AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger |  |
-| [Alert](Alert.md) | component | server ok |  |  |
+| [Alert](Alert.md) | component | server ok |  | 인라인 경고 — 흐름 안에 남는 알림 |
 | [AppShell](AppShell.md) | component | client |  | 레거시 셸 `AppShell`. |
 | [BackButton](BackButton.md) | component | server ok |  | 뒤로가기의 동작은 라우터가 소유하고 모양·아이콘은 모든 페이지에서 공유한다. |
 | [Badge](Badge.md) | component | server ok |  |  |
@@ -22,7 +22,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [DisplayHeading](DisplayHeading.md) | component | server ok |  |  |
 | [Drawer](Drawer.md) | component | client | DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger |  |
 | [DropdownMenu](DropdownMenu.md) | component | client | DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger |  |
-| [EmptyState](EmptyState.md) | component | server ok |  |  |
+| [EmptyState](EmptyState.md) | component | server ok |  | 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다. |
 | [Eyebrow](Eyebrow.md) | component | server ok |  |  |
 | [Field](Field.md) | component | client |  | 레거시 셸 `Field`. |
 | [Hud](Hud.md) | component | client | HudCell | 레거시 셸 `Hud`. |
@@ -36,7 +36,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Panel](Panel.md) | component | client | PanelGroup | 레거시 셸 `Panel`. |
 | [PanelToggleButton](PanelToggleButton.md) | component | client |  |  |
 | [Popover](Popover.md) | component | client | PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger |  |
-| [Progress](Progress.md) | component | client |  |  |
+| [Progress](Progress.md) | component | client |  | 진행 막대 — 값이 있을 때만 쓴다 |
 | [RadioGroup](RadioGroup.md) | component | client | RadioGroupItem |  |
 | [ScrollArea](ScrollArea.md) | component | client |  |  |
 | [SectionLabel](SectionLabel.md) | component | client |  |  |
@@ -45,9 +45,9 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Select](Select.md) | component | client |  | 레거시 컨트롤 `Select`. |
 | [Separator](Separator.md) | component | client |  |  |
 | [Sidebar](Sidebar.md) | component | client | SidebarGroup, SidebarItem |  |
-| [Skeleton](Skeleton.md) | component | server ok | SkeletonText |  |
+| [Skeleton](Skeleton.md) | component | server ok | SkeletonText | 스켈레톤 바 — 곧 올 내용과 같은 높이의 자리 |
 | [Slider](Slider.md) | component | client |  | 레거시 컨트롤 `Slider`. |
-| [Spinner](Spinner.md) | component | server ok |  |  |
+| [Spinner](Spinner.md) | component | server ok |  | 스피너 — «돌고 있다» 만 말한다 |
 | [StatusBadge](StatusBadge.md) | component | client |  | 레거시 셸 `StatusBadge`. |
 | [StatusDot](StatusDot.md) | component | server ok |  |  |
 | [Switch](Switch.md) | component | client |  |  |
@@ -58,7 +58,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Textarea](Textarea.md) | component | client |  |  |
 | [Th](Th.md) | component | server ok |  | 열 머리 칸(`<th>`) — mono 대문자 라벨 |
 | [Thead](Thead.md) | component | server ok |  | 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다. |
-| [ToastProvider](ToastProvider.md) | component | client |  |  |
+| [ToastProvider](ToastProvider.md) | component | client |  | 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 |
 | [Toggle](Toggle.md) | component | client |  | 레거시 컨트롤 `Toggle`. |
 | [Toolbar](Toolbar.md) | component | server ok | ToolbarDivider, ToolbarSpacer |  |
 | [Tooltip](Tooltip.md) | component | client | TooltipProvider |  |
@@ -66,5 +66,5 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Tr](Tr.md) | component | server ok |  | 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다. |
 | [usePanelLayout](usePanelLayout.md) | hook | client |  |  |
 | [useSidebarCollapse](useSidebarCollapse.md) | hook | client |  |  |
-| [useToast](useToast.md) | hook | client |  |  |
+| [useToast](useToast.md) | hook | client |  | 가장 가까운 `ToastProvider` 의 큐 — 밖에서 부르면 던진다. |
 | [ViewerPanel](ViewerPanel.md) | component | client |  | 레거시 셸 `ViewerPanel`. |

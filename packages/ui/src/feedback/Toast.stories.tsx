@@ -1,0 +1,102 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useEffect, useRef } from "react";
+import { expect } from "storybook/test";
+
+import { ToastProvider, useToast, type ToastOptions } from "./Toast";
+
+/* 3스토리 계약(본보기 primitives/Button.stories). 대상은 ToastProvider — 큐 밖의 속성은 뷰포트(ol)로 간다.
+ *
+ * 결정성: 토스트는 마운트 때 한 번(`Seed`) 띄우고 `duration: 0`(닫을 때까지 남는다)으로 둔다 — 자동 해제 타이머가 스크린샷과
+ * 경주하지 않는다. 진입 애니메이션은 유한이라 VRT(animations: "disabled")가 끝 프레임을 찍는다.
+ * Variants·ThemeContrast 는 뷰포트에 `static` 을 넘겨 흐름 안에 놓는다(fixed 는 한 화면에 하나만 설 수 있다) — className 전달의 쓰임새이기도 하다. */
+const toneValues = ["neutral", "success", "warning", "destructive"] as const;
+const positionValues = ["bottom-right", "bottom-center", "top-right", "top-center"] as const;
+
+const SAMPLE: Record<(typeof toneValues)[number], ToastOptions> = {
+  neutral: { title: "Link copied", duration: 0 },
+  success: { title: "Layout saved", description: "Version 12 is now the current layout.", duration: 0 },
+  warning: {
+    title: "3 values are placeholders",
+    description: "They will be replaced when the source file is linked.",
+    duration: 0,
+  },
+  destructive: {
+    title: "Export failed",
+    description: "The file could not be written.",
+    action: { label: "Retry", altText: "Retry the export", onSelect: () => {} },
+    duration: 0,
+  },
+};
+
+/** 마운트 때 한 번만 띄운다 — StrictMode 의 이중 effect 에도 두 번 쌓이지 않게 ref 로 막는다. */
+function Seed({ toasts }: { toasts: readonly ToastOptions[] }) {
+  const { toast } = useToast();
+  const done = useRef(false);
+  useEffect(() => {
+    if (done.current) return;
+    done.current = true;
+    for (const options of toasts) toast(options);
+  }, [toast, toasts]);
+  return null;
+}
+
+const meta = {
+  title: "Feedback/Toast",
+  component: ToastProvider,
+  args: { position: "bottom-right", limit: 3, children: null },
+  argTypes: { position: { control: "select", options: positionValues } },
+} satisfies Meta<typeof ToastProvider>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  /* 뷰포트는 fixed 라 제 상자가 비어 보인다 — 앱 자리의 글 한 줄이 루트의 첫 보이는 자식이 되어 VRT 가 렌더 완료를 기다릴 수 있다. */
+  render: (args) => (
+    <ToastProvider {...args}>
+      <p className="m-0 text-body text-foreground">
+        Notifications stack in the corner chosen by the position prop.
+      </p>
+      <Seed toasts={[{ ...SAMPLE.success, tone: "success" }]} />
+    </ToastProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const viewport = canvasElement.ownerDocument.querySelector('[data-slot="toast-viewport"]');
+    await expect(viewport).toHaveTextContent("Layout saved");
+  },
+};
+
+export const Variants: Story = {
+  tags: ["!manifest"],
+  args: { limit: toneValues.length },
+  render: (args) => (
+    <ToastProvider {...args} className="static">
+      <Seed toasts={toneValues.map((tone) => ({ ...SAMPLE[tone], tone }))} />
+    </ToastProvider>
+  ),
+};
+
+export const ThemeContrast: Story = {
+  args: { limit: toneValues.length },
+  // color-contrast: 테마 라벨(muted-foreground · background) — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
+  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
+  /* ThemePair 는 같은 자식을 두 번 그려 뷰포트 region 의 이름이 겹친다(landmark-unique) — 같은 모양의 두 칸을 여기서 펴고
+     `label` 로 칸마다 이름을 준다. 모양은 stories/decorators/ThemePair 와 같다. */
+  render: (args) => (
+    <div className="grid grid-cols-2 gap-0 font-sans text-body">
+      {(["light", "dark"] as const).map((theme) => (
+        <section
+          key={theme}
+          data-theme={theme}
+          data-testid={`theme-${theme}`}
+          className="flex flex-col gap-3 bg-background p-6 text-foreground"
+        >
+          <span className="font-mono text-micro tracking-caps text-muted-foreground uppercase">{theme}</span>
+          <ToastProvider {...args} className="static" label={`Notifications · ${theme}`}>
+            <Seed toasts={toneValues.map((tone) => ({ ...SAMPLE[tone], tone }))} />
+          </ToastProvider>
+        </section>
+      ))}
+    </div>
+  ),
+};
