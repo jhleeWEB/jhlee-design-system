@@ -281,7 +281,8 @@ select:not([data-slot])[aria-invalid="true"]:focus-visible { outline-color: var(
 .ds-panel-group .field .val { color: var(--chrome-foreground); font-size: var(--text-label); font-weight: 600; }
 .ds-panel-group .field .path { color: var(--chrome-muted-foreground); font-size: var(--text-micro); }
 .tabs[data-design-system] { display: inline-flex; gap: 2px; padding: 2px; border: 0; border-radius: var(--radius-md); background: var(--chrome-primary-track); }
-.tabs[data-design-system] [role="tab"] { border: 0; border-radius: var(--radius-sm); color: var(--chrome-muted-foreground); }
+/* 동심원 — 안쪽 반경 = 바깥(md) − 패딩 2px(#26). 미지원 엔진에서는 6px 로 옛 --radius-sm 과 같다. */
+.tabs[data-design-system] [role="tab"] { border: 0; border-radius: calc(var(--radius-md) - 2px); color: var(--chrome-muted-foreground); }
 .panel-head .tabs[data-design-system] [role="tab"] { padding-inline: 8px; font-size: var(--text-label); }
 .tabs[data-design-system] [role="tab"][aria-selected="true"] { color: var(--chrome-primary); background: var(--chrome-card); box-shadow: var(--shadow-chip); }
 .hud[data-design-system] { display: flex; flex-flow: row wrap; border: 1px solid var(--chrome-border); overflow: hidden; background: var(--chrome-border); }

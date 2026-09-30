@@ -27,7 +27,9 @@ describe("exports", () => {
         ".",
         "./canvas-metrics",
         "./legacy",
+        "./testing",
         "./theme.css",
+        "./corner.css",
         "./tokens.css",
         "./shell.css",
         "./canvas.css",
@@ -54,6 +56,7 @@ describe("exports", () => {
           "types": "./dist/canvas-metrics.d.ts",
         },
         "./canvas.css": "./dist/canvas.css",
+        "./corner.css": "./dist/corner.css",
         "./legacy": {
           "default": "./dist/legacy/index.js",
           "import": "./dist/legacy/index.js",
@@ -61,6 +64,11 @@ describe("exports", () => {
         },
         "./package.json": "./package.json",
         "./shell.css": "./dist/legacy/shell.css",
+        "./testing": {
+          "default": "./dist/testing/index.js",
+          "import": "./dist/testing/index.js",
+          "types": "./dist/testing/index.d.ts",
+        },
         "./theme.css": "./dist/theme.css",
         "./tokens.css": "./dist/tokens.css",
       }

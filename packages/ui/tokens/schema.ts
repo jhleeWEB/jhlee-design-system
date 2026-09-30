@@ -20,8 +20,9 @@ export const SCOPES = ["root", "chrome", "theme", "theme-inline", "legacy"] as c
 /** 스코프 이름. */
 export type Scope = (typeof SCOPES)[number];
 
-/** 허용하는 `$type`. `animation` 은 DTCG 에 없는 확장이다 — Tailwind `--animate-*` 의 «name duration easing» 한 줄을 그대로 든다. */
-export const TYPES = ["color", "dimension", "duration", "cubicBezier", "fontFamily", "number", "shadow", "typography", "animation"] as const;
+/** 허용하는 `$type`. `animation` 은 DTCG 에 없는 확장이다 — Tailwind `--animate-*` 의 «name duration easing» 한 줄을 그대로 든다.
+ * `keyword` 도 확장이다 — `corner.shape` 의 `round` · `squircle` 처럼 CSS 키워드 하나가 값인 토큰(#26). */
+export const TYPES = ["color", "dimension", "duration", "cubicBezier", "fontFamily", "number", "shadow", "typography", "animation", "keyword"] as const;
 /** `$type` 이름. */
 export type TokenType = (typeof TYPES)[number];
 
@@ -64,6 +65,19 @@ const sdsSchema = z.strictObject({
   /** 토큰에만 — `@media (prefers-reduced-motion: reduce)` 에서의 값. */
   reducedMotion: z.string().optional(),
   /**
+   * 토큰에만(root 스코프) — 진행형 향상(#26). `$value` 는 이 `@supports (<query>)` 안에서만 쓰이고 `:root` 기본값은 `fallback` 이다.
+   * 미지원 엔진이 받는 값이 fallback 이라, 토큰 모델(`__tests__/tokens/model.ts`)이 읽는 해석값도 fallback 이다 — «다른 엔진은 불변» 을 스펙이 그대로 본다.
+   */
+  supports: z.string().min(1).optional(),
+  /** `supports` 의 짝 — `@supports` 밖(`:root`)의 값. 같은 `$type` 의 값 규칙을 따른다. */
+  fallback: z.union([z.string(), z.number()]).optional(),
+  /**
+   * 토큰에만(theme 스코프의 px dimension) — 곡률 보정 계수를 곱한다(#26): `8px` → `calc(8px * var(--corner-k, 1))`. 같은 반경이면 스쿼클이
+   * 작아 보여(대각 깊이 원호 0.293R vs K=2 0.159R) 지원 엔진에서만 계수(1.5)를 곱한다. 계수는 `corner.k` 가 `@supports` 안에서 정하므로
+   * 미지원 엔진의 반경은 그대로다. 옛 이름 alias(`var(--radius-md)`)는 참조라 계수를 따라간다.
+   */
+  corner: z.boolean().optional(),
+  /**
    * legacy.json 의 파일 머리에만 — alias 를 둘 수 없는 개명 `옛 경로 → 새 경로`(B5, #22). 옛 이름이 새 정본의 **다른** 토큰과 글자가 같을 때
    * (`chrome.accent` 옛 azure → 새 옅은 면, `chrome.muted` 옛 회색 글자 → 새 면) CSS 변수도 유틸도 alias 로 살릴 수 없으므로 코드모드 표
    * (eslint/legacy-classes.json · scripts/codemod-css-vars.mjs)에만 실린다.
@@ -81,6 +95,7 @@ const valueSchemas: Readonly<Record<TokenType, z.ZodType>> = {
     }),
   dimension,
   duration: z.string().regex(/^(?:\{[a-z0-9.-]+\}|\d+(?:\.\d+)?m?s)$/, "duration 은 <n>ms|s · {alias}"),
+  keyword: z.string().regex(/^[a-z][a-z-]*$/, "keyword 는 소문자 CSS 키워드 하나(round · squircle)"),
   cubicBezier: z.union([z.tuple([z.number(), z.number(), z.number(), z.number()]), z.string().regex(REF)]),
   fontFamily: z.string().min(1),
   number: z.number(),
@@ -197,6 +212,14 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
         if (!parsed.success) errors.push(`${where}: ${type} 값 — ${parsed.error.issues.map(i => i.message).join("; ")}`);
         if (sds.ts !== undefined && type !== "duration") errors.push(`${where}: sds.ts 는 duration 에만 붙는다`);
         if (sds.reducedMotion !== undefined && type !== "duration" && type !== "animation") errors.push(`${where}: sds.reducedMotion 은 duration·animation 에만 붙는다`);
+        // supports · fallback 은 짝이다 — 한쪽만 있으면 :root 기본값이 없거나 재정의가 없어 진행형 향상이 아니다.
+        if ((sds.supports === undefined) !== (sds.fallback === undefined)) errors.push(`${where}: sds.supports 와 sds.fallback 은 함께 둔다`);
+        if (sds.supports !== undefined && sds.scope !== "root") errors.push(`${where}: sds.supports 는 root 스코프(:root)에서만 뜻이 있다`);
+        if (sds.fallback !== undefined && !valueSchemas[type].safeParse(sds.fallback).success) errors.push(`${where}: sds.fallback 은 ${type} 값 규칙을 따라야 한다`);
+        if (sds.corner) {
+          if (type !== "dimension" || !/^\d+(?:\.\d+)?px$/.test(String(node.$value))) errors.push(`${where}: sds.corner 는 px 리터럴 dimension 에만 붙는다 — calc 로 감싸려면 값이 있어야 한다`);
+          if (sds.scope !== "theme") errors.push(`${where}: sds.corner 는 theme 스코프(@theme 사다리)에서만 뜻이 있다`);
+        }
       }
       if (sds.reset && sds.scope !== "theme" && sds.scope !== "theme-inline") errors.push(`${where}: reset 은 theme · theme-inline 스코프에서만 뜻이 있다`);
       if (sds.utility && sds.scope === "legacy") errors.push(`${where}: legacy 이름으로 유틸리티를 내지 않는다`);
@@ -216,6 +239,7 @@ function walkFile(file: string, root: unknown, errors: string[], out: FlatToken[
     }
 
     if (own.ts !== undefined || own.reducedMotion !== undefined) errors.push(`${where}: ts · reducedMotion 은 토큰에만 둔다`);
+    if (own.supports !== undefined || own.fallback !== undefined || own.corner !== undefined) errors.push(`${where}: supports · fallback · corner 는 토큰에만 둔다`);
     const next: Inherited = { type, sds: { ...inherited.sds, ...own }, deprecated };
     for (const [key, child] of Object.entries(node)) {
       if (key.startsWith("$")) continue;

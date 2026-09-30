@@ -64,6 +64,8 @@ export function MediaCard({
     <div
       data-slot="media-card"
       data-selected={selected || undefined}
+      /* 선택 버튼의 ::after 링이 카드 곡선을 따르려면 자기 elevation 을 알아야 한다(#26) — 링은 안쪽 버튼에 있고 카드 반경은 여기 있다. */
+      data-elevation={elevation ?? "raised"}
       className={cn(
         mediaCardVariants({ orientation, elevation, selected: selected ?? false, interactive: !!onSelect }),
         className,
@@ -99,6 +101,8 @@ export function MediaCard({
                 className={cn(
                   "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
                   "cursor-pointer text-left after:absolute after:inset-0 after:content-['']",
+                  /* 링은 카드 반경을 따른다 — raised 는 그대로, flat 은 1px 테두리 안쪽(inset-0 은 패딩 상자)이라 헤어라인만큼 뺀다. flush 는 각지다. */
+                  "group-data-[elevation=raised]:after:rounded-lg group-data-[elevation=flat]:after:rounded-[calc(var(--radius-lg)-var(--space-hairline))]",
                   "focus-visible:outline-none",
                   "focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ring",
                 )}

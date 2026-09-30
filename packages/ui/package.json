@@ -21,7 +21,9 @@
     ".": "./src/index.ts",
     "./canvas-metrics": "./src/canvas-metrics.ts",
     "./legacy": "./src/legacy/index.ts",
+    "./testing": "./src/testing/index.ts",
     "./theme.css": "./src/theme.css",
+    "./corner.css": "./src/corner.css",
     "./tokens.css": "./src/tokens.css",
     "./shell.css": "./src/legacy/shell.css",
     "./canvas.css": "./src/canvas.css",
@@ -46,7 +48,13 @@
         "import": "./dist/legacy/index.js",
         "default": "./dist/legacy/index.js"
       },
+      "./testing": {
+        "types": "./dist/testing/index.d.ts",
+        "import": "./dist/testing/index.js",
+        "default": "./dist/testing/index.js"
+      },
       "./theme.css": "./dist/theme.css",
+      "./corner.css": "./dist/corner.css",
       "./tokens.css": "./dist/tokens.css",
       "./shell.css": "./dist/legacy/shell.css",
       "./canvas.css": "./dist/canvas.css",

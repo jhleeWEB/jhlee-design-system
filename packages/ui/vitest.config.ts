@@ -17,7 +17,7 @@ const here = dirname(fileURLToPath(import.meta.url));
  *    대비 4.5:1 실측이 여기서 나온다. `--project=` 로 골라 돌린다(`pnpm test` = unit + arch, `pnpm test:stories` = storybook). */
 
 /** arch 프로젝트가 소유하는 스펙 경로 — unit 에서 빼고 arch 에서 든다. */
-const ARCH_SPECS = ["src/__arch__/**/*.spec.ts", "src/__tests__/tokens/**/*.spec.ts", "src/__tests__/package/**/*.spec.ts"];
+const ARCH_SPECS = ["src/__arch__/**/*.spec.ts", "src/__tests__/tokens/**/*.spec.ts", "src/__tests__/package/**/*.spec.ts", "src/__tests__/corner.spec.ts"];
 export default defineConfig({
   test: {
     projects: [

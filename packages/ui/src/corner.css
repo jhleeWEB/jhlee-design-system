@@ -1,0 +1,41 @@
+/* Squircle 디자인 시스템 — 곡률(계획 Part 3, #26)
+ *
+ * «radius 는 역할이 정하고, 곡률은 시스템이 정한다.» 모든 크롬 모서리(radius > 0)는 연속 곡률(스쿼클)을 향한다. 구현 수단은 CSS
+ * `corner-shape` 하나(CSS Borders 4)이고 이것은 **진행형 향상**이다 — 지원 엔진(Chromium 139+)만 스쿼클 + 보정 반경을 받고,
+ * 미지원 엔진(2026-09: Safari 27 정식 · Firefox 정식)은 속성을 무시해 `border-radius` 원호로 떨어진다. **원호 강등은 결함이 아니라
+ * 허용된 폴백이다.** clip-path·mask·Houdini 폴백은 넣지 않는다 — 스펙상 영역 밖 테두리·outline·그림자를 지워 `shadow-*` 안의 헤어라인과
+ * `focus-ring`(WCAG 2.4.7)이 사라진다.
+ *
+ * 값은 토큰이다 — `generated/tokens.css` 의 `--corner-shape`(round → squircle) · `--corner-k`(1 → 1.5)가 `:root` 기본값과
+ * `@supports (corner-shape: squircle)` 재정의를 든다(정본 tokens/semantic/layer.json 의 corner 그룹). 반경 사다리 md/lg/xl 은
+ * `calc(N px * var(--corner-k, 1))` 이라 지원 엔진에서만 커진다(같은 반경이면 스쿼클이 작아 보인다). 이 파일은 **규칙** 만 든다.
+ *
+ * `@layer` 로 감싸지 않는다 — tokens.css 의 레이어 없는 요소 규칙(`button { border-radius: 0 }`)이 레이어 안 규칙을 이기는 캐스케이드와
+ * 같은 층에 있어야 한다. `corner` 단축 속성도 쓰지 않는다 — 미지원 엔진이 통째로 무시해 radius 까지 사라진다.
+ */
+
+@supports (corner-shape: squircle) {
+  /* 킬 스위치 — 데모 직전 전량 원호 복귀 · 성능 A/B. 속성 하나로 지원 엔진을 미지원 엔진과 같은 그림으로 만든다. */
+  :root[data-corner="round"] {
+    --corner-shape: round;
+    --corner-k: 1;
+  }
+
+  /* 전역 — 반경 0 에는 효과가 없으므로(스펙 §3.7) 캔버스(--radius-none)는 구조로 불변이다. */
+  *,
+  ::before,
+  ::after {
+    corner-shape: var(--corner-shape);
+  }
+
+  /* 원형·pill 은 원호 — 초타원이면 캡슐 끝이 눌린다. 목록은 `__tests__/corner.spec` 이 원형 radius 규칙과 대조한다.
+     [data-corner="round"] 는 서브트리 예외(스쿼클을 쓰지 않는 도면 위젯 등). */
+  .rounded-full,
+  .ds-scroll-area-thumb,
+  .switch-track,
+  .switch-knob,
+  [data-corner="round"],
+  [data-corner="round"] * {
+    corner-shape: round;
+  }
+}

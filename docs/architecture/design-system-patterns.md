@@ -93,6 +93,34 @@ React 19에서는 ref를 prop으로 받을 수 있다. 단순 래퍼는 native/R
   Header의 description이나 별도 Description이 전혀 없다면 Content에
   `aria-describedby={undefined}`를 명시한다. 사용자 정의 설명 ID는 그대로 전달할 수 있다.
 
+## 곡률 — 연속 곡률(스쿼클) 모서리
+
+«radius 는 역할이 정하고, 곡률은 시스템이 정한다.» 컴포넌트는 `rounded-sm|md|lg|xl|full` 만 고르고 곡선 모양은 손대지 않는다(계획 Part 3, #26).
+구현은 CSS `corner-shape` 하나이고 **진행형 향상**이다 — 지원 엔진(Chromium 139+)은 `squircle`(= superellipse(2), 초타원 n=4) + 보정 반경
+(`--corner-k` 1.5), 미지원 엔진(2026-09: Safari 27 정식 · Firefox 정식)은 속성을 무시해 `border-radius` 원호로 떨어진다.
+
+- **원호 강등은 결함이 아니라 허용된 폴백이다.** clip-path·mask 폴백은 스펙상 영역 밖 테두리·outline·그림자를 지워 `shadow-*` 안의 헤어라인과
+  `focus-ring`(WCAG 2.4.7)이 사라지고, `filter: drop-shadow` 는 `position: fixed` 컨테이닝 블록을 바꿔 Modal 이 깨지며, Houdini 는 폴백이 필요한
+  바로 그 엔진에서 안 돈다. 그래서 런타임 폴백은 없다 — Apple 기기 사용자에게 원호로 보이는 것은 이 향상의 본질적 한계이고 데모 브라우저
+  (Chrome/Edge ≥139)가 데모 가치를 정한다.
+- **값은 토큰, 규칙은 corner.css.** `tokens/semantic/layer.json` 의 `corner.shape`(round → squircle) · `corner.k`(1 → 1.5)가 `generated/tokens.css` 의
+  `:root` 기본값과 `@supports (corner-shape: squircle)` 재정의로 나간다. 반경 사다리 md/lg/xl 은 `calc(N px * var(--corner-k, 1))` 이라 지원 엔진에서만
+  커진다(같은 반경이면 스쿼클이 작아 보인다 — 대각 깊이 원호 0.293R vs K=2 0.159R). `sm`(6px)은 곱하지 않는다 — 차이가 서브픽셀이고 9–11px 은 20px 배지를
+  알약으로 만든다. `src/corner.css` 는 `@supports` 안의 `*, ::before, ::after { corner-shape: var(--corner-shape) }` 와 예외뿐이며 `@layer` 로 감싸지 않는다
+  (tokens.css 의 레이어 없는 요소 규칙과 같은 층). `corner` 단축 속성은 쓰지 않는다 — 미지원 엔진이 통째로 무시해 radius 까지 사라진다.
+- **원형·pill 은 원호.** 초타원이면 캡슐 끝이 눌린다. `.rounded-full` · `.ds-scroll-area-thumb` · 레거시 `.switch-track/.switch-knob` · `[data-corner="round"]`(서브트리
+  예외)가 `corner-shape: round` 다. TSX 의 원형은 `rounded-full` 클래스로만 적는다 — 그래야 `.rounded-full` 예외가 전부를 덮는다(`corner.spec`).
+- **동심원 = `calc(바깥 토큰 − 패딩)`.** 트랙 안의 pill·탭처럼 안쪽 반경이 필요하면 그것이 유일한 허용 임의값이다 — 계수를 따라가 양쪽 엔진에서 동심이
+  유지된다(SegmentedControl `rounded-[calc(var(--radius-md)-var(--spacing)*0.5)]`, 레거시 탭 `calc(var(--radius-md) - 2px)`). 미지원 엔진에서는 옛 `rounded-sm` 과
+  같은 6px 이라 «다른 엔진은 불변» 이다. DropdownMenu 항목(lg 면 − 8px 패딩)은 `rounded-md` 로 둔다 — 동심원 값(18 − 8 = 10)과 12 는 눈으로 구분되지 않고,
+  동심원으로 적으면 미지원 엔진의 항목이 4px 로 바뀐다(카탈로그 `Foundations/Corners` 에 두 후보가 나란히 있다).
+- **킬 스위치.** `html[data-corner="round"]` 가 지원 엔진을 미지원 엔진과 같은 그림(원호 · k=1)으로 되돌린다 — 데모 직전 전량 원호 복귀, 성능 A/B.
+  카탈로그의 토글이 그것을 켠다.
+- **검증.** 정적 불변식 `src/__tests__/corner.spec.ts`(전역 규칙의 자리 · `--corner-k` 기본 1 · 원형 예외 대조 · 사다리 형식 · `border-radius` 원시값 래칫 ·
+  임의값 형태) + Playwright `vrt/corners.spec.ts`(Chromium CSSOM 스윕과 픽셀 프로파일 — 기대값은 페이지 안 `CSS.supports` 에서 파생) + 3엔진 darwin 골든
+  (`vrt/__snapshots__/corners/`, `VRT_ENGINES=1` 로컬 절차). 소비 레포는 `@jhleeweb/squircle-design-system/testing` 의 `auditCorners` 로 같은 규칙을 래칫에 건다.
+  Playwright WebKit 은 trunk 라 `corner-shape` 를 이미 지원한다 — Safari 정식판의 증거가 아니다.
+
 ## 검증 기준
 
 새 패턴은 클래스명 검사보다 사용자 동작으로 검증한다. 최소한 바뀐 계약에 해당하는
