@@ -28,8 +28,10 @@ export function literal(type, value) {
 /**
  * 토큰 하나 → CSS 선언 목록 `[prop, value]`. typography 는 Tailwind 규약대로 둘로 갈라진다(`--text-body` · `--text-body--line-height`).
  * `outputReferences` 면 원문의 `{ref}` 를 `var()` 로 남겨 참조 사슬을 보존한다 — `@theme inline` 이 `var(--chrome-*)` 를 가리켜야 테마 전환이 먹는다.
+ * `corner`(sds.corner) 면 곡률 보정 계수를 곱한다 — `calc(8px * var(--corner-k, 1))`. 폴백 1 은 `tokens.css` 없이 `theme.tailwind.css` 만 읽어도
+ * 반경이 사라지지 않게 한다(#26).
  */
-export function declarations(name, type, original, resolved, outputReferences) {
+export function declarations(name, type, original, resolved, outputReferences, corner = false) {
   if (type === "typography") {
     const v = resolved;
     return [
@@ -37,12 +39,16 @@ export function declarations(name, type, original, resolved, outputReferences) {
       [`--${name}--line-height`, String(v.lineHeight)],
     ];
   }
+  if (corner) return [[`--${name}`, `calc(${literal(type, resolved)} * var(--corner-k, 1))`]];
   if (outputReferences && typeof original === "string" && /\{[a-z0-9.-]+\}/.test(original)) return [[`--${name}`, refsToVars(original)]];
   return [[`--${name}`, literal(type, resolved)]];
 }
 
-/** Style Dictionary 토큰 → 선언 목록. */
-export const tokenDeclarations = (token, outputReferences) => declarations(token.name, token.$type, token.original.$value, token.$value, outputReferences);
+/** Style Dictionary 토큰 → 선언 목록. `supports` 토큰은 `:root` 에 fallback 을 낸다 — `$value` 는 `@supports` 블록(css-vars.mjs)의 몫이다. */
+export const tokenDeclarations = (token, outputReferences) =>
+  sds(token).supports !== undefined
+    ? declarations(token.name, token.$type, sds(token).fallback, sds(token).fallback, false)
+    : declarations(token.name, token.$type, token.original.$value, token.$value, outputReferences, sds(token).corner === true);
 
 /** `selector {\n  decl;\n}` — 들여쓰기는 2칸, 중첩(@media 안)은 indent 로. */
 export function block(selector, lines, indent = "") {

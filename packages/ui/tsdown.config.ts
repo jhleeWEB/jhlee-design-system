@@ -7,7 +7,8 @@ import { defineConfig } from "tsdown";
  *  - 소비자는 publishConfig.exports(dist) 를, 워크스페이스(갤러리·Storybook)는 exports(src) 를 본다 — pnpm 이 발행 시 바꿔 끼운다. */
 export default defineConfig({
   // legacy/index 는 별도 entry 다 — 루트 배럴의 @deprecated 재export 와 같은 파일을 가리키므로 unbundle 에서 중복 없이 dist/legacy/ 에 놓인다(#10).
-  entry: ["src/index.ts", "src/legacy/index.ts", "src/canvas-metrics.ts"],
+  // testing/index 는 소비 레포의 __arch__ 래칫이 부르는 검사기(corner-audit, #26) — 배럴에 닿지 않으므로 별도 entry 다.
+  entry: ["src/index.ts", "src/legacy/index.ts", "src/canvas-metrics.ts", "src/testing/index.ts"],
   format: "esm",
   platform: "neutral",
   unbundle: true,
@@ -18,6 +19,8 @@ export default defineConfig({
   copy: [
     { from: "src/theme.css", to: "dist" },
     { from: "src/tokens.css", to: "dist" },
+    // 곡률 규칙 — theme.css 가 `@import "./corner.css"` 로 본다(#26).
+    { from: "src/corner.css", to: "dist" },
     // 생성물 — theme.css · tokens.css 가 `@import "./generated/…"` 로 본다(#18). 디렉터리 깊이를 소스와 같게 유지해야 tarball 안에서도 상대경로가 산다.
     { from: "src/generated/tokens.css", to: "dist/generated" },
     { from: "src/generated/legacy.css", to: "dist/generated" },

@@ -113,6 +113,8 @@
   --canvas-grid: var(--palette-gray-150);
 
   /* semantic/layer.json */
+  --corner-shape: round;
+  --corner-k: 1;
   --layer-raised: 1;
   --layer-sticky: 10;
   --layer-scrim: 40;
@@ -138,6 +140,14 @@
 
   /* component/tooltip.json */
   --duration-tooltip-delay: 350ms;
+}
+
+/* 진행형 향상 — 지원 엔진만 이 값을 받는다. 미지원 엔진은 위 :root 의 fallback 으로 남는다(#26). */
+@supports (corner-shape: squircle) {
+  :root {
+    --corner-shape: squircle;
+    --corner-k: 1.5;
+  }
 }
 
 /* 크롬 — 라이트가 기준값. [data-theme="light"] 를 함께 두는 이유: 전역이 다크일 때 라이트 서브트리가 라이트로 돌아오려면 값이 그 요소에 직접 선언돼야 한다. */

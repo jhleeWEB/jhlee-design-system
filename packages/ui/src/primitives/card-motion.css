@@ -24,6 +24,8 @@
   position: absolute;
   inset: 0;
   z-index: 1;
+  /* 카드의 곡선을 따른다 — 스트립이 카드 모서리 밖으로 각지게 비치지 않게(#26). */
+  border-radius: inherit;
   width: 100%;
   height: 100%;
   visibility: hidden;

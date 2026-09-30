@@ -5,7 +5,7 @@
 
 ```
 primitive/  color(--palette-*) · dimension(--size-* --space-* --spacing) · motion(--duration-* --ease-*) · typography(--font-stack-*)   ← 리터럴이 사는 유일한 층
-semantic/   canvas.json(다크 없음) · chrome.light.json + chrome.dark.json(같은 키 집합) · layer.json(radius · shadow · z-index) · tailwind.json(@theme inline --color-*)
+semantic/   canvas.json(다크 없음) · chrome.light.json + chrome.dark.json(같은 키 집합) · layer.json(radius · shadow · z-index · corner 곡률) · tailwind.json(@theme inline --color-*)
 component/  control · overlay · toast · tooltip · scroll · collapse                                                                        ← 치수·시간
 legacy.json 옛 이름 → 새 이름 alias(전부 $deprecated). 세 출력의 원천 — 아래 «옛 이름»
 ```
@@ -24,7 +24,7 @@ legacy.json 옛 이름 → 새 이름 alias(전부 $deprecated). 세 출력의 �
 | 사다리(한 단 약한 것) | `-2` `-3` | `foreground-2` · 면은 `muted`(한 단) `secondary`(두 단) |
 | 글자 사다리 | `foreground` → `foreground-2` → `muted-foreground` → `foreground-disabled` | 본문 · 보조 · 라벨 · 비활성 |
 | 테두리 사다리 | `border` → `border-strong` | 구획선 · 컨트롤 외곽 |
-| 반경 | `sm` `md` `lg` `xl` `full` = 6 / 8 / 12 / 16 / 9999 | 칩 · 컨트롤 · 카드와 부유층 · 모달 |
+| 반경 | `sm` `md` `lg` `xl` `full` = 6 / 8 / 12 / 16 / 9999 체감값 — md/lg/xl 은 스쿼클 엔진에서 × `corner.k`(1.5) | 칩 · 컨트롤 · 카드와 부유층 · 모달 |
 
 **뜻이 갈리는 두 이름**: `primary`(azure 채움, «지금 고른 것 · 주된 동작»)와 `accent`(옅은 azure 면 — 선택된 행 · 배지 바탕). shadcn 과 같다. 옛 이름에서
 `accent` 는 azure 채움이었고 `muted` 는 회색 **글자**였다 — 그래서 그 둘은 alias 로 살릴 수 없고 코드모드로만 옮긴다(아래).
@@ -61,3 +61,5 @@ legacy.json 옛 이름 → 새 이름 alias(전부 $deprecated). 세 출력의 �
 | `ts` | duration 토큰 | `generated/tokens.ts` 의 `MOTION` 키 |
 | `reducedMotion` | duration·animation 토큰 | `@media (prefers-reduced-motion: reduce)` 의 값 |
 | `renames` | legacy.json 파일 머리 | alias 없는 개명 `옛 경로 → 새 경로` |
+| `supports` + `fallback` | root 토큰(짝) | 진행형 향상(#26) — `:root` 에는 `fallback`, `@supports (<query>) { :root }` 에는 `$value`. 토큰 모델의 해석값은 fallback(미지원 엔진의 값) |
+| `corner` | theme 의 px dimension | `calc(N px * var(--corner-k, 1))` — 곡률 보정 계수를 곱한다(radius md/lg/xl) |

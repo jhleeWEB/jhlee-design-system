@@ -6,9 +6,10 @@
  *   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) }   chrome 다크(OS)
  *   :root[data-theme="dark"], [data-theme="dark"]                               chrome 다크(토글) — 같은 본문
  *   @media (prefers-reduced-motion: reduce) { :root }                           reducedMotion 재정의
+ *   @supports (<query>) { :root }                                                sds.supports 토큰의 재정의(#26) — :root 에는 fallback 이 나간다
  * 다크를 두 번 찍는 이유(손 CSS 주석 그대로): OS 설정을 따르되 토글이 이기고, `ThemeContrast` 스토리가 서브트리에 속성을 단다.
  * 다크 본문은 options.dark 로 받는다 — source 로 넣으면 같은 키가 두 번 정의돼 SD 가 충돌을 낸다. */
-import { block, byOrder, decl, groupBy, HEADER, sds, tokenDeclarations } from "./shared.mjs";
+import { block, byOrder, decl, groupBy, HEADER, literal, sds, tokenDeclarations } from "./shared.mjs";
 
 const LIGHT_SELECTOR = ':root,\n[data-theme="light"]';
 const DARK_MEDIA = "@media (prefers-color-scheme: dark)";
@@ -25,6 +26,16 @@ function rootLines(tokens, outputReferences) {
     for (const t of group) lines.push(...tokenDeclarations(t, outputReferences).map(decl));
   }
   return lines;
+}
+
+/**
+ * `sds.supports` 토큰을 질의별로 묶어 `@supports (<query>) { :root { … } }` 블록으로 — 진행형 향상의 «지원 엔진 값» 이다(#26).
+ * 스코프 판독(model.ts 의 scopeOf)은 @supports 안을 토큰으로 읽지 않으므로 해석값은 :root 의 fallback, 곧 미지원 엔진의 값이다.
+ */
+export function supportsBlocks(tokens) {
+  return [...groupBy(tokens.filter(t => sds(t).supports !== undefined), t => sds(t).supports)].map(([query, group]) =>
+    block(`@supports (${query})`, block(":root", group.map(t => `--${t.name}: ${literal(t.$type, t.$value)};`)).split("\n")),
+  );
 }
 
 /** reducedMotion 재정의가 있는 토큰 → `--name: value;`. */
@@ -52,6 +63,7 @@ export function cssVars({ dictionary, options }) {
   const parts = [
     HEADER,
     block(":root", rootLines(root, outputReferences)),
+    ...supportsBlocks(root).flatMap(b => ["", "/* 진행형 향상 — 지원 엔진만 이 값을 받는다. 미지원 엔진은 위 :root 의 fallback 으로 남는다(#26). */", b]),
     "",
     "/* 크롬 — 라이트가 기준값. [data-theme=\"light\"] 를 함께 두는 이유: 전역이 다크일 때 라이트 서브트리가 라이트로 돌아오려면 값이 그 요소에 직접 선언돼야 한다. */",
     block(LIGHT_SELECTOR, [...chrome.flatMap(t => tokenDeclarations(t, outputReferences).map(decl)), "color-scheme: light;"]),

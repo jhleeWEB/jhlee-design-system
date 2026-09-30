@@ -77,7 +77,9 @@ export function SegmentedControl<T extends string | number>({
             onClick={() => onChange(option.value)}
             className={cn(
               "appearance-none border-0 bg-transparent font-inherit",
-              "cursor-pointer rounded-sm px-3 font-medium transition-colors duration-fast",
+              /* 동심원 — 안쪽 반경 = 바깥(rounded-md) − 패딩(p-0.5). 토큰만으로 적어야 --corner-k 를 따라 양쪽 엔진에서 동심이 유지된다(#26).
+                 미지원 엔진에서는 8 − 2 = 6px 로 옛 rounded-sm 과 같다. */
+              "cursor-pointer rounded-[calc(var(--radius-md)-var(--spacing)*0.5)] px-3 font-medium transition-colors duration-fast",
               "focus-visible:focus-ring focus-visible:outline-none",
               "disabled:pointer-events-none disabled:opacity-45",
               size === "sm" ? "h-6 text-label" : "h-7 text-control",

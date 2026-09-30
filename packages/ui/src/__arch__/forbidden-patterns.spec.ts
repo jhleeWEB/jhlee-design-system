@@ -75,7 +75,8 @@ const PATTERNS: readonly Pattern[] = [
     id: "tsx-tailwind-default-scale",
     why: "duration-100 · z-50 · leading-5 · font-500 · tracking-1 같은 Tailwind 기본 사다리와 rounded-[…] 는 역할 이름이 아니다 — theme.css 가 initial 로 지운 사다리에 역할(duration-fast · z-toast)을 더해 쓴다",
     kinds: ["ts", "tsx"],
-    find: file => matches(file.code, /\b(?:duration|z|leading|font|tracking)-\d+\b|\brounded-\[/g),
+    // `rounded-[calc(var(--radius-…)-…)]` 는 동심원 규칙의 유일한 허용 임의값이다(#26, corner.spec 이 형태를 본다) — 여기서는 세지 않는다.
+    find: file => matches(file.code, /\b(?:duration|z|leading|font|tracking)-\d+\b|\brounded-\[(?!calc\(var\(--radius-)/g),
     // #18 이 z-50 → z-scrim/z-modal/z-popover/z-toast/z-tooltip, z-1 → z-raised, duration-100/150/200 → duration-fast/base/slow 로 바꿔 24파일 → 3건.
     // #22 가 rounded-[6px] → rounded-sm(같은 6px). 남은 둘은 같은 값의 토큰이 없다(duration-120 · leading-5) — Phase D 의 몫.
     baseline: {
@@ -218,6 +219,7 @@ const DETECTOR_CASES: Readonly<Record<string, { readonly path: string; readonly 
       'const a = "transition duration-150 z-50 leading-5";',
       'const b = "font-600 tracking-1 rounded-[6px]";',
       'const c = "duration-fast z-toast rounded-md font-semibold";',
+      'const d = "rounded-[calc(var(--radius-md)-var(--spacing)*0.5)]";',
       "// z-50 은 z-toast 로",
     ].join("\n"),
     hits: ["duration-150", "z-50", "leading-5", "font-600", "tracking-1", "rounded-["],
