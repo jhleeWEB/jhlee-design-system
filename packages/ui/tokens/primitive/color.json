@@ -1,0 +1,91 @@
+{
+  "$description": "원시 팔레트 — 리터럴이 사는 유일한 색 층. 참고 화면(Office Studio 2000×1070)에서 픽셀로 뽑은 값이다(theme.css 머리 주석). 계획대로 --palette-* 로 내고, 기존 --color-{hue}-* 는 소비자 이름이라 alias 로 남긴다(B5 가 뗀다).",
+  "$extensions": { "sds": { "scope": "root" } },
+  "palette": {
+    "$type": "color",
+    "cool": {
+      "$description": "쿨 뉴트럴 — 순회색이 아니라 푸른 기가 도는 회색(#eff1f7 은 B>R). 실측.",
+      "0": { "$value": "#ffffff" },
+      "25": { "$value": "#f9fbfc" },
+      "50": { "$value": "#f4f6fa" },
+      "100": { "$value": "#eff1f7" },
+      "150": { "$value": "#e9ecf2" },
+      "200": { "$value": "#eceff5" },
+      "300": { "$value": "#d8dde8" },
+      "400": { "$value": "#a0a6b4" },
+      "500": { "$value": "#697183" },
+      "600": { "$value": "#545c6d" },
+      "700": { "$value": "#3a4150" },
+      "800": { "$value": "#262c38" },
+      "900": { "$value": "#191f28" },
+      "950": { "$value": "#0f131a" }
+    },
+    "azure": {
+      "$description": "액센트 — 실측 #0869e1.",
+      "50": { "$value": "#eef5fe" },
+      "100": { "$value": "#e6eff8" },
+      "200": { "$value": "#c9e0fb" },
+      "500": { "$value": "#0869e1" },
+      "600": { "$value": "#0a5cc4" },
+      "700": { "$value": "#0b4da4" }
+    },
+    "mono": {
+      "$description": "자매 저장소 globals.css 의 mono 12단 — 무채색이 필요한 자리에서 계속 쓴다.",
+      "0": { "$value": "#ffffff" },
+      "50": { "$value": "#fafafa" },
+      "100": { "$value": "#f4f4f5" },
+      "200": { "$value": "#e4e4e7" },
+      "300": { "$value": "#d4d4d8" },
+      "400": { "$value": "#a1a1aa" },
+      "500": { "$value": "#71717a" },
+      "600": { "$value": "#52525b" },
+      "700": { "$value": "#3f3f46" },
+      "800": { "$value": "#27272a" },
+      "900": { "$value": "#18181b" },
+      "950": { "$value": "#09090b" }
+    }
+  },
+  "color": {
+    "$type": "color",
+    "$description": "옛 이름 --color-{hue}-{step} → --palette-* alias. 소비자 이름은 마지막까지 불변(계획 §2.2 «alias 이행»).",
+    "$deprecated": "--palette-* 를 쓴다. B5 에서 지운다.",
+    "cool": {
+      "0": { "$value": "{palette.cool.0}" },
+      "25": { "$value": "{palette.cool.25}" },
+      "50": { "$value": "{palette.cool.50}" },
+      "100": { "$value": "{palette.cool.100}" },
+      "150": { "$value": "{palette.cool.150}" },
+      "200": { "$value": "{palette.cool.200}" },
+      "300": { "$value": "{palette.cool.300}" },
+      "400": { "$value": "{palette.cool.400}" },
+      "500": { "$value": "{palette.cool.500}" },
+      "600": { "$value": "{palette.cool.600}" },
+      "700": { "$value": "{palette.cool.700}" },
+      "800": { "$value": "{palette.cool.800}" },
+      "900": { "$value": "{palette.cool.900}" },
+      "950": { "$value": "{palette.cool.950}" }
+    },
+    "azure": {
+      "50": { "$value": "{palette.azure.50}" },
+      "100": { "$value": "{palette.azure.100}" },
+      "200": { "$value": "{palette.azure.200}" },
+      "500": { "$value": "{palette.azure.500}" },
+      "600": { "$value": "{palette.azure.600}" },
+      "700": { "$value": "{palette.azure.700}" }
+    },
+    "mono": {
+      "0": { "$value": "{palette.mono.0}" },
+      "50": { "$value": "{palette.mono.50}" },
+      "100": { "$value": "{palette.mono.100}" },
+      "200": { "$value": "{palette.mono.200}" },
+      "300": { "$value": "{palette.mono.300}" },
+      "400": { "$value": "{palette.mono.400}" },
+      "500": { "$value": "{palette.mono.500}" },
+      "600": { "$value": "{palette.mono.600}" },
+      "700": { "$value": "{palette.mono.700}" },
+      "800": { "$value": "{palette.mono.800}" },
+      "900": { "$value": "{palette.mono.900}" },
+      "950": { "$value": "{palette.mono.950}" }
+    }
+  }
+}

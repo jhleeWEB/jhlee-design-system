@@ -1,0 +1,14 @@
+/* 생성물 — 손으로 고치지 않는다.
+ * 정본: packages/ui/tokens/ 의 DTCG JSON → tokens/build.mjs · 재생성 `pnpm tokens:build` · 최신성 `pnpm tokens:check` (#15) */
+
+/** Tailwind 테마(@theme) 사다리의 역할 이름 — 네임스페이스별, 정본 순. twMerge(cn.ts)가 충돌을 해소하려면 이 이름들을 알아야 한다. */
+export const LADDERS = {
+  size: ["rail", "gap"],
+  ease: ["out-quick"],
+  animate: ["in-pop", "in-fade", "in-rise", "shimmer"],
+  text: ["micro", "label", "body", "control", "title", "readout", "display"],
+  tracking: ["caps"],
+  radius: ["none", "chip", "control", "card", "float", "modal", "full"],
+  shadow: ["none", "chip", "card", "pop", "modal"],
+  height: ["ctl-sm", "ctl", "ctl-lg"],
+} as const;

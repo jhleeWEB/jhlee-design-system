@@ -5,15 +5,12 @@
  * 「캔버스는 다크에서도 바뀌지 않는다」는 이 시스템의 **유일한 구조적 약속**이고, 그것이 깨지는 방식은 언제나 같다 — 누군가 다크 블록에
  * `--canvas-*` 한 줄을 더한다. 그 순간 도면이 어두워지고, 인쇄와 색각 이상 근거가 함께 무너진다.
  */
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-
 import { describe, expect, it } from "vitest";
 
+import { cnClassGroup, cnLadder } from "./cn-ladders";
 import { loadTokenModel, type TokenScope } from "./model";
 
 const model = loadTokenModel();
-const cn = readFileSync(fileURLToPath(new URL("../../cn.ts", import.meta.url)), "utf8");
 
 const namesIn = (scope: TokenScope, prefix: string): string[] =>
   [...new Set(model.tokens.filter(t => t.scope === scope && t.name.startsWith(prefix)).map(t => t.name))].sort();
@@ -24,31 +21,6 @@ const ladder = (ns: string): string[] =>
     .map(n => n.slice(ns.length + 3))
     .filter(n => !n.includes("--"))
     .sort();
-
-/** `cn.ts` 의 `override.theme.<key>: [...]`. */
-function listed(key: string): string[] | null {
-  const m = cn.match(new RegExp(`\\b${key}: \\[([^\\]]*)\\]`));
-  return m
-    ? m[1]!
-        .split(",")
-        .map(s => s.trim().replace(/^"|"$/g, ""))
-        .filter(Boolean)
-        .sort()
-    : null;
-}
-
-/** `cn.ts` 의 `extend.classGroups.<key>: [{ <key>: [...] }]` 를 유틸리티 이름(`h-ctl`)으로 편다. */
-function classGroup(key: string): string[] | null {
-  const m = cn.match(new RegExp(`\\b${key}: \\[\\{ ${key}: \\[([^\\]]*)\\] \\}\\]`));
-  return m
-    ? m[1]!
-        .split(",")
-        .map(s => s.trim().replace(/^"|"$/g, ""))
-        .filter(Boolean)
-        .map(s => `${key}-${s}`)
-        .sort()
-    : null;
-}
 
 describe("방향 C — 캔버스와 크롬의 분리", () => {
   it("다크 블록은 --canvas-* 를 하나도 건드리지 않는다", () => {
@@ -84,24 +56,24 @@ describe("사다리", () => {
 
   it("cn.ts 의 radius · shadow · text 사다리가 theme.css 와 같다", () => {
     /* 둘이 갈리면 증상은 «className 덮어쓰기가 가끔 안 먹는다» 로 나타나 추적하기 어렵다. cn.ts 주석이 약속한 것이 이것이다. */
-    expect(listed("radius")).toEqual(ladder("radius"));
-    expect(listed("shadow")).toEqual(ladder("shadow"));
-    expect(listed("text")).toEqual(ladder("text"));
+    expect(cnLadder("radius")).toEqual(ladder("radius"));
+    expect(cnLadder("shadow")).toEqual(ladder("shadow"));
+    expect(cnLadder("text")).toEqual(ladder("text"));
   });
 
   it("cn.ts 의 animate · ease 사다리가 theme.css 와 같다", () => {
     /* `--animate-*` 는 reduced-motion 블록에도 `none` 으로 다시 나온다 — 사다리는 `@theme` 의 것이다. */
-    expect(listed("animate")).toEqual(ladder("animate"));
-    expect(listed("ease")).toEqual(ladder("ease"));
+    expect(cnLadder("animate")).toEqual(ladder("animate"));
+    expect(cnLadder("ease")).toEqual(ladder("ease"));
   });
 
   it("cn.ts 의 h · w · gap classGroups 가 theme.css 의 @utility 와 같다", () => {
     /* `@utility` 로 손수 낸 클래스는 Tailwind 네임스페이스가 아니라 twMerge 가 모른다 — 모르면 «충돌 없음» 으로 보아 둘 다 남긴다.
        실측으로 `cn("h-ctl", "h-auto")` 가 둘을 다 남겼다(cn.ts 주석). 그래서 손수 낸 것마다 classGroups 에 있어야 한다. */
     const declared = (prefix: string) => model.utilities.filter(u => u.startsWith(`${prefix}-`)).sort();
-    expect(classGroup("h")).toEqual(declared("h"));
-    expect(classGroup("w")).toEqual(declared("w"));
-    expect(classGroup("gap")).toEqual(declared("gap"));
+    expect(cnClassGroup("h")).toEqual(declared("h"));
+    expect(cnClassGroup("w")).toEqual(declared("w"));
+    expect(cnClassGroup("gap")).toEqual(declared("gap"));
   });
 
   it("손수 낸 @utility 는 이것이 전부다 — 더하면 여기와 cn.ts 를 함께 고친다(혼용 규칙 ⑤)", () => {

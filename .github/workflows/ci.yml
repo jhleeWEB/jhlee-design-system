@@ -18,6 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+      # 생성물(src/generated)이 DTCG 정본(tokens/*.json)과 같은가 — 정본만 고치고 재생성을 잊은 PR 을 여기서 잡는다(#15)
+      - run: pnpm tokens:check
       # vitest unit(jsdom 계약) + arch(래칫 · 토큰 모델 · 패키지 계약, #11) + packages/eslint-rules 의 RuleTester
       - run: pnpm test
   storybook:

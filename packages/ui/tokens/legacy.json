@@ -1,0 +1,4 @@
+{
+  "$description": "빈 골격(#15). B4 가 base 30개와 옛 이름 → 새 이름 alias 를 $deprecated 로 여기 옮기고, 생성물 legacy.css + legacy-alias-use 래칫으로 소비자 이름을 마지막까지 지킨다. 제거는 major.",
+  "$extensions": { "sds": { "scope": "legacy" } }
+}

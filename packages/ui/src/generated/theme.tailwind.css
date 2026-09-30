@@ -1,0 +1,110 @@
+/* 생성물 — 손으로 고치지 않는다.
+ * 정본: packages/ui/tokens/ 의 DTCG JSON → tokens/build.mjs · 재생성 `pnpm tokens:build` · 최신성 `pnpm tokens:check` (#15) */
+
+@theme {
+  --spacing: 4px;
+
+  --size-rail: 64px;
+  --size-gap: 12px;
+
+  --ease-out-quick: cubic-bezier(0.22, 0.8, 0.3, 1);
+
+  --animate-in-pop: pop 0.14s var(--ease-out-quick);
+  --animate-in-fade: fade 0.12s linear;
+  --animate-in-rise: rise 0.16s var(--ease-out-quick);
+  --animate-shimmer: shimmer 1.25s linear infinite;
+
+  --text-*: initial;
+  --text-micro: 10px;
+  --text-micro--line-height: 1.4;
+  --text-label: 11px;
+  --text-label--line-height: 1.45;
+  --text-body: 13px;
+  --text-body--line-height: 1.55;
+  --text-control: 13.5px;
+  --text-control--line-height: 1.4;
+  --text-title: 15px;
+  --text-title--line-height: 1.4;
+  --text-readout: 22px;
+  --text-readout--line-height: 1.2;
+  --text-display: 26px;
+  --text-display--line-height: 1.16;
+
+  --tracking-caps: 0.09em;
+
+  --radius-*: initial;
+  --radius-none: 0;
+  --radius-chip: 6px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-float: 12px;
+  --radius-modal: 16px;
+  --radius-full: 9999px;
+
+  --shadow-*: initial;
+  --shadow-none: none;
+  --shadow-chip: 0 1px 2px rgb(25 31 40 / 0.05);
+  --shadow-card: 0 1px 2px rgb(25 31 40 / 0.04), 0 4px 12px rgb(25 31 40 / 0.05);
+  --shadow-pop: 0 2px 6px rgb(25 31 40 / 0.06), 0 12px 28px rgb(25 31 40 / 0.10), 0 0 0 1px rgb(25 31 40 / 0.05);
+  --shadow-modal: 0 8px 20px rgb(25 31 40 / 0.10), 0 28px 64px rgb(25 31 40 / 0.16), 0 0 0 1px rgb(25 31 40 / 0.05);
+
+  --height-ctl-sm: 30px;
+  --height-ctl: 36px;
+  --height-ctl-lg: 44px;
+}
+
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+  --color-black: #1a1a1a;
+  --color-canvas: var(--canvas-bg);
+  --color-canvas-surface: var(--canvas-surface);
+  --color-canvas-line: var(--canvas-line);
+  --color-canvas-line-strong: var(--canvas-line-strong);
+  --color-canvas-ink: var(--canvas-ink);
+  --color-canvas-ink-2: var(--canvas-ink-2);
+  --color-canvas-muted: var(--canvas-muted);
+  --color-canvas-grid: var(--canvas-grid);
+  --color-chrome: var(--chrome-bg);
+  --color-surface: var(--chrome-surface);
+  --color-surface-2: var(--chrome-surface-2);
+  --color-surface-3: var(--chrome-surface-3);
+  --color-overlay: var(--chrome-overlay);
+  --color-ink: var(--chrome-ink);
+  --color-ink-2: var(--chrome-ink-2);
+  --color-muted: var(--chrome-muted);
+  --color-disabled: var(--chrome-disabled);
+  --color-line: var(--chrome-line);
+  --color-line-strong: var(--chrome-line-strong);
+  --color-accent: var(--chrome-accent);
+  --color-accent-hover: var(--chrome-accent-hover);
+  --color-accent-ink: var(--chrome-accent-ink);
+  --color-accent-soft: var(--chrome-accent-soft);
+  --color-accent-track: var(--chrome-accent-track);
+  --color-selection-fill: var(--chrome-selection-fill);
+  --color-selection-stroke: var(--chrome-selection-stroke);
+  --color-scrim: var(--chrome-scrim);
+  --color-focus: var(--chrome-focus);
+  --color-tooltip: var(--chrome-tooltip-bg);
+  --color-tooltip-ink: var(--chrome-tooltip-ink);
+  --color-ok: var(--chrome-ok);
+  --color-warn: var(--chrome-warn);
+  --color-danger: var(--chrome-danger);
+  --color-ok-soft: var(--chrome-ok-soft);
+  --color-warn-soft: var(--chrome-warn-soft);
+  --color-danger-soft: var(--chrome-danger-soft);
+
+  --font-sans: "Instrument Sans", var(--sans);
+  --font-mono: "Geist Mono", var(--mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --animate-in-pop: none;
+    --animate-in-fade: none;
+    --animate-in-rise: none;
+    --animate-shimmer: none;
+  }
+}

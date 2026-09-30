@@ -58,6 +58,8 @@
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p tsconfig.stories.json",
     "test": "vitest run --project=unit --project=arch --passWithNoTests",
+    "tokens:build": "node tokens/build.mjs",
+    "tokens:check": "node tokens/build.mjs --check",
     "test:arch": "vitest run --project=arch",
     "lint": "cd ../.. && pnpm exec eslint packages/ui --max-warnings 0",
     "test:stories": "vitest run --project=storybook",
@@ -115,9 +117,11 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "storybook": "10.6.1",
+    "style-dictionary": "^4.4.0",
     "tailwindcss": "^4.3.3",
     "tsdown": "^0.23.0",
     "typescript": "^5",
-    "vitest": "^4"
+    "vitest": "^4",
+    "zod": "^4.6.5"
   }
 }

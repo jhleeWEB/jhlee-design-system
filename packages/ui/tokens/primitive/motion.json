@@ -1,0 +1,15 @@
+{
+  "$description": "모션 곡선과 진입 애니메이션 — 도면 툴에서 애니메이션은 «무엇이 어디서 왔는지» 만 말한다. 140ms 를 넘기면 기다림이 된다. reduced-motion 에서는 전부 none.",
+  "$extensions": { "sds": { "scope": "theme" } },
+  "ease": {
+    "$type": "cubicBezier",
+    "out-quick": { "$value": [0.22, 0.8, 0.3, 1] }
+  },
+  "animate": {
+    "$type": "animation",
+    "in-pop": { "$value": "pop 0.14s {ease.out-quick}", "$extensions": { "sds": { "reducedMotion": "none" } } },
+    "in-fade": { "$value": "fade 0.12s linear", "$extensions": { "sds": { "reducedMotion": "none" } } },
+    "in-rise": { "$value": "rise 0.16s {ease.out-quick}", "$extensions": { "sds": { "reducedMotion": "none" } } },
+    "shimmer": { "$value": "shimmer 1.25s linear infinite", "$extensions": { "sds": { "reducedMotion": "none" } } }
+  }
+}

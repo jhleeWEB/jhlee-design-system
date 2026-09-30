@@ -56,6 +56,7 @@ export interface TokenModel {
 /** 모델이 읽는 정본 파일 — 둘이 한 벌이다(theme.css 가 tokens.css 를 @import 한다). */
 export const TOKEN_FILES = ["tokens.css", "theme.css"] as const;
 
+/** `src/` 기준 경로로 읽는다 — 생성물(`generated/tokens.css`)도 같은 기준이다. */
 function read(file: string): string {
   return readFileSync(fileURLToPath(new URL(`../../${file}`, import.meta.url)), "utf8");
 }
@@ -105,16 +106,16 @@ function scopeOf(node: ChildNode): TokenScope | null {
   return null;
 }
 
-let cache: TokenModel | null = null;
-
-/** 두 정본 파일을 한 번만 파싱한다. */
-export function loadTokenModel(): TokenModel {
-  if (cache) return cache;
+/**
+ * 아무 CSS 파일 묶음이든 한 모델로 읽는다(`src/` 기준 경로). 손 정본은 `loadTokenModel` 이, 생성물(`generated/*.css`)은 `generated-parity.spec` 이
+ * 이것으로 읽어 같은 해석기로 두 해석 맵을 비교한다 — 비교기가 다르면 «같다» 가 뜻을 잃는다.
+ */
+export function loadTokenModelFrom(files: readonly string[]): TokenModel {
   const tokens: Token[] = [];
   const references: VarReference[] = [];
   const resets: Reset[] = [];
   const utilities: string[] = [];
-  for (const file of TOKEN_FILES) {
+  for (const file of files) {
     const root = postcss.parse(read(file), { from: file });
     root.walkAtRules("utility", at => {
       utilities.push(at.params.trim());
@@ -133,7 +134,14 @@ export function loadTokenModel(): TokenModel {
       tokens.push({ name: decl.prop, value: decl.value.replace(/\s+/g, " ").trim(), scope, file, line, refs: names });
     });
   }
-  cache = { tokens, references, resets, utilities };
+  return { tokens, references, resets, utilities };
+}
+
+let cache: TokenModel | null = null;
+
+/** 두 손 정본 파일을 한 번만 파싱한다. */
+export function loadTokenModel(): TokenModel {
+  cache ??= loadTokenModelFrom(TOKEN_FILES);
   return cache;
 }
 

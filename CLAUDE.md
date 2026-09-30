@@ -16,6 +16,19 @@
 
 ```
 packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown 산출물(커밋하지 않는다)
+  tokens/                    **DTCG JSON 정본** — 사람이 토큰을 편집하는 유일한 곳(#15). `base.json`(tokens.css 의 base 30, 이름 불변이라 아직 legacy 가 아니다) ·
+                             `primitive/{color,dimension,typography,motion}` · `semantic/{canvas,chrome.light,chrome.dark,layer,tailwind}` ·
+                             `component/{control,collapse,toast,scroll,tooltip}` · `legacy.json`(빈 골격, B4). 파일 머리 `$extensions.sds.scope` 가
+                             생성물의 어느 블록으로 나가는지 정한다(root · chrome · theme · theme-inline · ts · legacy). `schema.ts`(zod)가 모양과
+                             파일 사이 약속(alias 존재 · chrome 은 light/dark 둘 다 · canvas 는 light 만, `canvas.dark.json` 은 존재가 곧 실패)을 검사하고,
+                             `build.mjs` 가 Style Dictionary 4 + 우리 포맷 3(`formats/{css-vars,tailwind-theme,ts-consts}.mjs`)으로 생성물을 쓴다.
+                             다크는 source 가 아니라 options 로 읽어 두 다크 블록에 같은 본문을 찍는다
+  src/generated/             **생성물 — 손으로 고치지 않는다.** `tokens.css`(:root · 크롬 라이트/다크 · reduced-motion) · `theme.tailwind.css`(@theme · @theme inline) ·
+                             `legacy.css` · `tokens.ts`(MOTION) · `ladders.ts`(LADDERS). 커밋하며 `pnpm tokens:check` 가 최신성을 강제한다(CI unit job · verify).
+                             **아직 연결하지 않았다**(B3) — 아래 손 CSS 가 여전히 정본이고 `generated-parity.spec` 이 «생성물 해석 맵 == 손 CSS 해석 맵» 을 증명한다.
+                             유일한 의도된 차이는 원시의 새 이름 `--palette-*`(옛 `--color-{hue}-*` 는 alias). 래칫·ESLint jsdoc 대상이 아니다
+  src/tokens/motion.ts       JS 가 읽는 시간 상수 `MOTION`(접기 200 · 토스트 220/180/240/4200 · 스크롤바 500/200 · 툴팁 350) — Toast·ScrollArea·Tooltip 이 쓴다(B1, #15).
+                             `motion.spec` 이 CSS(toast.css · theme.css)의 ms 와 대조한다. 공개 API 는 아니다(배럴 export 없음). B3 가 생성물 `tokens.ts` 로 대체한다
   src/tokens.css             base 토큰(회색조·판정색·셸 치수·글꼴) + 원칙을 강제하는 요소 규칙
   src/theme.css              방향 C — --canvas-*(라이트 고정·radius 0·무채색) / --chrome-*(듀얼 테마), Tailwind v4 @theme 매핑,
                              @source "./" 자기 등록, 컴포넌트 CSS(@import)
@@ -24,7 +37,8 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   src/legacy/                `./legacy` 서브패스 — 3열 작업대 셸·컨트롤·DesignSystemProvider·shell.css(#10). 격리·동결: ESLint ignores,
                              래칫 제외. 루트 배럴은 같은 이름을 지정자별 @deprecated 로 한 마이너 재export 하고 다음 마이너에 `feat!:` 로 지운다
   src/**/*.stories.tsx       컴포넌트 옆 스토리 — 3스토리 계약(Default · Variants · ThemeContrast, `stories-contract.spec` 이 검사, 본보기 Button)
-  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트, 15 스펙). `tokens/`(postcss 토큰 모델 + 사다리·참조·다크 동일·해석 맵 스냅샷)와
+  src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트, 15 스펙). `tokens/`(postcss 토큰 모델 + 사다리·참조·다크 동일·해석 맵 스냅샷 +
+                             motion 상수 대조 · 정본 스키마 · 생성물 동일성, #15)과
                              `package/`(exports · "use client" 집합 · 공개 API 목록)는 `arch` 프로젝트(node)가 돈다(#11)
   src/__arch__/              금지 패턴 래칫(`forbidden-patterns.spec` — 파일별 횟수 기준선, 늘면 실패·줄면 낮춰야 통과) + 소스 그래프. `arch` 프로젝트(#11)
   .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
@@ -76,7 +90,9 @@ pnpm typecheck         # 엄격 프로필(src) + test 프로필(스펙·__arch__
 pnpm lint              # ESLint 10 — 기준선(eslint-suppressions.json) 밖 신규 위반만 실패
 pnpm test              # vitest unit(jsdom) + arch(node: 래칫·토큰·패키지 계약) 프로젝트 + packages/eslint-rules 의 RuleTester
 pnpm build             # tsdown → packages/ui/dist
-pnpm verify            # typecheck + lint + test + build — PR 전 한 번
+pnpm tokens:build      # tokens/*.json → src/generated/* (Style Dictionary). 정본을 고치면 돌리고 생성물을 함께 커밋한다
+pnpm tokens:check      # 생성물이 정본과 같은가 — 다르면 exit 1 (CI unit job · verify)
+pnpm verify            # typecheck + lint + tokens:check + test + build — PR 전 한 번
 pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(Phase A 는 'todo')
 pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
 cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics legacy   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
@@ -87,6 +103,8 @@ cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tm
 늘면 새 위반이고, 줄이면 같은 PR 에서 기준선을 낮춘다(0 이면 줄을 지운다). 토큰 쪽도 같은 모양이다: `references.spec` 의
 `KNOWN_INLINE_LITERALS`(`@theme inline` 의 리터럴 4개)와 미참조 원시 18개 스냅샷, `tokens-snapshot.spec` 의 해석 맵(Phase B 생성기의 비교
 기준 — 토큰 값을 바꾸는 PR 만 `-u` 로 갱신한다), `rsc-directives.spec` 의 `"use client"` 파일 목록, `public-api.spec` 의 배럴 export 목록.
+토큰 값을 바꾸는 PR 은 **JSON 정본과 손 CSS 를 함께** 고치고 `pnpm tokens:build` 를 돌린다 — `generated-parity.spec` 이 둘의 해석 맵을 라이트·다크
+전량 비교하므로 한쪽만 고치면 빨갛다(B3 가 손 CSS 를 생성물로 바꿔 끼우면 그 이중 편집이 끝난다).
 
 **린트 기준선.** 루트 `eslint.config.js`(플러그인 + 로컬 규칙 `ds/*`, `packages/eslint-rules/`)의 모든 규칙은 error 이고,
 첫 실행의 위반은 `eslint-suppressions.json`(ESLint bulk suppressions)이 덮는다 — 계획의 «warn + 기준선» 은 suppressions 가
