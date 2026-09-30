@@ -64,7 +64,7 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 ## 컴포넌트
 
 - [Accordion](docs/components/Accordion.md): (설명 없음 — JSDoc 대기) — 부품: AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger — "use client"
-- [Alert](docs/components/Alert.md): (설명 없음 — JSDoc 대기)
+- [Alert](docs/components/Alert.md): 인라인 경고 — 흐름 안에 남는 알림
 - [AppShell](docs/components/AppShell.md): 레거시 셸 `AppShell`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [BackButton](docs/components/BackButton.md): 뒤로가기의 동작은 라우터가 소유하고 모양·아이콘은 모든 페이지에서 공유한다.
 - [Badge](docs/components/Badge.md): (설명 없음 — JSDoc 대기)
@@ -81,7 +81,7 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [DisplayHeading](docs/components/DisplayHeading.md): (설명 없음 — JSDoc 대기)
 - [Drawer](docs/components/Drawer.md): (설명 없음 — JSDoc 대기) — 부품: DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger — "use client"
 - [DropdownMenu](docs/components/DropdownMenu.md): (설명 없음 — JSDoc 대기) — 부품: DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger — "use client"
-- [EmptyState](docs/components/EmptyState.md): (설명 없음 — JSDoc 대기)
+- [EmptyState](docs/components/EmptyState.md): 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다.
 - [Eyebrow](docs/components/Eyebrow.md): (설명 없음 — JSDoc 대기)
 - [Field](docs/components/Field.md): 레거시 셸 `Field`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Hud](docs/components/Hud.md): 레거시 셸 `Hud`. — 부품: HudCell — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
@@ -95,7 +95,7 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [Panel](docs/components/Panel.md): 레거시 셸 `Panel`. — 부품: PanelGroup — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [PanelToggleButton](docs/components/PanelToggleButton.md): (설명 없음 — JSDoc 대기) — "use client"
 - [Popover](docs/components/Popover.md): (설명 없음 — JSDoc 대기) — 부품: PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger — "use client"
-- [Progress](docs/components/Progress.md): (설명 없음 — JSDoc 대기) — "use client"
+- [Progress](docs/components/Progress.md): 진행 막대 — 값이 있을 때만 쓴다 — "use client"
 - [RadioGroup](docs/components/RadioGroup.md): (설명 없음 — JSDoc 대기) — 부품: RadioGroupItem — "use client"
 - [ScrollArea](docs/components/ScrollArea.md): (설명 없음 — JSDoc 대기) — "use client"
 - [SectionLabel](docs/components/SectionLabel.md): (설명 없음 — JSDoc 대기) — "use client"
@@ -104,9 +104,9 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [Select](docs/components/Select.md): 레거시 컨트롤 `Select`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Separator](docs/components/Separator.md): (설명 없음 — JSDoc 대기) — "use client"
 - [Sidebar](docs/components/Sidebar.md): (설명 없음 — JSDoc 대기) — 부품: SidebarGroup, SidebarItem — "use client"
-- [Skeleton](docs/components/Skeleton.md): (설명 없음 — JSDoc 대기) — 부품: SkeletonText
+- [Skeleton](docs/components/Skeleton.md): 스켈레톤 바 — 곧 올 내용과 같은 높이의 자리 — 부품: SkeletonText
 - [Slider](docs/components/Slider.md): 레거시 컨트롤 `Slider`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
-- [Spinner](docs/components/Spinner.md): (설명 없음 — JSDoc 대기)
+- [Spinner](docs/components/Spinner.md): 스피너 — «돌고 있다» 만 말한다
 - [StatusBadge](docs/components/StatusBadge.md): 레거시 셸 `StatusBadge`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [StatusDot](docs/components/StatusDot.md): (설명 없음 — JSDoc 대기)
 - [Switch](docs/components/Switch.md): (설명 없음 — JSDoc 대기) — "use client"
@@ -117,7 +117,7 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - [Textarea](docs/components/Textarea.md): (설명 없음 — JSDoc 대기) — "use client"
 - [Th](docs/components/Th.md): 열 머리 칸(`<th>`) — mono 대문자 라벨
 - [Thead](docs/components/Thead.md): 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다.
-- [ToastProvider](docs/components/ToastProvider.md): (설명 없음 — JSDoc 대기) — "use client"
+- [ToastProvider](docs/components/ToastProvider.md): 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 — "use client"
 - [Toggle](docs/components/Toggle.md): 레거시 컨트롤 `Toggle`. — "use client" — @deprecated 다음 마이너에서 제거 — `@jhleeweb/squircle-design-system/legacy` 에서 import 한다
 - [Toolbar](docs/components/Toolbar.md): (설명 없음 — JSDoc 대기) — 부품: ToolbarDivider, ToolbarSpacer
 - [Tooltip](docs/components/Tooltip.md): (설명 없음 — JSDoc 대기) — 부품: TooltipProvider — "use client"
@@ -129,7 +129,7 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 
 - [usePanelLayout](docs/components/usePanelLayout.md): (설명 없음 — JSDoc 대기) — "use client"
 - [useSidebarCollapse](docs/components/useSidebarCollapse.md): (설명 없음 — JSDoc 대기) — "use client"
-- [useToast](docs/components/useToast.md): (설명 없음 — JSDoc 대기) — "use client"
+- [useToast](docs/components/useToast.md): 가장 가까운 `ToastProvider` 의 큐 — 밖에서 부르면 던진다. — "use client"
 
 ## 유틸리티
 
@@ -138,14 +138,17 @@ B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `bo
 - `buttonVariants`: cva — 축 variant(solid | outline | ghost | link) · tone(neutral | primary | destructive) · size(sm | md | lg | icon-sm | icon | icon-lg); 기본 variant=outline, tone=neutral, size=md. 서버에서 호출 가능.
 - `cardVariants`: cva — 축 elevation(raised | flat | flush) · pad(none | sm | md | lg); 기본 elevation=raised, pad=none. 서버에서 호출 가능.
 - `drawerVariants`: cva — 축 side(right | left | bottom) · size(sm | md | lg); 기본 side=right, size=md. 서버에서 호출 가능.
+- `emptyStateVariants`: cva — 축 size(default | compact); 기본 size=default. 서버에서 호출 가능.
 - `inputVariants`: cva — 축 size(sm | md | lg) · invalid(true | false) · numeric(true | false); 기본 size=md, invalid=false, numeric=false. 서버에서 호출 가능.
 - `mediaCardMediaVariants`: cva — 축 orientation(vertical | horizontal) · ratio(16/9 | 4/3 | 1/1 | plan | none); 기본 orientation=vertical, ratio=plan. 서버에서 호출 가능.
 - `mediaCardVariants`: cva — 축 orientation(vertical | horizontal) · elevation(raised | flat | flush) · selected(true | false) · interactive(true | false); 기본 orientation=vertical, elevation=raised, selected=false, interactive=false. 서버에서 호출 가능.
 - `modalVariants`: cva — 축 size(sm | md | lg | xl | full); 기본 size=md. 서버에서 호출 가능.
 - `progressVariants`: cva — 축 tone(primary | success | warning | destructive | neutral); 기본 tone=primary. 서버에서 호출 가능.
+- `skeletonVariants`: cva — 축 shape(bar | circle); 기본 shape=bar. 서버에서 호출 가능.
 - `spinnerVariants`: cva — 축 size(sm | md | lg) · tone(neutral | muted | primary); 기본 size=md, tone=neutral. 서버에서 호출 가능.
 - `tableCellVariants`: cva — 축 numeric(true | false) · tone(neutral | success | warning | destructive); 기본 numeric=false, tone=neutral. 서버에서 호출 가능.
 - `toastVariants`: cva — 축 tone(neutral | success | warning | destructive); 기본 tone=neutral. 서버에서 호출 가능.
+- `toastViewportVariants`: cva — 축 position(bottom-right | bottom-center | top-right | top-center); 기본 position=bottom-right. 서버에서 호출 가능.
 - `cn`: function
 - `cva`: function
 - `GRID_MAJOR_EVERY`: constant

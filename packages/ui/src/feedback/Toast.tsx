@@ -5,7 +5,7 @@ import { LuX } from "react-icons/lu";
 
 import { cn, type VariantProps } from "../cn";
 import { normalizeTone, type ToneInput } from "../lib/tone";
-import { toastVariants, type ToastTone } from "./Toast.variants";
+import { toastVariants, toastViewportVariants, type ToastPosition, type ToastTone } from "./Toast.variants";
 import { Button } from "../primitives/Button";
 import { MOTION } from "../generated/tokens";
 
@@ -20,18 +20,45 @@ import { MOTION } from "../generated/tokens";
  * Radix 의 `Toast` 를 쓰는 이유는 스와이프 해제·포커스 복귀·`aria-live` 처리가 이미 옳기
  * 때문이다. 우리가 얹는 것은 큐와 외형뿐이다. */
 
+/** `toast()` 한 번에 넘기는 알림 한 건. */
 export interface ToastOptions extends Omit<VariantProps<typeof toastVariants>, "tone"> {
   /**
-   * 톤 — `neutral`(기본) · `success` · `warning` · `destructive`.
+   * 톤 — 왼쪽 띠의 색. 판정일 때만 유채색이다.
+   * - `neutral` — 판정 없는 알림(저장됨·복사됨, 기본)
+   * - `success` — 통과·완료
+   * - `warning` — 주의. 되돌릴 수 있지만 확인이 필요하다
+   * - `destructive` — 실패. 대개 `duration: 0` 과 함께 쓴다
+   * @default "neutral"
    * @deprecated 옛 키 `ok` · `warn` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
    */
   tone?: ToneInput<ToastTone> | null | undefined;
+  /** 무슨 일인지 한 줄 — 굵게 그린다. */
   title: React.ReactNode;
+  /**
+   * 제목 아래의 보조 문장.
+   * @default undefined
+   */
   description?: React.ReactNode;
-  /** 본문 아래의 되돌리기 등. `altText` 는 스크린리더가 읽는 대체 문구다. */
-  action?: { label: string; altText: string; onSelect: () => void };
-  /** ms. `0` 이면 사용자가 닫을 때까지 남는다 — 실패 알림에만 쓴다. */
+  /**
+   * 본문 아래의 되돌리기 등. `altText` 는 스크린리더가 읽는 대체 문구다.
+   * @default undefined
+   */
+  action?: ToastAction;
+  /**
+   * ms. `0` 이면 사용자가 닫을 때까지 남는다 — 실패 알림에만 쓴다. 비우면 `ToastProvider` 의 `duration` 을 따른다.
+   * @default undefined
+   */
   duration?: number;
+}
+
+/** 토스트 본문 아래의 조치 버튼 하나. */
+export interface ToastAction {
+  /** 버튼 글자. */
+  label: string;
+  /** 스크린리더가 읽는 대체 문구 — 단축키로 조치에 닿는 방법을 말한다(Radix 요구). */
+  altText: string;
+  /** 눌렀을 때. 토스트는 Radix 가 닫는다. */
+  onSelect: () => void;
 }
 
 interface QueuedToast extends ToastOptions {
@@ -39,41 +66,62 @@ interface QueuedToast extends ToastOptions {
   open: boolean;
 }
 
-interface ToastApi {
+/** `useToast()` 가 돌려주는 것 — 띄우기와 닫기. */
+export interface ToastApi {
+  /** 알림을 큐에 넣고 id 를 돌려준다. `limit` 을 넘으면 오래된 것부터 닫는다. */
   toast: (options: ToastOptions) => number;
+  /** 그 id 의 알림을 닫는다(퇴장 애니메이션 뒤 큐에서 빠진다). */
   dismiss: (id: number) => void;
 }
 
 const ToastContext = createContext<ToastApi | null>(null);
 
+/** 가장 가까운 `ToastProvider` 의 큐 — 밖에서 부르면 던진다. */
 export function useToast(): ToastApi {
   const api = useContext(ToastContext);
   if (!api) throw new Error("useToast must be used inside <ToastProvider>");
   return api;
 }
 
-export interface ToastProviderProps {
+/**
+ * 토스트 큐의 props. 큐 설정 밖의 속성(`className` · `ref` · `hotkey` · `label` · `data-*` …)은 **뷰포트**(쌓이는 `ol`)로 간다 —
+ * 프로바이더가 그리는 DOM 은 그것뿐이라 공통 계약(className · ref · rest)이 거기 닿는다.
+ */
+export interface ToastProviderProps extends Omit<
+  React.ComponentProps<typeof RadixToast.Viewport>,
+  "children"
+> {
+  /** 앱 — 이 안에서 `useToast()` 를 부른다. */
   children: React.ReactNode;
-  /** 화면에 동시에 보일 최대 개수. 넘치면 오래된 것부터 닫는다. */
+  /**
+   * 화면에 동시에 보일 최대 개수. 넘치면 오래된 것부터 닫는다.
+   * @default 3
+   */
   limit?: number;
-  /** 기본 노출 시간(ms). 판정 실패처럼 읽는 데 시간이 걸리는 것은 호출처가 늘린다. */
+  /**
+   * 기본 노출 시간(ms). `0` 이면 닫을 때까지 남는다. 판정 실패처럼 읽는 데 시간이 걸리는 것은 호출처가 늘린다.
+   * @default MOTION.toastDefaultMs
+   */
   duration?: number;
-  /** 뷰포트 위치. 캔버스 위 도구 클러스터와 겹치지 않는 쪽을 앱이 고른다. */
-  position?: "bottom-right" | "bottom-center" | "top-right" | "top-center";
+  /**
+   * 뷰포트 위치. 캔버스 위 도구 클러스터와 겹치지 않는 쪽을 앱이 고른다.
+   * - `bottom-right` — 오른쪽 아래(기본)
+   * - `bottom-center` — 아래 가운데
+   * - `top-right` — 오른쪽 위. 토스트는 위에서 내려온다
+   * - `top-center` — 위 가운데. 토스트는 위에서 내려온다
+   * @default "bottom-right"
+   */
+  position?: ToastPosition | null | undefined;
 }
 
-const VIEWPORT_POSITION: Record<NonNullable<ToastProviderProps["position"]>, string> = {
-  "bottom-right": "bottom-0 right-0 items-end",
-  "bottom-center": "bottom-0 left-1/2 -translate-x-1/2 items-center",
-  "top-right": "top-0 right-0 items-end",
-  "top-center": "top-0 left-1/2 -translate-x-1/2 items-center",
-};
-
+/** 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다. 알림은 `useToast().toast()` 로 띄운다. */
 export function ToastProvider({
   children,
   limit = 3,
   duration = MOTION.toastDefaultMs,
-  position = "bottom-right",
+  position,
+  className,
+  ...rest
 }: ToastProviderProps) {
   const [queue, setQueue] = useState<readonly QueuedToast[]>([]);
   const nextId = useRef(0);
@@ -131,7 +179,7 @@ export function ToastProvider({
         {queue.map((item) => (
           <RadixToast.Root
             data-slot="toast"
-            data-position={position}
+            data-tone={normalizeTone(item.tone) ?? "neutral"}
             key={item.id}
             open={item.open}
             /* Radix 의 `duration` 은 필수 number 라 `undefined` 를 넘기면 타입이 깨진다.
@@ -172,17 +220,19 @@ export function ToastProvider({
                 aria-label="Dismiss"
                 className="shrink-0 [&_svg]:size-4"
               >
-                <LuX size={16} aria-hidden="true" focusable={false} />
+                {/* 크기는 위 `[&_svg]:size-4` 가 정한다 — 아이콘 prop 의 숫자는 토큰 밖 값이다. */}
+                <LuX aria-hidden="true" focusable={false} />
               </Button>
             </RadixToast.Close>
           </RadixToast.Root>
         ))}
         <RadixToast.Viewport
+          className={cn(toastViewportVariants({ position }), className)}
+          {...rest}
+          /* 슬롯·축은 rest 뒤 — 소비자가 넘긴 data-slot 이 손잡이를 덮지 못하게 한다(공통 계약 slot-locked).
+             toast.css 의 위·아래 진입 방향도 이 data-position 을 읽는다. */
           data-slot="toast-viewport"
-          className={cn(
-            "pointer-events-none fixed z-toast m-0 flex max-h-screen w-[min(var(--size-toast),100vw)] list-none flex-col gap-3 p-4 outline-none",
-            VIEWPORT_POSITION[position],
-          )}
+          data-position={position ?? "bottom-right"}
         />
       </RadixToast.Provider>
     </ToastContext.Provider>

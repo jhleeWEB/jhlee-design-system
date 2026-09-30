@@ -66,11 +66,6 @@
       "count": 1
     }
   },
-  "packages/ui/src/feedback/Alert.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 3
-    }
-  },
   "packages/ui/src/feedback/Alert.variants.ts": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
@@ -79,27 +74,11 @@
   "packages/ui/src/feedback/EmptyState.tsx": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 6
-    }
-  },
-  "packages/ui/src/feedback/Progress.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 2
     }
   },
   "packages/ui/src/feedback/Skeleton.tsx": {
     "ds/no-literal-style-value": {
       "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 4
-    }
-  },
-  "packages/ui/src/feedback/Spinner.tsx": {
-    "jsdoc/require-jsdoc": {
-      "count": 2
     }
   },
   "packages/ui/src/feedback/Spinner.variants.ts": {
@@ -110,12 +89,6 @@
   "packages/ui/src/feedback/Toast.tsx": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
-    },
-    "ds/no-literal-style-value": {
-      "count": 1
-    },
-    "jsdoc/require-jsdoc": {
-      "count": 10
     }
   },
   "packages/ui/src/navigation/Accordion.tsx": {

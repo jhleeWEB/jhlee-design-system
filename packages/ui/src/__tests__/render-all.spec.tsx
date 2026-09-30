@@ -23,11 +23,16 @@ import * as DescriptionListStories from "../data/DescriptionList.stories";
 import * as TableStories from "../data/Table.stories";
 import * as barrel from "../index";
 import * as legacy from "../legacy/index";
+import * as AlertStories from "../feedback/Alert.stories";
+import * as EmptyStateStories from "../feedback/EmptyState.stories";
+import * as ProgressStories from "../feedback/Progress.stories";
+import * as SkeletonStories from "../feedback/Skeleton.stories";
+import * as SpinnerStories from "../feedback/Spinner.stories";
+import * as ToastStories from "../feedback/Toast.stories";
 import * as ButtonStories from "../primitives/Button.stories";
 
 /** 오늘 깨지는 검사 — 알파벳순, 줄어들기만 한다. */
 const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
-  Alert: ["axes", "slot-locked"],
   BackButton: ["slot-locked"],
   Badge: ["axes", "slot-locked"],
   Breadcrumb: ["slot-locked"],
@@ -60,7 +65,6 @@ const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
   DropdownMenuSubContent: ["slot", "slot-locked"],
   DropdownMenuSubTrigger: ["slot", "slot-locked"],
   DropdownMenuTrigger: ["className", "slot", "slot-locked"],
-  EmptyState: ["axes", "slot-locked"],
   Eyebrow: ["slot-locked"],
   Input: ["axes", "slot-locked"],
   Kbd: ["slot-locked"],
@@ -79,7 +83,6 @@ const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
   PopoverClose: ["className", "slot", "slot-locked"],
   PopoverContent: ["slot-locked"],
   PopoverTrigger: ["className", "slot", "slot-locked"],
-  Progress: ["axes", "slot-locked"],
   RadioGroup: ["className", "slot", "slot-locked"],
   RadioGroupItem: ["slot-locked"],
   SectionLabel: ["slot-locked"],
@@ -88,13 +91,9 @@ const KNOWN_CONTRACT_FAILURES: Readonly<Record<string, readonly CheckId[]>> = {
   Sidebar: ["slot-locked"],
   SidebarGroup: ["slot-locked"],
   SidebarItem: ["slot-locked"],
-  Skeleton: ["slot-locked"],
-  SkeletonText: ["slot-locked"],
-  Spinner: ["axes", "slot-locked"],
   StatusDot: ["ref", "rest"],
   Switch: ["slot-locked"],
   Textarea: ["slot-locked"],
-  ToastProvider: ["className", "ref", "rest"],
   Toolbar: ["slot-locked"],
   ToolbarDivider: ["ref", "rest", "slot", "slot-locked"],
   ToolbarSpacer: ["className", "ref", "rest", "slot", "slot-locked"],
@@ -108,7 +107,6 @@ const {
   AccordionHeader,
   AccordionItem,
   AccordionTrigger,
-  Alert,
   Badge,
   BackButton,
   Breadcrumb,
@@ -141,7 +139,6 @@ const {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-  EmptyState,
   Eyebrow,
   Input,
   Kbd,
@@ -160,7 +157,6 @@ const {
   PopoverClose,
   PopoverContent,
   PopoverTrigger,
-  Progress,
   RadioGroup,
   RadioGroupItem,
   ScrollArea,
@@ -170,9 +166,7 @@ const {
   Sidebar,
   SidebarGroup,
   SidebarItem,
-  Skeleton,
   SkeletonText,
-  Spinner,
   StatusDot,
   Switch,
   Table,
@@ -181,7 +175,6 @@ const {
   Textarea,
   Th,
   Thead,
-  ToastProvider,
   Toolbar,
   ToolbarDivider,
   ToolbarSpacer,
@@ -192,10 +185,16 @@ const {
 
 /** 스토리가 있는 컴포넌트 — `Default` 가 픽스처다. */
 const STORY_SUBJECTS: Readonly<Record<string, ContractSubject>> = {
+  Alert: storySubject(AlertStories, { slot: "alert", axes: ["tone"] }),
   Button: storySubject(ButtonStories, { slot: "button", axes: ["variant", "tone", "size"] }),
   DataTable: storySubject(DataTableStories, { slot: "data-table" }),
   DescriptionList: storySubject(DescriptionListStories, { slot: "description-list" }),
+  EmptyState: storySubject(EmptyStateStories, { slot: "empty-state", axes: ["size"] }),
+  Progress: storySubject(ProgressStories, { slot: "progress", axes: ["tone"] }),
+  Skeleton: storySubject(SkeletonStories, { slot: "skeleton", axes: ["shape"] }),
+  Spinner: storySubject(SpinnerStories, { slot: "spinner", axes: ["size", "tone"] }),
   Table: storySubject(TableStories, { slot: "table" }),
+  ToastProvider: storySubject(ToastStories, { slot: "toast-viewport", axes: ["position", "tone"] }),
 };
 
 /* 최소 props 픽스처. 부품(Content·Item…)은 열린 부모 안에 두어 포털까지 렌더한다. 탐침(p)은 검사 대상 컴포넌트에만 펼친다. */
@@ -298,15 +297,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
         <AccordionContent {...p}>B body</AccordionContent>
       </AccordionItem>
     )),
-  },
-  Alert: {
-    slot: "alert",
-    axes: ["tone"],
-    render: (p) => (
-      <Alert tone="info" title="Heads up" {...p}>
-        Body
-      </Alert>
-    ),
   },
   BackButton: { slot: "button", render: (p) => <BackButton {...p}>Back</BackButton> },
   Badge: {
@@ -545,11 +535,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       </DropdownMenu>
     ),
   },
-  EmptyState: {
-    slot: "empty-state",
-    axes: ["size"],
-    render: (p) => <EmptyState title="Nothing yet" description="Add a site to begin." {...p} />,
-  },
   Eyebrow: { slot: "eyebrow", render: (p) => <Eyebrow {...p}>Step</Eyebrow> },
   Input: { slot: "input", axes: ["size"], render: (p) => <Input aria-label="Area" size="md" {...p} /> },
   Kbd: { slot: "kbd", render: (p) => <Kbd {...p}>⌘K</Kbd> },
@@ -645,11 +630,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       </Popover>
     ),
   },
-  Progress: {
-    slot: "progress",
-    axes: ["tone"],
-    render: (p) => <Progress value={40} tone="primary" aria-label="FSI" {...p} />,
-  },
   RadioGroup: {
     slot: "radio-group",
     render: (p) => (
@@ -717,13 +697,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       </Sidebar>
     ),
   },
-  Skeleton: { slot: "skeleton", render: (p) => <Skeleton w={80} {...p} /> },
   SkeletonText: { slot: "skeleton-text", render: (p) => <SkeletonText {...p} /> },
-  Spinner: {
-    slot: "spinner",
-    axes: ["size", "tone"],
-    render: (p) => <Spinner size="md" tone="primary" label="Loading" {...p} />,
-  },
   StatusDot: { slot: "status-dot", render: (p) => <StatusDot tone="success" label="Pass" {...p} /> },
   Switch: { slot: "switch", render: (p) => <Switch aria-label="Dark" {...p} /> },
   Tbody: {
@@ -774,14 +748,6 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
           </Tr>
         </Thead>
       </Table>
-    ),
-  },
-  ToastProvider: {
-    slot: "toast-viewport",
-    render: (p) => (
-      <ToastProvider {...p}>
-        <span>App</span>
-      </ToastProvider>
     ),
   },
   Toolbar: {

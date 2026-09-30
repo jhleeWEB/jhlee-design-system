@@ -133,7 +133,6 @@ const PATTERNS: readonly Pattern[] = [
     find: (file) => matches(file.code, /\b(?:size|width|height|strokeWidth)=\{\s*\d+(?:\.\d+)?\s*\}/g),
     baseline: {
       "CanvasScale.tsx": 3,
-      "feedback/Toast.tsx": 1,
       "navigation/BackButton.tsx": 2,
       "overlay/Drawer.tsx": 2,
       "overlay/Modal.tsx": 2,
@@ -164,7 +163,6 @@ const PATTERNS: readonly Pattern[] = [
     find: (file) => matches(file.code, /\b(?:size|tone|variant|elevation)\s*===\s*["'][^"'\n]*["']\s*\?/g),
     // Alert 의 `tone === "danger" ?` 는 #22 가 normalizeTone() 결과를 쓰면서 사라졌다.
     baseline: {
-      "feedback/EmptyState.tsx": 2,
       "navigation/SegmentedControl.tsx": 1,
       "primitives/Card.tsx": 1,
     },
@@ -175,7 +173,6 @@ const PATTERNS: readonly Pattern[] = [
     kinds: ["tsx"],
     find: (file) => matches(file.code, /\bdata-[a-z-]+=\{[a-zA-Z.]+\}/g),
     baseline: {
-      "feedback/Toast.tsx": 1,
       "primitives/Card.tsx": 1,
     },
   },
