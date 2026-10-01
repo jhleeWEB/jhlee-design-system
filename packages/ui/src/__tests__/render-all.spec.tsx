@@ -57,6 +57,8 @@ const {
   FieldError,
   FieldLabel,
   Lede,
+  Legend,
+  LegendItem,
   MediaCard,
   Modal,
   ModalBody,
@@ -72,6 +74,8 @@ const {
   PopoverTrigger,
   RadioGroup,
   RadioGroupItem,
+  Readout,
+  ReadoutItem,
   SectionLabel,
   Select,
   SelectContent,
@@ -98,6 +102,8 @@ const {
   Textarea,
   Th,
   Thead,
+  ToggleGroup,
+  ToggleGroupItem,
   Toolbar,
   ToolbarDivider,
   ToolbarSpacer,
@@ -434,6 +440,16 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   Lede: { slot: "lede", render: (p) => <Lede {...p}>Lede</Lede> },
+  LegendItem: {
+    slot: "legend-item",
+    render: (p) => (
+      <Legend>
+        <LegendItem swatch="muted" pattern="hatch" {...p}>
+          Core
+        </LegendItem>
+      </Legend>
+    ),
+  },
   Modal: {
     slot: "modal",
     noDom: true,
@@ -510,6 +526,14 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       <RadioGroup aria-label="Choice" defaultValue="a">
         <RadioGroupItem value="a" aria-label="A" {...p} />
       </RadioGroup>
+    ),
+  },
+  ReadoutItem: {
+    slot: "readout-item",
+    render: (p) => (
+      <Readout>
+        <ReadoutItem label="Height" value="68.4" unit="m" tone="destructive" status="Over limit" {...p} />
+      </Readout>
     ),
   },
   SectionLabel: { slot: "section-label", render: (p) => <SectionLabel {...p}>Section</SectionLabel> },
@@ -704,6 +728,17 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
           </Tr>
         </Thead>
       </Table>
+    ),
+  },
+  ToggleGroupItem: {
+    slot: "toggle-group-item",
+    axes: ["variant", "size"],
+    render: (p) => (
+      <ToggleGroup type="single" aria-label="View" defaultValue="a">
+        <ToggleGroupItem value="a" {...p}>
+          A
+        </ToggleGroupItem>
+      </ToggleGroup>
     ),
   },
   ToolbarDivider: {

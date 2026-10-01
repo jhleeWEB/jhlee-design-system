@@ -22,6 +22,8 @@ export { fieldVariants } from "./Field.variants";
 export { Input, Textarea, type InputProps } from "./Input";
 export { inputVariants } from "./Input.variants";
 export { Kbd, SectionLabel, Separator } from "./Misc";
+export { NumberInput, type NumberInputProps } from "./NumberInput";
+export { numberInputStepperVariants } from "./NumberInput.variants";
 export {
   Select,
   SelectContent,
@@ -35,3 +37,12 @@ export {
   type SelectTriggerProps,
 } from "./Select";
 export { selectTriggerVariants } from "./Select.variants";
+export { Slider, type SliderMark, type SliderProps } from "./Slider";
+export { sliderTrackVariants, sliderVariants } from "./Slider.variants";
+export {
+  ToggleGroup,
+  ToggleGroupItem,
+  type ToggleGroupItemProps,
+  type ToggleGroupProps,
+} from "./ToggleGroup";
+export { toggleGroupItemVariants, toggleGroupVariants } from "./ToggleGroup.variants";

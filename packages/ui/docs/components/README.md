@@ -26,12 +26,15 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Input](Input.md) | component | client |  | 입력 — 글자와 수치 |
 | [Kbd](Kbd.md) | component | client |  | 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. |
 | [Lede](Lede.md) | component | server ok |  | 들머리 아래 한 문단 — 읽히도록 폭을 제한한다. |
+| [Legend](Legend.md) | component | server ok | LegendItem | 캔버스 범례 — `LegendItem` 의 목록 |
 | [MediaCard](MediaCard.md) | component | client |  | 내용 카드 — 고를 수 있는 후보 한 개(썸네일 · 제목 · 메타 · 조치) |
 | [Modal](Modal.md) | component | client | ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger | 모달의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 모달성만 든다 |
+| [NumberInput](NumberInput.md) | component | client |  | 수치 입력 — 범위(`min` · `max`) · 보폭(`step`, Shift ×10) · 단위(`unit`) · 증감 버튼(`stepper`) |
 | [PanelToggleButton](PanelToggleButton.md) | component | client |  | 패널 여닫기 아이콘 버튼 — 열려 있으면 «접기», 닫혀 있으면 «보이기» 아이콘과 이름을 단다. |
 | [Popover](Popover.md) | component | client | PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger | 팝오버의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 |
 | [Progress](Progress.md) | component | client |  | 진행 막대 — 값이 있을 때만 쓴다 |
 | [RadioGroup](RadioGroup.md) | component | client | RadioGroupItem | 라디오 묶음 — 여럿 중 하나를 고른다 |
+| [Readout](Readout.md) | component | server ok | ReadoutItem | 수치 묶음 — 칸(`ReadoutItem`)을 한 줄에 나란히 두고 좁으면 줄을 바꾼다 |
 | [ScrollArea](ScrollArea.md) | component | client |  | 스크롤 영역 — 스크롤하거나 막대를 끄는 동안만 얇은 스크롤바가 보인다. |
 | [SectionLabel](SectionLabel.md) | component | client |  | 미세 라벨 — 구획의 이름(대문자 mono). |
 | [SegmentedControl](SegmentedControl.md) | component | client |  | 배타적 뷰 전환 — 트랙 위의 흰 pill 이 지금 고른 값이다(radiogroup · roving tabindex). |
@@ -39,6 +42,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Separator](Separator.md) | component | client |  | 구분선 — 크롬의 헤어라인 |
 | [Sidebar](Sidebar.md) | component | client | SidebarGroup, SidebarItem | 사이드바 — 접힌 rail(아이콘)과 펼친 panel(아이콘 + 라벨) 두 모습을 갖는 내비게이션 랜드마크. |
 | [Skeleton](Skeleton.md) | component | server ok | SkeletonText | 스켈레톤 바 — 곧 올 내용과 같은 높이의 자리 |
+| [Slider](Slider.md) | component | client |  | 슬라이더 — 값 하나(`[50]`) 또는 범위(`[20, 80]`)를 고른다 |
 | [Spinner](Spinner.md) | component | server ok |  | 스피너 — «돌고 있다» 만 말한다 |
 | [StatusDot](StatusDot.md) | component | server ok |  | 상태 점 — 글자를 넣을 수 없는 좁은 자리에서만 |
 | [Switch](Switch.md) | component | client |  | 스위치 — **즉시 적용되는** 켬/끔 |
@@ -50,6 +54,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Th](Th.md) | component | server ok |  | 열 머리 칸(`<th>`) — mono 대문자 라벨 |
 | [Thead](Thead.md) | component | server ok |  | 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다. |
 | [ToastProvider](ToastProvider.md) | component | client |  | 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 |
+| [ToggleGroup](ToggleGroup.md) | component | client | ToggleGroupItem | 토글 묶음 — `type="single"`(값 하나, 다시 누르면 끈다) · `type="multiple"`(값 배열) |
 | [Toolbar](Toolbar.md) | component | server ok | ToolbarDivider, ToolbarSpacer | 툴바 — 캔버스 위 또는 그 바로 위의 한 줄 |
 | [Tooltip](Tooltip.md) | component | client | TooltipProvider | 툴팁 — 트리거(`children`) 위에 말풍선(`label`)을 띄운다 |
 | [Tr](Tr.md) | component | server ok |  | 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다. |
