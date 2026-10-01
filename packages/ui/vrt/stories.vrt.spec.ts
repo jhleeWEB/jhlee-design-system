@@ -17,6 +17,9 @@ const index = JSON.parse(
 const stories = Object.values(index.entries).filter((e) => e.type === "story" && e.tags?.includes("vrt"));
 const themes = ["light", "dark"] as const;
 
+/* 토큰 색 감지용 단색 견본(Foundations/Colors · Swatches)만 threshold 0 — 나머지는 기본 0.2(playwright.config 머리 주석). */
+const STRICT = new Set(["foundations-colors--swatches"]);
+
 test.describe("stories", () => {
   for (const story of stories) {
     const locked = story.tags?.includes("theme-locked") ?? false;
@@ -54,7 +57,10 @@ test.describe("stories", () => {
           expect(canvasBg).toBe("rgb(255, 255, 255)");
         }
 
-        await expect(page).toHaveScreenshot(`${story.id}--${theme}.png`, { fullPage: true });
+        await expect(page).toHaveScreenshot(`${story.id}--${theme}.png`, {
+          fullPage: true,
+          ...(STRICT.has(story.id) ? { threshold: 0 } : {}),
+        });
       });
     }
   }

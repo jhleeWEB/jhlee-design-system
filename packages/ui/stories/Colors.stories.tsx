@@ -72,3 +72,26 @@ export const Tokens: Story = {
     await expect(swatches).toHaveLength(CHROME.length + CANVAS.length);
   },
 };
+
+/**
+ * 글자 · 테두리 · 둥근 모서리 없는 단색 칸만 — VRT 가 **이 스토리만** threshold 0 으로 비교한다(vrt/stories.vrt.spec.ts 의 STRICT).
+ * 전체 스냅샷은 기본 threshold 0.2 다: 기준선을 만드는 개발 기기(Apple Silicon · arm64 Docker)와 CI(x86_64)는 그림자 블러 · 안티에일리어싱을
+ * 다르게 래스터라이즈하고(threshold 0 에서 CI 75장 실패), Rosetta 의 amd64 에뮬레이션도 CI 와 SIMD 경로가 달라 320장이 실패했다(#75 실측).
+ * 정수 좌표의 단색 면은 아키텍처와 무관하게 같은 sRGB 픽셀이라, 토큰 색이 한 단(YIQ 0.023)만 움직여도 여기서는 반드시 빨개진다.
+ */
+export const Swatches: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4 bg-background p-6">
+      {[CHROME, CANVAS].map((names, i) => (
+        <ul key={i} className="m-0 grid list-none grid-cols-12 gap-2 p-0">
+          {names.map((name) => (
+            <li key={name} data-swatch={name} className="h-12" style={{ background: `var(${name})` }} />
+          ))}
+        </ul>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getAllByRole("listitem")).toHaveLength(CHROME.length + CANVAS.length);
+  },
+};

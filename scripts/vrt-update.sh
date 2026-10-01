@@ -15,10 +15,7 @@ REPORT="$ROOT/packages/ui/vrt/report"
 MODE=${VRT_CHECK:+check}
 mkdir -p "$OUT" "$REPORT"
 
-# --platform linux/amd64 — CI(ubuntu-latest)는 x86_64 다. Apple Silicon 의 Docker 는 기본이 arm64 라, 같은 이미지라도 Skia 의 그림자 블러·
-# 안티에일리어싱이 아키텍처마다 다르게 래스터라이즈된다. threshold 0(#70)에서 arm64 기준선은 CI 에서 오버레이·토스트 75장이 수천~수만 px 로
-# 실패했다(#75 첫 CI). 기준선과 검사는 CI 와 같은 아키텍처에서만 만든다 — Docker Desktop 의 Rosetta 에뮬레이션이라 느리다.
-docker run --rm --ipc=host --platform linux/amd64 \
+docker run --rm --ipc=host \
   -v "$ROOT":/src:ro \
   -v "$OUT":/out \
   -v "$REPORT":/report \
