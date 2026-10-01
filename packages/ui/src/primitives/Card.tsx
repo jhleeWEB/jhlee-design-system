@@ -12,10 +12,10 @@ import {
   useMemo,
   useRef,
 } from "react";
-import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import { cn, type VariantProps } from "../cn";
-import { ICON, INLINE_ICON } from "../lib/icons";
+import { IconChevronLeft, IconChevronRight } from "../icons/icons";
+import { INLINE_ICON } from "../lib/icons";
 import { cardHeaderVariants, cardVariants } from "./Card.variants";
 import { renderPanelToggle } from "./PanelToggleButton";
 
@@ -265,7 +265,7 @@ export function Card({
   const bodyContent = header === undefined ? childList.filter((child) => !isHeader(child)) : children;
   /* 셰브론은 **누르면 일어날 일**을 가리킨다. 왼쪽에 붙은 패널을 펼치면 내용이 오른쪽으로
      자라므로 오른쪽을 가리킨다. */
-  const StripChevron = side === "left" ? LuChevronRight : LuChevronLeft;
+  const StripChevron = side === "left" ? IconChevronRight : IconChevronLeft;
 
   return (
     <Ctx.Provider value={ctx}>
@@ -303,7 +303,7 @@ export function Card({
                 "focus-visible:focus-ring focus-visible:outline-none",
               )}
             >
-              <StripChevron {...ICON} className="size-4 shrink-0" />
+              <StripChevron className="size-4 shrink-0" />
               <span
                 className={cn(
                   "flex-1 font-mono text-micro tracking-caps whitespace-nowrap uppercase",

@@ -13,6 +13,8 @@ export default defineConfig({
     "src/canvas-metrics.ts",
     "src/testing/index.ts",
     "src/eslint/index.ts",
+    // icons/index 는 아이콘 서브패스 `./icons`(#64) — 루트 배럴에는 싣지 않는다(공개 표면은 컴포넌트, 아이콘은 서브패스).
+    "src/icons/index.ts",
     "src/agent/cli.ts",
   ],
   format: "esm",
@@ -30,6 +32,11 @@ export default defineConfig({
     // 생성물 — theme.css · tokens.css 가 `@import "./generated/…"` 로 본다(#18). 디렉터리 깊이를 소스와 같게 유지해야 tarball 안에서도 상대경로가 산다.
     { from: "src/generated/tokens.css", to: "dist/generated" },
     { from: "src/generated/theme.tailwind.css", to: "dist/generated" },
+    // 커서(#64) — tokens.css 가 cursors.css(:root 의 --cursor-*)를, theme.css 가 cursors.tailwind.css(@utility cursor-*)를 @import 한다.
+    { from: "src/generated/cursors.css", to: "dist/generated" },
+    { from: "src/generated/cursors.tailwind.css", to: "dist/generated" },
+    // lucide 에서 옮긴 글리프의 ISC 고지 — 아이콘 서브패스 옆에 싣는다(#64).
+    { from: "src/icons/LICENSE-lucide.txt", to: "dist/icons" },
     { from: "src/canvas.css", to: "dist" },
     { from: "src/feedback/toast.css", to: "dist/feedback" },
     { from: "src/primitives/card-motion.css", to: "dist/primitives" },
@@ -42,7 +49,6 @@ export default defineConfig({
       /^react($|\/)/,
       /^react-dom($|\/)/,
       /^radix-ui($|\/)/,
-      /^react-icons($|\/)/,
       "class-variance-authority",
       "clsx",
       "tailwind-merge",

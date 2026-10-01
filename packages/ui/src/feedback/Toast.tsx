@@ -1,9 +1,9 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Toast as RadixToast } from "radix-ui";
-import { LuX } from "react-icons/lu";
 
 import { cn, type VariantProps } from "../cn";
+import { IconX } from "../icons/icons";
 import { toastVariants, toastViewportVariants, type ToastPosition, type ToastTone } from "./Toast.variants";
 import { SlottedButton } from "../primitives/Button";
 import { MOTION } from "../generated/tokens";
@@ -219,7 +219,7 @@ export function ToastProvider({
                 className="shrink-0 [&_svg]:size-4"
               >
                 {/* 크기는 위 `[&_svg]:size-4` 가 정한다 — 아이콘 prop 의 숫자는 토큰 밖 값이다. */}
-                <LuX aria-hidden="true" focusable={false} />
+                <IconX />
               </SlottedButton>
             </RadixToast.Close>
           </RadixToast.Root>

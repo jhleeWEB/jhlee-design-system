@@ -13,10 +13,10 @@ import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { LuCircle } from "react-icons/lu";
 import { describe, expect, it } from "vitest";
 
 import { runContract, type ContractSubject, type Probe } from "../__arch__/component-contract";
+import { IconCircle } from "../icons/icons";
 import * as barrel from "../index";
 
 const {
@@ -625,7 +625,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     render: (p) => (
       <Sidebar>
         <SidebarGroup label="Group" {...p}>
-          <SidebarItem icon={<LuCircle />} label="Home" />
+          <SidebarItem icon={<IconCircle />} label="Home" />
         </SidebarGroup>
       </Sidebar>
     ),
@@ -634,7 +634,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     slot: "sidebar-item",
     render: (p) => (
       <Sidebar>
-        <SidebarItem icon={<LuCircle />} label="Home" {...p} />
+        <SidebarItem icon={<IconCircle />} label="Home" {...p} />
       </Sidebar>
     ),
   },

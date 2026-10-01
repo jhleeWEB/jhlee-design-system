@@ -2,6 +2,7 @@
  *
  * 토큰 값은 여기 없다. 정본은 `packages/ui/tokens/` 의 DTCG JSON 이고 생성기(`tokens/build.mjs`)가 아래 파일을 쓴다:
  *   generated/tokens.css   :root 원시(--palette-*) · 캔버스(--canvas-*) · 치수·간격·시간·층위 · 크롬 라이트/다크(--chrome-*) · reduced-motion
+ *   generated/cursors.css  :root 의 3D 모델링 커서(--cursor-*, #64 — 정본은 JSON 이 아니라 src/cursors/cursors.ts 의 SVG 표)
  * 옛 이름 alias(generated/legacy.css — --ink · --gap · --chrome-ink …)는 3.0.0 에서 지웠다(#49). 옮기는 길은 코드모드 · 린트 `--fix` 다.
  * 손 CSS 로 값을 적던 때(#15 이전)의 원칙 세 개는 그대로다 — 1. 도면 면은 radius 0 · 그림자 없음 · 무채색 · 다크 없음(캔버스),
  * 2. 유채색은 판정에만, 3. 수치는 mono + tabular-nums. 아래 요소 규칙이 그 원칙의 직접 결과이고, 값이 아니라 «규칙» 이라 손으로 남는다.
@@ -10,6 +11,8 @@
  */
 
 @import "./generated/tokens.css";
+/* 3D 모델링 커서 `--cursor-*`(#64) — 정본 src/cursors/cursors.ts, 생성 tokens/build.mjs. 유틸리티(cursor-cad-*)는 theme.css 쪽이다. */
+@import "./generated/cursors.css";
 
 *,
 *::before,

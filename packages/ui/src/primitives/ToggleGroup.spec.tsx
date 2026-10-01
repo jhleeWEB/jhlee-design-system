@@ -1,10 +1,9 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { LuBold, LuItalic } from "react-icons/lu";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { describeComponentContract } from "../__arch__/component-contract";
-import { ICON } from "../lib/icons";
+import { IconBold, IconItalic } from "../icons/icons";
 import { ToggleGroup, ToggleGroupItem } from "./ToggleGroup";
 import * as stories from "./ToggleGroup.stories";
 
@@ -53,8 +52,8 @@ describe("ToggleGroup 동작", () => {
     const onValueChange = vi.fn();
     render(
       <ToggleGroup type="multiple" aria-label="Format" onValueChange={onValueChange}>
-        <ToggleGroupItem value="bold" icon={<LuBold {...ICON} />} aria-label="Bold" />
-        <ToggleGroupItem value="italic" icon={<LuItalic {...ICON} />} aria-label="Italic" />
+        <ToggleGroupItem value="bold" icon={<IconBold />} aria-label="Bold" />
+        <ToggleGroupItem value="italic" icon={<IconItalic />} aria-label="Italic" />
       </ToggleGroup>,
     );
     expect(screen.getByRole("toolbar", { name: "Format" })).toBeInTheDocument();
@@ -72,9 +71,9 @@ describe("ToggleGroup 동작", () => {
   it("아이콘 전용 칸은 aria-label 이 타입에서 필수이고, 그 이름으로 읽힌다 — 가로 여백을 걷어 정사각으로 선다", () => {
     render(
       <ToggleGroup type="multiple" aria-label="Format">
-        <ToggleGroupItem value="bold" icon={<LuBold {...ICON} />} aria-label="Bold" />
+        <ToggleGroupItem value="bold" icon={<IconBold />} aria-label="Bold" />
         {/* @ts-expect-error — 아이콘만 든 칸에 aria-label 이 없으면 타입 오류다. */}
-        <ToggleGroupItem value="italic" icon={<LuItalic {...ICON} />} />
+        <ToggleGroupItem value="italic" icon={<IconItalic />} />
       </ToggleGroup>,
     );
     const bold = screen.getByRole("button", { name: "Bold" });

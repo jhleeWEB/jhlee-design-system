@@ -6,7 +6,7 @@
  */
 import { beforeAll, describe, expect, it } from "vitest";
 
-/* 배럴의 첫 로드는 radix-ui · react-icons 전량을 끌어온다 — unit(jsdom)·arch 워커가 함께 도는 전체 `pnpm test` 에서 그 비용이
+/* 배럴의 첫 로드는 radix-ui 전량을(옛 react-icons 도, #64 이전) 끌어온다 — unit(jsdom)·arch 워커가 함께 도는 전체 `pnpm test` 에서 그 비용이
  * vitest 기본 5초를 넘겨 간헐 실패했다(#17, 실측 5024ms). 로드를 beforeAll 로 빼 테스트 시간에서 제외하고, 그 훅에만 넉넉한 시간을 준다. */
 const BARREL_LOAD_TIMEOUT_MS = 30_000;
 

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { LuFolderOpen } from "react-icons/lu";
 import { expect } from "storybook/test";
 
 import { ThemePair } from "../../stories/decorators/ThemePair";
+import { IconFolderOpen } from "../icons/icons";
 import { Button } from "../primitives/Button";
 import { EmptyState } from "./EmptyState";
 
@@ -16,7 +16,7 @@ const meta = {
     size: "default",
     title: "No project selected",
     description: "Pick a project from the list or create one, then its files become available.",
-    icon: <LuFolderOpen aria-hidden="true" />,
+    icon: <IconFolderOpen />,
     action: (
       <Button variant="solid" tone="primary">
         Create project

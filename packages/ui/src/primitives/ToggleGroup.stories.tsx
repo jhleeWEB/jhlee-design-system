@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { LuBold, LuGrid3X3, LuItalic, LuMagnet, LuRuler, LuUnderline } from "react-icons/lu";
 import { expect, fn, userEvent } from "storybook/test";
 
 import { ThemePair } from "../../stories/decorators/ThemePair";
 import { Matrix } from "../../stories/helpers/Matrix";
-import { ICON } from "../lib/icons";
+import { IconBold, IconGrid, IconItalic, IconMeasureDistance, IconSnap, IconUnderline } from "../icons/icons";
 import { ToggleGroup, ToggleGroupItem } from "./ToggleGroup";
 
 /* 3스토리 계약(본보기 Button.stories). 축은 `variant` · `size` — Variants 는 두 축의 격자에 글자 칸 · 아이콘 전용 칸 · 비활성 칸을 함께 그린다.
@@ -51,11 +50,11 @@ export const Default: Story = {
 function FormatItems({ disabled = false }: { disabled?: boolean }) {
   return (
     <>
-      <ToggleGroupItem value="bold" icon={<LuBold {...ICON} />} aria-label="Bold" />
-      <ToggleGroupItem value="italic" icon={<LuItalic {...ICON} />} aria-label="Italic" />
+      <ToggleGroupItem value="bold" icon={<IconBold />} aria-label="Bold" />
+      <ToggleGroupItem value="italic" icon={<IconItalic />} aria-label="Italic" />
       <ToggleGroupItem
         value="underline"
-        icon={<LuUnderline {...ICON} />}
+        icon={<IconUnderline />}
         aria-label="Underline"
         disabled={disabled}
       />
@@ -103,13 +102,13 @@ export const Variants: Story = {
             size={size}
             aria-label={`${variant} ${size} aids`}
           >
-            <ToggleGroupItem value="grid" icon={<LuGrid3X3 {...ICON} />}>
+            <ToggleGroupItem value="grid" icon={<IconGrid />}>
               Grid
             </ToggleGroupItem>
-            <ToggleGroupItem value="snap" icon={<LuMagnet {...ICON} />}>
+            <ToggleGroupItem value="snap" icon={<IconSnap />}>
               Snap
             </ToggleGroupItem>
-            <ToggleGroupItem value="measure" icon={<LuRuler {...ICON} />}>
+            <ToggleGroupItem value="measure" icon={<IconMeasureDistance />}>
               Measure
             </ToggleGroupItem>
           </ToggleGroup>

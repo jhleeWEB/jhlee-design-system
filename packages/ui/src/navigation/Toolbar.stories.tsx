@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { LuHand, LuMousePointer2, LuRuler, LuZoomIn } from "react-icons/lu";
 import { expect } from "storybook/test";
 
 import { ThemePair } from "../../stories/decorators/ThemePair";
+import { IconMeasureDistance, IconPan, IconSelect, IconZoomIn } from "../icons/icons";
 import { Button } from "../primitives/Button";
 import { Toolbar, ToolbarDivider, ToolbarSpacer } from "./Toolbar";
 
@@ -12,18 +12,18 @@ function Tools() {
   return (
     <>
       <Button variant="ghost" size="icon-sm" aria-label="Select">
-        <LuMousePointer2 aria-hidden="true" />
+        <IconSelect />
       </Button>
       <Button variant="ghost" size="icon-sm" aria-label="Pan">
-        <LuHand aria-hidden="true" />
+        <IconPan />
       </Button>
       <ToolbarDivider />
       <Button variant="ghost" size="icon-sm" aria-label="Measure">
-        <LuRuler aria-hidden="true" />
+        <IconMeasureDistance />
       </Button>
       <ToolbarSpacer />
       <Button variant="ghost" size="icon-sm" aria-label="Zoom in">
-        <LuZoomIn aria-hidden="true" />
+        <IconZoomIn />
       </Button>
     </>
   );

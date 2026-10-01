@@ -1,8 +1,7 @@
 "use client";
-import { LuMaximize2, LuMinimize2 } from "react-icons/lu";
 
 import { cn } from "../cn";
-import { ICON } from "../lib/icons";
+import { IconMaximize, IconMinimize } from "../icons/icons";
 import { SlottedButton, type ButtonProps } from "./Button";
 
 /** `<PanelToggleButton>` 의 props — 아이콘 버튼이라 `variant` · `size` · `children` 은 고정이다. */
@@ -34,7 +33,7 @@ export function renderPanelToggle(
   slot: string,
 ) {
   const action = `${open ? "Collapse" : "Show"} the ${label}`;
-  const Icon = open ? LuMinimize2 : LuMaximize2;
+  const Icon = open ? IconMinimize : IconMaximize;
   return (
     <SlottedButton
       {...rest}
@@ -50,7 +49,7 @@ export function renderPanelToggle(
       title={action}
       onClick={() => onOpenChange(!open)}
     >
-      <Icon {...ICON} />
+      <Icon />
     </SlottedButton>
   );
 }
