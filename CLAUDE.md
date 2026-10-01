@@ -165,7 +165,7 @@ cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tm
 유니언 값의 설명 빈자리 — JSDoc 을 채우면 같은 PR 에서 줄인다. 첫 실측 139 · 109 → Phase D 뒤 32 · 4 → legacy 를 지운 #49 에서 0 — 이제 새 빈자리는 곧 실패). Phase C 의 래칫 셋(C2·C3, 전부
 «없는 실패는 새 위반, 목록에 있는데 통과하면 지워라»): `contrast.spec` 의 `KNOWN_FAILURES`(WCAG 2.x 미달 쌍, 첫 실측 7 — light 5 · dark 2 → #55 에서 글자 쌍 다섯을 값으로 고쳐 2.
 남은 둘은 `border-strong/card`(1.4.11 비텍스트 3:1, 라이트 · 다크) — 3:1 로 올리면 입력 · 체크박스 외곽이 세 배 진해지는 디자인 결정이라 따로 묻는다) · `stories-contract.spec` 의 `KNOWN_A11Y_FAILURES`(axe 규칙을 스토리 단위 `parameters.a11y.config.rules` 로 끈 스토리 — 메타에서 끄는 것은
-금지. 첫 실측 7 → Phase D 의 새 스토리들이 올려 2026-10-01 재실측 61 → #47 의 Select · Field · Tabs 아홉을 더해 70. #55 에서 4 — 토큰 값 · Sidebar 배지 opacity · 단축키 색으로 color-contrast 가, ThemePair 가 테마를 자식 함수로 넘겨 landmark-unique 가 모두 빠졌다. 남은 넷은 열린 Select · Radius Components 의 aria-hidden-focus(Radix 포커스 가드)와 Workbench 의 aria-progressbar-name) ·
+금지. 첫 실측 7 → Phase D 의 새 스토리들이 올려 2026-10-01 재실측 61 → #47 의 Select · Field · Tabs 아홉을 더해 70. #55 에서 4 — 토큰 값 · Sidebar 배지 opacity · 단축키 색으로 color-contrast 가, ThemePair 가 테마를 자식 함수로 넘겨 landmark-unique 가 모두 빠졌다. 남은 넷은 열린 Select · Radius Components 의 aria-hidden-focus(Radix 포커스 가드)와 Workbench 의 aria-progressbar-name — #71 에서 Workbench 를 다시 짜며 3) ·
 `vitest.config.ts` 의 coverage thresholds(첫 실측 floor−2 — statements 84 · branches 78 · functions 82 · lines 89).
 `render-all.spec` 의 `KNOWN_CONTRACT_FAILURES`(첫 실측 81 컴포넌트)와 `stories-contract.spec` 의 `STORIES_MISSING` 은 Phase D 가 0 으로 비워 지웠다(#48) —
 이제 «배럴 컴포넌트마다 옆 stories · 옆 spec(또는 부품 픽스처)» 는 예외 없는 불변식이다. 마지막 예외였던 Button 의 slot-locked 는 #49 에서 잠갔다 —
@@ -177,13 +177,13 @@ DS 안에서 다른 이름이 필요한 자리(토스트 · 대화상자 닫기 
 첫 실행의 위반은 `eslint-suppressions.json`(ESLint bulk suppressions)이 덮는다 — 계획의 «warn + 기준선» 은 suppressions 가
 error 만 덮기 때문에 이 모양이 됐다. **기준선을 늘리는 PR 은 받지 않는다**(`--suppress-all` 재실행 금지). 위반을 고쳐 줄이면
 같은 PR 에서 `pnpm exec eslint . --prune-suppressions` 로 기준선을 낮춘다.
-기준선의 실측(2026-10-01, D8 #49 의 프루닝 뒤 — 죽은 항목 0; 첫 실측 2026-09-30 은 49 파일 350 건 · 규칙 14개, #48 뒤 26 파일 83 건): 24 파일 75 건, 규칙 10개 —
-`better-tailwindcss/no-restricted-classes` 25 · `better-tailwindcss/no-unknown-classes` 20 · `ds/no-literal-style-value` 12 ·
-`@typescript-eslint/no-unnecessary-type-assertion` 8 · `jsx-a11y/label-has-associated-control` 3 · `@typescript-eslint/no-floating-promises` 2 · `react-hooks/refs` 2 ·
-`ds/no-forward-ref` 1 · `jsdoc/require-jsdoc` 1 · `jsx-a11y/interactive-supports-focus` 1. 7 파일은 `src/__tests__/` 의 옛 스펙이고(legacy 전용 스펙 둘은 #49 에서 지웠다)
-Workbench(`stories/workbench/Workbench.tsx`)가 32 건이다.
+기준선의 실측(2026-10-01, #71 의 프루닝 뒤 — 죽은 항목 0; 첫 실측 2026-09-30 은 49 파일 350 건 · 규칙 14개, #48 뒤 26 파일 83 건, #49 뒤 16 파일 57 건): 15 파일 26 건, 규칙 9개 —
+`@typescript-eslint/no-unnecessary-type-assertion` 8 · `better-tailwindcss/no-restricted-classes` 6 · `ds/no-literal-style-value` 3 ·
+`better-tailwindcss/no-unknown-classes` 2 · `@typescript-eslint/no-floating-promises` 2 · `react-hooks/refs` 2 ·
+`ds/no-forward-ref` 1 · `jsdoc/require-jsdoc` 1 · `jsx-a11y/interactive-supports-focus` 1. 대부분 `src/__tests__/` 의 옛 스펙이다 —
+Workbench(`stories/workbench/Workbench.tsx`)의 31 건은 #71 에서 AppShell 로 다시 짜며 0 이 됐다.
 **그 밖의 모든 규칙은 기준선 없이 통과한다** — `ds/legacy-tone` · `ds/no-magic-ms` · `ds/no-boolean-string-data-attr`, `jsdoc/require-description`·`check-tag-names`,
-`import-x/no-cycle`·`no-self-import`·`no-duplicates`, `no-restricted-imports`(배럴·테스트 import 금지), 위 둘을 뺀 `jsx-a11y/*`, 위 하나를 뺀 `react-hooks/*`,
+`import-x/no-cycle`·`no-self-import`·`no-duplicates`, `no-restricted-imports`(배럴·테스트 import 금지), 위 하나를 뺀 `jsx-a11y/*`, 위 하나를 뺀 `react-hooks/*`,
 위 둘을 뺀 `@typescript-eslint/*`(recommendedTypeChecked), `js.recommended` 전부.
 이 규칙들은 새 위반이 곧 실패이므로 승격할 것이 없다. **stylelint** 는 기준선이 없다 — 손 CSS 의 위반은 0 이고(C4 에서 theme.css 의 6건을 같은 값의 토큰으로 옮겼다)
 마지막 warning 기준선(`legacy/shell.css` 122건)은 3.0.0 에서 파일째 지웠다(`--max-warnings 0`, #49). **Prettier** 는 CI 가 `--check` 만 한다 — 첫 적용 커밋은 `.git-blame-ignore-revs` 에 있다.

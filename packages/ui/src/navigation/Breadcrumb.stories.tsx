@@ -25,6 +25,13 @@ export const Default: Story = {
     await expect(canvas.getByText("Level 3")).toHaveAttribute("aria-current", "page");
     await userEvent.click(canvas.getByRole("button", { name: "Tower A" }));
     await expect(args.items[1]?.onSelect).toHaveBeenCalledOnce();
+    // 링크 조각은 브라우저 기본 링크(파랑 · 밑줄)가 아니라 경로의 muted 글자다(#70) — 버튼 조각과 같은 색이어야 한다.
+    const link = canvas.getByRole("link", { name: "Projects" });
+    const button = canvas.getByRole("button", { name: "Tower A" });
+    await userEvent.unhover(button);
+    await expect(getComputedStyle(link).textDecorationLine).toBe("none");
+    await expect(getComputedStyle(link).color).toBe(getComputedStyle(button).color);
+    (document.activeElement as HTMLElement | null)?.blur();
   },
 };
 

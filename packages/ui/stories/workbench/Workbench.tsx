@@ -1,479 +1,893 @@
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 import {
+  AppShell,
   Badge,
+  Breadcrumb,
   Button,
-  Card,
-  CardCollapse,
-  CardHeader,
-  CardWell,
+  CanvasScale,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
   DescriptionList,
-  DisplayHeading,
-  Eyebrow,
-  Input,
-  Lede,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+  Field,
+  FieldControl,
+  FieldLabel,
+  Kbd,
+  Legend,
+  LegendItem,
+  NumberInput,
+  PanelToggleButton,
   Progress,
+  Readout,
+  ReadoutItem,
   SectionLabel,
-  SegmentedControl,
-  Separator,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Sidebar,
   SidebarGroup,
   SidebarItem,
-  StatusDot,
-  Switch,
+  Slider,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
   ToastProvider,
+  ToggleGroup,
+  ToggleGroupItem,
+  Toolbar,
+  ToolbarDivider,
+  ToolbarSpacer,
   Tooltip,
   TooltipProvider,
+  TopBar,
+  niceScale,
   usePanelLayout,
 } from "../../src";
+import {
+  IconAxis,
+  IconDownload,
+  IconDraw,
+  IconEye,
+  IconFileText,
+  IconGrid,
+  IconLayers,
+  IconMap,
+  IconMeasureArea,
+  IconMeasureDistance,
+  IconMove,
+  IconOrbit,
+  IconPan,
+  IconRectangle,
+  IconRedo,
+  IconRotate,
+  IconScale,
+  IconSearch,
+  IconSectionPlane,
+  IconSelect,
+  IconSettings,
+  IconSnap,
+  IconUndo,
+  IconViewFront,
+  IconViewIso,
+  IconViewSide,
+  IconViewTop,
+  IconZoomExtents,
+  IconZoomIn,
+  IconZoomOut,
+  IconZoomWindow,
+} from "../../src/icons";
 
-/* 제품 화면의 복제 (#1198) — `apps/ds-gallery/src/main.tsx` 의 작업대 절을 옮긴 것(계획 §2.5-e, #6).
- * 화면 내용·문자열은 원본 그대로다. 달라진 것은 셋뿐: 진입점(createRoot)·CSS import 가 빠지고 Storybook preview 가 맡는다,
- * `document.documentElement` 를 직접 만지던 다크 토글이 addon-themes 툴바 전역으로 대체됐다(그래서 맥락 줄의 Dark 버튼이 없다),
- * 작업대 패널 접힘의 `storageKey` 를 뺐다 — 스토리는 결정론적이어야 VRT 기준선이 성립하고, 브라우저에 남은 상태가 스크린샷을 바꾸면 안 된다.
- * 같은 파일에 있던 컴포넌트 명세(`<Spec>` 17절, `Pages/Gallery`)는 Phase D 가 컴포넌트별 스토리로 나눈 뒤 지웠다(#48) — 이것은 영구다.
+/* 제품 화면의 복제 — 3D 배치 설정기(configurator) 작업대(#71). 옛 손 레이아웃(2줄 머리 · 250px Card 인스펙터 · 스트립 접힘, #1198 · #6)을
+ * DS 의 작업대 부품으로 다시 짰다: AppShell(inset — 옅은 바닥 위의 카드) · TopBar · 끌어 바꾸고 접는 인스펙터(AppShell 안의 ResizablePanels) ·
+ * 레일 Sidebar · 캔버스 위 부유 툴 클러스터(Toolbar + ToggleGroup + Tooltip 단축키) · 쥔 툴의 CAD 커서(`cursor-cad-*`) ·
+ * 캔버스 범례(Legend) · 축척(CanvasScale) · 실시간 판독(Readout) · 명령 팔레트(⌘K, 닫힌 채 시작).
  *
- * 구조는 참고 화면(Office Studio)에서 왔다: 옅은 바닥 위에 카드가 떠 있고, 왼쪽에 64px 레일,
- * 상단에 두 줄(제품 줄 · 맥락 줄), 아래에 상태 줄. 캔버스는 카드 안의 «웰» 에 흰 시트로 앉는다. */
+ * 도메인 어휘(필지 · FSI · 주차 · 규칙 팩)는 **이 파일의 데이터에만** 있다 — 컴포넌트는 그것을 모른다.
+ * VRT 기준선이 성립하도록 결정적이다: 타이머 · 난수 · `storageKey` 가 없고, 수치는 고정 데이터에서 계산한다(숫자 서식은 en-US 고정).
+ * 다크 토글은 addon-themes 툴바 전역이 맡는다 — 캔버스(흰 바탕 · 무채색 · radius 0)는 어느 테마에서도 같은 픽셀이고, 크롬만 바뀐다. */
 
-const ICON = {
-  site: "M2 13 8 2l6 11z",
-  plan: "M2.5 2.5h11v11h-11zM2.5 6.5h11M6.5 6.5v7",
-  tower: "M3 2.5h4.5v11H3zM8.5 6h4.5v7.5H8.5z",
-  park: "M6.5 11.5V4.5h2.4a2.1 2.1 0 010 4.2H6.5",
-  rules: "M8 2v12M4 5l4-3 4 3M3 10h10",
-  out: "M8 10V2M5 5l3-3 3 3M2.5 10v3h11v-3",
-} as const;
+const fmt = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+const fmt1 = new Intl.NumberFormat("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const fmt2 = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-function Icon({ d }: { d: string }) {
+/* ── 스토리 데이터 — 필지 · 규칙 ─────────────────────────────────────────────── */
+const SITE = { width: 88, depth: 54 } as const; // m
+const PLOT_AREA = SITE.width * SITE.depth; // 4,752 m²
+const PODIUM = { x0: 10, x1: 78, y0: 10, y1: 44, z: 9 } as const;
+const TOWER_A = { x0: 14, x1: 36, y0: 14, y1: 36, storeys: 16 } as const;
+const TOWER_B = { x0: 50, x1: 72, y0: 16, y1: 38 } as const;
+const STOREY = 3.15;
+const RULES = { fsiCap: 3.33, heightCap: 70, coverage: 41.8, coverageCap: 45 } as const;
+/* 탑 A 의 연면적(고정) + 탑 B 의 층당 면적 — 층수를 바꾸면 FSI 판독이 바로 따라온다. */
+const GFA_FIXED = 7_260;
+const GFA_PER_STOREY_B = 404;
+
+/* ── 툴 — 아이콘 · 단축키 · 커서가 한 줄에 있다. 커서 클래스는 정적 문자열이어야 Tailwind 가 굽는다. ── */
+type ToolId =
+  "select" | "move" | "rotate" | "scale" | "orbit" | "pan" | "zoom" | "measure" | "draw" | "section";
+
+interface Tool {
+  id: ToolId;
+  label: string;
+  key: string;
+  icon: ReactNode;
+  cursor: string;
+}
+
+const TOOL_GROUPS: readonly (readonly Tool[])[] = [
+  [
+    { id: "select", label: "Select", key: "V", icon: <IconSelect />, cursor: "cursor-cad-select" },
+    { id: "move", label: "Move", key: "G", icon: <IconMove />, cursor: "cursor-cad-move" },
+    { id: "rotate", label: "Rotate", key: "R", icon: <IconRotate />, cursor: "cursor-cad-rotate" },
+    { id: "scale", label: "Scale", key: "S", icon: <IconScale />, cursor: "cursor-cad-scale" },
+  ],
+  [
+    { id: "orbit", label: "Orbit", key: "O", icon: <IconOrbit />, cursor: "cursor-cad-orbit" },
+    { id: "pan", label: "Pan", key: "H", icon: <IconPan />, cursor: "cursor-cad-pan" },
+    {
+      id: "zoom",
+      label: "Zoom window",
+      key: "Z",
+      icon: <IconZoomWindow />,
+      cursor: "cursor-cad-zoom-window",
+    },
+  ],
+  [
+    {
+      id: "measure",
+      label: "Measure",
+      key: "M",
+      icon: <IconMeasureDistance />,
+      cursor: "cursor-cad-measure",
+    },
+    { id: "draw", label: "Draw outline", key: "L", icon: <IconDraw />, cursor: "cursor-cad-draw" },
+    {
+      id: "section",
+      label: "Section plane",
+      key: "X",
+      icon: <IconSectionPlane />,
+      cursor: "cursor-cad-section",
+    },
+  ],
+];
+const TOOLS: readonly Tool[] = TOOL_GROUPS.flat();
+const TOOL_BY_ID = Object.fromEntries(TOOLS.map((t) => [t.id, t])) as Record<ToolId, Tool>;
+const TOOL_BY_KEY: Readonly<Record<string, ToolId>> = Object.fromEntries(
+  TOOLS.map((t) => [t.key.toLowerCase(), t.id]),
+);
+
+const VIEWS = [
+  { id: "iso", label: "Isometric view", key: "0", icon: <IconViewIso /> },
+  { id: "top", label: "Top view", key: "7", icon: <IconViewTop /> },
+  { id: "front", label: "Front view", key: "1", icon: <IconViewFront /> },
+  { id: "side", label: "Side view", key: "3", icon: <IconViewSide /> },
+] as const;
+
+/* 훅에 넘기는 id 배열은 **모듈 상수**여야 한다 — 렌더마다 새 배열이면 usePanelLayout 의 메모가 매번 무효화된다. */
+const PANELS = ["inspector"] as const;
+const INSPECTOR_ID = "workbench-inspector";
+
+/* ── 3D 매싱 — 축측도. 캔버스 어휘만 쓴다(흰 바탕 · 무채색 · 선택만 크롬 선택색). ─────────────────────────── */
+const PX_PER_M = 4; // 도면 좌표(viewBox) 1 m 의 길이
+const VIEWBOX = { x: 0, y: -80, width: 900, height: 640 } as const;
+const COS30 = Math.cos(Math.PI / 6);
+const ORIGIN = { x: 391, y: 184 } as const;
+const r1 = (n: number) => Math.round(n * 10) / 10;
+type P3 = readonly [x: number, y: number, z: number];
+function iso([x, y, z]: P3): [number, number] {
+  return [r1(ORIGIN.x + (x - y) * COS30 * PX_PER_M), r1(ORIGIN.y + (x + y) * 0.5 * PX_PER_M - z * PX_PER_M)];
+}
+const pts = (...ps: P3[]) => ps.map((p) => iso(p).join(",")).join(" ");
+
+interface Box {
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+  z0: number;
+  z1: number;
+}
+
+function boxFaces({ x0, x1, y0, y1, z0, z1 }: Box) {
+  return {
+    top: pts([x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]),
+    /* 보는 쪽은 +x · +y 다 — y=y1 면이 왼쪽 아래, x=x1 면이 오른쪽 아래로 보인다. */
+    left: pts([x0, y1, z0], [x1, y1, z0], [x1, y1, z1], [x0, y1, z1]),
+    right: pts([x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]),
+  };
+}
+
+function Mass({ box, storey, podium = false }: { box: Box; storey?: number; podium?: boolean }) {
+  const f = boxFaces(box);
+  const levels: number[] = [];
+  if (storey) for (let z = box.z0 + storey; z < box.z1 - 0.01; z += storey) levels.push(r1(z));
   return (
-    <svg
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d={d} />
-    </svg>
+    <g>
+      <polygon
+        points={f.left}
+        fill="var(--canvas-ink-2)"
+        fillOpacity={podium ? 0.16 : 0.42}
+        stroke="var(--canvas-ink-2)"
+        strokeWidth={0.8}
+      />
+      <polygon
+        points={f.right}
+        fill="var(--canvas-ink-2)"
+        fillOpacity={podium ? 0.26 : 0.62}
+        stroke="var(--canvas-ink-2)"
+        strokeWidth={0.8}
+      />
+      <g stroke="var(--canvas-bg)" strokeOpacity={0.45} strokeWidth={0.6} fill="none">
+        {levels.map((z) => (
+          <polyline key={z} points={pts([box.x0, box.y1, z], [box.x1, box.y1, z], [box.x1, box.y0, z])} />
+        ))}
+      </g>
+      <polygon points={f.top} fill="var(--canvas-surface)" stroke="var(--canvas-ink-2)" strokeWidth={0.8} />
+    </g>
   );
 }
 
-/* ── 도면 — 캔버스 어휘만 쓴다. 다크에서도 이 면은 바뀌지 않는다. ──────────── */
-function SitePlan() {
+function MassingView({ towerHeight, setback }: { towerHeight: number; setback: number }) {
+  const towerA: Box = { ...TOWER_A, z0: PODIUM.z, z1: PODIUM.z + TOWER_A.storeys * STOREY };
+  const towerB: Box = { ...TOWER_B, z0: PODIUM.z, z1: PODIUM.z + towerHeight };
+  const selection = boxFaces(towerB);
+  const handles: P3[] = [
+    [towerB.x0, towerB.y0, towerB.z1],
+    [towerB.x1, towerB.y0, towerB.z1],
+    [towerB.x1, towerB.y1, towerB.z1],
+    [towerB.x0, towerB.y1, towerB.z1],
+    [towerB.x1, towerB.y1, towerB.z0],
+  ];
+  const grid: number[] = [];
+  for (let v = -16; v <= 104; v += 8) grid.push(v);
+  /* 높이 치수는 오른쪽 면 바깥(+x)에 세운다 — 앞 모서리에 겹치면 층선과 섞여 읽히지 않는다. */
+  const [hx, hy] = iso([towerB.x1 + 8, towerB.y0, 0]);
+  const [, hy2] = iso([towerB.x1 + 8, towerB.y0, towerB.z1]);
+  const [sx0, sy0] = iso([TOWER_A.x1, 52, 0]);
+  const [sx1, sy1] = iso([TOWER_B.x0, 52, 0]);
+  const [ax, ay] = iso([towerA.x0, towerA.y0, towerA.z1]);
+  const [bx, by] = iso([towerB.x0, towerB.y0, towerB.z1]);
   return (
-    <svg viewBox="0 0 520 300" className="absolute inset-0 size-full" aria-label="Site plan">
-      <g stroke="var(--canvas-grid)" strokeWidth={0.7}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-          <line key={`v${i}`} x1={i * 52} y1={0} x2={i * 52} y2={300} />
-        ))}
-        {[1, 2, 3, 4, 5].map((i) => (
-          <line key={`h${i}`} x1={0} y1={i * 50} x2={520} y2={i * 50} />
+    <svg
+      viewBox={`${VIEWBOX.x} ${VIEWBOX.y} ${VIEWBOX.width} ${VIEWBOX.height}`}
+      preserveAspectRatio="xMidYMid meet"
+      className="absolute inset-0 size-full"
+      role="img"
+      aria-label="Massing model, Tower B selected"
+    >
+      <g stroke="var(--canvas-grid)" strokeWidth={0.7} fill="none">
+        {grid.map((v) => (
+          <g key={v}>
+            {v <= 104 ? <polyline points={pts([v, -16, 0], [v, 70, 0])} /> : null}
+            {v <= 70 ? <polyline points={pts([-16, v, 0], [104, v, 0])} /> : null}
+          </g>
         ))}
       </g>
+      {/* 필지 경계와 이격선 — 이격선은 인스펙터의 슬라이더를 따라 움직인다. */}
       <polygon
-        points="58,40 452,30 466,258 72,270"
+        points={pts([0, 0, 0], [SITE.width, 0, 0], [SITE.width, SITE.depth, 0], [0, SITE.depth, 0])}
         fill="var(--canvas-bg)"
+        fillOpacity={0.6}
         stroke="var(--canvas-ink-2)"
         strokeWidth={1.4}
       />
       <polygon
-        points="86,64 424,55 436,232 100,243"
+        points={pts(
+          [setback, setback, 0],
+          [SITE.width - setback, setback, 0],
+          [SITE.width - setback, SITE.depth - setback, 0],
+          [setback, SITE.depth - setback, 0],
+        )}
         fill="none"
         stroke="var(--canvas-muted)"
         strokeWidth={1}
         strokeDasharray="6 4"
       />
-      <rect
-        x="104"
-        y="82"
-        width="312"
-        height="132"
-        fill="var(--canvas-muted)"
-        opacity={0.12}
-        stroke="var(--canvas-muted)"
-        strokeWidth={0.8}
-      />
-      <rect x="126" y="98" width="84" height="100" fill="var(--canvas-ink-2)" opacity={0.7} />
-      <rect
-        x="266"
-        y="92"
-        width="84"
-        height="100"
+      <Mass box={{ ...PODIUM, z0: 0, z1: PODIUM.z }} podium />
+      <Mass box={towerA} storey={STOREY} />
+      <Mass box={towerB} storey={STOREY} />
+      {/* 선택 — 크롬의 선택색은 도면 위에서도 «지금 고른 것» 하나만 말한다. */}
+      <polygon
+        points={selection.top}
         fill="var(--chrome-selection-fill)"
         stroke="var(--chrome-selection-stroke)"
         strokeWidth={1.8}
       />
-      <g stroke="var(--canvas-ink-2)" strokeWidth={0.9}>
-        <line x1="210" y1="214" x2="266" y2="214" />
-        <line x1="210" y1="206" x2="210" y2="222" />
-        <line x1="266" y1="206" x2="266" y2="222" />
+      <g fill="none" stroke="var(--chrome-selection-stroke)" strokeWidth={1.4}>
+        <polygon points={selection.left} />
+        <polygon points={selection.right} />
       </g>
-      <text x="216" y="234" fontFamily="var(--font-stack-mono)" fontSize={11} fill="var(--canvas-ink-2)">
-        12.4 m
-      </text>
-      <text x="134" y="116" fontFamily="var(--font-stack-mono)" fontSize={12} fill="var(--canvas-ink)">
-        A
-      </text>
-      <text x="274" y="110" fontFamily="var(--font-stack-mono)" fontSize={12} fill="var(--canvas-ink)">
-        B
-      </text>
+      <g fill="var(--canvas-bg)" stroke="var(--chrome-selection-stroke)" strokeWidth={1.4}>
+        {handles.map((p) => {
+          const [x, y] = iso(p);
+          return <rect key={p.join()} x={x - 3} y={y - 3} width={6} height={6} />;
+        })}
+      </g>
+      {/* 치수 — 탑 사이 간격과 탑 B 의 높이 */}
+      <g stroke="var(--canvas-ink-2)" strokeWidth={0.9}>
+        <line x1={sx0} y1={sy0} x2={sx1} y2={sy1} />
+        <line x1={sx0} y1={sy0 - 6} x2={sx0} y2={sy0 + 6} />
+        <line x1={sx1} y1={sy1 - 6} x2={sx1} y2={sy1 + 6} />
+        <line x1={hx} y1={hy} x2={hx} y2={hy2} />
+        <line x1={hx - 6} y1={hy} x2={hx + 6} y2={hy} />
+        <line x1={hx - 6} y1={hy2} x2={hx + 6} y2={hy2} />
+      </g>
+      <g fontFamily="var(--font-stack-mono)" fontSize={11} fill="var(--canvas-ink-2)">
+        <text x={r1((sx0 + sx1) / 2 - 18)} y={r1((sy0 + sy1) / 2 + 18)}>
+          {fmt1.format(TOWER_B.x0 - TOWER_A.x1)} m
+        </text>
+        <text x={hx + 10} y={r1((hy + hy2) / 2)}>
+          {fmt1.format(PODIUM.z + towerHeight)} m
+        </text>
+      </g>
+      <g fontFamily="var(--font-stack-mono)" fontSize={12} fill="var(--canvas-ink)">
+        <text x={ax - 4} y={ay - 10}>
+          A
+        </text>
+        <text x={bx - 4} y={by - 10}>
+          B
+        </text>
+      </g>
     </svg>
   );
 }
 
-/* 훅에 넘기는 id 배열은 **모듈 상수**여야 한다. 렌더마다 새 배열을 만들면 내부 useMemo 가
-   매번 무효화되어 접힘 상태가 튄다. */
-const PANELS = ["brief", "plan", "model", "inspect"] as const;
-/* 「Focus canvas」 가 접는 것은 **곁 패널**이다 — 캔버스까지 접으면 이름과 하는 일이 달라진다. */
-const SIDE_PANELS = ["brief", "inspect"] as const;
+/* ── 캔버스 위 부유 크롬 ─────────────────────────────────────────────────────── */
+/* 툴 칸은 테두리 없는 칸으로 선다 — outline 의 켜진 칸(옅은 주색 바탕 · 주색 테두리)만 남기고 꺼진 칸의 상자를 걷는다. */
+const CLUSTER_ITEM = "border-transparent bg-transparent";
+/* Button 의 기본 아이콘 칸(28px)은 이 화면의 16px 아이콘 사다리보다 크다 — 툴 칸(ToggleGroupItem 16px)과 같은 크기로 맞춘다. */
+const BUTTON_ICON = "[&_svg]:size-4";
 
-/* 3D 매싱 — 축측도. 도면과 같은 캔버스 어휘를 쓴다(흰 바탕·무채색). */
-function MassingView() {
-  const box = (x: number, y: number, w: number, h: number, d: number) => {
-    const k = 0.42;
-    const top = `${x},${y} ${x + w},${y} ${x + w + d * k},${y - d * k} ${x + d * k},${y - d * k}`;
-    const front = `${x},${y} ${x + w},${y} ${x + w},${y + h} ${x},${y + h}`;
-    const sideFace = `${x + w},${y} ${x + w + d * k},${y - d * k} ${x + w + d * k},${y + h - d * k} ${x + w},${y + h}`;
-    return { top, front, side: sideFace };
-  };
-  const towers = [box(96, 132, 58, 96, 54), box(206, 118, 58, 110, 54)];
-  const podium = box(70, 228, 228, 26, 78);
+function ToolCluster({ tool, onToolChange }: { tool: ToolId; onToolChange: (tool: ToolId) => void }) {
   return (
-    <svg viewBox="0 0 420 300" className="absolute inset-0 size-full" aria-label="Massing view">
-      <g stroke="var(--canvas-line)" strokeWidth={0.7}>
-        {[0, 1, 2, 3, 4].map((i) => (
-          <line key={i} x1={40 + i * 24} y1={276} x2={130 + i * 24} y2={238} />
+    <Toolbar
+      onCanvas
+      aria-label="Tools"
+      aria-orientation="vertical"
+      className="absolute top-3 left-3 flex-col p-1"
+    >
+      <ToggleGroup
+        type="single"
+        variant="outline"
+        orientation="vertical"
+        aria-label="Active tool"
+        value={tool}
+        // 같은 칸을 다시 눌러 빈 값이 되면 무시한다 — 작업대에는 언제나 툴 하나가 쥐어져 있다.
+        onValueChange={(v: string) => {
+          if (v) onToolChange(v as ToolId);
+        }}
+        className="flex-col"
+      >
+        {TOOL_GROUPS.map((group, gi) => [
+          gi > 0 ? <ToolbarDivider key={`divider-${gi}`} className="mx-0 my-1 h-px w-ctl" /> : null,
+          ...group.map((t) => (
+            <Tooltip key={t.id} label={t.label} shortcut={t.key} side="right">
+              <ToggleGroupItem value={t.id} icon={t.icon} aria-label={t.label} className={CLUSTER_ITEM} />
+            </Tooltip>
+          )),
+        ])}
+      </ToggleGroup>
+    </Toolbar>
+  );
+}
+
+function ViewCluster() {
+  return (
+    <Toolbar onCanvas aria-label="View cube" className="absolute top-3 right-3 flex-col p-1">
+      <ToggleGroup
+        type="single"
+        variant="outline"
+        orientation="vertical"
+        aria-label="Camera"
+        defaultValue="iso"
+        className="flex-col"
+      >
+        {VIEWS.map((v) => (
+          <Tooltip key={v.id} label={v.label} shortcut={v.key} side="left">
+            <ToggleGroupItem value={v.id} icon={v.icon} aria-label={v.label} className={CLUSTER_ITEM} />
+          </Tooltip>
         ))}
-      </g>
-      {[podium, ...towers].map((b, i) => (
-        <g key={i}>
-          <polygon
-            points={b.front}
-            fill="var(--canvas-ink-2)"
-            opacity={i === 0 ? 0.24 : 0.58}
-            stroke="var(--canvas-ink-2)"
-            strokeWidth={0.8}
-          />
-          <polygon
-            points={b.side}
-            fill="var(--canvas-ink-2)"
-            opacity={i === 0 ? 0.34 : 0.78}
-            stroke="var(--canvas-ink-2)"
-            strokeWidth={0.8}
-          />
-          <polygon
-            points={b.top}
-            fill="var(--canvas-surface)"
-            stroke="var(--canvas-ink-2)"
-            strokeWidth={0.8}
-          />
-        </g>
-      ))}
-      <text x="112" y="176" fontFamily="var(--font-stack-mono)" fontSize={11} fill="var(--canvas-bg)">
-        A
-      </text>
-      <text x="222" y="164" fontFamily="var(--font-stack-mono)" fontSize={11} fill="var(--canvas-bg)">
-        B
-      </text>
-    </svg>
+      </ToggleGroup>
+    </Toolbar>
+  );
+}
+
+function ZoomCluster() {
+  return (
+    <Toolbar onCanvas aria-label="Zoom" className="absolute right-3 bottom-3 gap-1 p-1">
+      <Tooltip label="Zoom out" shortcut="−">
+        <Button variant="ghost" size="icon" className={BUTTON_ICON} aria-label="Zoom out">
+          <IconZoomOut />
+        </Button>
+      </Tooltip>
+      <span className="w-12 text-center tnum text-label text-muted-foreground">100 %</span>
+      <Tooltip label="Zoom in" shortcut="+">
+        <Button variant="ghost" size="icon" className={BUTTON_ICON} aria-label="Zoom in">
+          <IconZoomIn />
+        </Button>
+      </Tooltip>
+      <ToolbarDivider className="mx-1 h-5" />
+      <Tooltip label="Zoom to fit" shortcut="⇧2">
+        <Button variant="ghost" size="icon" className={BUTTON_ICON} aria-label="Zoom to fit">
+          <IconZoomExtents />
+        </Button>
+      </Tooltip>
+    </Toolbar>
+  );
+}
+
+/* ── 인스펙터 ───────────────────────────────────────────────────────────────── */
+interface Massing {
+  storeys: number;
+  floorHeight: number;
+  setback: number;
+}
+
+const RULE_ROWS = [
+  { id: "FSI-01", name: "Floor space index", tone: "success", verdict: "Pass" },
+  { id: "HT-02", name: "Height limit", tone: "destructive", verdict: "Fail" },
+  { id: "SB-03", name: "Side setbacks", tone: "success", verdict: "Pass" },
+  { id: "PK-04", name: "Parking provision", tone: "destructive", verdict: "Fail" },
+] as const;
+
+const LAYERS = ["Towers", "Podium", "Setback", "Site boundary", "Grid"] as const;
+
+function Inspector({
+  massing,
+  onMassingChange,
+  height,
+}: {
+  massing: Massing;
+  onMassingChange: (next: Massing) => void;
+  height: number;
+}) {
+  const overHeight = height > RULES.heightCap;
+  return (
+    <div className="flex h-full min-h-0 flex-col overflow-y-auto">
+      <div className="flex items-start gap-3 px-4 pt-4 pb-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <SectionLabel>Selection</SectionLabel>
+          <span className="text-title font-semibold text-foreground">Tower B</span>
+          <span className="tnum text-label text-muted-foreground">
+            Point tower · {massing.storeys} storeys · {fmt1.format(height)} m
+          </span>
+        </div>
+        <Badge tone={overHeight ? "destructive" : "success"} dot>
+          {overHeight ? "Height fail" : "Height pass"}
+        </Badge>
+      </div>
+      <Tabs defaultValue="properties">
+        <TabsList variant="underline" aria-label="Inspector sections" className="px-4">
+          <TabsTrigger value="properties">Properties</TabsTrigger>
+          <TabsTrigger value="rules">Rules</TabsTrigger>
+          <TabsTrigger value="layers">Layers</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="properties" className="flex flex-col gap-4 p-4">
+          <Field>
+            <FieldLabel>Typology</FieldLabel>
+            <Select defaultValue="point">
+              <FieldControl>
+                <SelectTrigger size="sm">
+                  <SelectValue />
+                </SelectTrigger>
+              </FieldControl>
+              <SelectContent>
+                <SelectItem value="point">Point tower</SelectItem>
+                <SelectItem value="slab">Slab block</SelectItem>
+                <SelectItem value="l-block">L-block</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field>
+              <FieldLabel>Storeys</FieldLabel>
+              <FieldControl>
+                <NumberInput
+                  size="sm"
+                  min={1}
+                  max={40}
+                  unit="fl"
+                  value={massing.storeys}
+                  onValueChange={(storeys) => onMassingChange({ ...massing, storeys })}
+                />
+              </FieldControl>
+            </Field>
+            <Field>
+              <FieldLabel>Floor height</FieldLabel>
+              <FieldControl>
+                <NumberInput
+                  size="sm"
+                  min={2.8}
+                  max={4.5}
+                  step={0.05}
+                  unit="m"
+                  value={massing.floorHeight}
+                  onValueChange={(floorHeight) => onMassingChange({ ...massing, floorHeight })}
+                />
+              </FieldControl>
+            </Field>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-label font-medium text-foreground-2">Setback</span>
+            <Slider
+              aria-label="Setback"
+              size="sm"
+              min={3}
+              max={12}
+              step={0.5}
+              value={[massing.setback]}
+              onValueChange={([setback = massing.setback]) => onMassingChange({ ...massing, setback })}
+              showValue
+              formatValue={(v) => `${fmt1.format(v)} m`}
+            />
+          </div>
+
+          <Collapsible defaultOpen>
+            <CollapsibleTrigger>Geometry</CollapsibleTrigger>
+            <CollapsibleContent className="pt-2">
+              <DescriptionList
+                rows={[
+                  { k: "Footprint", v: "22.0 × 22.0 m", numeric: true },
+                  { k: "Floor plate", v: "484 m²", numeric: true },
+                  { k: "Tower spacing", v: `${fmt1.format(TOWER_B.x0 - TOWER_A.x1)} m`, numeric: true },
+                  { k: "Height", v: `${fmt1.format(height)} m`, numeric: true },
+                ]}
+              />
+            </CollapsibleContent>
+          </Collapsible>
+          <Collapsible>
+            <CollapsibleTrigger>Placement</CollapsibleTrigger>
+            <CollapsibleContent className="pt-2">
+              <DescriptionList
+                rows={[
+                  { k: "Origin X", v: "50.00 m", numeric: true },
+                  { k: "Origin Y", v: "16.00 m", numeric: true },
+                  { k: "Rotation", v: "0°", numeric: true },
+                ]}
+              />
+            </CollapsibleContent>
+          </Collapsible>
+        </TabsContent>
+
+        <TabsContent value="rules" className="flex flex-col gap-4 p-4">
+          <ul className="m-0 flex list-none flex-col gap-2 p-0 text-body">
+            {RULE_ROWS.map((r) => (
+              <li key={r.id} className="flex items-center gap-3">
+                <span className="w-12 font-mono text-label text-muted-foreground">{r.id}</span>
+                <span className="min-w-0 flex-1 truncate text-foreground-2">{r.name}</span>
+                <Badge tone={r.tone} dot>
+                  {r.verdict}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-col gap-2">
+            <SectionLabel>Parking</SectionLabel>
+            <Progress value={82} tone="destructive" aria-label="Parking bays provided" />
+            <div className="flex items-center justify-between text-label">
+              <span className="tnum text-muted-foreground">218 of 266 bays</span>
+              <span className="tnum font-medium text-destructive">−48 short</span>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="layers" className="flex flex-col gap-1 p-4">
+          {LAYERS.map((layer) => (
+            <div key={layer} className="flex items-center gap-3 text-body text-foreground-2">
+              <span className="min-w-0 flex-1 truncate">{layer}</span>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className={BUTTON_ICON}
+                aria-label={`Hide ${layer.toLowerCase()}`}
+              >
+                <IconEye />
+              </Button>
+            </div>
+          ))}
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+/* ── 명령 팔레트 — ⌘K. 스토리는 닫힌 채 시작한다(VRT 는 작업대만 찍는다). ───────────────────── */
+function Palette({
+  open,
+  onOpenChange,
+  onTool,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onTool: (tool: ToolId) => void;
+}) {
+  const run = (fn?: () => void) => () => {
+    fn?.();
+    onOpenChange(false);
+  };
+  return (
+    <CommandDialog open={open} onOpenChange={onOpenChange}>
+      <Command label="Commands">
+        <CommandInput placeholder="Search tools and actions…" />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Tools">
+            {TOOLS.map((t) => (
+              <CommandItem key={t.id} value={t.label} shortcut={t.key} onSelect={run(() => onTool(t.id))}>
+                {t.label}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandSeparator />
+          <CommandGroup heading="Actions">
+            <CommandItem value="Save scheme" shortcut="⌘S" onSelect={run()}>
+              Save scheme
+            </CommandItem>
+            <CommandItem value="Export model" shortcut="⌘E" onSelect={run()}>
+              Export model
+            </CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    </CommandDialog>
   );
 }
 
 /* ── 제품 화면 복제 ────────────────────────────────────────────────────────── */
 export function Workbench() {
-  const [view, setView] = useState<"plan" | "model">("plan");
-  const [deck, setDeck] = useState(true);
-  /* 제품에서는 접힘 상태를 localStorage 에 남기지만(`storageKey`), 스토리에서는 뺀다 — 머리 주석 참조. */
+  const [tool, setTool] = useState<ToolId>("select");
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [massing, setMassing] = useState<Massing>({ storeys: 20, floorHeight: STOREY, setback: 6 });
+  /* 제품에서는 접힘 · 폭을 남기겠지만(`storageKey`) 스토리에서는 뺀다 — 브라우저에 남은 상태가 VRT 픽셀을 흔들면 안 된다. */
   const panels = usePanelLayout(PANELS);
+  const inspectorOpen = !panels.isCollapsed("inspector");
+  const setInspectorOpen = (open: boolean) => panels.setCollapsed("inspector", !open);
+
+  const towerHeight = massing.storeys * massing.floorHeight;
+  const height = PODIUM.z + towerHeight;
+  const gfa = GFA_FIXED + GFA_PER_STOREY_B * massing.storeys;
+  const fsi = gfa / PLOT_AREA;
+  const overFsi = fsi > RULES.fsiCap;
+  const overHeight = height > RULES.heightCap;
+  /* 축척 막대는 화면 px 로 그린다 — 도면이 칸에 맞춰(meet) 줄어든 배율을 재서 m/px 를 낸다. 페인트 전(useLayoutEffect)에 재므로
+     첫 프레임부터 맞는 길이다(VRT 가 고정 뷰포트에서 같은 값을 얻는다). */
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [fit, setFit] = useState(1);
+  useLayoutEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const measure = () =>
+      setFit(Math.min(el.clientWidth / VIEWBOX.width, el.clientHeight / VIEWBOX.height) || 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  const scale = niceScale(1 / (PX_PER_M * fit));
+
+  /* 단축키 — ⌘K 는 팔레트, 글자 하나는 툴. 입력 칸 · 대화상자 안의 타이핑은 건드리지 않는다. */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPaletteOpen(true);
+        return;
+      }
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (
+        e.target instanceof Element &&
+        e.target.closest("input, textarea, [contenteditable], [role=dialog]")
+      )
+        return;
+      const next = TOOL_BY_KEY[e.key.toLowerCase()];
+      if (next) setTool(next);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
-    <div className="flex h-[640px] min-h-0 flex-col bg-background">
-      {/* 제품 줄 */}
-      <header className="flex shrink-0 items-center gap-3 px-4 pt-3">
-        <div className="grid size-7 place-items-center rounded-[7px] bg-primary font-mono text-micro font-medium text-primary-foreground">
-          BO
-        </div>
-        <span className="text-title font-semibold tracking-[-0.01em] text-foreground">
-          Residential Studio
-        </span>
-        <span className="font-mono text-micro tracking-caps text-muted-foreground uppercase">
-          BuildOS / India
-        </span>
-        <span className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" size="sm">
-            Regulation lab ↗
-          </Button>
-          <Button size="sm">Open</Button>
-          <Button size="sm" variant="solid" tone="primary">
-            Save scheme ↓
-          </Button>
-        </span>
-      </header>
-
-      {/* 맥락 줄 */}
-      <div className="flex shrink-0 items-center gap-3 px-4 py-2.5">
-        <span className="truncate text-label text-muted-foreground">
-          Dahisar · 4,812 m² plot · FSI 3.33 · 2 towers · 168 units
-        </span>
-        <span className="ml-auto flex items-center gap-2">
-          <SegmentedControl
-            label="View mode"
+    <>
+      <AppShell
+        variant="inset"
+        className="h-screen"
+        resizable
+        inspectorId={INSPECTOR_ID}
+        inspectorMinSize={280}
+        inspectorMaxSize={440}
+        inspectorOpen={inspectorOpen}
+        onInspectorOpenChange={setInspectorOpen}
+        topBar={
+          <TopBar
             size="sm"
-            value={view}
-            onChange={setView}
-            options={[
-              { value: "plan", label: "2D plan" },
-              { value: "model", label: "3D model" },
-            ]}
+            title="Residential Studio"
+            eyebrow="Planning draft"
+            leading={
+              <span
+                aria-hidden="true"
+                className="grid size-8 place-items-center rounded-md bg-primary font-mono text-micro font-medium text-primary-foreground"
+              >
+                BO
+              </span>
+            }
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: "Projects", href: "#projects" },
+                  { label: "Dahisar plot", href: "#dahisar" },
+                  { label: "Scheme C" },
+                ]}
+              />
+            }
+            actions={
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={BUTTON_ICON}
+                  onClick={() => setPaletteOpen(true)}
+                >
+                  <IconSearch />
+                  Search
+                  <Kbd>⌘K</Kbd>
+                </Button>
+                <Button size="sm" className={BUTTON_ICON}>
+                  <IconDownload />
+                  Export
+                </Button>
+                <Button size="sm" variant="solid" tone="primary">
+                  Save scheme
+                </Button>
+                <PanelToggleButton
+                  open={inspectorOpen}
+                  onOpenChange={setInspectorOpen}
+                  label="inspector"
+                  controls={INSPECTOR_ID}
+                />
+              </>
+            }
           />
-          <Separator orientation="vertical" className="h-4" />
-          {panels.anyCollapsed ? (
-            <Button variant="ghost" size="sm" onClick={panels.expandAll}>
-              Expand all
+        }
+        sidebar={
+          <Sidebar collapsed label="Workspace" className="rounded-lg border-r-0 shadow-card">
+            <SidebarItem icon={<IconMap />} label="Site" shortcut="1" />
+            <SidebarItem icon={<IconLayers />} label="Massing" shortcut="2" active />
+            <SidebarItem icon={<IconRectangle />} label="Floor plates" shortcut="3" />
+            <SidebarGroup label="Checks">
+              <SidebarItem icon={<IconMeasureArea />} label="Areas" shortcut="4" />
+              <SidebarItem icon={<IconFileText />} label="Regulations" shortcut="5" />
+            </SidebarGroup>
+            <div className="mt-auto">
+              <SidebarItem icon={<IconSettings />} label="Settings" />
+            </div>
+          </Sidebar>
+        }
+        inspector={<Inspector massing={massing} onMassingChange={setMassing} height={height} />}
+        footer={
+          <footer className="flex shrink-0 items-center gap-3 border-t border-border bg-secondary px-4 py-1 text-micro text-muted-foreground">
+            <Badge tone={overFsi ? "destructive" : "success"} dot>
+              {overFsi ? "FSI over cap" : "FSI within cap"}
+            </Badge>
+            <Badge tone="destructive" dot>
+              {overHeight ? "2 rules fail" : "1 rule fails"}
+            </Badge>
+            <span>Pack in-mh-mumbai · DCPR 2034</span>
+            <span className="ml-auto tnum">X 61.20 m · Y 27.40 m · Z {fmt2.format(height)} m</span>
+            <span>Snap on</span>
+            <span className="tnum">1 : 500</span>
+          </footer>
+        }
+      >
+        <Toolbar aria-label="View options" className="gap-2 px-3 py-2">
+          <ToggleGroup type="single" size="sm" aria-label="View mode" defaultValue="model">
+            <ToggleGroupItem value="plan">2D plan</ToggleGroupItem>
+            <ToggleGroupItem value="model">3D model</ToggleGroupItem>
+            <ToggleGroupItem value="section">Section</ToggleGroupItem>
+          </ToggleGroup>
+          <ToolbarSpacer />
+          <ToggleGroup
+            type="multiple"
+            variant="outline"
+            size="sm"
+            aria-label="Overlays"
+            defaultValue={["grid", "snap"]}
+          >
+            <Tooltip label="Grid" shortcut="⇧G">
+              <ToggleGroupItem value="grid" icon={<IconGrid />} aria-label="Grid" />
+            </Tooltip>
+            <Tooltip label="Snap" shortcut="⇧S">
+              <ToggleGroupItem value="snap" icon={<IconSnap />} aria-label="Snap" />
+            </Tooltip>
+            <Tooltip label="Axes" shortcut="⇧A">
+              <ToggleGroupItem value="axes" icon={<IconAxis />} aria-label="Axes" />
+            </Tooltip>
+          </ToggleGroup>
+          <ToolbarDivider className="h-5" />
+          <Tooltip label="Undo" shortcut="⌘Z">
+            <Button variant="ghost" size="icon-sm" className={BUTTON_ICON} aria-label="Undo">
+              <IconUndo />
             </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => SIDE_PANELS.forEach((id) => panels.setCollapsed(id, true))}
-            >
-              Focus canvas
+          </Tooltip>
+          <Tooltip label="Redo" shortcut="⇧⌘Z">
+            <Button variant="ghost" size="icon-sm" className={BUTTON_ICON} aria-label="Redo">
+              <IconRedo />
             </Button>
-          )}
-        </span>
-      </div>
+          </Tooltip>
+        </Toolbar>
 
-      {/* 본문 — 레일 + 떠 있는 카드 셋 */}
-      <div className="flex min-h-0 flex-1 gap-shell px-4 pb-3">
-        <Sidebar collapsed className="w-rail shrink-0 rounded-lg bg-transparent p-1.5">
-          <SidebarItem icon={<Icon d={ICON.site} />} label="Site" shortcut="1" />
-          <SidebarItem icon={<Icon d={ICON.plan} />} label="Plan" shortcut="2" active />
-          <SidebarItem icon={<Icon d={ICON.tower} />} label="Towers" shortcut="3" />
-          <SidebarGroup label="Checks">
-            <SidebarItem icon={<Icon d={ICON.park} />} label="Parking" shortcut="4" />
-            <SidebarItem icon={<Icon d={ICON.rules} />} label="Regulations" shortcut="5" />
-          </SidebarGroup>
-          <div className="mt-auto">
-            <SidebarItem icon={<Icon d={ICON.out} />} label="Export" shortcut="⌘E" />
+        {/* 캔버스 — 흰 바탕 고정 · radius 0. 커서는 쥔 툴의 CAD 커서다(VRT 는 커서를 찍지 못하므로 data-tool 이 상태를 드러낸다). */}
+        <div
+          ref={stageRef}
+          data-slot="workbench-canvas"
+          data-tool={tool}
+          className={`relative min-h-0 flex-1 overflow-hidden bg-canvas ${TOOL_BY_ID[tool].cursor}`}
+        >
+          <MassingView towerHeight={towerHeight} setback={massing.setback} />
+          <ToolCluster tool={tool} onToolChange={setTool} />
+          <Readout
+            variant="floating"
+            size="sm"
+            aria-label="Scheme metrics"
+            className="absolute top-3 right-20 left-20"
+          >
+            <ReadoutItem label="GFA" value={fmt.format(gfa)} unit="m²" />
+            <ReadoutItem
+              label="FSI"
+              value={fmt2.format(fsi)}
+              tone={overFsi ? "destructive" : "success"}
+              status={overFsi ? `Over ${RULES.fsiCap}` : `Within ${RULES.fsiCap}`}
+            />
+            <ReadoutItem
+              label="Height"
+              value={fmt1.format(height)}
+              unit="m"
+              tone={overHeight ? "destructive" : "success"}
+              status={overHeight ? `Over ${RULES.heightCap} m` : `Within ${RULES.heightCap} m`}
+            />
+            <ReadoutItem
+              label="Coverage"
+              value={fmt1.format(RULES.coverage)}
+              unit="%"
+              tone="success"
+              status={`Within ${RULES.coverageCap} %`}
+            />
+          </Readout>
+          <ViewCluster />
+          <div className="absolute bottom-3 left-3 flex items-end gap-3">
+            <Legend orientation="horizontal" aria-label="Massing legend">
+              <LegendItem swatch="ink-2">Tower</LegendItem>
+              <LegendItem swatch="muted">Podium</LegendItem>
+              <LegendItem swatch="muted" pattern="line">
+                Setback
+              </LegendItem>
+              <LegendItem swatch="line-strong" pattern="outline">
+                Site
+              </LegendItem>
+            </Legend>
+            <CanvasScale lengthPx={scale.px} label={`${scale.lengthM} m`} />
           </div>
-        </Sidebar>
-
-        {/* 브리프 — 읽는 줄이 있는 패널. 이 제품이 «설정 화면» 이 아니라는 것을 여기서 말한다. */}
-        <Card
-          className="w-[290px] shrink-0 overflow-y-auto overscroll-contain"
-          collapsed={panels.isCollapsed("brief")}
-          onCollapsedChange={(v) => panels.setCollapsed("brief", v)}
-          collapseTo="strip"
-          collapsedLabel="Planning brief"
-          collapsedSignal={<StatusDot tone="warning" label="3 to be verified" />}
-          side="left"
-        >
-          <div className="flex flex-col gap-4 p-5">
-            <div className="flex flex-col gap-2.5">
-              <div className="flex items-start gap-2">
-                <Eyebrow step="01" className="flex-1">
-                  Planning brief
-                </Eyebrow>
-                <CardCollapse />
-              </div>
-              <DisplayHeading>Make the plot work.</DisplayHeading>
-              <Lede>
-                Set the programme, the deal model and the tower count. Every candidate is judged against the
-                same jurisdiction pack.
-              </Lede>
-            </div>
-
-            <Separator />
-
-            <div className="flex flex-col gap-3">
-              <SectionLabel>Programme</SectionLabel>
-              <label className="flex items-center justify-between gap-3 text-body text-foreground-2">
-                Storeys
-                <Input numeric defaultValue="21" suffix="fl" className="w-[92px]" />
-              </label>
-              <label className="flex items-center justify-between gap-3 text-body text-foreground-2">
-                Carpet target
-                <Input numeric defaultValue="38,420" suffix="m²" className="w-[118px]" />
-              </label>
-              <label className="flex items-center justify-between gap-3 text-body text-foreground-2">
-                Podium deck
-                <Switch checked={deck} onCheckedChange={setDeck} />
-              </label>
-            </div>
-
-            <Separator />
-
-            <div className="flex flex-col gap-3">
-              <SectionLabel>FSI ledger</SectionLabel>
-              <DescriptionList
-                rows={[
-                  { k: "Permitted", v: "38,420 m²", numeric: true },
-                  { k: "Consumed", v: "37,118 m²", numeric: true },
-                  { k: "Balance", v: "1,302 m²", numeric: true, provisional: true },
-                ]}
-              />
-              <div className="flex flex-wrap gap-1.5">
-                <Badge tone="success" dot>
-                  FSI-01 pass
-                </Badge>
-                <Badge tone="warning" dot>
-                  3 TBV
-                </Badge>
-              </div>
-            </div>
-
-            <Button variant="solid" tone="primary" size="lg" className="w-full">
-              Generate schemes →
-            </Button>
-            <Button size="lg" className="w-full">
-              Compare schemes
-            </Button>
-            <p className="text-label leading-relaxed text-muted-foreground">
-              Generate returns one checked scheme. Compare explores alternatives and takes longer.
-            </p>
-          </div>
-        </Card>
-
-        {/* 2D — 캔버스가 «웰» 안의 흰 시트로 앉는다 */}
-        <Card
-          className="min-w-0 flex-1"
-          collapsed={panels.isCollapsed("plan")}
-          onCollapsedChange={(v) => panels.setCollapsed("plan", v)}
-          collapseTo="strip"
-          collapsedLabel="2D plan"
-          side="left"
-        >
-          <CardHeader title="2D Plan" meta="88.0 × 54.0 m" />
-          <CardWell className="grid place-items-center p-6">
-            <div className="relative aspect-[26/15] w-full max-w-[560px] border border-canvas-line bg-canvas shadow-chip">
-              <SitePlan />
-            </div>
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
-              <div className="flex items-center gap-1 rounded-lg border border-border p-1 shadow-pop on-canvas">
-                <Tooltip label="Zoom to fit" shortcut="⇧2">
-                  <Button size="icon-sm" variant="ghost" aria-label="Zoom to fit">
-                    <Icon d={ICON.plan} />
-                  </Button>
-                </Tooltip>
-                <Separator orientation="vertical" className="mx-0.5 h-4" />
-                <span className="px-2 tnum text-label text-muted-foreground">1 : 500</span>
-                <Separator orientation="vertical" className="mx-0.5 h-4" />
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button size="sm" variant="ghost">
-                      Legend
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent side="top" align="end" className="w-auto">
-                    <SectionLabel className="mb-2.5">Categories</SectionLabel>
-                    <ul className="flex flex-col gap-2 text-body text-foreground-2">
-                      {[
-                        ["Tower", "var(--canvas-ink-2)"],
-                        ["Podium", "var(--canvas-muted)"],
-                        ["Setback", "var(--canvas-muted)"],
-                      ].map(([l, c]) => (
-                        <li key={l} className="flex items-center gap-2">
-                          <i
-                            className="size-2.5 shrink-0 border border-canvas-line"
-                            style={{ background: c }}
-                          />
-                          {l}
-                        </li>
-                      ))}
-                    </ul>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
-          </CardWell>
-        </Card>
-
-        {/* 3D — 뷰 둘이 나란히 서므로 하나를 접으면 다른 하나가 그 폭을 가져간다.
-            접기의 이득이 실제로 보이는 자리다. */}
-        <Card
-          className="min-w-0 flex-1"
-          collapsed={panels.isCollapsed("model")}
-          onCollapsedChange={(v) => panels.setCollapsed("model", v)}
-          collapseTo="strip"
-          collapsedLabel="3D model"
-          side="right"
-        >
-          <CardHeader title="3D Model" meta="B+2P+21" />
-          <CardWell className="grid place-items-center p-6">
-            <div className="relative aspect-[7/5] w-full max-w-[420px] border border-canvas-line bg-canvas shadow-chip">
-              <MassingView />
-            </div>
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
-              <div className="flex items-center gap-1 rounded-lg border border-border p-1 shadow-pop on-canvas">
-                <Button size="sm" variant="ghost">
-                  Orbit
-                </Button>
-                <Separator orientation="vertical" className="mx-0.5 h-4" />
-                <Button size="sm" variant="ghost">
-                  Cutaway
-                </Button>
-              </div>
-            </div>
-          </CardWell>
-        </Card>
-
-        {/* 검사 — 수치와 판정 */}
-        <Card
-          className="w-[250px] shrink-0 overflow-y-auto overscroll-contain"
-          collapsed={panels.isCollapsed("inspect")}
-          onCollapsedChange={(v) => panels.setCollapsed("inspect", v)}
-          collapseTo="strip"
-          collapsedLabel="Inspect"
-          collapsedSignal={<StatusDot tone="destructive" label="PK-04 fail" />}
-          side="right"
-        >
-          <CardHeader title="Inspect" meta="Tower B" />
-          <div className="flex flex-col gap-4 px-4 pb-4">
-            <div className="rounded-md border border-success/30 bg-success-soft px-3 py-2 text-label text-foreground-2">
-              <b className="text-foreground">Scheme COMPLETE</b> · 0 rules unmet
-              <div className="mt-1 tnum text-muted-foreground">95.2 / 100 · 168 units · access checked</div>
-            </div>
-            <div className="flex flex-col gap-2.5">
-              <SectionLabel>Tower B</SectionLabel>
-              <DescriptionList
-                rows={[
-                  { k: "Storeys", v: "21", numeric: true },
-                  { k: "Units", v: "84", numeric: true },
-                  { k: "Built-up", v: "18,914 m²", numeric: true },
-                  { k: "Spacing", v: "12.4 m", numeric: true },
-                ]}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <SectionLabel>Parking</SectionLabel>
-              <Progress value={82} />
-              <div className="flex items-center justify-between text-label">
-                <span className="text-muted-foreground">218 of 266 bays</span>
-                <span className="tnum font-medium text-destructive">−48</span>
-              </div>
-              <Badge tone="destructive" dot>
-                PK-04 fail
-              </Badge>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <footer className="flex shrink-0 items-center gap-3 border-t border-border bg-secondary px-4 py-1.5 text-micro text-muted-foreground">
-        <span>Pack in-mh-mumbai · DCPR 2034</span>
-        <span className="ml-auto">Targets met · Planning draft</span>
-      </footer>
-    </div>
+          <ZoomCluster />
+        </div>
+      </AppShell>
+      <Palette open={paletteOpen} onOpenChange={setPaletteOpen} onTool={setTool} />
+    </>
   );
 }
 
-/* 원 갤러리 앱의 루트 — 툴팁·토스트 프로바이더는 앱 최상단에 한 번 있어야 하고, 스토리에서는 그 자리를 이것이 맡는다. */
+/* 원 갤러리 앱의 루트 — 툴팁 · 토스트 프로바이더는 앱 최상단에 한 번 있어야 하고, 스토리에서는 그 자리를 이것이 맡는다. */
 export function WorkbenchProviders({ children }: { children: React.ReactNode }) {
   return (
     <TooltipProvider>

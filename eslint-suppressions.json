@@ -88,16 +88,5 @@
     "better-tailwindcss/no-restricted-classes": {
       "count": 1
     }
-  },
-  "packages/ui/stories/workbench/Workbench.tsx": {
-    "better-tailwindcss/no-restricted-classes": {
-      "count": 19
-    },
-    "ds/no-literal-style-value": {
-      "count": 9
-    },
-    "jsx-a11y/label-has-associated-control": {
-      "count": 3
-    }
   }
 }
