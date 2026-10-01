@@ -17,11 +17,23 @@ const index = JSON.parse(
 const stories = Object.values(index.entries).filter((e) => e.type === "story" && e.tags?.includes("vrt"));
 const themes = ["light", "dark"] as const;
 
+/* 토큰 색 감지용 단색 견본(Foundations/Colors · Swatches)만 threshold 0 — 나머지는 기본 0.2(playwright.config 머리 주석). */
+const STRICT = new Set(["foundations-colors--swatches"]);
+
 test.describe("stories", () => {
   for (const story of stories) {
     const locked = story.tags?.includes("theme-locked") ?? false;
     for (const theme of locked ? (["locked"] as const) : themes) {
       test(`${story.id} · ${theme}`, async ({ page }) => {
+        /* CSS 전이를 끈다. 테마는 첫 렌더 **뒤에** 데코레이터가 `data-theme` 을 달아 바꾸므로, 다크 스냅샷은 `transition-colors`(100ms)를
+           가진 요소마다 라이트 → 다크 전이를 거친다(실측: data-theme 이 붙은 프레임에 CSSTransition 6개가 running). `animations: "disabled"` 는
+           촬영 순간에야 전이를 끝으로 감고, 그 전에 그려진 중간 프레임이 둥근 모서리 AA 픽셀에 ±1~4 를 남겼다 — 전이의 «출발 색» 이 다크
+           스냅샷에 새어, 라이트 토큰 하나만 바꾼 빌드에서 다크 스냅샷 11장(Input · Tabs · ToggleGroup …)이 바뀌었다(#70). 정적 스냅샷에 전이는 뜻이 없다. */
+        await page.addInitScript(() => {
+          const style = document.createElement("style");
+          style.textContent = "*, *::before, *::after { transition: none !important; }";
+          (document.head ?? document.documentElement).append(style);
+        });
         const globals = theme === "locked" ? "" : `&globals=theme:${theme}`;
         await page.goto(`/iframe.html?id=${story.id}&viewMode=story${globals}`);
         await page.locator("#storybook-root > *").first().waitFor();
@@ -45,7 +57,10 @@ test.describe("stories", () => {
           expect(canvasBg).toBe("rgb(255, 255, 255)");
         }
 
-        await expect(page).toHaveScreenshot(`${story.id}--${theme}.png`, { fullPage: true });
+        await expect(page).toHaveScreenshot(`${story.id}--${theme}.png`, {
+          fullPage: true,
+          ...(STRICT.has(story.id) ? { threshold: 0 } : {}),
+        });
       });
     }
   }

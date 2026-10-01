@@ -50,7 +50,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 |---|---|---|---|---|
 | `value` | `string` | 예 |  | 고르면 루트의 값이 되는 문자열. 검색은 이 값과 글자(`children` 이 문자열일 때) · `keywords` 를 함께 본다. |
 | `onSelect` | `(value: string) => void` |  | `undefined` | 누르거나 Enter 로 실행할 때 — 항목의 `value` 를 받는다. |
-| `tone` | `"neutral" \| "destructive"` |  | `"neutral"` | 값: `destructive` — 되돌릴 수 없는 동작(삭제). 글자와 강조 면이 붉다 · `neutral` — 일반 동작(기본) |
+| `tone` | `"destructive" \| "neutral"` |  | `"neutral"` | 값: `destructive` — 되돌릴 수 없는 동작(삭제). 글자와 강조 면이 붉다 · `neutral` — 일반 동작(기본) |
 | `disabled` | `boolean` |  | `false` | 고를 수 없게 — 보이지만 강조·실행을 건너뛴다. |
 | `keywords` | `readonly string[]` |  | `[]` | 값 밖에서도 맞힐 낱말 — "Export as PDF" 를 "print" 로도 찾게. |
 | `shortcut` | `string` |  | `undefined` | 오른쪽에 붙는 단축키 표기(`Kbd` 칩) — "⌘K". 표기일 뿐 키를 묶지 않는다. |

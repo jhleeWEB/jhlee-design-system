@@ -1,3 +1,4 @@
+import { availableParallelism } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -25,6 +26,11 @@ const ARCH_SPECS = [
 ];
 export default defineConfig({
   test: {
+    /* 부하 내성(#70 · 6번). 기본 워커 수(코어 수)는 한가한 기계 기준이라, 다른 일(도커 VRT · 두 번째 vitest)과 겹치면 jsdom 계약 스펙의 무거운
+     * 케이스가 5초 기본 타임아웃을 넘었다 — 실측(8코어 macOS): 한가할 때 가장 느린 케이스 DatePicker·Calendar `slot` 1.4~1.9초,
+     * unit 을 셋 동시에 돌리면 DatePicker `slot` 5.8~6.1초로 세 번 모두 실패. 워커를 코어의 절반(8코어 → 4)으로 묶으면 같은 부하에서
+     * 최악 2.6~2.8초 · 실패 0, 한가할 때 unit 전체는 44.8초 → 48.2초. 과다 구독을 줄이는 쪽이 타임아웃만 올리는 것보다 낫다 — 느려진 원인이 사라진다. */
+    maxWorkers: Math.max(1, Math.floor(availableParallelism() / 2)),
     /* 커버리지(C3) — unit + arch 를 함께 돌린 첫 실측(2026-09-30)의 floor − 2 를 문턱으로 고정한다. 문턱은 «떨어지지 않는다» 를 지키는
      * 래칫이지 목표가 아니다 — 올릴 때는 실측이 오른 뒤 같은 PR 에서 올린다. 대상은 제품 소스뿐: 스펙·스토리·생성물은 뺀다. */
     coverage: {
@@ -46,6 +52,9 @@ export default defineConfig({
         test: {
           name: "unit",
           environment: "jsdom",
+          /* 15초 — 위 실측의 부하 최악(6.1초)의 두 배 남짓. 진짜 멈춤(대기 중인 Promise · 무한 루프)은 여전히 15초에 잡힌다 —
+           * 이보다 크게 올리면 걸림을 느린 테스트로 숨긴다. */
+          testTimeout: 15_000,
           globals: false,
           include: ["src/**/*.spec.{ts,tsx}"],
           exclude: [...configDefaults.exclude, ...ARCH_SPECS],

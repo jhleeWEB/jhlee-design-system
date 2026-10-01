@@ -291,6 +291,20 @@ export function orderValues(values: readonly string[], axisOrder: readonly strin
   });
 }
 
+/**
+ * 리터럴 유니언의 타입 표기를 `values` 와 같은 순서(`orderValues`)로 다시 쓴다. `typeToString` 은 유니언 구성원을 타입 id 순으로 찍는데
+ * id 는 프로그램 전체에서 그 리터럴이 **처음 생긴 순서**다 — 다른 파일이 `"outline"` 을 먼저 쓰면 Button 의 `variant` 표기가
+ * `"link" | "outline" | "solid" | …` 로 뒤집혀 브랜치마다 docs/components 가 흔들렸다(#65 · #70 · 5번).
+ * 표기가 리터럴(과 cva `VariantProps` 가 붙이는 `null`)만일 때만 바꾼다 — 별칭(`ButtonTone | null`)은 이름이 곧 안정된 표기라 그대로 둔다.
+ */
+export function orderLiteralUnionText(text: string, ordered: readonly string[]): string {
+  const parts = text.split(" | ");
+  const literal = (part: string): boolean => /^"(?:[^"\\]|\\.)*"$/.test(part);
+  if (!ordered.length || !parts.every((part) => literal(part) || part === "null")) return text;
+  if (parts.filter(literal).length !== ordered.length) return text;
+  return [...ordered.map((v) => JSON.stringify(v)), ...(parts.includes("null") ? ["null"] : [])].join(" | ");
+}
+
 function propsOf(
   checker: ts.TypeChecker,
   propsType: ts.Type,
@@ -314,9 +328,12 @@ function propsOf(
       defaultValue = JSON.stringify(cvaDefaults[p.name]);
     props.push({
       name: p.name,
-      type: typeText(checker, type)
-        .replace(/^undefined \| /, "")
-        .replace(/ \| undefined$/, ""),
+      type: orderLiteralUnionText(
+        typeText(checker, type)
+          .replace(/^undefined \| /, "")
+          .replace(/ \| undefined$/, ""),
+        literals,
+      ),
       required: !optional,
       default: defaultValue,
       values,

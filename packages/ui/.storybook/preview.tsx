@@ -12,6 +12,21 @@ import "@fontsource/geist-mono/500.css";
 
 import "./storybook.css";
 
+/* 위 import 가 싣는 면 전부. `document.fonts.ready` 는 «지금 받는 중인» 글꼴만 기다린다 — 글꼴은 글자가 그려질 때에야 받기 시작하므로
+   첫 렌더 전에는 기다릴 것이 없어 곧바로 풀린다. 그 사이 열린 채로 그려지는 오버레이(Popover · HoverCard …)는 폴백 글꼴 폭의 트리거로
+   자리를 재고, 글꼴이 온 뒤의 재계산은 트리거가 인라인 `<a>` 면 ResizeObserver 가 보지 못해(인라인 상자는 크기를 보고하지 않는다)
+   타이밍에 따라 한 번씩만 일어났다 — 실측: HoverCard ThemeContrast 다크의 화살표 `left` 가 15회 중 1회 29.5px 대신 29.4609px 로 남아
+   1px 옆에 그려졌다(#70 · 7번). 렌더 전에 면을 다 받아 두면 첫 측정부터 최종 폭이다. 두 번째 인자는 latin · latin-ext 두 subset 을
+   모두 건드리는 글자다(`·` 는 latin, `Ā` 는 latin-ext). */
+const FONT_FACES = [
+  "400 1em 'Instrument Sans'",
+  "500 1em 'Instrument Sans'",
+  "600 1em 'Instrument Sans'",
+  "700 1em 'Instrument Sans'",
+  "400 1em 'Geist Mono'",
+  "500 1em 'Geist Mono'",
+];
+
 const preview: Preview = {
   decorators: [
     /* `html[data-theme]` 이 theme.css 의 규약이다 — `:root[data-theme="dark"]` 가 토글 다크, `:root:not([data-theme="light"])` 가
@@ -23,6 +38,12 @@ const preview: Preview = {
       parentSelector: "html",
       attributeName: "data-theme",
     }),
+  ],
+  loaders: [
+    async () => {
+      await Promise.all(FONT_FACES.map((face) => document.fonts.load(face, "a·Ā")));
+      return {};
+    },
   ],
   parameters: {
     /* 'error' — addon-vitest 가 Chromium 에서 axe 를 돌려 위반이 있으면 스토리가 실패한다(C2). 알려진 위반은 그 스토리의
