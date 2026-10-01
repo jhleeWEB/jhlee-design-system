@@ -134,6 +134,15 @@ export default tseslint.config(
     files: TSX_FILES,
   })),
   ...asError([jsxA11y.flatConfigs.recommended]).map((config) => ({ ...config, files: TSX_FILES })),
+  {
+    // 포커스를 받는 separator 는 위젯이다(WAI-ARIA 1.2 separator · APG Window Splitter — tabindex · aria-valuenow · 키보드 조작이 계약이다).
+    // jsx-a11y 6.10 은 separator 를 늘 비대화형 역할로 보아 tabIndex 와 키 · 포인터 핸들러를 잡는다 — 역할 예외 옵션이 없어 그 파일에서만 끈다(#60).
+    files: ["packages/ui/src/navigation/ResizablePanels.tsx"],
+    rules: {
+      "jsx-a11y/no-noninteractive-element-interactions": "off",
+      "jsx-a11y/no-noninteractive-tabindex": "off",
+    },
+  },
 
   // ── import-x: 순환 금지 · 배럴 내부 import 금지 · 테스트 import 금지 ──
   {

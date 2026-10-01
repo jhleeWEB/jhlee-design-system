@@ -88,6 +88,9 @@
   --size-rail: 64px;
   --size-strip: 36px;
   --size-scrollbar: 6px;
+  --size-inspector: 340px;
+  --size-topbar-sm: 44px;
+  --size-topbar-md: 56px;
   --size-panel: 300px;
   --size-sheet-sm: 280px;
   --size-sheet-md: 460px;

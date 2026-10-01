@@ -66,6 +66,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 
 - [Accordion](docs/components/Accordion.md): 접이식 구획 묶음 — `type="single"` 은 하나만, `"multiple"` 은 여럿을 연다 — 부품: AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger — "use client"
 - [Alert](docs/components/Alert.md): 인라인 경고 — 흐름 안에 남는 알림
+- [AppShell](docs/components/AppShell.md): 작업대 셸 — 상단바 · 사이드바 · 본문 · 인스펙터(접기 · 선택적 폭 조절) · 바닥줄. — "use client"
 - [BackButton](docs/components/BackButton.md): 뒤로가기의 동작은 라우터가 소유하고 모양·아이콘은 모든 페이지에서 공유한다.
 - [Badge](docs/components/Badge.md): 배지 — 상태를 **글자와 함께** 말한다
 - [Breadcrumb](docs/components/Breadcrumb.md): 경로 — 「지금 무엇을 보고 있나」 — "use client"
@@ -100,6 +101,9 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [Progress](docs/components/Progress.md): 진행 막대 — 값이 있을 때만 쓴다 — "use client"
 - [RadioGroup](docs/components/RadioGroup.md): 라디오 묶음 — 여럿 중 하나를 고른다 — 부품: RadioGroupItem — "use client"
 - [Readout](docs/components/Readout.md): 수치 묶음 — 칸(`ReadoutItem`)을 한 줄에 나란히 두고 좁으면 줄을 바꾼다 — 부품: ReadoutItem
+- [ResizableHandle](docs/components/ResizableHandle.md): 패널 사이의 손잡이 — `role="separator"` — "use client"
+- [ResizablePanel](docs/components/ResizablePanel.md): 묶음 안의 패널 한 칸 — "use client"
+- [ResizablePanels](docs/components/ResizablePanels.md): 크기를 끌어 바꾸는 패널 묶음 — "use client"
 - [ScrollArea](docs/components/ScrollArea.md): 스크롤 영역 — 스크롤하거나 막대를 끄는 동안만 얇은 스크롤바가 보인다. — "use client"
 - [SectionLabel](docs/components/SectionLabel.md): 미세 라벨 — 구획의 이름(대문자 mono). — "use client"
 - [SegmentedControl](docs/components/SegmentedControl.md): 배타적 뷰 전환 — 트랙 위의 흰 pill 이 지금 고른 값이다(radiogroup · roving tabindex). — "use client"
@@ -122,6 +126,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [ToggleGroup](docs/components/ToggleGroup.md): 토글 묶음 — `type="single"`(값 하나, 다시 누르면 끈다) · `type="multiple"`(값 배열) — 부품: ToggleGroupItem — "use client"
 - [Toolbar](docs/components/Toolbar.md): 툴바 — 캔버스 위 또는 그 바로 위의 한 줄 — 부품: ToolbarDivider, ToolbarSpacer
 - [Tooltip](docs/components/Tooltip.md): 툴팁 — 트리거(`children`) 위에 말풍선(`label`)을 띄운다 — 부품: TooltipProvider — "use client"
+- [TopBar](docs/components/TopBar.md): 상단바 — 제목 · eyebrow · 브레드크럼 · 동작 슬롯을 한 줄에 고정 순서로 놓는다.
 - [Tr](docs/components/Tr.md): 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다.
 
 ## 훅
@@ -133,6 +138,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 ## 유틸리티
 
 - `alertVariants`: cva — 축 tone(info | success | warning | destructive); 기본 tone=info. 서버에서 호출 가능.
+- `appShellVariants`: cva — 축 variant(flush | inset); 기본 variant=flush. 서버에서 호출 가능.
 - `badgeVariants`: cva — 축 tone(neutral | primary | success | warning | destructive) · provisional(true | false); 기본 tone=neutral, provisional=false. 서버에서 호출 가능.
 - `buttonVariants`: cva — 축 variant(solid | outline | ghost | link) · tone(neutral | primary | destructive) · size(sm | md | lg | icon-sm | icon | icon-lg); 기본 variant=outline, tone=neutral, size=md. 서버에서 호출 가능.
 - `cardVariants`: cva — 축 elevation(raised | flat | flush) · pad(none | sm | md | lg); 기본 elevation=raised, pad=none. 서버에서 호출 가능.
@@ -158,6 +164,9 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `progressVariants`: cva — 축 tone(primary | success | warning | destructive | neutral); 기본 tone=primary. 서버에서 호출 가능.
 - `readoutValueVariants`: cva — 축 tone(neutral | primary | success | warning | destructive | info); 기본 tone=neutral. 서버에서 호출 가능.
 - `readoutVariants`: cva — 축 size(sm | md) · variant(inline | floating); 기본 size=md, variant=inline. 서버에서 호출 가능.
+- `resizableHandleVariants`: cva — 축 orientation(horizontal | vertical); 기본 orientation=horizontal. 서버에서 호출 가능.
+- `resizablePanelsVariants`: cva — 축 orientation(horizontal | vertical); 기본 orientation=horizontal. 서버에서 호출 가능.
+- `resizablePanelVariants`: cva — 축 없음. 서버에서 호출 가능.
 - `selectTriggerVariants`: cva — 축 size(sm | md | lg) · invalid(true | false); 기본 size=md, invalid=false. 서버에서 호출 가능.
 - `skeletonVariants`: cva — 축 shape(bar | circle); 기본 shape=bar. 서버에서 호출 가능.
 - `sliderTrackVariants`: cva — 축 size(sm | md); 기본 size=md. 서버에서 호출 가능.
@@ -170,6 +179,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `toastViewportVariants`: cva — 축 position(bottom-right | bottom-center | top-right | top-center); 기본 position=bottom-right. 서버에서 호출 가능.
 - `toggleGroupItemVariants`: cva — 축 variant(segmented | outline) · size(sm | md); 기본 variant=segmented, size=md. 서버에서 호출 가능.
 - `toggleGroupVariants`: cva — 축 variant(segmented | outline) · size(sm | md); 기본 variant=segmented, size=md. 서버에서 호출 가능.
+- `topBarVariants`: cva — 축 size(sm | md); 기본 size=md. 서버에서 호출 가능.
 - `cn`: function
 - `cva`: function
 - `GRID_MAJOR_EVERY`: constant
