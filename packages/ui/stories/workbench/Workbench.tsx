@@ -347,8 +347,6 @@ function MassingView({ towerHeight, setback }: { towerHeight: number; setback: n
 /* ── 캔버스 위 부유 크롬 ─────────────────────────────────────────────────────── */
 /* 툴 칸은 테두리 없는 칸으로 선다 — outline 의 켜진 칸(옅은 주색 바탕 · 주색 테두리)만 남기고 꺼진 칸의 상자를 걷는다. */
 const CLUSTER_ITEM = "border-transparent bg-transparent";
-/* Button 의 기본 아이콘 칸(28px)은 이 화면의 16px 아이콘 사다리보다 크다 — 툴 칸(ToggleGroupItem 16px)과 같은 크기로 맞춘다. */
-const BUTTON_ICON = "[&_svg]:size-4";
 
 function ToolCluster({ tool, onToolChange }: { tool: ToolId; onToolChange: (tool: ToolId) => void }) {
   return (
@@ -408,19 +406,19 @@ function ZoomCluster() {
   return (
     <Toolbar onCanvas aria-label="Zoom" className="absolute right-3 bottom-3 gap-1 p-1">
       <Tooltip label="Zoom out" shortcut="−">
-        <Button variant="ghost" size="icon" className={BUTTON_ICON} aria-label="Zoom out">
+        <Button variant="ghost" size="icon" aria-label="Zoom out">
           <IconZoomOut />
         </Button>
       </Tooltip>
       <span className="w-12 text-center tnum text-label text-muted-foreground">100 %</span>
       <Tooltip label="Zoom in" shortcut="+">
-        <Button variant="ghost" size="icon" className={BUTTON_ICON} aria-label="Zoom in">
+        <Button variant="ghost" size="icon" aria-label="Zoom in">
           <IconZoomIn />
         </Button>
       </Tooltip>
       <ToolbarDivider className="mx-1 h-5" />
       <Tooltip label="Zoom to fit" shortcut="⇧2">
-        <Button variant="ghost" size="icon" className={BUTTON_ICON} aria-label="Zoom to fit">
+        <Button variant="ghost" size="icon" aria-label="Zoom to fit">
           <IconZoomExtents />
         </Button>
       </Tooltip>
@@ -588,12 +586,7 @@ function Inspector({
           {LAYERS.map((layer) => (
             <div key={layer} className="flex items-center gap-3 text-body text-foreground-2">
               <span className="min-w-0 flex-1 truncate">{layer}</span>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                className={BUTTON_ICON}
-                aria-label={`Hide ${layer.toLowerCase()}`}
-              >
+              <Button variant="ghost" size="icon-sm" aria-label={`Hide ${layer.toLowerCase()}`}>
                 <IconEye />
               </Button>
             </div>
@@ -734,17 +727,12 @@ export function Workbench() {
             }
             actions={
               <>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={BUTTON_ICON}
-                  onClick={() => setPaletteOpen(true)}
-                >
+                <Button variant="ghost" size="sm" onClick={() => setPaletteOpen(true)}>
                   <IconSearch />
                   Search
                   <Kbd>⌘K</Kbd>
                 </Button>
-                <Button size="sm" className={BUTTON_ICON}>
+                <Button size="sm">
                   <IconDownload />
                   Export
                 </Button>
@@ -817,12 +805,12 @@ export function Workbench() {
           </ToggleGroup>
           <ToolbarDivider className="h-5" />
           <Tooltip label="Undo" shortcut="⌘Z">
-            <Button variant="ghost" size="icon-sm" className={BUTTON_ICON} aria-label="Undo">
+            <Button variant="ghost" size="icon-sm" aria-label="Undo">
               <IconUndo />
             </Button>
           </Tooltip>
           <Tooltip label="Redo" shortcut="⇧⌘Z">
-            <Button variant="ghost" size="icon-sm" className={BUTTON_ICON} aria-label="Redo">
+            <Button variant="ghost" size="icon-sm" aria-label="Redo">
               <IconRedo />
             </Button>
           </Tooltip>

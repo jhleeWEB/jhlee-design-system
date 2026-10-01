@@ -14,8 +14,8 @@ export const buttonVariants = cva(
     "focus-visible:focus-ring focus-visible:outline-none",
     "disabled:pointer-events-none disabled:opacity-45",
     "aria-disabled:pointer-events-none aria-disabled:opacity-45",
-    /* 아이콘만 든 버튼이 정사각이 되도록. 텍스트가 있으면 패딩이 이긴다. */
-    "[&_svg]:size-7 [&_svg]:shrink-0",
+    /* 크롬 아이콘은 16px 한 가지다(lib/icons) — 예전 \`size-7\`(28px)은 아이콘을 버튼 높이만큼 키웠다(#73). */
+    "[&_svg]:size-4 [&_svg]:shrink-0",
   ],
   {
     variants: {

@@ -254,8 +254,8 @@ export function ComboboxItem({ className, value, keywords, onSelect, children, .
   const words = typeof children === "string" ? [...(keywords ?? []), children] : (keywords ?? []);
   return (
     <SlottedCommandItem
-      // 메뉴 항목 바탕의 `[&_svg]:size-7 · text-muted-foreground` 를 이 자리에서만 고친다 — 체크는 Select 항목과 같은 16px · primary 다.
-      className={cn("pl-8 [&_svg]:size-4 [&_svg[data-check]]:text-primary", className)}
+      // 체크 표시만 primary 로 — 크기(16px)는 메뉴 항목 바탕이 이미 정한다(#73).
+      className={cn("pl-8 [&_svg[data-check]]:text-primary", className)}
       value={value}
       keywords={words}
       onSelect={(next) => {

@@ -118,7 +118,7 @@ export function SidebarItem({ className, icon, label, active, badge, shortcut, .
         "aria-[current=page]:border-transparent aria-[current=page]:bg-accent aria-[current=page]:text-primary",
         "focus-visible:focus-ring focus-visible:outline-none",
         "disabled:pointer-events-none disabled:opacity-45",
-        "[&_svg]:size-8 [&_svg]:shrink-0",
+        "[&_svg]:size-4 [&_svg]:shrink-0",
         collapsed ? "w-ctl-lg justify-center p-0" : "w-full px-3",
         className,
       )}
