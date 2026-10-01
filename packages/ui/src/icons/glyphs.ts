@@ -654,6 +654,31 @@ const table = {
       ["path", { d: "m17.5 15.5 2-2" }],
     ],
   },
+  /** lucide `bold` */
+  bold: {
+    category: "chrome",
+    lucide: "bold",
+    nodes: [["path", { d: "M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8" }]],
+  },
+  /** lucide `italic` */
+  italic: {
+    category: "chrome",
+    lucide: "italic",
+    nodes: [
+      ["line", { x1: "19", x2: "10", y1: "4", y2: "4" }],
+      ["line", { x1: "14", x2: "5", y1: "20", y2: "20" }],
+      ["line", { x1: "15", x2: "9", y1: "4", y2: "20" }],
+    ],
+  },
+  /** lucide `underline` */
+  underline: {
+    category: "chrome",
+    lucide: "underline",
+    nodes: [
+      ["path", { d: "M6 4v6a6 6 0 0 0 12 0V4" }],
+      ["line", { x1: "4", x2: "20", y1: "20", y2: "20" }],
+    ],
+  },
   /** 직접 그림 — 두 끝점(원)을 잇는 선분. */
   line: {
     category: "draw",

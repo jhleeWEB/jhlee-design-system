@@ -116,6 +116,12 @@ export const IconUndo = /* @__PURE__ */ createIcon("undo");
 export const IconRedo = /* @__PURE__ */ createIcon("redo");
 /** 글리프 `measure-distance` — 정본 `glyphs.ts`. */
 export const IconMeasureDistance = /* @__PURE__ */ createIcon("measure-distance");
+/** 글리프 `bold` — 정본 `glyphs.ts`. */
+export const IconBold = /* @__PURE__ */ createIcon("bold");
+/** 글리프 `italic` — 정본 `glyphs.ts`. */
+export const IconItalic = /* @__PURE__ */ createIcon("italic");
+/** 글리프 `underline` — 정본 `glyphs.ts`. */
+export const IconUnderline = /* @__PURE__ */ createIcon("underline");
 /** 글리프 `line` — 정본 `glyphs.ts`. */
 export const IconLine = /* @__PURE__ */ createIcon("line");
 /** 글리프 `polyline` — 정본 `glyphs.ts`. */
@@ -198,6 +204,9 @@ export const icons = {
   undo: IconUndo,
   redo: IconRedo,
   "measure-distance": IconMeasureDistance,
+  bold: IconBold,
+  italic: IconItalic,
+  underline: IconUnderline,
   line: IconLine,
   polyline: IconPolyline,
   "add-point": IconAddPoint,
