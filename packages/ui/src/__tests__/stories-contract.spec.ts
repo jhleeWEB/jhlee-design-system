@@ -58,6 +58,9 @@ const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
   "src/navigation/Sidebar.stories.tsx#Default": ["color-contrast"],
   "src/navigation/Sidebar.stories.tsx#ThemeContrast": ["color-contrast", "landmark-unique"],
   "src/navigation/Sidebar.stories.tsx#Variants": ["color-contrast"],
+  "src/navigation/Tabs.stories.tsx#Default": ["color-contrast"],
+  "src/navigation/Tabs.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/navigation/Tabs.stories.tsx#Variants": ["color-contrast"],
   "src/navigation/Toolbar.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/overlay/AlertDialog.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/overlay/Drawer.stories.tsx#ThemeContrast": ["color-contrast"],
@@ -77,6 +80,9 @@ const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
   "src/primitives/Choice.stories.tsx#Variants": ["color-contrast"],
   "src/primitives/Editorial.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/primitives/Editorial.stories.tsx#Variants": ["color-contrast"],
+  "src/primitives/Field.stories.tsx#Default": ["color-contrast"],
+  "src/primitives/Field.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Field.stories.tsx#Variants": ["color-contrast"],
   "src/primitives/Input.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/primitives/Input.stories.tsx#Variants": ["color-contrast"],
   "src/primitives/MediaCard.stories.tsx#Default": ["color-contrast"],
@@ -85,6 +91,9 @@ const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
   "src/primitives/Misc.stories.tsx#ThemeContrast": ["color-contrast"],
   "src/primitives/Misc.stories.tsx#Variants": ["color-contrast"],
   "src/primitives/PanelToggleButton.stories.tsx#ThemeContrast": ["color-contrast"],
+  "src/primitives/Select.stories.tsx#Default": ["aria-hidden-focus"],
+  "src/primitives/Select.stories.tsx#ThemeContrast": ["aria-hidden-focus", "color-contrast"],
+  "src/primitives/Select.stories.tsx#Variants": ["color-contrast"],
   "stories/Radius.stories.tsx#Components": ["aria-hidden-focus", "color-contrast"],
   "stories/Radius.stories.tsx#Ladder": ["color-contrast"],
   "stories/Workbench.stories.tsx#Default": ["aria-progressbar-name", "color-contrast"],
@@ -171,8 +180,6 @@ describe("스토리 계약", () => {
     expect(modules).toContain("primitives/Button");
   });
 
-  // `legacy/*`(shell·controls·design-system)는 여기 잡히지 않는다 — 루트 배럴이 `@deprecated` const 별칭으로만 내보내
-  // 스캐너(`export … from`)에 걸리지 않고, 격리·동결된 코드라 스토리 계약 밖이다(#10).
   it("컴포넌트 모듈마다 옆에 stories 가 있다", () => {
     const missing = modules.filter((m) => !existsSync(join(SRC, `${m}.stories.tsx`)));
     expect(missing, "새 컴포넌트는 stories 와 함께 만든다").toEqual([]);

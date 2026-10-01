@@ -12,7 +12,7 @@
  *  - `sugar` 는 오늘 비어 있다 — 설탕(부품만으로 조립한 편의 래퍼)은 Phase D 의 부품 1·2차와 함께 생기고, 그때 JSDoc 태그로 표시한다.
  *  - `utilities` 는 컴포넌트·훅이 아닌 값 export(`*Variants` · `cn` · 상수) — «index export 전수 포함» 게이트가 두 배열의 합집합으로 본다.
  *  - optional prop 의 `default` 는 `@default` 태그 → 같은 파일이 import 하는 cva 의 `defaultVariants` 순으로 채운다. 유니언 `values[].doc` 은
- *    설명의 «`값` — 설명» 또는 «`값`(설명)» 줄에서 읽고, 옛 tone 키는 legacy-tone 표로 «deprecated alias» 를 자동으로 단다.
+ *    설명의 «`값` — 설명» 또는 «`값`(설명)» 줄에서 읽고. 옛 tone 키는 3.0.0 에서 유니언에서 빠졌다(#49).
  *  - `client` 는 export 가 선언된 파일의 첫 줄 `"use client"` 다(배럴의 const 별칭은 초기화식을 한 단계 따라간다).
  */
 import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
@@ -21,9 +21,8 @@ import { fileURLToPath } from "node:url";
 
 import ts from "typescript";
 
-import { LEGACY_TONES } from "../src/eslint/rules/legacy-tone.ts";
 import { SPACING_STEPS } from "../src/eslint/spacing.ts";
-import { LEGACY_FILE, readTokenSources, validateTokenSources } from "../tokens/schema.ts";
+import { readTokenSources, validateTokenSources } from "../tokens/schema.ts";
 
 /** 패키지 루트(`packages/ui`). */
 export const PKG_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -279,12 +278,9 @@ function cvaInFile(
   return { defaults, axes };
 }
 
-const LEGACY_TONE_KEYS = new Set(Object.keys(LEGACY_TONES));
-
-/** 유니언 값의 순서 — 타입 검사기의 순서는 임의라, cva 축 순서 → 나머지 알파벳 → 옛 tone 키(deprecated)는 끝으로. */
+/** 유니언 값의 순서 — 타입 검사기의 순서는 임의라, cva 축 순서 → 나머지 알파벳. */
 export function orderValues(values: readonly string[], axisOrder: readonly string[]): string[] {
   const rank = (v: string): [number, number, string] => {
-    if (LEGACY_TONE_KEYS.has(v)) return [2, 0, v];
     const i = axisOrder.indexOf(v);
     return i === -1 ? [1, 0, v] : [0, i, v];
   };
@@ -312,12 +308,7 @@ function propsOf(
     const optional = Boolean(p.flags & ts.SymbolFlags.Optional);
     const description = docOf(checker, p);
     const literals = orderValues(literalValues(type) ?? [], cvaAxes[p.name] ?? []);
-    const values = literals.map((value) => {
-      let doc = docForValue(description, value);
-      if (!doc && LEGACY_TONE_KEYS.has(value))
-        doc = `deprecated alias of "${LEGACY_TONES[value as keyof typeof LEGACY_TONES]}"`;
-      return { value, doc };
-    });
+    const values = literals.map((value) => ({ value, doc: docForValue(description, value) }));
     let defaultValue = tagOf(checker, "default", p) ?? "";
     if (!defaultValue && optional && cvaDefaults[p.name] !== undefined)
       defaultValue = JSON.stringify(cvaDefaults[p.name]);
@@ -375,16 +366,13 @@ function hookParams(checker: ts.TypeChecker, sig: ts.Signature): ManifestProp[] 
   });
 }
 
-/** 토큰 색인 — DTCG 정본에서 legacy 파일을 뺀 이름. */
+/** 토큰 색인 — DTCG 정본의 이름(옛 이름 alias 는 3.0.0 에서 지웠다, #49). */
 export function tokenIndex(): ManifestTokens {
   const { errors, tokens } = validateTokenSources(readTokenSources(join(PKG_DIR, "tokens")));
   if (errors.length) throw new Error(`tokens: ${errors.join("\n")}`);
   const names = (group: string, scope?: string): string[] =>
     tokens
-      .filter(
-        (t) =>
-          t.file !== LEGACY_FILE && t.path[0] === group && (scope === undefined || t.sds.scope === scope),
-      )
+      .filter((t) => t.path[0] === group && (scope === undefined || t.sds.scope === scope))
       .map((t) => t.path.slice(1).join("-"));
   return {
     colors: names("color", "theme-inline"),

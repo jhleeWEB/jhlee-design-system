@@ -18,5 +18,5 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | `onOpenChange` | `(open: boolean) => void` | 예 |  | 눌렀을 때 다음 상태(`!open`)로 불린다 — 제어 컴포넌트다. |
 | `label` | `string` | 예 |  | 아이콘만 보여도 어느 패널을 여닫는지 툴팁과 접근성 이름에 남긴다. |
 | `controls` | `string` |  | `undefined` | 여닫는 패널의 `id` — `aria-controls` 로 간다. |
-| `tone` | `ToneInput<ButtonTone> \| null` |  | `"neutral"` | 값: `destructive` — 파괴적 동작 · `neutral` — 기본 · `primary` — 주된 동작 · `accent` — deprecated alias of "primary" · `current` — deprecated alias of "neutral" · `danger` — deprecated alias of "destructive" · `default` — deprecated alias of "neutral" |
+| `tone` | `ButtonTone \| null` |  | `"neutral"` | 값: `destructive` — 파괴적 동작 · `neutral` — 기본 · `primary` — 주된 동작 |
 | `loading` | `boolean` |  | `false` | 진행 중. 스피너로 라벨을 **대체하지 않는다** — 폭이 흔들리면 옆 버튼이 밀린다. |

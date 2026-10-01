@@ -1,5 +1,5 @@
 {
-  "$description": "층위 — radius · shadow 사다리(Tailwind @theme)와 z-index 층(:root --layer-* + 생성 @utility z-*, #18). radius·shadow 는 shipped 캔버스 툴(tldraw)의 라이브 DOM 값을 이 제품의 밀도로 누른 것. radius 이름은 shadcn 의 sm/md/lg/xl(6/8/12/16 체감값, B5 #22) — 옛 역할 이름(chip/control/card/float/modal)은 legacy.json 의 alias 다. reset 은 Tailwind 기본 사다리를 지워 역할 이름만 남긴다. 값은 전부 px 리터럴 고정이다 — 스쿼클(#26·#27)은 사용자 결정(2026-09-30, #36)으로 폐기했다.",
+  "$description": "층위 — radius · shadow 사다리(Tailwind @theme)와 z-index 층(:root --layer-* + 생성 @utility z-*, #18). radius·shadow 는 shipped 캔버스 툴(tldraw)의 라이브 DOM 값을 이 제품의 밀도로 누른 것. radius 이름은 shadcn 의 sm/md/lg/xl(6/8/12/16 체감값, B5 #22) — 옛 역할 이름(chip/control/card/float/modal)의 alias 는 3.0.0 에서 지웠다(#49). reset 은 Tailwind 기본 사다리를 지워 역할 이름만 남긴다. 값은 전부 px 리터럴 고정이다 — 스쿼클(#26·#27)은 사용자 결정(2026-09-30, #36)으로 폐기했다.",
   "$extensions": { "sds": { "scope": "theme" } },
   "radius": {
     "$type": "dimension",

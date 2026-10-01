@@ -19,7 +19,7 @@ description: Squircle Design System({{name}})으로 화면을 조립할 때 — 
    jq '.utilities[] | select(.kind == "variants") | {name, axes, defaults}' node_modules/{{name}}/dist/components.manifest.json
    jq '.tokens' node_modules/{{name}}/dist/components.manifest.json
    ```
-3. **없는 부품·prop 은 지어내지 않는다.** 매니페스트에 없으면 «DS 확장 필요 — <무엇이, 왜>» 로 보고하고 그 자리는 가장 가까운 있는 부품으로 임시 조립한 뒤 TODO 로 표시한다. `@deprecated` 인 것(`./legacy`, 옛 tone 키)은 새 코드에 고르지 않는다.
+3. **없는 부품·prop 은 지어내지 않는다.** 매니페스트에 없으면 «DS 확장 필요 — <무엇이, 왜>» 로 보고하고 그 자리는 가장 가까운 있는 부품으로 임시 조립한 뒤 TODO 로 표시한다. `@deprecated` 인 것은 새 코드에 고르지 않는다(3.0.0 에서 `./legacy` · 옛 tone 키 · 옛 토큰 이름은 지웠다).
 4. 클라이언트 경계를 정한다 — `client: true` 컴포넌트는 `"use client"` 파일에서만 렌더한다. 서버 컴포넌트에서는 `*Variants` 호출만.
 
 ## 2. Compose — 부품 조립, className 은 토큰 유틸만

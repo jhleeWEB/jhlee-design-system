@@ -21,7 +21,7 @@ const read = (file: string): string =>
   readFileSync(fileURLToPath(new URL(`../${file}`, import.meta.url)), "utf8");
 const model = loadTokenModel();
 
-/** src/ 의 제품 CSS·TSX(legacy 포함, 스펙·스토리·생성물 제외) — 소비자 검사기에 넘기는 모양. */
+/** src/ 의 제품 CSS·TSX(스펙·스토리·생성물 제외) — 소비자 검사기에 넘기는 모양. */
 const sources: CornerSource[] = [...sourceGraph().values()]
   .filter((f) => !f.excluded)
   .map((f) => ({ path: f.path, text: f.text }));
@@ -71,12 +71,10 @@ describe("반경 사다리", () => {
     ).toEqual([]);
   });
 
-  it("border-radius 원시값 래칫 — legacy shell.css 의 스위치 2 뿐이다", () => {
-    /* 원형(999px · 50%)이라 토큰(--radius-full)으로 바꿔도 그림은 같다 — 옮기면 여기서 줄인다. 줄어들기만 한다.
-     * theme.css 의 스크롤 썸(999px)은 C4 에서 var(--radius-full) 로 옮겼다(stylelint 가 반경 리터럴을 막는다). */
+  it("border-radius 원시값은 0 이다", () => {
+    /* 마지막 둘(legacy/shell.css 의 스위치 999px · 50%)은 3.0.0 에서 파일째 지웠다(#49). theme.css 의 스크롤 썸은 C4 에서 var(--radius-full) 로 옮겼다. */
     const raw = auditCorners(sources).filter((f) => f.rule === "raw-radius");
-    expect(countByFile(raw)).toEqual({ "legacy/shell.css": 2 });
-    expect(raw.map((f) => f.text).sort()).toEqual(["border-radius: 50%", "border-radius: 999px"]);
+    expect(countByFile(raw)).toEqual({});
   });
 
   it("TSX 의 rounded-[…] 는 동심원 calc(var(--radius-…) − 패딩) 뿐이다", () => {

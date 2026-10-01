@@ -2,13 +2,12 @@
 /*
  * 공개 컴포넌트 전부가 공통 계약(`__arch__/component-contract.tsx`)을 어딘가에서 한 번 돈다(계획 §2.4 D-3, C3 → D7 #48).
  *
- * 대상은 배럴(index.ts)의 PascalCase 값 export 에서 `./legacy` 재export(격리·동결, #10)를 뺀 것이다. 덮는 길은 둘뿐이고 겹치지 않는다:
+ * 대상은 배럴(index.ts)의 PascalCase 값 export 전부다(`./legacy` 별칭은 3.0.0 에서 지웠다, #49). 덮는 길은 둘뿐이고 겹치지 않는다:
  *  1. 컴포넌트 옆 `Name.spec.tsx` 가 `Name.stories` 를 계약에 넘긴다(`describeComponentContract` · `storySubject`) — 스토리 메타의
  *     `component` 가 그 spec 이 덮는 컴포넌트다. Phase D(D1–D5)가 스토리를 가진 컴포넌트를 전부 이리로 옮겼다.
  *  2. 스토리의 `component` 가 아닌 부품(Content·Item·Trigger…)은 여기 FIXTURES 의 최소 props 로 돈다.
  * 한때 여기 있던 STORY_SUBJECTS(스토리 Default 를 다시 돌리던 것)는 폴더 spec 과 같은 검사를 두 번 돌려 지웠다(#48).
  * 부품의 실패를 붙들던 KNOWN_CONTRACT_FAILURES 도 0 이 되어 지웠다 — 부품 픽스처는 실패 0 이 계약이다.
- * 유일한 예외 Button 의 slot-locked 는 `primitives/Button.spec.tsx` 가 그 자리에서 붙든다(legacy Select 가 의존, D8 #49 에서 잠근다).
  */
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
@@ -19,7 +18,6 @@ import { describe, expect, it } from "vitest";
 
 import { runContract, type ContractSubject, type Probe } from "../__arch__/component-contract";
 import * as barrel from "../index";
-import * as legacy from "../legacy/index";
 
 const {
   Accordion,
@@ -53,6 +51,11 @@ const {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   Eyebrow,
+  Field,
+  FieldControl,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
   Lede,
   MediaCard,
   Modal,
@@ -70,6 +73,14 @@ const {
   RadioGroup,
   RadioGroupItem,
   SectionLabel,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
   Separator,
   Sidebar,
   SidebarGroup,
@@ -78,6 +89,10 @@ const {
   StatusDot,
   Switch,
   Table,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
   Tbody,
   Td,
   Textarea,
@@ -120,6 +135,19 @@ const openDrawer =
       </DrawerContent>
     </Drawer>
   );
+const openSelect =
+  (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
+  (p) => (
+    <Select open defaultValue="a">
+      <SelectTrigger aria-label="Choice">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>{child(p)}</SelectContent>
+    </Select>
+  );
+const inTabs =
+  (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
+  (p) => <Tabs defaultValue="a">{child(p)}</Tabs>;
 const inAccordion =
   (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
   (p) => (
@@ -358,6 +386,53 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   Eyebrow: { slot: "eyebrow", render: (p) => <Eyebrow {...p}>Step</Eyebrow> },
+  FieldControl: {
+    // 자기 DOM 이 없는 Slot 이다 — 탐침은 자식 Input 에 닿고 data-slot 은 자식의 것이 남는다.
+    slot: "input",
+    render: (p) => (
+      <Field>
+        <FieldLabel>Name</FieldLabel>
+        <FieldControl {...p}>
+          <barrel.Input />
+        </FieldControl>
+      </Field>
+    ),
+  },
+  FieldDescription: {
+    slot: "field-description",
+    render: (p) => (
+      <Field>
+        <FieldLabel>Name</FieldLabel>
+        <FieldControl>
+          <barrel.Input />
+        </FieldControl>
+        <FieldDescription {...p}>Help</FieldDescription>
+      </Field>
+    ),
+  },
+  FieldError: {
+    slot: "field-error",
+    render: (p) => (
+      <Field>
+        <FieldLabel>Name</FieldLabel>
+        <FieldControl>
+          <barrel.Input />
+        </FieldControl>
+        <FieldError {...p}>Required</FieldError>
+      </Field>
+    ),
+  },
+  FieldLabel: {
+    slot: "field-label",
+    render: (p) => (
+      <Field>
+        <FieldLabel {...p}>Name</FieldLabel>
+        <FieldControl>
+          <barrel.Input />
+        </FieldControl>
+      </Field>
+    ),
+  },
   Lede: { slot: "lede", render: (p) => <Lede {...p}>Lede</Lede> },
   Modal: {
     slot: "modal",
@@ -438,6 +513,88 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   SectionLabel: { slot: "section-label", render: (p) => <SectionLabel {...p}>Section</SectionLabel> },
+  Select: {
+    // 자기 DOM 이 없는 Radix Root — 열린 상자(포털)로 slot · axe 를 본다. 열린 Select 의 aria-hidden-focus 는 Select.stories 머리 주석.
+    slot: "select-content",
+    noDom: true,
+    axeOff: ["aria-hidden-focus"],
+    render: (p) => (
+      <Select open defaultValue="a" {...p}>
+        <SelectTrigger aria-label="Choice">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="a">A</SelectItem>
+        </SelectContent>
+      </Select>
+    ),
+  },
+  SelectContent: {
+    slot: "select-content",
+    axeOff: ["aria-hidden-focus"],
+    render: (p) => (
+      <Select open defaultValue="a">
+        <SelectTrigger aria-label="Choice">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent {...p}>
+          <SelectItem value="a">A</SelectItem>
+        </SelectContent>
+      </Select>
+    ),
+  },
+  SelectGroup: {
+    slot: "select-group",
+    axeOff: ["aria-hidden-focus"],
+    render: openSelect((p) => (
+      <SelectGroup {...p}>
+        <SelectItem value="a">A</SelectItem>
+      </SelectGroup>
+    )),
+  },
+  SelectItem: {
+    slot: "select-item",
+    axeOff: ["aria-hidden-focus"],
+    render: openSelect((p) => (
+      <SelectItem value="a" {...p}>
+        A
+      </SelectItem>
+    )),
+  },
+  SelectLabel: {
+    slot: "select-label",
+    axeOff: ["aria-hidden-focus"],
+    render: openSelect((p) => (
+      <SelectGroup>
+        <SelectLabel {...p}>Group</SelectLabel>
+        <SelectItem value="a">A</SelectItem>
+      </SelectGroup>
+    )),
+  },
+  SelectSeparator: {
+    slot: "select-separator",
+    axeOff: ["aria-hidden-focus"],
+    render: openSelect((p) => (
+      <>
+        <SelectItem value="a">A</SelectItem>
+        <SelectSeparator {...p} />
+        <SelectItem value="b">B</SelectItem>
+      </>
+    )),
+  },
+  SelectValue: {
+    slot: "select-value",
+    render: (p) => (
+      <Select defaultValue="a">
+        <SelectTrigger aria-label="Choice">
+          <SelectValue {...p} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="a">A</SelectItem>
+        </SelectContent>
+      </Select>
+    ),
+  },
   Separator: { slot: "separator", render: (p) => <Separator {...p} /> },
   SidebarGroup: {
     slot: "sidebar-group",
@@ -460,6 +617,45 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   SkeletonText: { slot: "skeleton-text", render: (p) => <SkeletonText {...p} /> },
   StatusDot: { slot: "status-dot", render: (p) => <StatusDot tone="success" label="Pass" {...p} /> },
   Switch: { slot: "switch", render: (p) => <Switch aria-label="Dark" {...p} /> },
+  TabsContent: {
+    slot: "tabs-content",
+    render: inTabs((p) => (
+      <>
+        <TabsList aria-label="Views">
+          <TabsTrigger value="a">A</TabsTrigger>
+        </TabsList>
+        <TabsContent value="a" {...p}>
+          A body
+        </TabsContent>
+      </>
+    )),
+  },
+  TabsList: {
+    slot: "tabs-list",
+    axes: ["variant"],
+    render: inTabs((p) => (
+      <>
+        <TabsList aria-label="Views" {...p}>
+          <TabsTrigger value="a">A</TabsTrigger>
+        </TabsList>
+        <TabsContent value="a">A body</TabsContent>
+      </>
+    )),
+  },
+  TabsTrigger: {
+    slot: "tabs-trigger",
+    axes: ["variant"],
+    render: inTabs((p) => (
+      <>
+        <TabsList aria-label="Views" variant="underline">
+          <TabsTrigger value="a" {...p}>
+            A
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="a">A body</TabsContent>
+      </>
+    )),
+  },
   Tbody: {
     slot: "table-body",
     render: (p) => (
@@ -555,12 +751,8 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
 
 const isComponent = (v: unknown): boolean =>
   typeof v === "function" || (typeof v === "object" && v !== null && "$$typeof" in v);
-const LEGACY = new Set(Object.keys(legacy));
 const PUBLIC_COMPONENTS = Object.entries(barrel)
-  .filter(
-    ([name, value]) =>
-      /^[A-Z]/.test(name) && !/^[A-Z0-9_]+$/.test(name) && isComponent(value) && !LEGACY.has(name),
-  )
+  .filter(([name, value]) => /^[A-Z]/.test(name) && !/^[A-Z0-9_]+$/.test(name) && isComponent(value))
   .map(([name]) => name)
   .sort();
 

@@ -4,7 +4,7 @@
  * 네 가지: ① index 의 런타임 export 가 전부 실린다(컴포넌트 ∪ 유틸리티 == `Object.keys(import(index))`) ② optional prop 의 `default` 가 비어 있지 않다
  * ③ 유니언 `values[].doc` 이 비어 있지 않다 ④ `client` 가 실제 `"use client"` 와 같다. ②·③ 은 첫 실측(2026-09-30, 공개 144 중 `/**` 23,
  * `@default` 0 — 빈자리 139 · 109)에서 **KNOWN_GAPS 래칫**으로 시작했다 — 실제 빈자리 목록이 기준선과 같아야 통과한다. 줄이면 같은 PR 에서
- * 기준선을 낮춘다. Phase D(D1–D5)가 DS 컴포넌트의 JSDoc 을 채워 남은 것은 동결된 legacy 뿐이고(36), D8(#49)이 legacy 와 함께 0 으로 만든다.
+ * 기준선을 낮춘다. Phase D(D1–D5)가 DS 컴포넌트의 JSDoc 을 채워 남은 것은 동결된 legacy 뿐이었고(36), D8(#49)이 legacy 와 함께 0 으로 만들었다.
  * ①·④ 는 래칫이 아니라 불변식이다.
  */
 import { describe, expect, it } from "vitest";
@@ -23,48 +23,10 @@ const manifest = (): Manifest => (cached ??= buildManifest());
 
 /** 오늘의 빈자리 — `Component.prop` · `Component.prop=value`. 경로 오름차순. 줄어들기만 한다. 첫 실측(2026-09-30, #31), 재실측(2026-10-01, #48). */
 const KNOWN_GAPS = {
-  // optional prop 인데 `@default` 도 cva defaultVariants 도 없다(첫 실측 139 → 32, 전부 legacy).
-  default: [
-    "AppShell.inspect",
-    "AppShell.inspectCollapseTo",
-    "AppShell.inspectId",
-    "AppShell.inspectOpen",
-    "Field.children",
-    "Field.path",
-    "Field.value",
-    "HudCell.u",
-    "HudCell.verdict",
-    "Panel.actions",
-    "Panel.eyebrow",
-    "Panel.scrollable",
-    "Panel.titleHidden",
-    "Panel.variant",
-    "PanelGroup.echo",
-    "PanelGroup.open",
-    "Segmented.disabled",
-    "Select.aria-describedby",
-    "Select.className",
-    "Select.disabled",
-    "Select.invalid",
-    "Slider.className",
-    "Slider.disabled",
-    "Slider.onChange",
-    "Slider.onCommit",
-    "Slider.step",
-    "Toggle.disabled",
-    "Toggle.hideText",
-    "Toggle.hint",
-    "TopBar.children",
-    "TopBar.eyebrow",
-    "ViewerPanel.head",
-  ],
-  // 유니언 값인데 «`값` — 설명» 줄이 없다(첫 실측 109 → 4, 전부 legacy).
-  values: [
-    "AppShell.inspectCollapseTo=hidden",
-    "AppShell.inspectCollapseTo=strip",
-    "Panel.variant=control",
-    "Panel.variant=inspect",
-  ],
+  // optional prop 인데 `@default` 도 cva defaultVariants 도 없다(첫 실측 139 → 32, 전부 legacy → 0: legacy 를 지운 3.0.0, #49).
+  default: [] as string[],
+  // 유니언 값인데 «`값` — 설명» 줄이 없다(첫 실측 109 → 4, 전부 legacy → 0: #49).
+  values: [] as string[],
 };
 
 describe("components.manifest.json", { timeout: 120_000 }, () => {
@@ -123,21 +85,13 @@ describe("components.manifest.json", { timeout: 120_000 }, () => {
     expect(gaps).toEqual([...KNOWN_GAPS.values].sort());
   });
 
-  it("옛 tone 키는 deprecated alias 로 자동 설명되고 새 키가 앞에 온다", () => {
+  it("tone 은 새 어휘만 싣고 값마다 설명이 있다 — 옛 키는 3.0.0 에서 유니언에서 빠졌다(#49)", () => {
     const tone = manifest()
       .components.find((c) => c.name === "Button")
       ?.props.find((p) => p.name === "tone");
-    expect(tone?.values.map((v) => v.value)).toEqual([
-      "neutral",
-      "primary",
-      "destructive",
-      "accent",
-      "current",
-      "danger",
-      "default",
-    ]);
-    expect(tone?.values.find((v) => v.value === "accent")?.doc).toBe('deprecated alias of "primary"');
-    expect(tone?.default).toBe('"neutral"'); // @default 가 없어도 같은 파일의 cva defaultVariants 에서 온다
+    expect(tone?.values.map((v) => v.value)).toEqual(["neutral", "primary", "destructive"]);
+    expect(tone?.values.every((v) => v.doc !== "")).toBe(true);
+    expect(tone?.default).toBe('"neutral"');
   });
 
   it("cva 유틸리티는 축과 기본값을 AST 에서 읽는다", () => {
@@ -152,7 +106,7 @@ describe("components.manifest.json", { timeout: 120_000 }, () => {
     expect(button?.client).toBe(false);
   });
 
-  it("토큰 색인은 legacy 를 뺀 정본 이름이다", () => {
+  it("토큰 색인은 정본 이름이다 — 옛 유틸 이름(ink)은 없다", () => {
     const t = manifest().tokens;
     expect(t.colors).toContain("primary");
     expect(t.colors).not.toContain("ink");
@@ -173,7 +127,7 @@ describe("생성기 조각", () => {
     expect(docForValue("아무 설명", "solid")).toBe("");
   });
 
-  it("orderValues — cva 축 순서 → 나머지 알파벳 → 옛 tone 키", () => {
+  it("orderValues — cva 축 순서 → 나머지 알파벳", () => {
     expect(orderValues(["danger", "b", "primary", "a", "neutral"], ["neutral", "primary"])).toEqual([
       "neutral",
       "primary",

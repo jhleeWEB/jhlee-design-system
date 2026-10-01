@@ -19,7 +19,7 @@ function themeLines(tokens, outputReferences) {
   for (const [ns, group] of groupBy(tokens, (t) => t.path[0])) {
     if (lines.length) lines.push("");
     if (group.some((t) => sds(t).reset)) lines.push(`--${ns}-*: initial;`);
-    // legacy.json 의 옛 유틸 이름 alias 는 같은 네임스페이스 끝에 붙는다(정본 순서상 legacy 가 마지막) — 읽는 사람을 위해 표시한다.
+    // `$deprecated` 토큰은 읽는 사람을 위해 표시한다(옛 유틸 이름 alias 는 3.0.0 에서 지웠다, #49 — 오늘은 해당 없음).
     for (const t of group)
       lines.push(
         ...tokenDeclarations(t, outputReferences)

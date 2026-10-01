@@ -14,5 +14,5 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
-| `tone` | `ToneInput<ProgressTone> \| null` |  | `"primary"` | 값: `primary` — 지금 진행 중인 주된 작업(기본) · `success` — 허용량 안에서 끝났다 · `warning` — 상한에 가깝다 · `destructive` — 상한을 넘었다(100% 초과) · `neutral` — 판정 없는 단순 채움 · `accent` — deprecated alias of "primary" · `current` — deprecated alias of "neutral" · `danger` — deprecated alias of "destructive" · `default` — deprecated alias of "neutral" · `ok` — deprecated alias of "success" · `warn` — deprecated alias of "warning" |
+| `tone` | `ProgressTone \| null` |  | `"primary"` | 값: `primary` — 지금 진행 중인 주된 작업(기본) · `success` — 허용량 안에서 끝났다 · `warning` — 상한에 가깝다 · `destructive` — 상한을 넘었다(100% 초과) · `neutral` — 판정 없는 단순 채움 |
 | `value` | `number \| null` |  | `null` | 0–100(밖의 값은 잘라 그린다). `null` 이면 미판정(indeterminate)으로 그린다. |

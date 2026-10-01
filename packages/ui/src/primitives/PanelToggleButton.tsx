@@ -3,7 +3,7 @@ import { LuMaximize2, LuMinimize2 } from "react-icons/lu";
 
 import { cn } from "../cn";
 import { ICON } from "../lib/icons";
-import { Button, type ButtonProps } from "./Button";
+import { SlottedButton, type ButtonProps } from "./Button";
 
 /** `<PanelToggleButton>` 의 props — 아이콘 버튼이라 `variant` · `size` · `children` 은 고정이다. */
 export interface PanelToggleButtonProps extends Omit<
@@ -36,11 +36,10 @@ export function renderPanelToggle(
   const action = `${open ? "Collapse" : "Show"} the ${label}`;
   const Icon = open ? LuMinimize2 : LuMaximize2;
   return (
-    <Button
+    <SlottedButton
       {...rest}
       ref={ref}
-      /* 문자열이다 — 불리언 data 속성 래칫(boolean-string-data-attr)의 정규식이 식별자 하나를 불리언으로 의심한다. */
-      data-slot={slot satisfies string}
+      slot={slot}
       type="button"
       variant="ghost"
       size="icon-sm"
@@ -52,7 +51,7 @@ export function renderPanelToggle(
       onClick={() => onOpenChange(!open)}
     >
       <Icon {...ICON} />
-    </Button>
+    </SlottedButton>
   );
 }
 

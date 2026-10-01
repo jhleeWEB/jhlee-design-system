@@ -1,8 +1,8 @@
 /* Squircle 디자인 시스템 — 토큰(#18)
  *
- * 토큰 값은 여기 없다. 정본은 `packages/ui/tokens/` 의 DTCG JSON 이고 생성기(`tokens/build.mjs`)가 아래 두 파일을 쓴다:
+ * 토큰 값은 여기 없다. 정본은 `packages/ui/tokens/` 의 DTCG JSON 이고 생성기(`tokens/build.mjs`)가 아래 파일을 쓴다:
  *   generated/tokens.css   :root 원시(--palette-*) · 캔버스(--canvas-*) · 치수·간격·시간·층위 · 크롬 라이트/다크(--chrome-*) · reduced-motion
- *   generated/legacy.css   옛 이름(--ink · --line · --ok-pale · --gap · --size-gap · --color-{hue}-* · --chrome-ink · --chrome-line …) → 새 정본 alias. 값은 옛 것과 같다. 제거는 major
+ * 옛 이름 alias(generated/legacy.css — --ink · --gap · --chrome-ink …)는 3.0.0 에서 지웠다(#49). 옮기는 길은 코드모드 · 린트 `--fix` 다.
  * 손 CSS 로 값을 적던 때(#15 이전)의 원칙 세 개는 그대로다 — 1. 도면 면은 radius 0 · 그림자 없음 · 무채색 · 다크 없음(캔버스),
  * 2. 유채색은 판정에만, 3. 수치는 mono + tabular-nums. 아래 요소 규칙이 그 원칙의 직접 결과이고, 값이 아니라 «규칙» 이라 손으로 남는다.
  *
@@ -10,7 +10,6 @@
  */
 
 @import "./generated/tokens.css";
-@import "./generated/legacy.css";
 
 *,
 *::before,
@@ -18,8 +17,7 @@
   box-sizing: border-box;
 }
 
-/* body 의 바닥·글자색은 크롬이다 — 다크를 따른다(#20 · #24 결정, 2026-09-30). 옛 base 이름(--bg #f4f4f4 · --ink #1a1a1a)은 값을 보존하는
-   legacy alias 로 남고(재매핑은 소비자 픽셀을 바꾸는 major 라 하지 않는다) 여기서는 더 읽지 않는다. */
+/* body 의 바닥·글자색은 크롬이다 — 다크를 따른다(#20 · #24 결정, 2026-09-30). 옛 base 이름(--bg · --ink)은 3.0.0 에서 지웠다(#49). */
 body {
   margin: 0;
   background: var(--chrome-background);

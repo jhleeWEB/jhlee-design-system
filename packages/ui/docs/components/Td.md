@@ -15,4 +15,4 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
 | `numeric` | `boolean` |  | `false` | 수치 칸 — 우측 정렬 + mono + tabular-nums(원칙 3). |
-| `tone` | `ToneInput<CellTone>` |  | `"neutral"` | 값: `neutral` — 판정 없음(본문 글자색) · `success` — 통과 · `warning` — 주의 · `destructive` — 실패 · `current` — deprecated alias of "neutral" · `danger` — deprecated alias of "destructive" · `default` — deprecated alias of "neutral" · `ok` — deprecated alias of "success" · `warn` — deprecated alias of "warning" |
+| `tone` | `CellTone` |  | `"neutral"` | 값: `neutral` — 판정 없음(본문 글자색) · `success` — 통과 · `warning` — 주의 · `destructive` — 실패 |

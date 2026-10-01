@@ -23,7 +23,7 @@ import tseslint from "typescript-eslint";
 
 /* `no-restricted-classes` 의 패턴(옛 이름 개명 · hex · 단위 리터럴 · 격자 밖 간격)은 소비자 프리셋(`packages/ui/src/eslint/index.ts`)과 한 벌이다(#31) —
  * 워크스페이스와 소비 레포가 같은 규칙을 돌려야 «여기서는 통과, 저기서는 실패» 가 없다. Node 24 가 .ts 를 그대로 읽으므로 빌드 없이 import 된다.
- * 옛 이름 표는 legacy.json 이 원천이고 tokens/build.mjs 가 src/generated/legacy-classes.json 으로 굽는다(`pnpm tokens:check`) — {pattern, fix} 라
+ * 옛 이름 표는 tokens/legacy-map.mjs(정적 표, #49)가 원천이고 tokens/build.mjs 가 src/generated/legacy-classes.json 으로 굽는다(`pnpm tokens:check`) — {pattern, fix} 라
  * **`eslint --fix` 가 곧 코드모드**다. */
 import { restrictedClassPatterns } from "./packages/ui/src/eslint/index.ts";
 
@@ -89,9 +89,6 @@ export default tseslint.config(
       "**/vrt/report/",
       "**/vrt/results/",
       "**/coverage/",
-      // ./legacy 는 격리·동결이다(#10) — 기준선(suppressions)으로 덮던 것을 계획대로 ignores 로 바꿨다. 새 위반이 생길 일도, 고칠 일도 없는 코드라
-      // 래칫에 태우지 않는다. 다음 마이너에서 루트 배럴 재export 와 함께 지운다.
-      "packages/ui/src/legacy/",
     ],
   },
 
@@ -251,7 +248,6 @@ export default tseslint.config(
     },
     rules: {
       // `ds-*` 는 theme.css 가 @import 하는 컴포넌트 CSS 의 클래스다 — 토큰 밖 유틸리티가 아니라 DS 자신의 훅이다.
-      // shell.css 의 legacy 클래스(panel·hud …)를 쓰는 src/legacy/ 는 전역 ignores 다(#10).
       "better-tailwindcss/no-unknown-classes": ["error", { ignore: ["^ds-"], detectComponentClasses: true }],
       "better-tailwindcss/no-restricted-classes": [
         "error",

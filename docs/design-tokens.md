@@ -33,8 +33,9 @@ LLM 의 사전 분포는 shadcn/ui 다 — 그와 **같은 이름**은 설명 �
 | CSS 변수 | `var(--primary)` | `var(--chrome-primary)` · `var(--canvas-ink)` — 면 접두가 있다 | 접두가 곧 «어느 면인가» 이고 다크가 갈리는 집합(chrome)을 이름이 말한다. Tailwind 유틸에서는 접두를 뗀다(`bg-primary`) |
 | 기반 라이브러리 | Base UI(2026-07 부터 기본) | **Radix**(`radix-ui`) | 부품 구조가 다를 수 있다 — 부품 이름은 `components.manifest.json`(Phase C)이 정본 |
 
-## 옛 이름(한 마이너 동안만)
+## 옛 이름(3.0.0 에서 지웠다)
 
-B5(#22) 이전 이름은 alias 로 남아 있다 — `text-ink` `bg-surface` `border-line` `rounded-control` … 과 `var(--chrome-ink)` `var(--chrome-line)` …
-새 코드에 쓰지 않는다(ESLint `no-restricted-classes --fix` 가 새 이름으로 바꾼다). **예외 둘**: 옛 `accent`(azure)·`muted`(회색 글자)는 새 이름과
-글자가 같고 뜻이 다르므로 alias 가 없다 — `scripts/codemod-classes.mjs` · `scripts/codemod-css-vars.mjs` 를 **한 번** 돌려 옮긴다. 제거는 다음 마이너.
+B5(#22) 이전 이름(`text-ink` `bg-surface` `border-line` `rounded-control` … · `var(--chrome-ink)` `var(--chrome-line)` · `var(--ink)` `var(--gap)` …)은 2.x 까지
+alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르는 클래스(조용히 무시) · 정의 없는 변수다. 옮기는 길은 남아 있다:
+`scripts/codemod-css-vars.mjs` · `scripts/codemod-classes.mjs` 를 **한 번** 돌리고(옛 `accent`(azure)·`muted`(회색 글자)는 새 이름과 글자가 같아 스크립트만 옮긴다),
+그 다음 ESLint `no-restricted-classes --fix`(프리셋) 가 남은 것을 잡는다. 표는 `packages/ui/tokens/legacy-map.mjs`.

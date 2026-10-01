@@ -10,7 +10,7 @@ import {
   CANVAS_FILE,
   CHROME_LIGHT_FILE,
   DARK_FILE,
-  LEGACY_FILE,
+  REMOVED_LEGACY_FILE,
   readTokenSources,
   sortSourcePaths,
   validateTokenSources,
@@ -38,7 +38,7 @@ describe("정본", () => {
     expect(validateTokenSources(sources).errors).toEqual([]);
   });
 
-  it("정본 파일은 이것이 전부다 — 층 순(primitive → semantic → component → legacy)", () => {
+  it("정본 파일은 이것이 전부다 — 층 순(primitive → semantic → component)", () => {
     expect(sortSourcePaths(Object.keys(sources))).toMatchInlineSnapshot(`
       [
         "primitive/color.json",
@@ -56,14 +56,12 @@ describe("정본", () => {
         "component/scroll.json",
         "component/toast.json",
         "component/tooltip.json",
-        "legacy.json",
       ]
     `);
   });
 
   it("다크는 크롬 파일 하나뿐이고 라이트와 같은 집합이다", () => {
     const { tokens, dark } = validateTokenSources(sources);
-    // legacy.json 의 chrome.* 는 옛 이름 alias 라 다크 짝이 없다(#22) — 정본 파일의 것만 센다.
     const chrome = tokens
       .filter((t) => t.path[0] === "chrome" && t.file === CHROME_LIGHT_FILE)
       .map((t) => t.path.join("."));
@@ -208,36 +206,20 @@ describe("검출기", () => {
     ).toMatch(/utility 는 그룹에만/);
   });
 
-  it("legacy 는 $deprecated 만 살고, 새 정본은 옛 이름을 참조하지 않는다", () => {
-    /* alias 는 밖으로만 향한다 — 새 토큰이 `{ink}` 를 가리키면 옛 이름을 지울 때(major) 그 토큰이 함께 죽는다. */
-    const legacy = structuredClone(sources[LEGACY_FILE]) as Record<string, unknown>;
-    legacy.fresh = { $type: "color", $value: "{palette.gray.0}", $deprecated: false };
-    expect(errorsWith({ [LEGACY_FILE]: legacy }).join("\n")).toMatch(/fresh 는 \$deprecated 여야 한다/);
-    expect(
-      errorsWith({ "primitive/x.json": rootScoped("root", { x: { $type: "color", $value: "{ink}" } }) }).join(
-        "\n",
-      ),
-    ).toMatch(/x → \{ink\} 는 옛 이름이다/);
+  it("옛 이름 파일 legacy.json 은 존재가 곧 실패이고 legacy 스코프는 없다(3.0.0, #49)", () => {
+    /* 옛 이름 alias 를 다시 정본에 들이면 «지운 major» 가 조용히 되돌아온다 — 이행은 legacy-map.mjs 의 정적 표(린트 · 코드모드)가 맡는다. */
     expect(
       errorsWith({
-        "primitive/x.json": rootScoped("legacy", {
-          x: { $type: "color", $value: "#000000", $deprecated: true },
+        [REMOVED_LEGACY_FILE]: rootScoped("root", {
+          ink: { $type: "color", $value: "{palette.gray.900}", $deprecated: true },
         }),
       }).join("\n"),
-    ).toMatch(/legacy 스코프는 legacy\.json 만 쓴다/);
+    ).toMatch(/legacy\.json: 옛 이름 alias 는 3\.0\.0 에서 지웠다/);
     expect(
       errorsWith({
-        [LEGACY_FILE]: {
-          ...legacy,
-          fresh: undefined,
-          "z-thing": {
-            $type: "number",
-            $value: 1,
-            $extensions: { sds: { utility: { prefix: "z", properties: ["z-index"] } } },
-          },
-        },
+        "primitive/x.json": rootScoped("legacy", { x: { $type: "color", $value: "#000000" } }),
       }).join("\n"),
-    ).toMatch(/utility 는 그룹에만/);
+    ).toMatch(/scope/);
   });
 
   it("음수 치수(tracking-tight)는 dimension 이다", () => {

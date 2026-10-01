@@ -1,5 +1,4 @@
 import { cn, type VariantProps } from "../cn";
-import { normalizeTone, type ToneInput } from "../lib/tone";
 import { badgeVariants, type BadgeTone } from "./Badge.variants";
 
 /* 배지 — 상태를 **글자와 함께** 말한다.
@@ -14,9 +13,8 @@ export interface BadgeProps
   /**
    * 톤 — `neutral`(기본) · `primary`(주된 것 · 지금 고른 것) · `success`(통과) · `warning`(주의) · `destructive`(실패).
    * @default "neutral"
-   * @deprecated 옛 키 `accent` · `ok` · `warn` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
    */
-  tone?: ToneInput<BadgeTone> | null | undefined;
+  tone?: BadgeTone | null | undefined;
   /**
    * 글자 앞에 톤 색의 점을 둔다 — 목록에서 훑어 읽을 때.
    * @default false
@@ -28,7 +26,7 @@ export interface BadgeProps
 
 /** 배지 — 상태를 **글자와 함께** 말한다. 점만 필요한 좁은 자리는 `StatusDot`. */
 export function Badge({ className, tone, provisional, dot, children, ...rest }: BadgeProps) {
-  const resolvedTone = normalizeTone(tone);
+  const resolvedTone = tone;
   return (
     <span
       {...rest}
@@ -47,10 +45,9 @@ export function Badge({ className, tone, provisional, dot, children, ...rest }: 
 export interface StatusDotProps extends Omit<React.ComponentPropsWithRef<"span">, "children"> {
   /**
    * 톤 — Badge 와 같은 다섯: `neutral`(기본) · `primary`(주된 것) · `success`(통과) · `warning`(주의) · `destructive`(실패).
-   * 옛 키(accent · ok · warn · danger)는 한 마이너 동안 옮겨 준다.
    * @default "neutral"
    */
-  tone?: ToneInput<BadgeTone>;
+  tone?: BadgeTone;
   /** 점의 이름 — `aria-label` 과 `title` 로 간다. 점만으로는 상태를 말할 수 없어 필수다. */
   label: string;
 }
@@ -66,7 +63,7 @@ export function StatusDot({ tone = "neutral", label, className, ...rest }: Statu
     destructive: "bg-destructive",
   };
   // cn() 밖에서 고른다 — 안에서 `?? "neutral"` 을 쓰면 better-tailwindcss 가 그 문자열을 클래스로 읽는다.
-  const resolvedTone = normalizeTone(tone);
+  const resolvedTone = tone;
   const dot = fill[resolvedTone ?? "neutral"];
   return (
     <span

@@ -1,4 +1,4 @@
-/* sds/css-vars — `generated/tokens.css`(scope root · chrome) 와 `generated/legacy.css`(scope legacy).
+/* sds/css-vars — `generated/tokens.css`(scope root · chrome). 옛 이름 alias 의 `generated/legacy.css`(scope legacy)는 3.0.0 에서 지웠다(#49).
  *
  * 블록 모양은 `src/__tests__/tokens/model.ts` 의 scopeOf 가 선택자로 읽는 것과 같아야 한다(옛 손 theme.css 의 모양이다):
  *   :root                                  base · palette(+alias) · canvas · component
@@ -36,17 +36,10 @@ export const reducedMotionLines = (tokens) =>
 
 /** @type {import("style-dictionary/types").Format["format"]} */
 export function cssVars({ dictionary, options }) {
-  const { outputReferences = true, dark = [], legacy = false } = options;
+  const { outputReferences = true, dark = [] } = options;
   const all = dictionary.allTokens
-    .filter((t) => sds(t).scope === (legacy ? "legacy" : "root") || (!legacy && sds(t).scope === "chrome"))
+    .filter((t) => sds(t).scope === "root" || sds(t).scope === "chrome")
     .sort(byOrder);
-
-  if (legacy) {
-    const body = all.length
-      ? block(":root", rootLines(all, outputReferences))
-      : "/* 비어 있다 — legacy.json 에 옛 이름이 없다. */";
-    return `${HEADER}/* 옛 이름 → 새 정본 alias. 값은 옛 CSS 와 같다(#18). 새 코드는 쓰지 않는다 — forbidden-patterns 의 legacy-alias-use 래칫. 제거는 major. */\n\n${body}\n`;
-  }
 
   const root = all.filter((t) => sds(t).scope === "root");
   const chrome = all.filter((t) => sds(t).scope === "chrome");

@@ -6,12 +6,10 @@ import { defineConfig } from "tsdown";
  *  - CSS 는 빌드 파이프라인을 태우지 않고 그대로 복사한다 — @theme·@utility·@source 원문이 소비자 Tailwind 에 닿아야 한다.
  *  - 소비자는 publishConfig.exports(dist) 를, 워크스페이스(갤러리·Storybook)는 exports(src) 를 본다 — pnpm 이 발행 시 바꿔 끼운다. */
 export default defineConfig({
-  // legacy/index 는 별도 entry 다 — 루트 배럴의 @deprecated 재export 와 같은 파일을 가리키므로 unbundle 에서 중복 없이 dist/legacy/ 에 놓인다(#10).
   // testing/index 는 소비 레포의 __arch__ 래칫이 부르는 검사기(corner-audit, #26 · 규칙은 #36 에서 «corner-shape 금지» 로) — 배럴에 닿지 않으므로 별도 entry 다.
   // eslint/index 는 소비자 린트 프리셋(`./eslint` 서브패스), agent/cli 는 bin `sds-agent` — 둘 다 배럴에 닿지 않는 별도 entry 다(#31).
   entry: [
     "src/index.ts",
-    "src/legacy/index.ts",
     "src/canvas-metrics.ts",
     "src/testing/index.ts",
     "src/eslint/index.ts",
@@ -31,10 +29,7 @@ export default defineConfig({
     { from: "src/corner.css", to: "dist" },
     // 생성물 — theme.css · tokens.css 가 `@import "./generated/…"` 로 본다(#18). 디렉터리 깊이를 소스와 같게 유지해야 tarball 안에서도 상대경로가 산다.
     { from: "src/generated/tokens.css", to: "dist/generated" },
-    { from: "src/generated/legacy.css", to: "dist/generated" },
     { from: "src/generated/theme.tailwind.css", to: "dist/generated" },
-    // shell.css 는 `@import "../tokens.css"` 로 dist/tokens.css 를 본다 — 디렉터리 깊이를 소스와 같게 유지해야 상대경로가 산다.
-    { from: "src/legacy/shell.css", to: "dist/legacy" },
     { from: "src/canvas.css", to: "dist" },
     { from: "src/feedback/toast.css", to: "dist/feedback" },
     { from: "src/primitives/card-motion.css", to: "dist/primitives" },

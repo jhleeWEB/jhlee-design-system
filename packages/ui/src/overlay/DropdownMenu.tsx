@@ -2,7 +2,6 @@
 import { DropdownMenu as Radix, Slot } from "radix-ui";
 
 import { cn } from "../cn";
-import { normalizeTone, type ToneInput } from "../lib/tone";
 import { dropdownMenuItemVariants } from "./DropdownMenu.variants";
 
 /* 드롭다운 메뉴 — 목록에서 **하나를 실행**한다. 값을 고르는 것은 `Select` 다.
@@ -71,12 +70,12 @@ export function DropdownMenuRadioGroup({
 /** `DropdownMenuItem` 의 props. */
 export interface DropdownMenuItemProps extends React.ComponentPropsWithRef<typeof Radix.Item> {
   /**
-   * 톤. 옛 키 `default` · `danger` 는 한 마이너 동안 옮겨 준다.
+   * 톤.
    * - `neutral` — 일반 동작(기본)
    * - `destructive` — 되돌릴 수 없는 동작(삭제). 글자와 강조 면이 붉다
    * @default "neutral"
    */
-  tone?: ToneInput<"neutral" | "destructive">;
+  tone?: "neutral" | "destructive";
   /**
    * 오른쪽에 흐리게 붙는 단축키 표기 — "⌘S". 표기일 뿐 키를 묶지 않는다.
    * @default undefined
@@ -99,11 +98,11 @@ export function DropdownMenuItem({
   return (
     <Radix.Item
       asChild={asChild}
-      className={cn(dropdownMenuItemVariants({ tone: normalizeTone(tone) }), className)}
+      className={cn(dropdownMenuItemVariants({ tone }), className)}
       {...rest}
       data-slot="menu-item"
-      // cva 축은 해석된 값(옛 키를 옮긴 뒤 · 기본값 포함)으로 찍는다 — 스토리 격자·소비자 선택자가 같은 이름을 읽는다.
-      data-tone={normalizeTone(tone) ?? "neutral"}
+      // cva 축은 해석된 값(기본값 포함)으로 찍는다 — 스토리 격자·소비자 선택자가 같은 이름을 읽는다.
+      data-tone={tone ?? "neutral"}
     >
       {asChild ? (
         <Slot.Slottable child={children}>

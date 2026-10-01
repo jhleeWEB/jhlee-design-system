@@ -9,3 +9,16 @@ if (typeof globalThis.ResizeObserver === "undefined") {
     disconnect() {}
   };
 }
+
+/* Radix Select 는 열릴 때 고른 항목을 `scrollIntoView` 하고 트리거에서 포인터 캡처를 푼다 — jsdom 에는 둘 다 없어 열린 목록을 그리는 순간 던진다(#47). */
+if (typeof Element !== "undefined") {
+  const stubs: Record<string, () => unknown> = {
+    scrollIntoView: () => undefined,
+    hasPointerCapture: () => false,
+    releasePointerCapture: () => undefined,
+  };
+  for (const [name, value] of Object.entries(stubs)) {
+    if (!(name in Element.prototype))
+      Object.defineProperty(Element.prototype, name, { value, configurable: true, writable: true });
+  }
+}

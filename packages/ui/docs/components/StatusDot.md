@@ -14,5 +14,5 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
-| `tone` | `ToneInput<BadgeTone>` |  | `"neutral"` | 값: `neutral` — 기본 · `primary` — 주된 것 · `success` — 통과 · `warning` — 주의 · `destructive` — 실패 · `accent` — deprecated alias of "primary" · `current` — deprecated alias of "neutral" · `danger` — deprecated alias of "destructive" · `default` — deprecated alias of "neutral" · `ok` — deprecated alias of "success" · `warn` — deprecated alias of "warning" |
+| `tone` | `BadgeTone` |  | `"neutral"` | 값: `neutral` — 기본 · `primary` — 주된 것 · `success` — 통과 · `warning` — 주의 · `destructive` — 실패 |
 | `label` | `string` | 예 |  | 점의 이름 — `aria-label` 과 `title` 로 간다. 점만으로는 상태를 말할 수 없어 필수다. |

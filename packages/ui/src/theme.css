@@ -1,7 +1,7 @@
 /* Squircle 디자인 시스템 — 테마(#1198 → #18)
  *
  * 값은 전부 생성물이다. 이 파일은 «규칙» 만 든다 — keyframes · 손 @utility · `.ds-*` 컴포넌트 규칙 · 컴포넌트 CSS 의 @import · @source 자기 등록.
- *   tokens.css                      토큰(:root · 크롬 라이트/다크 · legacy alias) — generated/ 를 재수출한다
+ *   tokens.css                      토큰(:root · 크롬 라이트/다크) — generated/ 를 재수출한다
  *   generated/theme.tailwind.css    Tailwind v4 @theme(정적 사다리 + initial 리셋) · @theme inline(모드가 갈리는 --color-* 매핑 · 글꼴) · 생성 @utility(z-* · duration-*)
  *   corner.css                      비어 있다 — 스쿼클(#26)은 사용자 결정(2026-09-30, #36)으로 폐기했고 서브패스 호환을 위해 파일만 남는다
  *

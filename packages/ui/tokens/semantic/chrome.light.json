@@ -1,5 +1,5 @@
 {
-  "$description": "크롬 — UI 가 사는 면, 라이트 기준값. 이름은 shadcn 어휘(B5, #22): 면은 <role>, 그 위의 글자는 <role>-foreground, 옅은 면은 <role>-soft, 사다리는 -2/-3. 판정 4색(success·warning·destructive·info)은 톤마다 다섯 역할(DEFAULT · hover · foreground · soft · line)을 원시 사다리에서 고른다(#18) — 역할의 뜻과 대비 근거는 primitive/color.json 의 각 단에 있다. primary-foreground · popover · selection-fill · scrim 넷은 아직 리터럴이다. 옛 이름(--chrome-ink · --chrome-accent …)은 legacy.json 의 alias 다.",
+  "$description": "크롬 — UI 가 사는 면, 라이트 기준값. 이름은 shadcn 어휘(B5, #22): 면은 <role>, 그 위의 글자는 <role>-foreground, 옅은 면은 <role>-soft, 사다리는 -2/-3. 판정 4색(success·warning·destructive·info)은 톤마다 다섯 역할(DEFAULT · hover · foreground · soft · line)을 원시 사다리에서 고른다(#18) — 역할의 뜻과 대비 근거는 primitive/color.json 의 각 단에 있다. primary-foreground · popover · selection-fill · scrim 넷은 아직 리터럴이다. 옛 이름(--chrome-ink · --chrome-accent …)의 alias 는 3.0.0 에서 지웠다(#49).",
   "$extensions": { "sds": { "scope": "chrome" } },
   "chrome": {
     "$type": "color",

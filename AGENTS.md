@@ -37,7 +37,7 @@ main            기본 브랜치이자 유일한 장기 브랜치. 모든 PR 의
 | `docs` `chore` `ci` `test` `build` `style` | 발행 없음 |
 
 한국어 설명만으로는 major 가 오르지 않는다 — 파괴적 변경은 반드시 `!` 또는 `BREAKING CHANGE:` 를 적는다.
-반대로 `!` 는 언제나 major 다 — 스쿼클 폐기(#37)가 2.0.0 을 냈고, 옛 이름 alias·`normalizeTone`·루트 배럴의 legacy 별칭을 지우는 다음 파괴적 변경(D8 #49)은 **3.0.0** 이 된다. 소비 레포는 정확 버전을 고정하므로 major 가 잦아도 깨지지 않는다.
+반대로 `!` 는 언제나 major 다 — 스쿼클 폐기(#37)가 2.0.0 을, 새 부품 Select·Field·Tabs(#47)와 legacy 셸·옛 이름 alias·`normalizeTone`·루트 배럴 legacy 별칭 제거(D8 #49)를 한 PR 로 묶은 것이 **3.0.0** 을 낸다. 다음 파괴적 변경은 4.0.0 이다. 소비 레포는 정확 버전을 고정하므로 major 가 잦아도 깨지지 않는다.
 잘못 올린 버전은 삭제하지 않고 patch 를 하나 더 올린다. 가시성은 private 유지(public 은 되돌릴 수 없다).
 
 ## 커밋 메시지

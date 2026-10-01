@@ -1,5 +1,4 @@
 import { cn, type VariantProps } from "../cn";
-import { normalizeTone, type ToneInput } from "../lib/tone";
 import { spinnerVariants, type SpinnerTone } from "./Spinner.variants";
 
 /* 스피너 — «돌고 있다» 만 말한다. 얼마나 남았는지는 `Progress` 가 맡는다.
@@ -24,9 +23,8 @@ export interface SpinnerProps
    * - `muted` — 보조 자리의 흐린 회색(스피너 전용 값)
    * - `primary` — 주된 동작의 진행
    * @default "neutral"
-   * @deprecated 옛 키 `current` · `accent` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
    */
-  tone?: ToneInput<SpinnerTone> | null | undefined;
+  tone?: SpinnerTone | null | undefined;
   /**
    * 스크린리더에 읽히는 문구(`role="status"`). 비우면 장식으로 숨긴다 — 버튼 안처럼 이미 `aria-busy` 가 있는 자리에서는 비운다.
    * @default undefined
@@ -38,7 +36,7 @@ export interface SpinnerProps
 export function Spinner({ className, size, tone, label, ...rest }: SpinnerProps) {
   return (
     <svg
-      className={cn(spinnerVariants({ size, tone: normalizeTone(tone) }), className)}
+      className={cn(spinnerVariants({ size, tone }), className)}
       viewBox="0 0 16 16"
       fill="none"
       role={label ? "status" : undefined}
@@ -48,7 +46,7 @@ export function Spinner({ className, size, tone, label, ...rest }: SpinnerProps)
       /* 슬롯·축은 rest 뒤 — 소비자가 넘긴 data-slot 이 손잡이를 덮지 못하게 한다(공통 계약 slot-locked). */
       data-slot="spinner"
       data-size={size ?? "md"}
-      data-tone={normalizeTone(tone) ?? "neutral"}
+      data-tone={tone ?? "neutral"}
     >
       <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="2" opacity="0.2" />
       <path d="M8 1.5A6.5 6.5 0 0 1 14.5 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />

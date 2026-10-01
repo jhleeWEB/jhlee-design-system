@@ -114,13 +114,13 @@ function SitePlan() {
         <line x1="210" y1="206" x2="210" y2="222" />
         <line x1="266" y1="206" x2="266" y2="222" />
       </g>
-      <text x="216" y="234" fontFamily="var(--mono)" fontSize={11} fill="var(--canvas-ink-2)">
+      <text x="216" y="234" fontFamily="var(--font-stack-mono)" fontSize={11} fill="var(--canvas-ink-2)">
         12.4 m
       </text>
-      <text x="134" y="116" fontFamily="var(--mono)" fontSize={12} fill="var(--canvas-ink)">
+      <text x="134" y="116" fontFamily="var(--font-stack-mono)" fontSize={12} fill="var(--canvas-ink)">
         A
       </text>
-      <text x="274" y="110" fontFamily="var(--mono)" fontSize={12} fill="var(--canvas-ink)">
+      <text x="274" y="110" fontFamily="var(--font-stack-mono)" fontSize={12} fill="var(--canvas-ink)">
         B
       </text>
     </svg>
@@ -175,10 +175,10 @@ function MassingView() {
           />
         </g>
       ))}
-      <text x="112" y="176" fontFamily="var(--mono)" fontSize={11} fill="var(--canvas-bg)">
+      <text x="112" y="176" fontFamily="var(--font-stack-mono)" fontSize={11} fill="var(--canvas-bg)">
         A
       </text>
-      <text x="222" y="164" fontFamily="var(--mono)" fontSize={11} fill="var(--canvas-bg)">
+      <text x="222" y="164" fontFamily="var(--font-stack-mono)" fontSize={11} fill="var(--canvas-bg)">
         B
       </text>
     </svg>

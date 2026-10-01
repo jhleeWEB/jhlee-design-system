@@ -5,8 +5,6 @@ import { Button } from "../primitives/Button";
 import { Input } from "../primitives/Input";
 import { Checkbox, RadioGroup, RadioGroupItem, Switch } from "../primitives/Choice";
 import { SegmentedControl } from "../navigation/SegmentedControl";
-import { Toggle } from "../legacy/controls";
-import { DesignSystemProvider } from "../legacy/design-system";
 
 afterEach(cleanup);
 
@@ -388,28 +386,5 @@ describe("세그먼트의 키보드 계약", () => {
     expect(change.mock.calls).toEqual([[2], [0], [2]]);
     expect(zero.getAttribute("aria-checked")).toBe("true");
     expect(two.getAttribute("aria-checked")).toBe("false");
-  });
-});
-
-describe("스위치 설명 연결", () => {
-  it.each([false, true])("DS=%s에서 hint를 안정된 설명 ID로 연결하고 숨긴 문구를 참조하지 않는다", (ds) => {
-    const toggle = (hint: string, hideText = false) => {
-      const control = (
-        <Toggle label="Tandem stalls" hint={hint} hideText={hideText} value={false} onChange={() => {}} />
-      );
-      return ds ? <DesignSystemProvider>{control}</DesignSystemProvider> : control;
-    };
-    const { rerender } = render(toggle("Up to 20% by count"));
-    const control = screen.getByRole("switch", { name: "Tandem stalls" });
-    const id = control.getAttribute("aria-describedby")!;
-    expect(id).toBeTruthy();
-    expect(document.getElementById(id)?.textContent).toBe("Up to 20% by count");
-    rerender(toggle("Capacity limit applies"));
-    expect(control.getAttribute("aria-describedby")).toBe(id);
-    expect(document.getElementById(id)?.textContent).toBe("Capacity limit applies");
-    rerender(toggle("Capacity limit applies", true));
-    expect(control.hasAttribute("aria-describedby")).toBe(false);
-    expect(screen.getByRole("switch", { name: "Tandem stalls" })).toBe(control);
-    expect(document.getElementById(id)).toBeNull();
   });
 });

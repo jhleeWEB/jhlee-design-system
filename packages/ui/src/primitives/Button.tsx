@@ -11,7 +11,6 @@ import {
 import { Slot } from "radix-ui";
 
 import { cn, type VariantProps } from "../cn";
-import { normalizeTone, type ToneInput } from "../lib/tone";
 import { buttonVariants, type ButtonTone } from "./Button.variants";
 import { Spinner } from "../feedback/Spinner";
 
@@ -27,9 +26,8 @@ export interface ButtonProps
   /**
    * 톤 — `neutral`(기본) · `primary`(주된 동작) · `destructive`(파괴적 동작).
    * @default "neutral"
-   * @deprecated 옛 키 `accent` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
    */
-  tone?: ToneInput<ButtonTone> | null | undefined;
+  tone?: ButtonTone | null | undefined;
   /**
    * 래퍼를 만들지 않고 자식 요소에 버튼 스타일을 입힌다 — 링크를 버튼으로 보이게 할 때.
    * @default false
@@ -76,22 +74,31 @@ const disabledSlotProps = {
 
 /**
  * 버튼 — 크롬의 동작. `variant`(외형)와 `tone`(판정색)은 다른 축이다.
- *
- * `data-slot` 은 `{...rest}` **앞**에 둔다(공통 계약의 slot-locked 예외) — Toast · Modal · Drawer 의 닫기 버튼과 동결된 legacy Select 가
- * `data-slot` 을 넘겨 자기 이름을 붙이고, legacy/shell.css 가 `[data-slot="select"]` 로 그 버튼을 그린다. 잠그면 그 셋이 이름을 잃는다.
+ * @slot button
  */
-export function Button({
-  ref,
-  className,
-  variant,
-  tone,
-  size,
-  asChild,
-  loading,
-  disabled,
-  children,
-  ...rest
-}: ButtonProps) {
+export function Button(props: ButtonProps) {
+  return renderButton(props, "button");
+}
+
+/**
+ * `slot` 이름을 받는 버튼 — 내부용, 배럴에는 없다. 공개 `Button` 은 `data-slot="button"` 을 잠그므로 DS 안에서 다른 이름이 필요한
+ * 자리(토스트 액션·닫기 · 대화상자 닫기 · 패널 토글 · 카드 접기)가 이것을 쓴다.
+ */
+export function SlottedButton({ slot, ...props }: ButtonProps & { slot: string }) {
+  return renderButton(props, slot);
+}
+
+/**
+ * 버튼을 `slot` 이름으로 그린다.
+ *
+ * `data-slot` 은 `{...rest}` **뒤**에 둔다 — 소비자가 넘긴 data-slot 이 DS 의 손잡이를 덮지 못한다(공통 계약 slot-locked).
+ * 2.x 까지는 앞에 두었다: Toast · Modal · Drawer 의 닫기 버튼과 legacy Select 가 `data-slot` prop 으로 자기 이름을 붙였고 legacy/shell.css 가
+ * `[data-slot="select"]` 로 그 버튼을 그렸기 때문이다. legacy 를 지운 3.0.0 에서 잠그고(#49), 다른 이름이 필요한 DS 내부 자리는 `SlottedButton` 으로 이름을 넘긴다.
+ */
+function renderButton(
+  { ref, className, variant, tone, size, asChild, loading, disabled, children, ...rest }: ButtonProps,
+  slot: string,
+) {
   const Comp = asChild ? Slot.Root : "button";
   const blocked = Boolean(disabled || loading);
   const child =
@@ -113,11 +120,10 @@ export function Button({
           },
         )
       : children;
-  const resolvedTone = normalizeTone(tone);
+  const resolvedTone = tone;
   return (
     <Comp
       ref={ref}
-      data-slot="button"
       data-variant={variant ?? "outline"}
       data-tone={resolvedTone ?? "neutral"}
       data-size={size ?? "md"}
@@ -127,6 +133,8 @@ export function Button({
       aria-busy={loading || undefined}
       {...rest}
       {...(asChild && blocked ? { ...disabledSlotProps, ...guardedKeyboardProps(rest) } : {})}
+      /* 문자열이다 — 불리언 data 속성 래칫(boolean-string-data-attr)의 정규식이 식별자 하나를 불리언으로 의심한다. */
+      data-slot={slot satisfies string}
     >
       {loading ? <Spinner size="sm" /> : null}
       {/* `asChild` 일 때 Slot 은 **요소 하나**만 받는다. 스피너와 children 을 나란히 두면

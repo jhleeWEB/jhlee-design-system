@@ -2,7 +2,6 @@
 import { useId, useMemo, useState } from "react";
 
 import { cn } from "../cn";
-import { normalizeTone, type ToneInput } from "../lib/tone";
 import { Skeleton } from "../feedback/Skeleton";
 import { ScrollArea } from "../navigation/ScrollArea";
 import { tableCellVariants, type CellTone } from "./Table.variants";
@@ -32,8 +31,8 @@ export interface Column<Row> {
   numeric?: boolean;
   /** 정렬에 쓸 값. 주면 그 열의 머리가 정렬 버튼이 된다. */
   sortValue?: (row: Row) => number | string;
-  /** 판정색. 셀 단위로 다르면 함수로 준다. 옛 키 ok · warn · danger 는 한 마이너 동안 옮겨 준다. */
-  tone?: (row: Row) => ToneInput<CellTone> | undefined;
+  /** 판정색. 셀 단위로 다르면 함수로 준다. */
+  tone?: (row: Row) => CellTone | undefined;
   /** 고정 폭. 넘치면 표가 가로 스크롤된다. */
   width?: string;
   /** 합계 줄의 이 열 값. 없으면 빈 칸. */
@@ -274,7 +273,7 @@ export function DataTable<Row>({
                       )}
                     >
                       {columns.map((column, columnIndex) => {
-                        const tone = normalizeTone(column.tone?.(row));
+                        const tone = column.tone?.(row);
                         const content = column.cell
                           ? column.cell(row, index)
                           : ((row as Record<string, unknown>)[column.key] as React.ReactNode);

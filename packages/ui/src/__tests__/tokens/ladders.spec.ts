@@ -20,7 +20,7 @@ const namesIn = (scope: TokenScope, prefix: string): string[] =>
   [
     ...new Set(model.tokens.filter((t) => t.scope === scope && t.name.startsWith(prefix)).map((t) => t.name)),
   ].sort();
-/** 정본 크롬 토큰만 — legacy.css 의 `--chrome-<옛>: var(--chrome-<새>)` alias(#22)는 :root 에 살지만 다크 블록에 짝이 없는 것이 정상이다. */
+/** 정본 크롬 토큰만 — generated/tokens.css 의 것. */
 const chromeNamesIn = (scope: TokenScope): string[] =>
   [
     ...new Set(
@@ -61,19 +61,6 @@ describe("방향 C — 캔버스와 크롬의 분리", () => {
     expect(chromeNamesIn("dark-attr")).toEqual(chromeNamesIn("dark-media"));
     expect(chromeNamesIn("dark-attr")).toEqual(chromeNamesIn("root"));
     expect(chromeNamesIn("dark-attr").length).toBeGreaterThan(20);
-  });
-
-  it("legacy.css 의 옛 크롬 이름은 전부 정본 크롬 토큰을 가리킨다 — 다크도 그 참조를 따라 갈린다(#22)", () => {
-    const aliases = model.tokens.filter(
-      (t) => t.file === "generated/legacy.css" && t.name.startsWith("--chrome-"),
-    );
-    expect(aliases.length).toBeGreaterThan(20);
-    const canonical = new Set(chromeNamesIn("root"));
-    for (const t of aliases) {
-      expect(t.refs, t.name).toHaveLength(1);
-      expect(canonical.has(t.refs[0]!), `${t.name} → ${t.refs[0]}`).toBe(true);
-      expect(canonical.has(t.name), `${t.name} 은 옛 이름이어야 한다`).toBe(false);
-    }
   });
 
   it("캔버스 토큰은 :root 한 곳에서만 한 번씩 정의된다", () => {

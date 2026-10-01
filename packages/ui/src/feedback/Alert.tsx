@@ -1,5 +1,4 @@
 import { cn, type VariantProps } from "../cn";
-import { normalizeTone, type ToneInput } from "../lib/tone";
 import { alertVariants, type AlertTone } from "./Alert.variants";
 
 /* 인라인 경고 — 흐름 안에 남는다. 지나가는 것은 `Toast` 다.
@@ -24,9 +23,8 @@ export interface AlertProps
    * - `warning` — 주의. 진행은 되지만 확인이 필요하다
    * - `destructive` — 실패·위반. 고치기 전에는 진행할 수 없다
    * @default "info"
-   * @deprecated 옛 키 `ok` · `warn` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
    */
-  tone?: ToneInput<AlertTone> | null | undefined;
+  tone?: AlertTone | null | undefined;
   /**
    * 굵은 첫 줄 — 무슨 일인지 한 문장. 없으면 본문만 그린다.
    * `title` 을 Omit 하고 다시 선언한다 — DOM 의 `title` 은 툴팁 문자열이라 ReactNode 를 못 받는다.
@@ -42,7 +40,7 @@ export interface AlertProps
 
 /** 인라인 경고 — 흐름 안에 남는 알림. 아이콘·제목·색이 함께 말한다(색만으로 말하지 않는다). */
 export function Alert({ className, tone, title, action, children, ...rest }: AlertProps) {
-  const resolved = normalizeTone(tone) ?? "info";
+  const resolved = tone ?? "info";
   return (
     <div
       role={resolved === "destructive" ? "alert" : "status"}
@@ -50,7 +48,7 @@ export function Alert({ className, tone, title, action, children, ...rest }: Ale
       {...rest}
       /* 슬롯·축은 rest 뒤 — 소비자가 넘긴 data-slot 이 손잡이를 덮지 못하게 한다(공통 계약 slot-locked). */
       data-slot="alert"
-      data-tone={normalizeTone(tone) ?? "info"}
+      data-tone={tone ?? "info"}
     >
       <svg viewBox="0 0 16 16" aria-hidden="true" className="mt-px size-7 shrink-0">
         <circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" strokeWidth="1.3" />

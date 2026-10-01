@@ -1,34 +1,25 @@
 #!/usr/bin/env node
-/* CSS 변수 코드모드(B5, #22) — `var(--chrome-<옛>)`·`var(--radius-<옛>)` 를 새 이름으로 바꾼다.
+/* CSS 변수 코드모드(B5, #22) — `var(--chrome-<옛>)`·`var(--radius-<옛>)`·옛 base 이름(`var(--ink)` · `var(--gap)` …)을 새 이름으로 바꾼다.
  *
  *   node scripts/codemod-css-vars.mjs <파일 또는 디렉터리>…     지정한 .css/.ts/.tsx/.mdx 를 제자리에서 고친다
  *   node scripts/codemod-css-vars.mjs --dry <경로>…             바꿀 자리만 센다
  *
- * 표는 손으로 적지 않는다 — `packages/ui/tokens/legacy.json`(alias 토큰 + 파일 머리 renames)에서 `legacy-map.mjs` 가 뽑는다. 유틸 클래스
- * 쪽 코드모드(`text-ink` → `text-foreground`)는 같은 표에서 나온 `src/generated/legacy-classes.json` 을 ESLint `--fix` 가 적용한다 — 둘이 한 정본이다.
- * 옛 이름 대부분은 generated/legacy.css 의 alias 로 그대로 동작하지만 `--chrome-accent`(옛 azure → 새 옅은 면)·`--chrome-muted`(옛 회색 글자 →
- * 새 면)는 새 이름과 글자가 같아 alias 가 없다 — 그 둘은 이 스크립트를 돌려야 뜻이 지켜진다. 소비 레포도 같은 명령으로 옮긴다.
+ * 표는 `packages/ui/tokens/legacy-map.mjs` 의 정적 표 한 벌이다. 유틸 클래스 쪽 코드모드(`text-ink` → `text-foreground`)는 같은 표에서 나온
+ * `src/generated/legacy-classes.json` 을 ESLint `--fix` 가 적용한다 — 둘이 한 정본이다. 3.0.0 에서 옛 이름 alias(generated/legacy.css)를 지웠으므로(#49)
+ * 옛 이름은 더 이상 동작하지 않는다 — 2.x 에서 올라오는 소비 레포는 이 스크립트를 먼저 한 번 돌린다.
  *
  * 긴 이름을 먼저 바꾼다(`--chrome-accent-soft` 가 `--chrome-accent` 에 먼저 먹히지 않게) 하고, `var(--chrome-ink` 처럼 `var(` 뒤 이름 경계
  * (`,`·`)`·공백)까지 맞춘다 — `--chrome-ink-2` 를 `--chrome-ink` 로 오인하지 않는다. */
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { dirname, extname, join, resolve } from "node:path";
+import { extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { legacyRenames } from "../packages/ui/tokens/legacy-map.mjs";
-import { readTokenSources, validateTokenSources } from "../packages/ui/tokens/schema.ts";
 
-const here = dirname(fileURLToPath(import.meta.url));
-const TOKENS = join(here, "..", "packages", "ui", "tokens");
 const EXTENSIONS = new Set([".css", ".ts", ".tsx", ".mdx", ".md", ".html"]);
 const SKIP_DIRS = new Set(["node_modules", "dist", "storybook-static", ".git", "generated"]);
 
-const { errors, tokens, renames } = validateTokenSources(readTokenSources(TOKENS));
-if (errors.length) {
-  console.error(`tokens: 정본 검사 실패 ${errors.length}건 — 코드모드 표를 믿을 수 없다`);
-  process.exit(1);
-}
-const { cssVars } = legacyRenames(tokens, renames);
+const { cssVars } = legacyRenames();
 const entries = Object.entries(cssVars).sort(([a], [b]) => b.length - a.length || a.localeCompare(b));
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // 한 번의 치환으로 끝낸다 — 규칙마다 따로 돌리면 `--chrome-surface-2 → --chrome-muted` 뒤에 `--chrome-muted → --chrome-muted-foreground` 가

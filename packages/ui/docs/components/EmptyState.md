@@ -18,4 +18,4 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | `description` | `ReactNode` |  | `undefined` | 무엇을 하면 채워지는가 — 한두 문장. |
 | `icon` | `ReactNode` |  | `undefined` | 제목 위의 흐린 아이콘. 안의 svg 크기는 여기서 맞춘다(`size-16`). |
 | `action` | `ReactNode` |  | `undefined` | 빈자리를 채우는 조치 — 대개 버튼 하나. 사실상 필수다. |
-| `size` | `"default" \| "compact" \| null` |  | `"default"` | 값: `compact` — 패널 안의 좁은 자리. 여백과 제목을 줄인다 · `default` — 화면·카드의 넓은 빈자리(기본) |
+| `size` | `"default" \| "compact" \| null` |  | `"default"` | 값: `default` — 화면·카드의 넓은 빈자리(기본) · `compact` — 패널 안의 좁은 자리. 여백과 제목을 줄인다 |
