@@ -59,8 +59,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  // color-contrast: success 톤 글자(+120)가 bg-background 위에서 4.23 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #20 · #24)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   play: async ({ canvas }) => {
     const sort = canvas.getByRole("button", { name: "Floors" });
     await userEvent.click(sort);
@@ -73,8 +71,6 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: 판정 톤 글자와 muted-foreground 캡션·빈 표 문구가 bg-background 위에서 4.5 미만 — 토큰 값의 몫(#20 · #24)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <div className="flex flex-col gap-6">
       <DataTable
@@ -102,8 +98,6 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: 라이트의 muted-foreground 라벨·success 톤 글자 — 토큰 값의 몫(#20 · #24)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <ThemePair>
       <DataTable {...args} selectedKey="B" onSelect={() => {}} />

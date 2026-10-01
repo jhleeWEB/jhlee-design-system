@@ -153,12 +153,12 @@ cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tm
 **래칫 스펙.** `src/__arch__/forbidden-patterns.spec.ts` 는 토큰 밖 리터럴(tsx 대괄호 px/ms · Tailwind 기본 사다리 · CSS px/hex/ms · JS ms)·
 `forwardRef`·비-cva 삼항·불리언 data 속성·도메인 어휘를 **파일별 횟수 기준선**으로 붙든다. 실제 횟수가 기준선과 같아야 통과한다 —
 늘면 새 위반이고, 줄이면 같은 PR 에서 기준선을 낮춘다(0 이면 줄을 지운다). `legacy-alias-use`(옛 이름 `var(--ink)` 등의 사용, 목록은 tokens/legacy-map.mjs 의 정적 표에서 읽는다 — 3.0.0 뒤 정의가 없는 이름이라 0 을 지키는 경비)도
-같은 래칫이다(#18 · #49). 토큰 쪽도 같은 모양이다: `references.spec` 의 `KNOWN_INLINE_LITERALS`(`@theme inline` 의 리터럴 — #18 에서 0)와 미참조 원시 스냅샷(17 → 3.0.0 에서 옛 base alias 가 사라져 22 — 더해진 gray 다섯은 코드모드 목적지라 남긴다),
+같은 래칫이다(#18 · #49). 토큰 쪽도 같은 모양이다: `references.spec` 의 `KNOWN_INLINE_LITERALS`(`@theme inline` 의 리터럴 — #18 에서 0)와 미참조 원시 스냅샷(17 → 3.0.0 에서 옛 base alias 가 사라져 22 — 더해진 gray 다섯은 코드모드 목적지라 남긴다 → #55 에서 라이트 글자 AA 로 시맨틱이 새 단 550 · 650 으로 옮겨 27, 옛 500 들도 같은 이유로 남긴다),
 `rsc-directives.spec` 의 `"use client"` 파일 목록, `public-api.spec` 의 배럴 export 목록, `manifest.spec` 의 `KNOWN_GAPS`(optional prop 의 `@default` 빈자리 ·
 유니언 값의 설명 빈자리 — JSDoc 을 채우면 같은 PR 에서 줄인다. 첫 실측 139 · 109 → Phase D 뒤 32 · 4 → legacy 를 지운 #49 에서 0 — 이제 새 빈자리는 곧 실패). Phase C 의 래칫 셋(C2·C3, 전부
-«없는 실패는 새 위반, 목록에 있는데 통과하면 지워라»): `contrast.spec` 의 `KNOWN_FAILURES`(WCAG 2.x 미달 쌍, 첫 실측 7 — light 5 · dark 2, 2026-10-01 재실측도 7,
-값을 고치는 것은 #55 의 몫) · `stories-contract.spec` 의 `KNOWN_A11Y_FAILURES`(axe 규칙을 스토리 단위 `parameters.a11y.config.rules` 로 끈 스토리 — 메타에서 끄는 것은
-금지. 첫 실측 7 → Phase D 의 새 스토리들이 올려 2026-10-01 재실측 61 → #47 의 Select · Field · Tabs 아홉을 더해 70. 거의 전부 위 미달 토큰의 color-contrast 라 #55 가 토큰과 함께 줄이고, 열린 Select 의 aria-hidden-focus 둘은 Radix Select 에 모달성 옵션이 없어서다) ·
+«없는 실패는 새 위반, 목록에 있는데 통과하면 지워라»): `contrast.spec` 의 `KNOWN_FAILURES`(WCAG 2.x 미달 쌍, 첫 실측 7 — light 5 · dark 2 → #55 에서 글자 쌍 다섯을 값으로 고쳐 2.
+남은 둘은 `border-strong/card`(1.4.11 비텍스트 3:1, 라이트 · 다크) — 3:1 로 올리면 입력 · 체크박스 외곽이 세 배 진해지는 디자인 결정이라 따로 묻는다) · `stories-contract.spec` 의 `KNOWN_A11Y_FAILURES`(axe 규칙을 스토리 단위 `parameters.a11y.config.rules` 로 끈 스토리 — 메타에서 끄는 것은
+금지. 첫 실측 7 → Phase D 의 새 스토리들이 올려 2026-10-01 재실측 61 → #47 의 Select · Field · Tabs 아홉을 더해 70. #55 에서 4 — 토큰 값 · Sidebar 배지 opacity · 단축키 색으로 color-contrast 가, ThemePair 가 테마를 자식 함수로 넘겨 landmark-unique 가 모두 빠졌다. 남은 넷은 열린 Select · Radius Components 의 aria-hidden-focus(Radix 포커스 가드)와 Workbench 의 aria-progressbar-name) ·
 `vitest.config.ts` 의 coverage thresholds(첫 실측 floor−2 — statements 84 · branches 78 · functions 82 · lines 89).
 `render-all.spec` 의 `KNOWN_CONTRACT_FAILURES`(첫 실측 81 컴포넌트)와 `stories-contract.spec` 의 `STORIES_MISSING` 은 Phase D 가 0 으로 비워 지웠다(#48) —
 이제 «배럴 컴포넌트마다 옆 stories · 옆 spec(또는 부품 픽스처)» 는 예외 없는 불변식이다. 마지막 예외였던 Button 의 slot-locked 는 #49 에서 잠갔다 —

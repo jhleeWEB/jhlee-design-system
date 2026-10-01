@@ -35,7 +35,9 @@ docker run --rm --ipc=host \
       pnpm exec playwright test -c vrt/playwright.config.ts || { rm -rf /report/*; cp -R vrt/report/. /report/ 2>/dev/null || true; exit 1; }
       exit 0
     fi
-    pnpm exec playwright test -c vrt/playwright.config.ts --update-snapshots
+    # =all — 맨 --update-snapshots 는 «changed» 라 비교에 실패한 것만 다시 쓴다. 비교는 픽셀마다 YIQ threshold 0.2 를 두므로 토큰 색을
+    # 한두 단 옮긴 변화(#55 의 muted-foreground #697183 → #636b7c)는 실패가 아니어서 기준선에 남지 않았다. 픽셀이 같으면 PNG 도 같아 diff 는 없다.
+    pnpm exec playwright test -c vrt/playwright.config.ts --update-snapshots=all
     rm -rf /out/*
     cp -R vrt/__snapshots__/. /out/
   '

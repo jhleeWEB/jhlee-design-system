@@ -42,8 +42,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  // color-contrast: text-muted-foreground 가 페이지 바탕(bg-background)·트랙 위에서 4.5:1 미만 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   play: async ({ canvas, args }) => {
     const model = canvas.getByRole("radio", { name: "Model" });
     await userEvent.click(model);
@@ -56,8 +54,6 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: text-muted-foreground 가 페이지 바탕(bg-background)·트랙 위에서 4.5:1 미만 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <Matrix
       rows={stateValues}
@@ -82,8 +78,6 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: ThemePair 의 테마 라벨과 muted 글자 — 토큰 값의 몫(#23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <ThemePair>
       <SegmentedControl {...args} />

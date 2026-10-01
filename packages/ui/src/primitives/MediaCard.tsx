@@ -136,7 +136,7 @@ export function MediaCard({
                 onClick={onSelect}
                 /* 카드 전체로 늘어나는 얇은 버튼. 조치들은 z-raised 로 그 위에 뜬다. */
                 className={cn(
-                  "font-inherit appearance-none border-0 bg-transparent p-0 text-inherit",
+                  "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
                   "cursor-pointer text-left after:absolute after:inset-0 after:content-['']",
                   /* 링은 카드 반경을 따른다 — raised 는 그대로, flat 은 1px 테두리 안쪽(inset-0 은 패딩 상자)이라 헤어라인만큼 뺀다. flush 는 각지다. */
                   "group-data-[elevation=flat]:after:rounded-[calc(var(--radius-lg)-var(--space-hairline))] group-data-[elevation=raised]:after:rounded-lg",
@@ -151,7 +151,7 @@ export function MediaCard({
             )}
           </h3>
           {description ? (
-            <p className="leading-relaxed mt-1 line-clamp-2 text-body text-muted-foreground">{description}</p>
+            <p className="mt-1 line-clamp-2 text-body leading-relaxed text-muted-foreground">{description}</p>
           ) : null}
         </div>
 

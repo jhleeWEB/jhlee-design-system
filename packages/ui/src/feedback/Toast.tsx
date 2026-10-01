@@ -194,7 +194,7 @@ export function ToastProvider({
             <div className="min-w-0 flex-1 self-center [overflow-wrap:anywhere]">
               <RadixToast.Title className="font-semibold">{item.title}</RadixToast.Title>
               {item.description ? (
-                <RadixToast.Description className="leading-relaxed m-0 mt-1 text-muted-foreground">
+                <RadixToast.Description className="m-0 mt-1 leading-relaxed text-muted-foreground">
                   {item.description}
                 </RadixToast.Description>
               ) : null}

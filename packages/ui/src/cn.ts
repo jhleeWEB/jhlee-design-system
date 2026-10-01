@@ -47,7 +47,8 @@ export const TW_MERGE_CONFIG = {
   },
   extend: {
     // container 는 리셋하지 않았다 — Tailwind 의 max-w-xs 같은 기본 이름이 살아 있으므로 override 가 아니라 extend 다.
-    theme: { container: [...LADDERS.container] },
+    // leading 도 리셋하지 않았다(#55 — 쓰는 세 단만 정본에 올렸고 tight · loose 는 Tailwind 기본으로 산다).
+    theme: { container: [...LADDERS.container], leading: [...LADDERS.leading] },
     classGroups: {
       h: [{ h: [...HAND_UTILITIES.h] }],
       w: [{ w: [...HAND_UTILITIES.w] }],
@@ -57,6 +58,9 @@ export const TW_MERGE_CONFIG = {
       // 생성 @utility — z-toast · duration-fast. twMerge 의 z · duration 그룹은 숫자만 알아서 역할 이름을 더한다.
       z: [{ z: [...LADDERS.layer] }],
       duration: [{ duration: [...LADDERS.duration] }],
+      /* 손 @utility font-inherit(#55) — 기본 twMerge 는 font-<무엇> 을 font-family 로 읽어 `font-mono` 를 지운다. 제 그룹을 주어 아무것도
+         지우지 않게 한다(같은 요소에 글자 유틸을 겹쳐 두지 않는 것은 theme.css 주석의 약속이다). */
+      "font-inherit": ["font-inherit"],
     },
   },
 } as const;

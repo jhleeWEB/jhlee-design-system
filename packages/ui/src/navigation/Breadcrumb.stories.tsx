@@ -21,8 +21,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  // color-contrast: text-muted-foreground 가 페이지 바탕(bg-background)·트랙 위에서 4.5:1 미만 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   play: async ({ canvas, args }) => {
     await expect(canvas.getByText("Level 3")).toHaveAttribute("aria-current", "page");
     await userEvent.click(canvas.getByRole("button", { name: "Tower A" }));
@@ -32,8 +30,6 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: text-muted-foreground 가 페이지 바탕(bg-background)·트랙 위에서 4.5:1 미만 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: () => (
     <div className="flex flex-col gap-4">
       <Breadcrumb aria-label="Single" items={[{ label: "Projects" }]} />
@@ -64,21 +60,7 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: ThemePair 의 테마 라벨과 muted 글자 — 토큰 값의 몫(#23)
-  // landmark-unique: ThemePair 가 같은 args 를 두 번 그려 같은 이름의 랜드마크가 둘 선다 — 하네스의 산물이지 컴포넌트의 위반이 아니다
-  parameters: {
-    a11y: {
-      config: {
-        rules: [
-          { id: "color-contrast", enabled: false },
-          { id: "landmark-unique", enabled: false },
-        ],
-      },
-    },
-  },
   render: (args) => (
-    <ThemePair>
-      <Breadcrumb {...args} />
-    </ThemePair>
+    <ThemePair>{(theme) => <Breadcrumb {...args} aria-label={`Breadcrumb (${theme})`} />}</ThemePair>
   ),
 };

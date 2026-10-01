@@ -22,8 +22,6 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: SectionLabel(text-micro muted-foreground) — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <div className="flex w-80 flex-col gap-4 font-sans text-body text-foreground">
       <SectionLabel>Shortcuts</SectionLabel>
@@ -44,8 +42,6 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: ThemePair 머리(text-micro muted-foreground, 라이트) — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <ThemePair>
       <div className="flex w-48 flex-col gap-3">

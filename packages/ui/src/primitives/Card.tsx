@@ -297,7 +297,7 @@ export function Card({
               onClick={ctx.toggle}
               title={`Expand ${ctx.label}`}
               className={cn(
-                "font-inherit appearance-none border-0 bg-transparent p-0 text-inherit",
+                "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
                 "ds-card-strip flex cursor-pointer flex-col items-center gap-2 py-2.5",
                 "text-muted-foreground hover:bg-muted hover:text-foreground",
                 "focus-visible:focus-ring focus-visible:outline-none",
@@ -445,7 +445,7 @@ export function CardHeader({
             onClick={ctx.toggle}
             title={`${ctx.collapsed ? "Expand" : "Collapse"} ${ctx.label}`}
             className={cn(
-              "font-inherit appearance-none border-0 bg-transparent p-0 text-inherit",
+              "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
               "grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-muted-foreground",
               !meta && "ml-auto",
               "hover:bg-muted hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
@@ -482,7 +482,7 @@ export function CardCollapse({ className, onClick, ...rest }: React.ComponentPro
       }}
       title={`${ctx.collapsed ? "Expand" : "Collapse"} ${ctx.label}`}
       className={cn(
-        "font-inherit appearance-none border-0 bg-transparent p-0 text-inherit",
+        "appearance-none border-0 bg-transparent p-0 font-inherit text-inherit",
         "grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-muted-foreground",
         "hover:bg-muted hover:text-foreground focus-visible:focus-ring focus-visible:outline-none",
         ctx.collapsed

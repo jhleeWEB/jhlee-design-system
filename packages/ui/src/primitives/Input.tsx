@@ -171,7 +171,7 @@ export function Textarea({ className, invalid, ...rest }: TextareaProps) {
       data-invalid={invalid ? "" : undefined}
       className={cn(
         inputVariants({ size: "md", invalid: invalid ?? false }),
-        "leading-relaxed h-auto min-h-(--size-textarea) resize-y py-3",
+        "h-auto min-h-(--size-textarea) resize-y py-3 leading-relaxed",
         className,
       )}
     />

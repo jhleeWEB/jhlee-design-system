@@ -129,7 +129,9 @@ export function SidebarItem({ className, icon, label, active, badge, shortcut, .
       {collapsed ? null : (
         <>
           <span className="min-w-0 flex-1 truncate text-left">{label}</span>
-          {badge ? <span className="shrink-0 font-mono text-micro opacity-70">{badge}</span> : null}
+          {badge ? (
+            <span className="shrink-0 font-mono text-micro text-muted-foreground">{badge}</span>
+          ) : null}
         </>
       )}
     </button>

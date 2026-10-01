@@ -21,6 +21,13 @@
     },
     "caps": { "$value": "0.09em", "$description": "대문자 미세라벨 전용 — eyebrow · 섹션 라벨." }
   },
+  "leading": {
+    "$type": "number",
+    "$description": "줄높이 3단 — 모달·드로어 제목(snug) · 배지(normal) · 설명 문단(relaxed)이 쓴다. 값은 Tailwind 기본 테마의 같은 이름 그대로라 픽셀은 같다(#55): 이 시스템의 소비 진입 CSS 가 tailwindcss/theme.css 를 싣기 때문에 leading-* 은 늘 그려졌지만, 정본에 없어 린트(no-unknown-classes, entryPoint = theme.css)가 «모르는 클래스» 로 잡았다 — 쓰는 세 단만 정본에 올린다. reset 하지 않는다: tight · loose 를 지우면 소비자 코드가 깨져 major 다.",
+    "snug": { "$value": 1.375 },
+    "normal": { "$value": 1.5 },
+    "relaxed": { "$value": 1.625 }
+  },
   "font-weight": {
     "$type": "number",
     "$extensions": { "sds": { "reset": true } },

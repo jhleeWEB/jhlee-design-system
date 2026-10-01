@@ -49,8 +49,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  // color-contrast: 항목 배지(`opacity-70` 의 muted 글자, 2.75:1) — 배지 표현을 바꾸면 기존 픽셀(Workbench)이 움직여 이 PR 밖이다(#45 보고)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole("navigation", { name: "Main" })).toBeInTheDocument();
     await expect(canvas.getByRole("button", { name: /^Site/ })).toHaveAttribute("aria-current", "page");
@@ -63,8 +61,6 @@ const cases: readonly SidebarProps[] = sideValues.flatMap((side) =>
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: 항목 배지(`opacity-70` 의 muted 글자, 2.75:1) — 배지 표현을 바꾸면 기존 픽셀(Workbench)이 움직여 이 PR 밖이다(#45 보고)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: () => (
     <div className="flex items-start gap-6">
       {cases.map((props) => (
@@ -77,26 +73,18 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: ThemePair 의 테마 라벨과 muted 글자 — 토큰 값의 몫(#23)
-  // landmark-unique: ThemePair 가 같은 args 를 두 번 그려 같은 이름의 랜드마크가 둘 선다 — 하네스의 산물이지 컴포넌트의 위반이 아니다
-  parameters: {
-    a11y: {
-      config: {
-        rules: [
-          { id: "color-contrast", enabled: false },
-          { id: "landmark-unique", enabled: false },
-        ],
-      },
-    },
-  },
   render: (args) => (
     <ThemePair>
-      <Sidebar {...args}>
-        <Items />
-      </Sidebar>
-      <Sidebar {...args} collapsed>
-        <Items />
-      </Sidebar>
+      {(theme) => (
+        <>
+          <Sidebar {...args} label={`${args.label ?? "Main"} (${theme})`}>
+            <Items />
+          </Sidebar>
+          <Sidebar {...args} collapsed label={`${args.label ?? "Main"} (${theme} rail)`}>
+            <Items />
+          </Sidebar>
+        </>
+      )}
     </ThemePair>
   ),
 };

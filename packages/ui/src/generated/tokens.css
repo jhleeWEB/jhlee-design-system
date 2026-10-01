@@ -12,6 +12,7 @@
   --palette-cool-300: #d8dde8;
   --palette-cool-400: #a0a6b4;
   --palette-cool-500: #697183;
+  --palette-cool-550: #636b7c;
   --palette-cool-600: #545c6d;
   --palette-cool-700: #3a4150;
   --palette-cool-800: #262c38;
@@ -54,6 +55,7 @@
   --palette-moss-300: #4cb37e;
   --palette-moss-400: #1eaa64;
   --palette-moss-500: #17834d;
+  --palette-moss-550: #167d49;
   --palette-moss-600: #317351;
   --palette-moss-700: #12693e;
   --palette-moss-900: #12261c;
@@ -63,6 +65,7 @@
   --palette-amber-400: #d0830a;
   --palette-amber-500: #b87409;
   --palette-amber-600: #b16f09;
+  --palette-amber-650: #9a6108;
   --palette-amber-700: #895e1b;
   --palette-amber-900: #2a2113;
   --palette-rust-50: #fbeae3;
@@ -70,6 +73,7 @@
   --palette-rust-300: #f26c35;
   --palette-rust-400: #e2764d;
   --palette-rust-500: #c2410c;
+  --palette-rust-550: #bf400c;
   --palette-rust-600: #ad441c;
   --palette-rust-700: #a5370a;
   --palette-rust-900: #2b1913;
@@ -164,7 +168,7 @@
   --chrome-popover: rgb(255 255 255 / 0.94);
   --chrome-foreground: var(--palette-cool-900);
   --chrome-foreground-2: var(--palette-cool-600);
-  --chrome-muted-foreground: var(--palette-cool-500);
+  --chrome-muted-foreground: var(--palette-cool-550);
   --chrome-foreground-disabled: var(--palette-cool-400);
   --chrome-border: var(--palette-cool-200);
   --chrome-border-strong: var(--palette-cool-300);
@@ -181,17 +185,17 @@
   --chrome-ring: var(--palette-azure-500);
   --chrome-tooltip: var(--palette-cool-900);
   --chrome-tooltip-foreground: var(--palette-cool-25);
-  --chrome-success: var(--palette-moss-500);
+  --chrome-success: var(--palette-moss-550);
   --chrome-success-hover: var(--palette-moss-700);
   --chrome-success-foreground: var(--palette-cool-0);
   --chrome-success-soft: var(--palette-moss-50);
   --chrome-success-line: var(--palette-moss-400);
-  --chrome-warning: var(--palette-amber-500);
-  --chrome-warning-hover: var(--palette-amber-600);
-  --chrome-warning-foreground: var(--palette-cool-950);
+  --chrome-warning: var(--palette-amber-650);
+  --chrome-warning-hover: var(--palette-amber-700);
+  --chrome-warning-foreground: var(--palette-cool-0);
   --chrome-warning-soft: var(--palette-amber-50);
   --chrome-warning-line: var(--palette-amber-400);
-  --chrome-destructive: var(--palette-rust-500);
+  --chrome-destructive: var(--palette-rust-550);
   --chrome-destructive-hover: var(--palette-rust-700);
   --chrome-destructive-foreground: var(--palette-cool-0);
   --chrome-destructive-soft: var(--palette-rust-50);

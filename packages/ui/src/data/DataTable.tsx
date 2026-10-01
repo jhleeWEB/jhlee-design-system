@@ -202,7 +202,9 @@ export function DataTable<Row>({
                         onClick={() => toggleSort(column.key)}
                         aria-label={column.label ?? undefined}
                         className={cn(
-                          "appearance-none border-0 bg-transparent text-inherit",
+                          /* font-inherit — 머리 칸(th)의 mono · micro · uppercase · tracking-caps 를 그대로 받아
+                             정렬 불가 머리와 같은 글자가 된다(#55). */
+                          "group/sort appearance-none border-0 bg-transparent font-inherit text-inherit",
                           "flex w-full cursor-pointer items-end gap-1",
                           cellPad,
                           column.numeric ? "justify-end" : "justify-start",
@@ -211,8 +213,9 @@ export function DataTable<Row>({
                         )}
                       >
                         {column.header}
-                        {/* 화살표는 **정렬된 열에만** 나온다. 모든 열에 흐린 화살표를 두면
-                          「무엇으로 정렬돼 있나」가 한눈에 안 보인다. */}
+                        {/* 화살표는 **정렬된 열에만** 늘 보인다. 모든 열에 흐린 화살표를 두면
+                          「무엇으로 정렬돼 있나」가 한눈에 안 보인다. 정렬되지 않은 정렬 가능 열은 hover · 키보드 포커스에서만
+                          위아래 화살표를 내어 «누를 수 있다» 를 알린다(#55) — 자리는 늘 잡아 두어 정렬해도 머리 글자가 밀리지 않는다. */}
                         {active ? (
                           <svg viewBox="0 0 10 10" aria-hidden="true" className="size-2.5 shrink-0">
                             <path
@@ -220,7 +223,15 @@ export function DataTable<Row>({
                               fill="currentColor"
                             />
                           </svg>
-                        ) : null}
+                        ) : (
+                          <svg
+                            viewBox="0 0 10 10"
+                            aria-hidden="true"
+                            className="size-2.5 shrink-0 opacity-0 group-hover/sort:opacity-100 group-focus-visible/sort:opacity-100"
+                          >
+                            <path d="M5 0.5L8 4h-6zM5 9.5L2 6h6z" fill="currentColor" />
+                          </svg>
+                        )}
                       </button>
                     ) : (
                       column.header

@@ -60,7 +60,10 @@ describe("참조 무결성", () => {
     /* 원시(`--palette-*`)는 시맨틱이 참조해야 존재 이유가 있다. #11 의 18개에서 #18 이 cool.950(판정색 위의 어두운 글자)을 쓰기 시작해 17개다.
        나머지는 자매 저장소의 mono 12단(무채색이 필요한 자리를 위해 지우지 않는다)과 cool·azure 의 빈 단이다 — 늘지 않게 붙들어 둔다.
        3.0.0(#49)에서 옛 base 이름 alias(legacy.css 의 --dark · --light · --steel · --silver · --offwhite)가 사라져 gray 다섯이 더해졌다(22개) —
-       지우지 않는다: 코드모드 표(tokens/legacy-map.mjs 의 baseVars)가 옛 이름을 «값이 같은» 이 원시로 옮기므로 목적지가 살아 있어야 한다. */
+       지우지 않는다: 코드모드 표(tokens/legacy-map.mjs 의 baseVars)가 옛 이름을 «값이 같은» 이 원시로 옮기므로 목적지가 살아 있어야 한다.
+       #55 에서 라이트 글자 AA 를 위해 시맨틱이 한 단 어두운 새 단(cool.550 · moss.550 · rust.550 · amber.650)으로 옮겨 다섯이 더해졌다(27개) —
+       cool.500 · moss.500 · amber.500 · rust.500 은 같은 이유(코드모드 목적지 `--color-cool-500` · `--ok` · `--warn` · `--danger`)로 값째 남고,
+       amber.600(옛 라이트 hover)은 발행된 CSS 변수라 지우면 major 라서 남긴다. */
     const referrers = new Map<string, string[]>();
     for (const t of model.tokens)
       for (const ref of t.refs) referrers.set(ref, [...(referrers.get(ref) ?? []), t.name]);
@@ -74,9 +77,12 @@ describe("참조 무결성", () => {
       .sort();
     expect(dead).toMatchInlineSnapshot(`
       [
+        "--palette-amber-500",
+        "--palette-amber-600",
         "--palette-azure-200",
         "--palette-azure-700",
         "--palette-cool-50",
+        "--palette-cool-500",
         "--palette-cool-700",
         "--palette-cool-800",
         "--palette-gray-100",
@@ -96,6 +102,8 @@ describe("참조 무결성", () => {
         "--palette-mono-800",
         "--palette-mono-900",
         "--palette-mono-950",
+        "--palette-moss-500",
+        "--palette-rust-500",
       ]
     `);
   });
