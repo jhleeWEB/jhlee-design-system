@@ -13,6 +13,7 @@ import { sourceGraph } from "../../__arch__/source-graph";
 import {
   buildManifest,
   docForValue,
+  orderLiteralUnionText,
   orderValues,
   readCva,
   type Manifest,
@@ -135,6 +136,32 @@ describe("생성기 조각", () => {
       "b",
       "danger",
     ]);
+  });
+
+  it("orderLiteralUnionText — 리터럴 유니언만 values 순서로 다시 쓰고 null 은 끝에, 별칭·섞인 유니언은 그대로", () => {
+    // TS 가 찍은 순서(타입 id = 프로그램 안 첫 생성 순)가 어떻든 같은 표기가 나와야 한다 — #65 에서 실제로 뒤집힌 Button.variant 의 두 순서.
+    const order = ["solid", "outline", "ghost", "link"];
+    for (const printed of [
+      '"link" | "outline" | "solid" | "ghost" | null',
+      'null | "ghost" | "solid" | "outline" | "link"',
+    ])
+      expect(orderLiteralUnionText(printed, order)).toBe('"solid" | "outline" | "ghost" | "link" | null');
+    expect(orderLiteralUnionText('"b" | "a"', ["a", "b"])).toBe('"a" | "b"');
+    expect(orderLiteralUnionText("ButtonTone | null", ["neutral", "primary"])).toBe("ButtonTone | null");
+    expect(orderLiteralUnionText('number | "auto"', [])).toBe('number | "auto"');
+  });
+
+  it("리터럴 유니언의 type 표기는 values 와 같은 순서다 — 생성 문서가 프로그램의 파일 순서에 매이지 않는다", () => {
+    const literal = /^"(?:[^"\\]|\\.)*"$/;
+    for (const c of manifest().components)
+      for (const p of c.props) {
+        const parts = p.type.split(" | ").filter((part) => part !== "null");
+        if (!p.values.length || !parts.every((part) => literal.test(part))) continue;
+        expect(
+          parts.map((part) => JSON.parse(part) as string),
+          `${c.name}.${p.name}`,
+        ).toEqual(p.values.map((v) => v.value));
+      }
   });
 
   it("readCva — cva 가 아닌 선언은 null", () => {

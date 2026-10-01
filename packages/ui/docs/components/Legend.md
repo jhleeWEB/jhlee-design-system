@@ -31,5 +31,5 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
-| `pattern` | `"line" \| "fill" \| "outline" \| "hatch" \| null` |  | `"fill"` | 값: `fill` — 꽉 찬 사각(면 · 영역) · `outline` — 외곽선만 있는 사각(경계 · 계획선) · `hatch` — 외곽선 + 45° 빗금(단면 · 제외 구역) · `line` — 가로 선 하나(선 요소 · 치수선) |
-| `swatch` | `"line" \| "ink" \| "ink-2" \| "muted" \| "line-strong" \| "grid" \| "surface" \| null` |  | `"ink"` | 값: `ink` — 가장 진한 먹(벽 · 주된 선) · `ink-2` — 한 단 옅은 먹 · `muted` — 흐린 먹(보조 선 · 치수) · `line-strong` — 진한 선색 · `line` — 옅은 선색 · `grid` — 격자색 · `surface` — 바탕에서 한 단 들어간 면(채움보다 외곽 · 빗금과 함께 쓴다 — 흰 바탕 위 채움은 거의 보이지 않는다) |
+| `pattern` | `"fill" \| "outline" \| "hatch" \| "line" \| null` |  | `"fill"` | 값: `fill` — 꽉 찬 사각(면 · 영역) · `outline` — 외곽선만 있는 사각(경계 · 계획선) · `hatch` — 외곽선 + 45° 빗금(단면 · 제외 구역) · `line` — 가로 선 하나(선 요소 · 치수선) |
+| `swatch` | `"ink" \| "ink-2" \| "muted" \| "line-strong" \| "line" \| "grid" \| "surface" \| null` |  | `"ink"` | 값: `ink` — 가장 진한 먹(벽 · 주된 선) · `ink-2` — 한 단 옅은 먹 · `muted` — 흐린 먹(보조 선 · 치수) · `line-strong` — 진한 선색 · `line` — 옅은 선색 · `grid` — 격자색 · `surface` — 바탕에서 한 단 들어간 면(채움보다 외곽 · 빗금과 함께 쓴다 — 흰 바탕 위 채움은 거의 보이지 않는다) |

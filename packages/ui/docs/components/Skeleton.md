@@ -16,7 +16,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 |---|---|---|---|---|
 | `h` | `string \| number` |  | `12` | 바의 높이(px 수 또는 CSS 길이). 대체할 내용의 line-height 에 맞춘다. |
 | `w` | `string \| number` |  | `undefined` | 바의 폭(px 수 또는 CSS 길이). 글줄을 흉내 낼 때 마지막 줄만 짧게 하는 것이 자연스럽다. 비우면 `bar` 는 부모 폭을 따르고 `circle` 은 `h` 와 같은 정원이 된다. |
-| `shape` | `"circle" \| "bar" \| null` |  | `"bar"` | 값: `bar` — 글줄·값 자리. 작은 반경(기본) · `circle` — 아바타·상태 점 자리. 정원 |
+| `shape` | `"bar" \| "circle" \| null` |  | `"bar"` | 값: `bar` — 글줄·값 자리. 작은 반경(기본) · `circle` — 아바타·상태 점 자리. 정원 |
 
 ## 부품
 

@@ -20,4 +20,4 @@ Radix의 type="scroll"은 종료 판정에 100ms를 더하므로 DS의 500ms 계
 | `viewportRef` | `Ref<HTMLDivElement>` |  | `undefined` | 실제로 스크롤되는 뷰포트 요소의 ref — 스크롤 위치를 읽거나 옮길 때. |
 | `viewportClassName` | `string` |  | `undefined` | 뷰포트에 더할 className — 안쪽 패딩·높이 제한은 뿌리가 아니라 여기에 둔다. |
 | `viewportProps` | `Omit<Omit<ScrollAreaViewportProps & RefAttributes<HTMLDivElement>, "ref">, "asChild"> & { "data-slot"?: string; }` |  | `undefined` | 뷰포트에 펼칠 나머지 속성(`onScroll` 은 표시 타이머와 합성된다). |
-| `orientation` | `"vertical" \| "horizontal" \| "both"` |  | `"both"` | 값: `both` — 둘 다 · `horizontal` — 가로만 · `vertical` — 세로만 |
+| `orientation` | `"both" \| "horizontal" \| "vertical"` |  | `"both"` | 값: `both` — 둘 다 · `horizontal` — 가로만 · `vertical` — 세로만 |

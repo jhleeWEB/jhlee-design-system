@@ -14,7 +14,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
-| `variant` | `"link" \| "outline" \| "solid" \| "ghost" \| null` |  | `"ghost"` | 값: `ghost` — 바탕 없음(뒤로가기의 기본) · `link` — 밑줄 글자 · `outline` — 외곽선 · `solid` — 채움 |
-| `size` | `"sm" \| "md" \| "lg" \| "icon-sm" \| "icon" \| "icon-lg" \| null` |  | `"sm"` | 값: `icon` — 정사각 아이콘 · `icon-lg` — 큰 정사각 아이콘 · `icon-sm` — 작은 정사각 아이콘 · `lg` — 큰 컨트롤 높이 · `md` — 기본 컨트롤 높이 · `sm` — 작은 컨트롤 높이(기본) |
+| `variant` | `"ghost" \| "link" \| "outline" \| "solid" \| null` |  | `"ghost"` | 값: `ghost` — 바탕 없음(뒤로가기의 기본) · `link` — 밑줄 글자 · `outline` — 외곽선 · `solid` — 채움 |
+| `size` | `"icon" \| "icon-lg" \| "icon-sm" \| "lg" \| "md" \| "sm" \| null` |  | `"sm"` | 값: `icon` — 정사각 아이콘 · `icon-lg` — 큰 정사각 아이콘 · `icon-sm` — 작은 정사각 아이콘 · `lg` — 큰 컨트롤 높이 · `md` — 기본 컨트롤 높이 · `sm` — 작은 컨트롤 높이(기본) |
 | `tone` | `ButtonTone \| null` |  | `"neutral"` | 값: `destructive` — 파괴적 동작 · `neutral` — 기본 · `primary` — 주된 동작 |
 | `loading` | `boolean` |  | `false` | 진행 중 — 스피너를 라벨 앞에 더하고 누름을 막는다. |

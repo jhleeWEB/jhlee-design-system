@@ -18,7 +18,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | `eyebrow` | `ReactNode` |  | `undefined` | 제목 위 작은 라벨 — "Candidate 03" · "Dahisar". |
 | `description` | `ReactNode` |  | `undefined` | 제목 아래 설명 — 두 줄에서 자른다. |
 | `media` | `ReactNode` |  | `undefined` | 썸네일. 없으면 그 칸 자체가 사라진다. |
-| `mediaRatio` | `"none" \| "16/9" \| "4/3" \| "1/1" \| "plan" \| null` |  | `"plan"` | 값: `1/1` — 정사각 · `16/9` — 와이드 · `4/3` — 표준 · `none` — 비율 없음. 썸네일 내용의 높이를 따른다 · `plan` — 3:2. 도면 썸네일 — 필지는 대개 가로로 길다 |
+| `mediaRatio` | `"1/1" \| "16/9" \| "4/3" \| "none" \| "plan" \| null` |  | `"plan"` | 값: `1/1` — 정사각 · `16/9` — 와이드 · `4/3` — 표준 · `none` — 비율 없음. 썸네일 내용의 높이를 따른다 · `plan` — 3:2. 도면 썸네일 — 필지는 대개 가로로 길다 |
 | `mediaWidth` | `string` |  | `"132px"` | 가로 배치일 때 썸네일 폭(CSS 길이). 세로 배치에서는 무시된다. |
 | `mediaOverlay` | `ReactNode` |  | `undefined` | 썸네일 위 좌상단에 얹히는 것 — 순번 · 상태 점. |
 | `meta` | `ReactNode` |  | `undefined` | 제목 아래 줄 — 배지 · KPI. |

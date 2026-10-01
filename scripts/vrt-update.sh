@@ -35,9 +35,13 @@ docker run --rm --ipc=host \
       pnpm exec playwright test -c vrt/playwright.config.ts || { rm -rf /report/*; cp -R vrt/report/. /report/ 2>/dev/null || true; exit 1; }
       exit 0
     fi
-    # =all — 맨 --update-snapshots 는 «changed» 라 비교에 실패한 것만 다시 쓴다. 비교는 픽셀마다 YIQ threshold 0.2 를 두므로 토큰 색을
-    # 한두 단 옮긴 변화(#55 의 muted-foreground #697183 → #636b7c)는 실패가 아니어서 기준선에 남지 않았다. 픽셀이 같으면 PNG 도 같아 diff 는 없다.
-    pnpm exec playwright test -c vrt/playwright.config.ts --update-snapshots=all
+    # =all — 맨 --update-snapshots 는 «changed» 라 비교에 실패한 것만 다시 쓴다. 비교가 픽셀마다 YIQ threshold 0.2 였을 때 토큰 색을
+    # 한두 단 옮긴 변화(#55 의 muted-foreground #697183 → #636b7c)는 실패가 아니어서 기준선에 남지 않았다(지금 threshold 는 0, #70).
+    # 픽셀이 같으면 PNG 도 같아 diff 는 없다.
+    # --retries=2 — 갱신은 344장을 한 번에 쓰거나(cp) 아무것도 안 쓴다(set -e). 부하에서 무관한 스토리 하나가 타임아웃으로 한 번 넘어지면
+    # 전체가 쓰기 없이 멈췄다(#70 · 4번). 재시도는 일시적 타임아웃만 살린다 — 세 번 다 실패하는 진짜 실패(예외 · 캔버스 흰색 단언)는
+    # 여전히 0 이 아닌 종료 코드로 멈춘다. 검사 모드(위)는 재시도하지 않는다: 재시도로 통과한 흔들림은 «flaky» 로 0 종료가 되어 숨는다.
+    pnpm exec playwright test -c vrt/playwright.config.ts --update-snapshots=all --retries=2
     rm -rf /out/*
     cp -R vrt/__snapshots__/. /out/
   '
