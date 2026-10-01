@@ -48,7 +48,13 @@ export function Breadcrumb({ items, className, ...rest }: BreadcrumbProps) {
                 {item.label}
               </span>
             ) : item.href ? (
-              <a href={item.href} className="min-w-0 truncate hover:text-foreground hover:underline">
+              /* 링크 조각도 버튼 조각과 같은 글자다 — 이 DS 는 Tailwind preflight 를 싣지 않아 `<a>` 가 브라우저 기본 파랑 · 밑줄로
+                 그려졌다(#70). 색은 nav 의 muted 를 물려받고 밑줄은 hover 에만 둔다. */
+              <a
+                data-slot="breadcrumb-link"
+                href={item.href}
+                className="min-w-0 truncate rounded-md text-inherit no-underline hover:text-foreground hover:underline focus-visible:focus-ring focus-visible:outline-none"
+              >
                 {item.label}
               </a>
             ) : (

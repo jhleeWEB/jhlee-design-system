@@ -31,7 +31,6 @@ const KNOWN_A11Y_FAILURES: Readonly<Record<string, readonly string[]>> = {
   "src/primitives/Select.stories.tsx#Default": ["aria-hidden-focus"],
   "src/primitives/Select.stories.tsx#ThemeContrast": ["aria-hidden-focus"],
   "stories/Radius.stories.tsx#Components": ["aria-hidden-focus"],
-  "stories/Workbench.stories.tsx#Default": ["aria-progressbar-name"],
 };
 
 /** `{ id: "x", enabled: false }` 로 끈 규칙 id — 규칙 배열이 변수로 빠져 있어도 같은 파일 안이면 잡힌다. */
