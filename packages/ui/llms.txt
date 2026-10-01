@@ -67,10 +67,12 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [Accordion](docs/components/Accordion.md): 접이식 구획 묶음 — `type="single"` 은 하나만, `"multiple"` 은 여럿을 연다 — 부품: AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger — "use client"
 - [Alert](docs/components/Alert.md): 인라인 경고 — 흐름 안에 남는 알림
 - [AppShell](docs/components/AppShell.md): 작업대 셸 — 상단바 · 사이드바 · 본문 · 인스펙터(접기 · 선택적 폭 조절) · 바닥줄. — "use client"
+- [Avatar](docs/components/Avatar.md): 아바타 — 이미지가 그려지면 이미지, 아니면 이름의 이니셜 — 부품: AvatarGroup — "use client"
 - [BackButton](docs/components/BackButton.md): 뒤로가기의 동작은 라우터가 소유하고 모양·아이콘은 모든 페이지에서 공유한다.
 - [Badge](docs/components/Badge.md): 배지 — 상태를 **글자와 함께** 말한다
 - [Breadcrumb](docs/components/Breadcrumb.md): 경로 — 「지금 무엇을 보고 있나」 — "use client"
 - [Button](docs/components/Button.md): 버튼 — 크롬의 동작 — 부품: ButtonGroup — "use client"
+- [Calendar](docs/components/Calendar.md): 달력 — 한 달 격자에서 날짜 하나를 고른다 — "use client"
 - [CanvasScale](docs/components/CanvasScale.md): SVG 도면 안과 HTML 위 오버레이에서 같은 모양을 쓰며 위치와 현재 축척은 소비자가 정한다.
 - [Card](docs/components/Card.md): 카드 — 이 제품의 기본 구획 — 부품: CardCollapse, CardHeader, CardWell — "use client"
 - [CardGrid](docs/components/CardGrid.md): 카드 격자 — `auto-fit` 으로 항목이 남는 폭을 나눠 갖는다. — "use client"
@@ -81,6 +83,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [ConfirmDialog](docs/components/ConfirmDialog.md): 확인 대화 — 되돌릴 수 없는 동작 앞에서 묻는다 — "use client"
 - [ContextMenu](docs/components/ContextMenu.md): 우클릭 메뉴의 루트 — 열림 알림(`onOpenChange`)과 모달성(`modal`)만 든다 — 부품: ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger — "use client"
 - [DataTable](docs/components/DataTable.md): 명세서 표 — 한 열 정렬 · 행 선택 · 합계 줄 · 줄 높이를 지키는 로딩 — "use client"
+- [DatePicker](docs/components/DatePicker.md): 날짜 고르기 — 트리거를 누르면 달력 팝오버가 열린다 — "use client"
 - [DescriptionList](docs/components/DescriptionList.md): 이름-값 목록(`<dl>` 격자) — 이름은 왼쪽에서 말줄임, 값은 오른쪽 정렬.
 - [DisplayHeading](docs/components/DisplayHeading.md): 들머리 제목 — 한 패널에 하나만.
 - [Drawer](docs/components/Drawer.md): 서랍의 루트 — 열림 상태와 모달성(`modal={false}` 면 비모달)을 든다 — 부품: DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger — "use client"
@@ -96,6 +99,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [MediaCard](docs/components/MediaCard.md): 내용 카드 — 고를 수 있는 후보 한 개(썸네일 · 제목 · 메타 · 조치) — "use client"
 - [Modal](docs/components/Modal.md): 모달의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 모달성만 든다 — 부품: ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger — "use client"
 - [NumberInput](docs/components/NumberInput.md): 수치 입력 — 범위(`min` · `max`) · 보폭(`step`, Shift ×10) · 단위(`unit`) · 증감 버튼(`stepper`) — "use client"
+- [Pagination](docs/components/Pagination.md): 페이지 나눔 — 이전 · 쪽 번호(생략 포함) · 다음 — 부품: PaginationLink — "use client"
 - [PanelToggleButton](docs/components/PanelToggleButton.md): 패널 여닫기 아이콘 버튼 — 열려 있으면 «접기», 닫혀 있으면 «보이기» 아이콘과 이름을 단다. — "use client"
 - [Popover](docs/components/Popover.md): 팝오버의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 — 부품: PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger — "use client"
 - [Progress](docs/components/Progress.md): 진행 막대 — 값이 있을 때만 쓴다 — "use client"
@@ -114,6 +118,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [Slider](docs/components/Slider.md): 슬라이더 — 값 하나(`[50]`) 또는 범위(`[20, 80]`)를 고른다 — "use client"
 - [Spinner](docs/components/Spinner.md): 스피너 — «돌고 있다» 만 말한다
 - [StatusDot](docs/components/StatusDot.md): 상태 점 — 글자를 넣을 수 없는 좁은 자리에서만
+- [Stepper](docs/components/Stepper.md): 단계 진행 — 순서 있는 목록(`ol`)에 단계마다 원(번호 · 체크 · X) · 이름 · 상태 글자 · 설명을 두고 사이를 선으로 잇는다.
 - [Switch](docs/components/Switch.md): 스위치 — **즉시 적용되는** 켬/끔 — "use client"
 - [Table](docs/components/Table.md): 수치 표의 뿌리 — 가로 스크롤 영역 안의 `<table>`
 - [Tabs](docs/components/Tabs.md): 탭의 루트 — 값(`value` · `defaultValue` · `onValueChange`)과 방향(`orientation`) · 활성화 방식(`activationMode`)을 든다. — 부품: TabsContent, TabsList, TabsTrigger — "use client"
@@ -139,14 +144,18 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 
 - `alertVariants`: cva — 축 tone(info | success | warning | destructive); 기본 tone=info. 서버에서 호출 가능.
 - `appShellVariants`: cva — 축 variant(flush | inset); 기본 variant=flush. 서버에서 호출 가능.
+- `avatarGroupVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.
+- `avatarVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.
 - `badgeVariants`: cva — 축 tone(neutral | primary | success | warning | destructive) · provisional(true | false); 기본 tone=neutral, provisional=false. 서버에서 호출 가능.
 - `buttonVariants`: cva — 축 variant(solid | outline | ghost | link) · tone(neutral | primary | destructive) · size(sm | md | lg | icon-sm | icon | icon-lg); 기본 variant=outline, tone=neutral, size=md. 서버에서 호출 가능.
+- `calendarDayVariants`: cva — 축 없음. 서버에서 호출 가능.
 - `cardVariants`: cva — 축 elevation(raised | flat | flush) · pad(none | sm | md | lg); 기본 elevation=raised, pad=none. 서버에서 호출 가능.
 - `collapsibleTriggerVariants`: cva — 축 variant(row | inline); 기본 variant=row. 서버에서 호출 가능.
 - `comboboxTriggerVariants`: cva — 축 size(sm | md | lg) · invalid(true | false); 기본 size=md, invalid=false. 서버에서 호출 가능.
 - `commandVariants`: cva — 축 surface(card | plain); 기본 surface=card. 서버에서 호출 가능.
 - `contextMenuContentVariants`: cva — 축 없음. 서버에서 호출 가능.
 - `contextMenuItemVariants`: cva — 축 tone(neutral | destructive); 기본 tone=neutral. 서버에서 호출 가능.
+- `datePickerTriggerVariants`: cva — 축 size(sm | md | lg) · invalid(true | false); 기본 size=md, invalid=false. 서버에서 호출 가능.
 - `drawerVariants`: cva — 축 side(right | left | bottom) · size(sm | md | lg); 기본 side=right, size=md. 서버에서 호출 가능.
 - `dropdownMenuContentVariants`: cva — 축 없음. 서버에서 호출 가능.
 - `dropdownMenuItemVariants`: cva — 축 tone(neutral | destructive); 기본 tone=neutral. 서버에서 호출 가능.
@@ -160,6 +169,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `mediaCardVariants`: cva — 축 orientation(vertical | horizontal) · elevation(raised | flat | flush) · selected(true | false) · interactive(true | false); 기본 orientation=vertical, elevation=raised, selected=false, interactive=false. 서버에서 호출 가능.
 - `modalVariants`: cva — 축 size(sm | md | lg | xl | full); 기본 size=md. 서버에서 호출 가능.
 - `numberInputStepperVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.
+- `paginationLinkVariants`: cva — 축 size(sm | md); 기본 size=md. 서버에서 호출 가능.
 - `popoverContentVariants`: cva — 축 onCanvas(true | false); 기본 onCanvas=false. 서버에서 호출 가능.
 - `progressVariants`: cva — 축 tone(primary | success | warning | destructive | neutral); 기본 tone=primary. 서버에서 호출 가능.
 - `readoutValueVariants`: cva — 축 tone(neutral | primary | success | warning | destructive | info); 기본 tone=neutral. 서버에서 호출 가능.
@@ -172,6 +182,9 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `sliderTrackVariants`: cva — 축 size(sm | md); 기본 size=md. 서버에서 호출 가능.
 - `sliderVariants`: cva — 축 size(sm | md); 기본 size=md. 서버에서 호출 가능.
 - `spinnerVariants`: cva — 축 size(sm | md | lg) · tone(neutral | muted | primary); 기본 size=md, tone=neutral. 서버에서 호출 가능.
+- `stepConnectorVariants`: cva — 축 orientation(horizontal | vertical) · complete(true | false); 기본 orientation=horizontal, complete=false. 서버에서 호출 가능.
+- `stepIndicatorVariants`: cva — 축 status(complete | current | upcoming | error); 기본 status=upcoming. 서버에서 호출 가능.
+- `stepperVariants`: cva — 축 orientation(horizontal | vertical); 기본 orientation=horizontal. 서버에서 호출 가능.
 - `tableCellVariants`: cva — 축 numeric(true | false) · tone(neutral | success | warning | destructive); 기본 numeric=false, tone=neutral. 서버에서 호출 가능.
 - `tabsListVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.
 - `tabsTriggerVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.

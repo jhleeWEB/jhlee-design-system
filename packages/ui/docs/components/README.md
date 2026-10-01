@@ -7,10 +7,12 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Accordion](Accordion.md) | component | client | AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger | 접이식 구획 묶음 — `type="single"` 은 하나만, `"multiple"` 은 여럿을 연다 |
 | [Alert](Alert.md) | component | server ok |  | 인라인 경고 — 흐름 안에 남는 알림 |
 | [AppShell](AppShell.md) | component | client |  | 작업대 셸 — 상단바 · 사이드바 · 본문 · 인스펙터(접기 · 선택적 폭 조절) · 바닥줄. |
+| [Avatar](Avatar.md) | component | client | AvatarGroup | 아바타 — 이미지가 그려지면 이미지, 아니면 이름의 이니셜 |
 | [BackButton](BackButton.md) | component | server ok |  | 뒤로가기의 동작은 라우터가 소유하고 모양·아이콘은 모든 페이지에서 공유한다. |
 | [Badge](Badge.md) | component | server ok |  | 배지 — 상태를 **글자와 함께** 말한다 |
 | [Breadcrumb](Breadcrumb.md) | component | client |  | 경로 — 「지금 무엇을 보고 있나」 |
 | [Button](Button.md) | component | client | ButtonGroup | 버튼 — 크롬의 동작 |
+| [Calendar](Calendar.md) | component | client |  | 달력 — 한 달 격자에서 날짜 하나를 고른다 |
 | [CanvasScale](CanvasScale.md) | component | server ok |  | SVG 도면 안과 HTML 위 오버레이에서 같은 모양을 쓰며 위치와 현재 축척은 소비자가 정한다. |
 | [Card](Card.md) | component | client | CardCollapse, CardHeader, CardWell | 카드 — 이 제품의 기본 구획 |
 | [CardGrid](CardGrid.md) | component | client |  | 카드 격자 — `auto-fit` 으로 항목이 남는 폭을 나눠 갖는다. |
@@ -21,6 +23,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [ConfirmDialog](ConfirmDialog.md) | component | client |  | 확인 대화 — 되돌릴 수 없는 동작 앞에서 묻는다 |
 | [ContextMenu](ContextMenu.md) | component | client | ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger | 우클릭 메뉴의 루트 — 열림 알림(`onOpenChange`)과 모달성(`modal`)만 든다 |
 | [DataTable](DataTable.md) | component | client |  | 명세서 표 — 한 열 정렬 · 행 선택 · 합계 줄 · 줄 높이를 지키는 로딩 |
+| [DatePicker](DatePicker.md) | component | client |  | 날짜 고르기 — 트리거를 누르면 달력 팝오버가 열린다 |
 | [DescriptionList](DescriptionList.md) | component | server ok |  | 이름-값 목록(`<dl>` 격자) — 이름은 왼쪽에서 말줄임, 값은 오른쪽 정렬. |
 | [DisplayHeading](DisplayHeading.md) | component | server ok |  | 들머리 제목 — 한 패널에 하나만. |
 | [Drawer](Drawer.md) | component | client | DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger | 서랍의 루트 — 열림 상태와 모달성(`modal={false}` 면 비모달)을 든다 |
@@ -36,6 +39,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [MediaCard](MediaCard.md) | component | client |  | 내용 카드 — 고를 수 있는 후보 한 개(썸네일 · 제목 · 메타 · 조치) |
 | [Modal](Modal.md) | component | client | ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger | 모달의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 모달성만 든다 |
 | [NumberInput](NumberInput.md) | component | client |  | 수치 입력 — 범위(`min` · `max`) · 보폭(`step`, Shift ×10) · 단위(`unit`) · 증감 버튼(`stepper`) |
+| [Pagination](Pagination.md) | component | client | PaginationLink | 페이지 나눔 — 이전 · 쪽 번호(생략 포함) · 다음 |
 | [PanelToggleButton](PanelToggleButton.md) | component | client |  | 패널 여닫기 아이콘 버튼 — 열려 있으면 «접기», 닫혀 있으면 «보이기» 아이콘과 이름을 단다. |
 | [Popover](Popover.md) | component | client | PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger | 팝오버의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 |
 | [Progress](Progress.md) | component | client |  | 진행 막대 — 값이 있을 때만 쓴다 |
@@ -54,6 +58,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Slider](Slider.md) | component | client |  | 슬라이더 — 값 하나(`[50]`) 또는 범위(`[20, 80]`)를 고른다 |
 | [Spinner](Spinner.md) | component | server ok |  | 스피너 — «돌고 있다» 만 말한다 |
 | [StatusDot](StatusDot.md) | component | server ok |  | 상태 점 — 글자를 넣을 수 없는 좁은 자리에서만 |
+| [Stepper](Stepper.md) | component | server ok |  | 단계 진행 — 순서 있는 목록(`ol`)에 단계마다 원(번호 · 체크 · X) · 이름 · 상태 글자 · 설명을 두고 사이를 선으로 잇는다. |
 | [Switch](Switch.md) | component | client |  | 스위치 — **즉시 적용되는** 켬/끔 |
 | [Table](Table.md) | component | server ok |  | 수치 표의 뿌리 — 가로 스크롤 영역 안의 `<table>` |
 | [Tabs](Tabs.md) | component | client | TabsContent, TabsList, TabsTrigger | 탭의 루트 — 값(`value` · `defaultValue` · `onValueChange`)과 방향(`orientation`) · 활성화 방식(`activationMode`)을 든다. |
