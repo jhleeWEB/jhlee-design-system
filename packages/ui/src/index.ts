@@ -22,6 +22,8 @@
  */
 
 export { CanvasScale, type CanvasScaleProps } from "./CanvasScale";
+export { Legend, LegendItem, type LegendItemProps, type LegendProps } from "./Legend";
+export { legendSwatchVariants, legendVariants } from "./Legend.variants";
 export {
   niceScale,
   gridPitchM,

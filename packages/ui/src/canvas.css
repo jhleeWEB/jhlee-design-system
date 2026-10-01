@@ -13,3 +13,9 @@
 .ds-canvas-scale > text {
   fill: currentColor;
 }
+
+/* 범례 빗금(Legend `pattern="hatch"`) — 45° 의 1px 먹선을 격자 한 칸(--spacing) 간격으로. 색은 스와치의 currentColor(text-canvas-*)다.
+   Tailwind 대괄호에 적으면 1px 리터럴이 tsx 래칫에 걸려 여기 둔다. 캔버스라 테마와 무관하다. */
+.ds-legend-hatch {
+  background-image: repeating-linear-gradient(45deg, currentColor 0 1px, transparent 1px var(--spacing));
+}

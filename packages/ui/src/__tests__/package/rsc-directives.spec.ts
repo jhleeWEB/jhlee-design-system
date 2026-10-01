@@ -80,8 +80,11 @@ describe('"use client"', () => {
         "primitives/Input.tsx",
         "primitives/MediaCard.tsx",
         "primitives/Misc.tsx",
+        "primitives/NumberInput.tsx",
         "primitives/PanelToggleButton.tsx",
         "primitives/Select.tsx",
+        "primitives/Slider.tsx",
+        "primitives/ToggleGroup.tsx",
       ]
     `);
   });
