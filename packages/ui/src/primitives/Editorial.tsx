@@ -75,7 +75,7 @@ export function Lede({ className, ...rest }: React.ComponentPropsWithRef<"p">) {
     <p
       {...rest}
       data-slot="lede"
-      className={cn("leading-relaxed max-w-[42ch] text-body text-muted-foreground", className)}
+      className={cn("max-w-[42ch] text-body leading-relaxed text-muted-foreground", className)}
     />
   );
 }

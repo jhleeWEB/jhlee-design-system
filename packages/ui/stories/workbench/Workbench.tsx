@@ -334,7 +334,7 @@ export function Workbench() {
             <Button size="lg" className="w-full">
               Compare schemes
             </Button>
-            <p className="leading-relaxed text-label text-muted-foreground">
+            <p className="text-label leading-relaxed text-muted-foreground">
               Generate returns one checked scheme. Compare explores alternatives and takes longer.
             </p>
           </div>

@@ -45,27 +45,12 @@
       "count": 1
     }
   },
-  "packages/ui/src/feedback/Alert.variants.ts": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    }
-  },
-  "packages/ui/src/feedback/EmptyState.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    }
-  },
   "packages/ui/src/feedback/Skeleton.tsx": {
     "ds/no-literal-style-value": {
       "count": 1
     }
   },
   "packages/ui/src/feedback/Spinner.variants.ts": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    }
-  },
-  "packages/ui/src/feedback/Toast.tsx": {
     "better-tailwindcss/no-unknown-classes": {
       "count": 1
     }
@@ -78,32 +63,9 @@
       "count": 1
     }
   },
-  "packages/ui/src/overlay/AlertDialog.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 2
-    }
-  },
-  "packages/ui/src/overlay/Drawer.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 2
-    }
-  },
-  "packages/ui/src/overlay/Modal.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 2
-    }
-  },
-  "packages/ui/src/primitives/Badge.variants.ts": {
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    }
-  },
   "packages/ui/src/primitives/Card.tsx": {
     "better-tailwindcss/no-restricted-classes": {
       "count": 1
-    },
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 3
     },
     "react-hooks/refs": {
       "count": 2
@@ -113,24 +75,13 @@
     "better-tailwindcss/no-restricted-classes": {
       "count": 1
     },
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    },
     "ds/no-literal-style-value": {
-      "count": 1
-    }
-  },
-  "packages/ui/src/primitives/Input.tsx": {
-    "better-tailwindcss/no-unknown-classes": {
       "count": 1
     }
   },
   "packages/ui/src/primitives/MediaCard.tsx": {
     "better-tailwindcss/no-restricted-classes": {
       "count": 1
-    },
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 2
     }
   },
   "packages/ui/src/primitives/MediaCard.variants.ts": {
@@ -141,9 +92,6 @@
   "packages/ui/stories/workbench/Workbench.tsx": {
     "better-tailwindcss/no-restricted-classes": {
       "count": 19
-    },
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
     },
     "ds/no-literal-style-value": {
       "count": 9

@@ -78,8 +78,6 @@ export const Variants: Story = {
 
 export const ThemeContrast: Story = {
   args: { limit: toneValues.length },
-  // color-contrast: 테마 라벨(muted-foreground · background) — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   /* ThemePair 는 같은 자식을 두 번 그려 뷰포트 region 의 이름이 겹친다(landmark-unique) — 같은 모양의 두 칸을 여기서 펴고
      `label` 로 칸마다 이름을 준다. 모양은 stories/decorators/ThemePair 와 같다. */
   render: (args) => (

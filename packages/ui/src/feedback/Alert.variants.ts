@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "../cn";
 
 /** 알림 상자의 변형 — `tone` 마다 배경·테두리·글자색 한 벌. */
 export const alertVariants = cva(
-  "leading-relaxed flex max-w-full min-w-0 gap-4 rounded-md border border-l-3 p-5 text-body",
+  "flex max-w-full min-w-0 gap-4 rounded-md border border-l-3 p-5 text-body leading-relaxed",
   {
     variants: {
       tone: {

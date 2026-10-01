@@ -73,8 +73,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  // color-contrast: 설명 글자(text-muted-foreground)가 페이지 바탕 위에서 4.5:1 미만 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   play: async ({ canvas }) => {
     const input = canvas.getByRole("textbox", { name: "Site area" });
     const description = canvas.getByText("Gross area inside the boundary.");
@@ -85,8 +83,6 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: Matrix 머리 · 설명(text-muted-foreground) · 비활성 글자 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <Matrix
       rows={kindValues}
@@ -113,8 +109,6 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: ThemePair 머리 · 설명(text-muted-foreground, 라이트) — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <ThemePair>
       <Field {...args} className="w-56">

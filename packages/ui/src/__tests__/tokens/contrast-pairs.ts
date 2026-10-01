@@ -26,6 +26,9 @@ export const CONTRAST_PAIRS: readonly ContrastPair[] = [
   ...(["foreground", "foreground-2", "muted-foreground"] as const).flatMap((fg) =>
     (["background", "card", "muted"] as const).map((bg) => text(fg, bg, `body text on ${bg}`)),
   ),
+  // 보조 글자가 놓이는 더 어두운 면 둘 — 눌린 상태(secondary)와 SegmentedControl 트랙(primary-track)의 비선택 항목(#55).
+  text("muted-foreground", "secondary", "muted text on pressed / rail surface"),
+  text("muted-foreground", "primary-track", "unselected SegmentedControl item on its track"),
   text("primary-foreground", "primary", "solid primary button label"),
   // 판정색 — 채운 버튼·배지의 글자, 옅은 면 위의 판정색 글자(Alert·Badge soft), 카드 위의 판정색 글자(StatusDot 옆 라벨).
   ...TONES.flatMap((tone) => [

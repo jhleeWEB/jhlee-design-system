@@ -46,7 +46,7 @@ export function EmptyState({ className, title, description, icon, action, size, 
       {icon ? <div className="text-foreground-disabled [&_svg]:size-16">{icon}</div> : null}
       <div className={emptyStateTitleVariants({ size })}>{title}</div>
       {description ? (
-        <p className="leading-relaxed max-w-[46ch] text-body text-muted-foreground">{description}</p>
+        <p className="max-w-[46ch] text-body leading-relaxed text-muted-foreground">{description}</p>
       ) : null}
       {action ? <div className="mt-2">{action}</div> : null}
     </div>

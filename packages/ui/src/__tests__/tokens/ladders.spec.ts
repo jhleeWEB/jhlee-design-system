@@ -114,6 +114,7 @@ describe("사다리", () => {
     expect(utilitiesIn(HAND)).toMatchInlineSnapshot(`
       [
         "focus-ring",
+        "font-inherit",
         "gap-shell",
         "h-ctl",
         "h-ctl-lg",
@@ -172,6 +173,7 @@ describe("cn — 사다리마다 뒤엣것이 이긴다", () => {
     animate: ["animate"],
     ease: ["ease"],
     tracking: ["tracking"],
+    leading: ["leading"],
     "font-weight": ["font"],
     height: ["h", "w"],
     container: ["max-w", "w"],

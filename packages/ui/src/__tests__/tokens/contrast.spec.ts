@@ -15,18 +15,11 @@ import { CONTRAST_PAIRS, type ContrastPair } from "./contrast-pairs";
 import { loadTokenModel, resolvedMap, type Mode } from "./model";
 
 /**
- * 오늘 미달인 쌍 — `mode:fg/bg`. 첫 실행 실측(2026-09-30, C2). **줄어들기만 한다**: 토큰을 고쳐 통과하면 여기서 지워야 통과한다.
- * 값을 고치는 것은 B5 후속(#20 · #24)의 몫이라 여기서는 기록만 한다.
+ * 오늘 미달인 쌍 — `mode:fg/bg`. 첫 실행 실측(2026-09-30, C2) 7 → #55 에서 글자 쌍 다섯을 토큰 값으로 고쳐 2. **줄어들기만 한다**:
+ * 토큰을 고쳐 통과하면 여기서 지워야 통과한다. 남은 둘은 글자가 아닌 경계(1.4.11, 3:1)다 — border-strong 을 3:1 로 올리면 라이트가
+ * #d8dde8 → #8d94a3 로 입력·체크박스·outline 버튼 외곽이 한꺼번에 세 배 진해져, 값 조정이 아니라 디자인 결정이라 따로 묻는다(#55 보고).
  */
-const KNOWN_FAILURES: readonly string[] = [
-  "dark:border-strong/card",
-  "light:border-strong/card",
-  "light:destructive/destructive-soft",
-  "light:muted-foreground/background",
-  "light:success/success-soft",
-  "light:warning/card",
-  "light:warning/warning-soft",
-];
+const KNOWN_FAILURES: readonly string[] = ["dark:border-strong/card", "light:border-strong/card"];
 
 type Rgb = readonly [r: number, g: number, b: number];
 interface Rgba {

@@ -62,8 +62,6 @@ export const Default: Story = {
 
 /* 부품 전부 — 톤 두 값(neutral · destructive), 단축키, 비활성, 체크 · 라디오 항목, 머리글, 구분선, 하위 메뉴 트리거. */
 export const Variants: Story = {
-  // color-contrast: 단축키 kbd 의 text-foreground-disabled(2.43:1) — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #20 · #24)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   tags: ["!manifest"],
   render: (args) => (
     <DropdownMenu open modal={false}>
@@ -105,8 +103,6 @@ export const Variants: Story = {
 
 /* 같은 메뉴를 라이트·다크로 — 포털이 칸을 벗어나므로 상자에 `data-theme` 을 직접 단다. */
 export const ThemeContrast: Story = {
-  // color-contrast: ThemeSides 칸 머리글(text-muted-foreground 4.33:1)이 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #20 · #24) — Button ThemeContrast 와 같은 면제
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <ThemeSides>
       {(theme) => (

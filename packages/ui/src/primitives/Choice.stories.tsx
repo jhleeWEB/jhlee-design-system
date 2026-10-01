@@ -42,8 +42,6 @@ function Cell({ kind, state }: { kind: Kind; state: State }) {
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: Matrix 머리(text-micro muted-foreground)와 판정 톤 글자 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <div className="flex flex-col gap-6">
       <Matrix
@@ -62,8 +60,6 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: ThemePair 머리(text-micro muted-foreground, 라이트) — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #23)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <ThemePair>
       <Checkbox {...args} />

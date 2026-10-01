@@ -23,8 +23,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  // color-contrast: 이름(dt)의 muted-foreground 가 bg-background 위에서 4.33 — 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #20 · #24)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   play: async ({ canvas }) => {
     await expect(canvas.getByText("Balance")).toBeInTheDocument();
     await expect(canvas.getByTitle("Provisional")).toHaveTextContent("1,302 m²");
@@ -33,8 +31,6 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: 이름(dt)의 muted-foreground — 토큰 값의 몫(#20 · #24)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   args: {
     rows: [
       { k: "text", v: "North-east" },
@@ -47,8 +43,6 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: 라이트의 muted-foreground 라벨·이름 — 토큰 값의 몫(#20 · #24)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <ThemePair>
       <DescriptionList {...args} />

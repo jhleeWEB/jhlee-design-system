@@ -93,8 +93,6 @@ export const Variants: Story = {
 
 /* 같은 상자를 라이트·다크로 — 포털이 칸을 벗어나므로 상자에 `data-theme` 을 직접 단다. 둘이 겹치지 않게 좌우 4분점에 둔다. */
 export const ThemeContrast: Story = {
-  // color-contrast: ThemeSides 칸 머리글(text-muted-foreground 4.33:1)이 토큰 값의 몫(contrast.spec KNOWN_FAILURES · #20 · #24) — Button ThemeContrast 와 같은 면제
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   args: { size: "sm" },
   render: (args) => (
     <ThemeSides>

@@ -111,7 +111,8 @@ export function DropdownMenuItem({
       ) : (
         <span className="min-w-0 flex-1 truncate">{children}</span>
       )}
-      {shortcut ? <kbd className="font-mono text-micro text-foreground-disabled">{shortcut}</kbd> : null}
+      {/* 단축키는 비활성이 아니라 보조 정보다 — foreground-disabled(2.43:1)는 읽히지 않아 muted 로 둔다(#55). */}
+      {shortcut ? <kbd className="font-mono text-micro text-muted-foreground">{shortcut}</kbd> : null}
     </Radix.Item>
   );
 }

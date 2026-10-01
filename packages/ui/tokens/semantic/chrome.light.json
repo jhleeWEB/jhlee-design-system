@@ -23,8 +23,8 @@
     "foreground": { "$value": "{palette.cool.900}", "$description": "글자(옛 ink)." },
     "foreground-2": { "$value": "{palette.cool.600}", "$description": "한 단 약한 글자(옛 ink-2)." },
     "muted-foreground": {
-      "$value": "{palette.cool.500}",
-      "$description": "보조 글자 — 라벨 · 설명(옛 muted)."
+      "$value": "{palette.cool.550}",
+      "$description": "보조 글자 — 라벨 · 설명(옛 muted). 글자가 놓이는 가장 어두운 면(secondary 4.52 · primary-track 4.60 · background 4.74)까지 AA 를 넘는 단(#55, 옛 cool.500 은 background 4.33)."
     },
     "foreground-disabled": { "$value": "{palette.cool.400}", "$description": "비활성 글자(옛 disabled)." },
     "border": {
@@ -67,8 +67,8 @@
     },
     "tooltip-foreground": { "$value": "{palette.cool.25}", "$description": "툴팁 글자(옛 tooltip-ink)." },
     "success": {
-      "$value": "{palette.moss.500}",
-      "$description": "판정 «통과» — 채움(solid) · 글자(text)(옛 ok)."
+      "$value": "{palette.moss.550}",
+      "$description": "판정 «통과» — 채움(solid) · 글자(text)(옛 ok). 글자로서 soft 4.59 · background 4.58 · card 5.17(#55, 옛 moss.500 은 soft 4.25)."
     },
     "success-hover": {
       "$value": "{palette.moss.700}",
@@ -76,27 +76,30 @@
     },
     "success-foreground": {
       "$value": "{palette.cool.0}",
-      "$description": "solid 위의 글자 — 흰색 4.78:1(옛 ok-ink)."
+      "$description": "solid 위의 글자 — 흰색 5.17:1(옛 ok-ink)."
     },
     "success-soft": { "$value": "{palette.moss.50}", "$description": "옅은 면 — 배지 · 알림 바탕." },
     "success-line": {
       "$value": "{palette.moss.400}",
       "$description": "테두리 — 면 위 3:1(비텍스트 경계). 옛 border-ok/35 · /40 혼용을 이것 하나로."
     },
-    "warning": { "$value": "{palette.amber.500}", "$description": "판정 «주의»(옛 warn)." },
-    "warning-hover": { "$value": "{palette.amber.600}" },
+    "warning": {
+      "$value": "{palette.amber.650}",
+      "$description": "판정 «주의»(옛 warn). 글자로서 soft 4.67 · background 4.55 · card 5.14(#55, 옛 amber.500 은 card 3.79 · soft 3.45)."
+    },
+    "warning-hover": { "$value": "{palette.amber.700}", "$description": "650 보다 어둡게 — 흰 글자 5.71:1." },
     "warning-foreground": {
-      "$value": "{palette.cool.950}",
-      "$description": "amber 위의 흰 글자는 3.79:1 — 어두운 글자(4.91:1)만 4.5 를 넘는다(옛 warn-ink)."
+      "$value": "{palette.cool.0}",
+      "$description": "solid 위의 글자 — 흰색 5.14:1(#55). 옛 amber.500 위에서는 흰색이 3.79:1 이라 cool.950 이었다(옛 warn-ink)."
     },
     "warning-soft": { "$value": "{palette.amber.50}" },
     "warning-line": { "$value": "{palette.amber.400}" },
     "destructive": {
-      "$value": "{palette.rust.500}",
-      "$description": "판정 «실패» · 파괴적 동작(옛 danger)."
+      "$value": "{palette.rust.550}",
+      "$description": "판정 «실패» · 파괴적 동작(옛 danger). 글자로서 soft 4.55 · background 4.70 · card 5.31(#55, 옛 rust.500 은 soft 4.43)."
     },
     "destructive-hover": { "$value": "{palette.rust.700}" },
-    "destructive-foreground": { "$value": "{palette.cool.0}", "$description": "흰색 5.18:1(옛 danger-ink)." },
+    "destructive-foreground": { "$value": "{palette.cool.0}", "$description": "흰색 5.31:1(옛 danger-ink)." },
     "destructive-soft": { "$value": "{palette.rust.50}" },
     "destructive-line": { "$value": "{palette.rust.300}" },
     "info": {

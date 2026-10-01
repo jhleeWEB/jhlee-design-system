@@ -60,8 +60,6 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
-  // color-contrast: 행 머리의 muted-foreground 와 success·warning 톤 글자가 bg-background 위에서 4.5 미만 — 토큰 값의 몫(#20 · #24)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <Table {...args}>
       <Thead>
@@ -92,8 +90,6 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: 라이트의 muted-foreground 라벨·success 톤 글자 — 토큰 값의 몫(#20 · #24)
-  parameters: { a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } } },
   render: (args) => (
     <ThemePair>
       <Table {...args}>

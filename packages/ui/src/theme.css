@@ -69,6 +69,18 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* 맨 버튼이 글자 모양을 부모에서 받는다(#55). preflight 를 싣지 않으므로(머리 주석) UA 의 button 규칙(font: -webkit-small-control ·
+   letter-spacing: normal · text-transform: none)이 남아, tokens.css 가 inherit 하는 family · size · color 밖의 **굵기 · 줄높이 · 자간 · 대문자** 가
+   끊긴다 — MediaCard 제목 버튼이 semibold 대신 400 으로, DataTable 정렬 머리가 uppercase · tracking-caps 없이 그려졌다. 이 클래스는 #55 전까지
+   CSS 가 없는 이름이었다. 전역 요소 규칙으로 넓히면 굵기를 적지 않은 모든 버튼이 부모 굵기를 따라 바뀌므로 유틸 하나로 둔다.
+   `font` 단축이 크기까지 덮으므로 같은 요소에 text-<크기> 를 함께 두지 않는다(부모에 둔다). */
+@utility font-inherit {
+  font: inherit;
+  font-feature-settings: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
 /* 포커스 링은 한 벌이다. 컴포넌트마다 다시 쓰면 굵기와 색이 갈린다. */
 @utility focus-ring {
   outline: 2px solid var(--chrome-ring);

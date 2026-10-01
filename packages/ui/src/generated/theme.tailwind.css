@@ -31,6 +31,10 @@
   --tracking-tight: -0.025em;
   --tracking-caps: 0.09em;
 
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
   --font-weight-*: initial;
   --font-weight-normal: 400;
   --font-weight-medium: 500;

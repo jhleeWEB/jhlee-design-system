@@ -11,14 +11,26 @@ const sections = [
   { value: "review", title: "Review", body: "Checks that passed and those that did not." },
 ] as const;
 
-/* 열린 본문은 트리거 이름을 단 region 랜드마크다 — 한 화면에 여러 Accordion 을 둘 때는 `scope` 로 이름을 갈라야 landmark-unique 를 지킨다. */
-function Sections({ disabled, scope }: { disabled?: string; scope?: string }) {
+/* 열린 본문은 트리거 이름을 단 region 랜드마크다 — 한 화면에 여러 Accordion 을 둘 때는 `scope` 로 이름을 갈라야 landmark-unique 를 지킨다.
+   `hiddenScope` 는 같은 일을 화면에 보이지 않게 한다 — ThemeContrast 가 두 테마에 같은 그림을 그려야 해서(#55). */
+function Sections({
+  disabled,
+  scope,
+  hiddenScope,
+}: {
+  disabled?: string;
+  scope?: string;
+  hiddenScope?: string;
+}) {
   return (
     <>
       {sections.map((section) => (
         <AccordionItem key={section.value} value={section.value} disabled={section.value === disabled}>
           <AccordionHeader>
-            <AccordionTrigger>{scope ? `${section.title} · ${scope}` : section.title}</AccordionTrigger>
+            <AccordionTrigger>
+              {scope ? `${section.title} · ${scope}` : section.title}
+              {hiddenScope ? <span className="sr-only"> · {hiddenScope}</span> : null}
+            </AccordionTrigger>
           </AccordionHeader>
           <AccordionContent>{section.body}</AccordionContent>
         </AccordionItem>
@@ -71,23 +83,13 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
-  // color-contrast: ThemePair 의 테마 라벨과 muted 글자 — 토큰 값의 몫(#23)
-  // landmark-unique: ThemePair 가 같은 args 를 두 번 그려 같은 이름의 랜드마크가 둘 선다 — 하네스의 산물이지 컴포넌트의 위반이 아니다
-  parameters: {
-    a11y: {
-      config: {
-        rules: [
-          { id: "color-contrast", enabled: false },
-          { id: "landmark-unique", enabled: false },
-        ],
-      },
-    },
-  },
   render: (args) => (
     <ThemePair>
-      <Accordion {...args} className="w-full">
-        <Sections />
-      </Accordion>
+      {(theme) => (
+        <Accordion {...args} className="w-full">
+          <Sections hiddenScope={theme} />
+        </Accordion>
+      )}
     </ThemePair>
   ),
 };
