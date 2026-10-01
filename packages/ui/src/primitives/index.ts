@@ -10,6 +10,17 @@ export { buttonVariants, type ButtonTone } from "./Button.variants";
 export { PanelToggleButton, type PanelToggleButtonProps } from "./PanelToggleButton";
 export { Checkbox, RadioGroup, RadioGroupItem, Switch } from "./Choice";
 export {
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxTrigger,
+  type ComboboxContentProps,
+  type ComboboxItemProps,
+  type ComboboxProps,
+  type ComboboxTriggerProps,
+} from "./Combobox";
+export { comboboxTriggerVariants } from "./Combobox.variants";
+export {
   Field,
   FieldControl,
   FieldDescription,

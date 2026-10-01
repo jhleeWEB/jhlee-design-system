@@ -35,6 +35,12 @@
         "width": { "$value": "9px" },
         "height": { "$value": "4px" }
       }
+    },
+    "command": {
+      "list": {
+        "$value": "300px",
+        "$description": "Command(명령 팔레트 · Combobox 목록)의 목록 최대 높이 — 항목 한 줄(py-2 + text-body ≈ 36px)이 여덟 줄 남짓 보이고 그 밖은 목록 안에서 스크롤한다. cmdk·shadcn 의 관행값(300px)과 같다(#61). 높이가 고정이 아니라 상한이라 거른 결과가 적으면 줄어든다."
+      }
     }
   }
 }

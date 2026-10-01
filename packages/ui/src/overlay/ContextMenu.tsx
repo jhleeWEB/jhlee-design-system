@@ -1,74 +1,76 @@
 "use client";
-import { DropdownMenu as Radix, Slot } from "radix-ui";
+import { ContextMenu as Radix, Slot } from "radix-ui";
 
 import { cn } from "../cn";
-import { dropdownMenuContentVariants, dropdownMenuItemVariants } from "./DropdownMenu.variants";
+import { contextMenuContentVariants, contextMenuItemVariants } from "./ContextMenu.variants";
 
-/* 드롭다운 메뉴 — 목록에서 **하나를 실행**한다. 값을 고르는 것은 `Select` 다.
- * 그 구분이 흐려지면 「적용됨」 표시를 어디에 둘지가 매번 다시 문제가 된다.
+/* 우클릭 메뉴 — 영역을 우클릭(터치는 길게 누르기)하면 **그 자리에서** 실행 목록을 연다. 캔버스의 선택 객체 · 표의 행처럼
+ * 버튼을 따로 둘 자리가 없는 대상에 붙인다. 같은 동작은 반드시 다른 길(툴바 · DropdownMenu · 단축키)에도 있어야 한다 —
+ * 우클릭은 발견되지 않는 입력이다.
  *
- * 부품마다 `data-slot` 을 `{...rest}` **뒤**에 둔다 — 소비자가 넘긴 data-slot 이 DS 의 손잡이를 덮지 못하게 한다(slot-locked, D3 #44).
- * Radix 를 그대로 재수출하던 Trigger · Group · RadioGroup 도 같은 이유로 얇게 감싼다(className 을 twMerge 로 합친다). */
+ * 면과 항목은 DropdownMenu 와 같다(`ContextMenu.variants.ts` 가 같은 cva 객체를 다시 내보낸다). 부품도 DropdownMenu 와 한 벌로 이름 붙인다 —
+ * Item 의 `tone` · `shortcut`, CheckboxItem · RadioItem 의 표시, Label · Separator · Sub 까지 같은 모양이다.
+ *
+ * 부품마다 `data-slot` 을 `{...rest}` **뒤**에 둔다(slot-locked, D3 #44). */
 
-/** 메뉴의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다. 자기 DOM 은 없다(Radix `DropdownMenu.Root`). */
-export const DropdownMenu = Radix.Root;
+/** 우클릭 메뉴의 루트 — 열림 알림(`onOpenChange`)과 모달성(`modal`)만 든다. 자기 DOM 은 없다(Radix `ContextMenu.Root`). 열림은 트리거의 우클릭이 정한다(`open` prop 이 없다). */
+export const ContextMenu = Radix.Root;
 
-/** 하위 메뉴의 루트 — `DropdownMenuSubTrigger` 와 `DropdownMenuSubContent` 를 묶는다. 자기 DOM 은 없다(Radix `DropdownMenu.Sub`). */
-export const DropdownMenuSub = Radix.Sub;
+/** 하위 메뉴의 루트 — `ContextMenuSubTrigger` 와 `ContextMenuSubContent` 를 묶는다. 자기 DOM 은 없다(Radix `ContextMenu.Sub`). */
+export const ContextMenuSub = Radix.Sub;
 
 /**
- * 메뉴를 여는 버튼. `asChild` 로 DS `Button` 을 트리거로 쓴다.
- * @slot menu-trigger
+ * 우클릭을 받는 영역 — 기본은 `<span>` 이다. 블록 영역(캔버스 · 카드 · 표 행)이면 `asChild` 로 그 요소를 쓴다.
+ * `disabled` 면 브라우저의 기본 메뉴가 뜬다.
+ * @slot context-menu-trigger
  */
-export function DropdownMenuTrigger({
+export function ContextMenuTrigger({
   className,
   ...rest
 }: React.ComponentPropsWithRef<typeof Radix.Trigger>) {
-  return <Radix.Trigger className={cn(className)} {...rest} data-slot="menu-trigger" />;
+  return <Radix.Trigger className={cn(className)} {...rest} data-slot="context-menu-trigger" />;
 }
 
 /**
- * 메뉴 상자. 포털의 마운트 수명은 DS가 소유하므로 Content만 forceMount하는 조합은 공개하지 않는다.
- * @slot menu
+ * 메뉴 상자 — 포인터 자리에 뜬다. 포털의 마운트 수명은 DS 가 소유하므로 Content 만 forceMount 하는 조합은 공개하지 않는다.
+ * @slot context-menu
  */
-export function DropdownMenuContent({
+export function ContextMenuContent({
   className,
-  sideOffset = 4,
   ...rest
 }: Omit<React.ComponentPropsWithRef<typeof Radix.Content>, "forceMount">) {
   return (
     <Radix.Portal>
       <Radix.Content
-        sideOffset={sideOffset}
-        className={cn(dropdownMenuContentVariants(), className)}
+        className={cn(contextMenuContentVariants(), className)}
         {...rest}
-        data-slot="menu"
+        data-slot="context-menu"
       />
     </Radix.Portal>
   );
 }
 
 /**
- * 항목 묶음 — 시각 구분 없이 의미만 묶는다(구분선은 `DropdownMenuSeparator`).
- * @slot menu-group
+ * 항목 묶음 — 시각 구분 없이 의미만 묶는다(구분선은 `ContextMenuSeparator`).
+ * @slot context-menu-group
  */
-export function DropdownMenuGroup({ className, ...rest }: React.ComponentPropsWithRef<typeof Radix.Group>) {
-  return <Radix.Group className={cn(className)} {...rest} data-slot="menu-group" />;
+export function ContextMenuGroup({ className, ...rest }: React.ComponentPropsWithRef<typeof Radix.Group>) {
+  return <Radix.Group className={cn(className)} {...rest} data-slot="context-menu-group" />;
 }
 
 /**
  * 라디오 항목 묶음 — `value` · `onValueChange` 로 하나를 고른 상태를 든다.
- * @slot menu-radio-group
+ * @slot context-menu-radio-group
  */
-export function DropdownMenuRadioGroup({
+export function ContextMenuRadioGroup({
   className,
   ...rest
 }: React.ComponentPropsWithRef<typeof Radix.RadioGroup>) {
-  return <Radix.RadioGroup className={cn(className)} {...rest} data-slot="menu-radio-group" />;
+  return <Radix.RadioGroup className={cn(className)} {...rest} data-slot="context-menu-radio-group" />;
 }
 
-/** `DropdownMenuItem` 의 props. */
-export interface DropdownMenuItemProps extends React.ComponentPropsWithRef<typeof Radix.Item> {
+/** `ContextMenuItem` 의 props. */
+export interface ContextMenuItemProps extends React.ComponentPropsWithRef<typeof Radix.Item> {
   /**
    * 톤.
    * - `neutral` — 일반 동작(기본)
@@ -85,22 +87,22 @@ export interface DropdownMenuItemProps extends React.ComponentPropsWithRef<typeo
 
 /**
  * 실행 항목 — 누르면 동작하고 메뉴가 닫힌다.
- * @slot menu-item
+ * @slot context-menu-item
  */
-export function DropdownMenuItem({
+export function ContextMenuItem({
   className,
   tone,
   shortcut,
   children,
   asChild = false,
   ...rest
-}: DropdownMenuItemProps) {
+}: ContextMenuItemProps) {
   return (
     <Radix.Item
       asChild={asChild}
-      className={cn(dropdownMenuItemVariants({ tone }), className)}
+      className={cn(contextMenuItemVariants({ tone }), className)}
       {...rest}
-      data-slot="menu-item"
+      data-slot="context-menu-item"
       // cva 축은 해석된 값(기본값 포함)으로 찍는다 — 스토리 격자·소비자 선택자가 같은 이름을 읽는다.
       data-tone={tone ?? "neutral"}
     >
@@ -119,9 +121,9 @@ export function DropdownMenuItem({
 
 /**
  * 켜고 끄는 항목 — `checked` · `onCheckedChange`. 켜지면 왼쪽에 체크 표시가 선다.
- * @slot menu-checkbox-item
+ * @slot context-menu-checkbox-item
  */
-export function DropdownMenuCheckboxItem({
+export function ContextMenuCheckboxItem({
   className,
   children,
   asChild = false,
@@ -130,9 +132,9 @@ export function DropdownMenuCheckboxItem({
   return (
     <Radix.CheckboxItem
       asChild={asChild}
-      className={cn(dropdownMenuItemVariants(), "pl-8", className)}
+      className={cn(contextMenuItemVariants(), "pl-8", className)}
       {...rest}
-      data-slot="menu-checkbox-item"
+      data-slot="context-menu-checkbox-item"
     >
       <Radix.ItemIndicator className="absolute left-3">
         <svg viewBox="0 0 16 16" aria-hidden="true" className="size-6 text-primary">
@@ -152,10 +154,10 @@ export function DropdownMenuCheckboxItem({
 }
 
 /**
- * 라디오 항목 — `DropdownMenuRadioGroup` 안에서 하나만 고른다. 고르면 왼쪽에 점이 선다.
- * @slot menu-radio-item
+ * 라디오 항목 — `ContextMenuRadioGroup` 안에서 하나만 고른다. 고르면 왼쪽에 점이 선다.
+ * @slot context-menu-radio-item
  */
-export function DropdownMenuRadioItem({
+export function ContextMenuRadioItem({
   className,
   children,
   asChild = false,
@@ -164,9 +166,9 @@ export function DropdownMenuRadioItem({
   return (
     <Radix.RadioItem
       asChild={asChild}
-      className={cn(dropdownMenuItemVariants(), "pl-8", className)}
+      className={cn(contextMenuItemVariants(), "pl-8", className)}
       {...rest}
-      data-slot="menu-radio-item"
+      data-slot="context-menu-radio-item"
     >
       <Radix.ItemIndicator className="absolute left-4">
         <span className="block size-3 rounded-full bg-primary" />
@@ -178,9 +180,9 @@ export function DropdownMenuRadioItem({
 
 /**
  * 묶음의 머리글 — mono 대문자 미세라벨. 누를 수 없다.
- * @slot menu-label
+ * @slot context-menu-label
  */
-export function DropdownMenuLabel({ className, ...rest }: React.ComponentPropsWithRef<typeof Radix.Label>) {
+export function ContextMenuLabel({ className, ...rest }: React.ComponentPropsWithRef<typeof Radix.Label>) {
   return (
     <Radix.Label
       className={cn(
@@ -188,16 +190,16 @@ export function DropdownMenuLabel({ className, ...rest }: React.ComponentPropsWi
         className,
       )}
       {...rest}
-      data-slot="menu-label"
+      data-slot="context-menu-label"
     />
   );
 }
 
 /**
  * 묶음 사이 구분선 — 메뉴 상자의 안쪽 여백까지 가로지른다.
- * @slot menu-separator
+ * @slot context-menu-separator
  */
-export function DropdownMenuSeparator({
+export function ContextMenuSeparator({
   className,
   ...rest
 }: React.ComponentPropsWithRef<typeof Radix.Separator>) {
@@ -205,16 +207,16 @@ export function DropdownMenuSeparator({
     <Radix.Separator
       className={cn("-mx-2 my-2 h-px bg-border", className)}
       {...rest}
-      data-slot="menu-separator"
+      data-slot="context-menu-separator"
     />
   );
 }
 
 /**
  * 하위 메뉴를 여는 항목 — 오른쪽에 펼침 화살표가 붙는다.
- * @slot menu-sub-trigger
+ * @slot context-menu-sub-trigger
  */
-export function DropdownMenuSubTrigger({
+export function ContextMenuSubTrigger({
   className,
   children,
   asChild = false,
@@ -223,9 +225,9 @@ export function DropdownMenuSubTrigger({
   return (
     <Radix.SubTrigger
       asChild={asChild}
-      className={cn(dropdownMenuItemVariants(), "data-[state=open]:bg-muted", className)}
+      className={cn(contextMenuItemVariants(), "data-[state=open]:bg-muted", className)}
       {...rest}
-      data-slot="menu-sub-trigger"
+      data-slot="context-menu-sub-trigger"
     >
       {asChild ? (
         <Slot.Slottable child={children}>
@@ -250,18 +252,18 @@ export function DropdownMenuSubTrigger({
 
 /**
  * 하위 메뉴 상자 — 메뉴 상자와 같은 면.
- * @slot menu-sub-content
+ * @slot context-menu-sub-content
  */
-export function DropdownMenuSubContent({
+export function ContextMenuSubContent({
   className,
   ...rest
 }: Omit<React.ComponentPropsWithRef<typeof Radix.SubContent>, "forceMount">) {
   return (
     <Radix.Portal>
       <Radix.SubContent
-        className={cn(dropdownMenuContentVariants(), className)}
+        className={cn(contextMenuContentVariants(), className)}
         {...rest}
-        data-slot="menu-sub-content"
+        data-slot="context-menu-sub-content"
       />
     </Radix.Portal>
   );
