@@ -1,0 +1,112 @@
+/* 생성물 — 손으로 고치지 않는다.
+ * 정본: packages/ui/src/cursors/cursors.ts → tokens/build.mjs · 재생성 `pnpm tokens:build` · 최신성 `pnpm tokens:check` (#15) */
+
+/* 커서 유틸리티 — 값은 cursors.css 의 --cursor-*. 이름의 `cad-` 는 Tailwind 내장 cursor-* 키워드 유틸리티와 겹치지 않게 한다(formats/cursors.mjs 머리). */
+
+@utility cursor-cad-select {
+  cursor: var(--cursor-select);
+}
+
+@utility cursor-cad-select-add {
+  cursor: var(--cursor-select-add);
+}
+
+@utility cursor-cad-select-subtract {
+  cursor: var(--cursor-select-subtract);
+}
+
+@utility cursor-cad-copy {
+  cursor: var(--cursor-copy);
+}
+
+@utility cursor-cad-orbit {
+  cursor: var(--cursor-orbit);
+}
+
+@utility cursor-cad-pan {
+  cursor: var(--cursor-pan);
+}
+
+@utility cursor-cad-grab {
+  cursor: var(--cursor-grab);
+}
+
+@utility cursor-cad-grabbing {
+  cursor: var(--cursor-grabbing);
+}
+
+@utility cursor-cad-zoom-in {
+  cursor: var(--cursor-zoom-in);
+}
+
+@utility cursor-cad-zoom-out {
+  cursor: var(--cursor-zoom-out);
+}
+
+@utility cursor-cad-zoom-window {
+  cursor: var(--cursor-zoom-window);
+}
+
+@utility cursor-cad-move {
+  cursor: var(--cursor-move);
+}
+
+@utility cursor-cad-rotate {
+  cursor: var(--cursor-rotate);
+}
+
+@utility cursor-cad-scale {
+  cursor: var(--cursor-scale);
+}
+
+@utility cursor-cad-crosshair {
+  cursor: var(--cursor-crosshair);
+}
+
+@utility cursor-cad-snap {
+  cursor: var(--cursor-snap);
+}
+
+@utility cursor-cad-draw {
+  cursor: var(--cursor-draw);
+}
+
+@utility cursor-cad-add-point {
+  cursor: var(--cursor-add-point);
+}
+
+@utility cursor-cad-measure {
+  cursor: var(--cursor-measure);
+}
+
+@utility cursor-cad-section {
+  cursor: var(--cursor-section);
+}
+
+@utility cursor-cad-eyedropper {
+  cursor: var(--cursor-eyedropper);
+}
+
+@utility cursor-cad-resize-ns {
+  cursor: var(--cursor-resize-ns);
+}
+
+@utility cursor-cad-resize-ew {
+  cursor: var(--cursor-resize-ew);
+}
+
+@utility cursor-cad-resize-nesw {
+  cursor: var(--cursor-resize-nesw);
+}
+
+@utility cursor-cad-resize-nwse {
+  cursor: var(--cursor-resize-nwse);
+}
+
+@utility cursor-cad-not-allowed {
+  cursor: var(--cursor-not-allowed);
+}
+
+@utility cursor-cad-wait {
+  cursor: var(--cursor-wait);
+}

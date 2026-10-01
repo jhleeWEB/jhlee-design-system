@@ -86,7 +86,7 @@ jobs:
           pnpm exec publint --strict
           # attw --pack 은 npm pack 을 써서 pnpm 의 publishConfig.exports 치환을 못 받는다 — pnpm 이 만든 tarball 을 직접 검사한다
           pnpm pack --pack-destination /tmp/pack
-          pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics testing eslint   # CSS 서브패스는 타입 해석 대상이 아니다
+          pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics testing eslint icons   # CSS 서브패스는 타입 해석 대상이 아니다
           tar -tzf /tmp/pack/*.tgz | tee /tmp/pack/list.txt
           # AI 친화 산출물(#31): 프리셋 · bin · 매니페스트 · llms.txt · AGENTS 블록 · 스킬 · 컴포넌트 문서
           for f in package/dist/index.js package/dist/index.d.ts package/dist/canvas-metrics.js package/dist/testing/index.js package/dist/testing/index.d.ts package/dist/eslint/index.js package/dist/eslint/index.d.ts package/dist/agent/cli.js package/dist/components.manifest.json package/llms.txt package/agent/AGENTS.block.md package/agent/skills/squircle-ds/SKILL.md package/docs/components/README.md package/dist/theme.css package/dist/corner.css package/dist/tokens.css package/dist/generated/tokens.css package/dist/generated/theme.tailwind.css package/dist/canvas.css; do

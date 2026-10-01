@@ -47,6 +47,13 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              «`값` — 설명» 줄. react-docgen-typescript 는 쓰지 않는다. 게이트 `__tests__/package/manifest.spec.ts`(전수 포함 · client 일치 불변식 + KNOWN_GAPS 래칫)
   scripts/build-docs.ts      같은 매니페스트에서 `llms.txt`(llmstxt.org · «shadcn 과 다른 점» 은 docs/design-tokens.md 복사)와 `docs/components/*.md` 를 만든다. **둘은 커밋하는
                              생성물**이고 `pnpm manifest:check` 가 최신성을 강제한다(CI unit job · verify). `pnpm build` 가 tsdown 뒤에 둘을 이어 돌린다
+  src/icons/                 **아이콘 서브패스 `./icons`**(#64) — `glyphs.ts` 가 글리프 정본(24 뷰박스 · 획 2 · round · currentColor, `lucide` 필드가 있으면 lucide 경로를
+                             글자 그대로 — 고지 `LICENSE-lucide.txt` 가 dist/icons/ 로 실린다), `createIcon.tsx` 가 팩토리(기본 16px = `lib/icons` 의 ICON = `--size-icon-md` ·
+                             장식이면 aria-hidden · `title` 이면 role="img"), `icons.ts` 가 `Icon<Pascal>` 목록과 `icons` 맵(패키지 안은 이 파일을 import), `index.ts` 가 서브패스 진입.
+                             순수 모듈(지시문 없음). `react-icons` 의존은 없다 — 옮긴 자리는 같은 경로라 VRT 0 diff. 카탈로그 `Foundations/Icons`(stories/Icons.stories.tsx)
+  src/cursors/cursors.ts     3D 모델링 커서 정본(#64) — 32px SVG 조각(글리프 재사용) · 핫스팟 · 키워드 폴백. `tokens/build.mjs` 가 `formats/cursors.mjs` 로
+                             `generated/cursors.css`(:root `--cursor-*`, tokens.css 가 @import)와 `generated/cursors.tailwind.css`(`@utility cursor-cad-*`, theme.css 가 @import)를
+                             쓴다(`tokens:check` 대상). 유틸리티의 `cad-` 는 Tailwind 내장 `cursor-move` 류와 합쳐져 덮는 것을 피한다. JS 배포물에는 없다. 카탈로그 `Foundations/Cursors`
   src/lib/tone.ts            톤 어휘 한 벌(`toneValues` · `Tone`). 옛 키 shim `normalizeTone()` 은 3.0.0 에서 지웠다 — 옛 키는 타입 오류, 이행은 `ds/legacy-tone --fix`(#49)
   src/tokens.css             `generated/tokens.css` 재수출 + 원칙을 강제하는 요소 규칙(box-sizing · body · 컨트롤 radius 0 · .num). 값은 없다
   src/theme.css              tokens.css + `generated/theme.tailwind.css` 재수출, @source "./" 자기 등록, 컴포넌트 CSS(@import), keyframes,
@@ -147,7 +154,7 @@ pnpm --filter @jhleeweb/squircle-design-system test:tokens    # arch 프로젝�
 pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(a11y test 'error', C2)
 pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
 VRT_CHECK=1 sh scripts/vrt-update.sh                           # 도커 컨테이너에서 갱신 없이 0 diff 검사 — 시각이 바뀌면 안 되는 PR 의 머지 전 확인
-cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics testing eslint   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
+cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics testing eslint icons   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
 ```
 
 **래칫 스펙.** `src/__arch__/forbidden-patterns.spec.ts` 는 토큰 밖 리터럴(tsx 대괄호 px/ms · Tailwind 기본 사다리 · CSS px/hex/ms · JS ms)·

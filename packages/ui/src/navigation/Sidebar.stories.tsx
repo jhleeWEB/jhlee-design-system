@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { LuFileText, LuLayers, LuMap, LuSettings } from "react-icons/lu";
 import { expect } from "storybook/test";
 
 import { ThemePair } from "../../stories/decorators/ThemePair";
+import { IconFileText, IconLayers, IconMap, IconSettings } from "../icons/icons";
 import { TooltipProvider } from "../overlay/Tooltip";
 import { Sidebar, SidebarGroup, SidebarItem, type SidebarProps } from "./Sidebar";
 
@@ -14,12 +14,12 @@ function Items() {
   return (
     <>
       <SidebarGroup label="Project">
-        <SidebarItem icon={<LuMap aria-hidden="true" />} label="Site" active badge="3" />
-        <SidebarItem icon={<LuLayers aria-hidden="true" />} label="Massing" badge="12" />
-        <SidebarItem icon={<LuFileText aria-hidden="true" />} label="Report" />
+        <SidebarItem icon={<IconMap />} label="Site" active badge="3" />
+        <SidebarItem icon={<IconLayers />} label="Massing" badge="12" />
+        <SidebarItem icon={<IconFileText />} label="Report" />
       </SidebarGroup>
       <SidebarGroup label="Workspace">
-        <SidebarItem icon={<LuSettings aria-hidden="true" />} label="Settings" shortcut="⌘," />
+        <SidebarItem icon={<IconSettings />} label="Settings" shortcut="⌘," />
       </SidebarGroup>
     </>
   );

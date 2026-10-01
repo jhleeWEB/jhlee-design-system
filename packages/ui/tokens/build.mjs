@@ -16,7 +16,9 @@ import { fileURLToPath } from "node:url";
 
 import StyleDictionary from "style-dictionary";
 
+import * as cursorSource from "../src/cursors/cursors.ts";
 import { cssVars } from "./formats/css-vars.mjs";
+import { cursorFiles } from "./formats/cursors.mjs";
 import { legacyClassRestrictions, legacyRenames } from "./legacy-map.mjs";
 import { declarations } from "./formats/shared.mjs";
 import { tailwindTheme } from "./formats/tailwind-theme.mjs";
@@ -106,6 +108,17 @@ outputs.push({
   name: "src/generated/legacy-classes.json",
   output: `${JSON.stringify(legacyClassRestrictions(legacyRenames()), null, 2)}\n`,
 });
+
+// 커서(#64)도 SD 를 거치지 않는다 — 정본이 `src/cursors/cursors.ts` 의 SVG 표다(formats/cursors.mjs 머리).
+const cursors = cursorFiles(cursorSource);
+outputs.push(
+  { path: join(OUT_DIR, "cursors.css"), name: "src/generated/cursors.css", output: cursors.css },
+  {
+    path: join(OUT_DIR, "cursors.tailwind.css"),
+    name: "src/generated/cursors.tailwind.css",
+    output: cursors.tailwind,
+  },
+);
 
 if (check) {
   const stale = outputs

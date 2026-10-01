@@ -5,9 +5,9 @@
  */
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { LuMaximize2, LuMinimize2 } from "react-icons/lu";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { IconMaximize, IconMinimize } from "../icons/icons";
 import { Input } from "../primitives/Input";
 import { PanelToggleButton } from "../primitives/PanelToggleButton";
 
@@ -54,19 +54,17 @@ describe("Input type=number — 선행 0(CLAUDE.md «DS Input 의 type=number»)
   });
 });
 
-describe("PanelToggleButton — 아이콘(CLAUDE.md «Lucide LuMinimize2/LuMaximize2 를 16px»)", () => {
-  const iconMarkup = (Icon: typeof LuMinimize2) => {
-    const { container, unmount } = render(
-      <Icon size={16} strokeWidth={2} aria-hidden="true" focusable={false} />,
-    );
+describe("PanelToggleButton — 아이콘(lucide minimize-2/maximize-2 를 16px, 자체 아이콘 #64)", () => {
+  const iconMarkup = (Icon: typeof IconMinimize) => {
+    const { container, unmount } = render(<Icon />);
     const html = container.querySelector("svg")!.outerHTML;
     unmount();
     return html;
   };
 
   it.each([
-    [true, "Collapse", LuMinimize2],
-    [false, "Show", LuMaximize2],
+    [true, "Collapse", IconMinimize],
+    [false, "Show", IconMaximize],
   ] as const)("open=%s → %s 라벨과 그 아이콘", (open, verb, Icon) => {
     const expected = iconMarkup(Icon);
     render(<PanelToggleButton open={open} onOpenChange={() => {}} label="inspector" />);

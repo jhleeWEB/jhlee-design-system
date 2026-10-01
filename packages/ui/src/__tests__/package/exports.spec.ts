@@ -30,6 +30,7 @@ describe("exports", () => {
         "./canvas-metrics",
         "./testing",
         "./eslint",
+        "./icons",
         "./theme.css",
         "./corner.css",
         "./tokens.css",
@@ -63,6 +64,11 @@ describe("exports", () => {
           "default": "./dist/eslint/index.js",
           "import": "./dist/eslint/index.js",
           "types": "./dist/eslint/index.d.ts",
+        },
+        "./icons": {
+          "default": "./dist/icons/index.js",
+          "import": "./dist/icons/index.js",
+          "types": "./dist/icons/index.d.ts",
         },
         "./package.json": "./package.json",
         "./testing": {

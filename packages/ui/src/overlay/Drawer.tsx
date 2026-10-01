@@ -1,10 +1,10 @@
 "use client";
 import { Dialog } from "radix-ui";
-import { LuX } from "react-icons/lu";
 
 import { SlottedButton } from "../primitives/Button";
 
 import { cn, type VariantProps } from "../cn";
+import { IconX } from "../icons/icons";
 import { drawerVariants } from "./Drawer.variants";
 import { ScrollArea } from "../navigation/ScrollArea";
 
@@ -133,8 +133,8 @@ export function DrawerHeader({ className, title, description, children, ...rest 
           aria-label="Close"
           className="-mt-1 -mr-2 shrink-0 [&_svg]:size-4"
         >
-          {/* 크기·굵기는 적지 않는다 — 버튼의 `[&_svg]:size-4`(16px) 가 1em 속성을 이기고, lucide 의 기본 stroke-width 가 2 다(jsx-size-number 0). */}
-          <LuX aria-hidden="true" focusable={false} />
+          {/* 크기·굵기는 적지 않는다 — 버튼의 `[&_svg]:size-4`(16px) 가 16 기본 속성을 이기고, 아이콘 기본 획이 2 다(jsx-size-number 0). */}
+          <IconX />
         </SlottedButton>
       </Dialog.Close>
     </div>

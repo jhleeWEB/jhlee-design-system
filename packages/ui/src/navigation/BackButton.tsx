@@ -1,7 +1,7 @@
 import type { RefAttributes } from "react";
-import { LuArrowLeft } from "react-icons/lu";
 
 import { cn } from "../cn";
+import { IconArrowLeft } from "../icons/icons";
 import { Button, type ButtonProps } from "../primitives/Button";
 
 /**
@@ -52,8 +52,8 @@ export function BackButton({
       className={cn("gap-2 [&_svg]:size-4", className)}
       {...props}
     >
-      {/* 크기(16px)는 위 `[&_svg]:size-4` 가, 선 굵기는 Lucide 기본(2)이 정한다 — 숫자 prop 을 두지 않는다(jsx-size-number 래칫). */}
-      <LuArrowLeft aria-hidden="true" focusable={false} />
+      {/* 크기(16px)는 위 `[&_svg]:size-4` 가, 선 굵기는 아이콘 기본(획 2, lib/icons 의 ICON)이 정한다 — 숫자 prop 을 두지 않는다(jsx-size-number 래칫). */}
+      <IconArrowLeft />
       {children}
     </Button>
   );
