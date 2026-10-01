@@ -14,7 +14,11 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Card](Card.md) | component | client | CardCollapse, CardHeader, CardWell | 카드 — 이 제품의 기본 구획 |
 | [CardGrid](CardGrid.md) | component | client |  | 카드 격자 — `auto-fit` 으로 항목이 남는 폭을 나눠 갖는다. |
 | [Checkbox](Checkbox.md) | component | client |  | 체크박스 — 여러 개를 독립적으로 켠다 |
+| [Collapsible](Collapsible.md) | component | client | CollapsibleContent, CollapsibleTrigger | 접기의 루트 — 열림 상태를 들고 `CollapsibleTrigger` · `CollapsibleContent` 를 담는다. |
+| [Combobox](Combobox.md) | component | client | ComboboxContent, ComboboxItem, ComboboxTrigger | 콤보박스의 루트 — 값과 열림을 들고 트리거 · 상자를 묶는다 |
+| [Command](Command.md) | component | client | CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator | 명령의 루트 — 검색어와 강조 항목을 든다 |
 | [ConfirmDialog](ConfirmDialog.md) | component | client |  | 확인 대화 — 되돌릴 수 없는 동작 앞에서 묻는다 |
+| [ContextMenu](ContextMenu.md) | component | client | ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger | 우클릭 메뉴의 루트 — 열림 알림(`onOpenChange`)과 모달성(`modal`)만 든다 |
 | [DataTable](DataTable.md) | component | client |  | 명세서 표 — 한 열 정렬 · 행 선택 · 합계 줄 · 줄 높이를 지키는 로딩 |
 | [DescriptionList](DescriptionList.md) | component | server ok |  | 이름-값 목록(`<dl>` 격자) — 이름은 왼쪽에서 말줄임, 값은 오른쪽 정렬. |
 | [DisplayHeading](DisplayHeading.md) | component | server ok |  | 들머리 제목 — 한 패널에 하나만. |
@@ -23,6 +27,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [EmptyState](EmptyState.md) | component | server ok |  | 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다. |
 | [Eyebrow](Eyebrow.md) | component | server ok |  | 들머리 눈썹 — 대문자 mono 한 줄 |
 | [Field](Field.md) | component | client | FieldControl, FieldDescription, FieldError, FieldLabel | 필드의 루트 — 라벨 · 컨트롤 · 설명 · 오류가 쓸 id 를 만들어 나눠 준다 |
+| [HoverCard](HoverCard.md) | component | client | HoverCardContent, HoverCardTrigger | 호버 카드의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 지연(`openDelay` · `closeDelay`)만 든다 |
 | [Input](Input.md) | component | client |  | 입력 — 글자와 수치 |
 | [Kbd](Kbd.md) | component | client |  | 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. |
 | [Lede](Lede.md) | component | server ok |  | 들머리 아래 한 문단 — 읽히도록 폭을 제한한다. |

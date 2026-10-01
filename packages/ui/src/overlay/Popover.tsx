@@ -2,6 +2,7 @@
 import { Popover as Radix, Slot } from "radix-ui";
 
 import { cn } from "../cn";
+import { popoverContentVariants } from "./Popover.variants";
 
 /* 팝오버 — 툴팁과 달리 **조작이 들어간다**(법규 근거 · 범례 제어 · 작은 폼).
  * 캔버스 위에 뜨는 경우가 많아 `onCanvas` 로 배경을 비칠 수 있게 둔다. */
@@ -69,10 +70,8 @@ export function PopoverContent({
         asChild={asChild}
         sideOffset={sideOffset}
         className={cn(
-          "z-popover w-(--radix-popover-trigger-width) max-w-popover-fluid min-w-popover-min",
-          "rounded-lg border border-border p-5 shadow-pop",
-          "animate-in-pop text-body text-foreground focus-visible:outline-none",
-          onCanvas ? "on-canvas" : "bg-card",
+          popoverContentVariants({ onCanvas: onCanvas ?? false }),
+          "w-(--radix-popover-trigger-width) max-w-popover-fluid min-w-popover-min",
           className,
         )}
         {...rest}

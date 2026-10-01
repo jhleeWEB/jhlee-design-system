@@ -13,6 +13,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { useEffect, useRef } from "react";
 import { describe, expect, it } from "vitest";
 
 import { runContract, type ContractSubject, type Probe } from "../__arch__/component-contract";
@@ -31,6 +32,34 @@ const {
   CardGrid,
   CardHeader,
   CardWell,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxTrigger,
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuGroup,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
   Drawer,
   DrawerBody,
   DrawerClose,
@@ -56,6 +85,9 @@ const {
   FieldDescription,
   FieldError,
   FieldLabel,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
   Lede,
   Legend,
   LegendItem,
@@ -151,6 +183,47 @@ const openSelect =
       <SelectContent>{child(p)}</SelectContent>
     </Select>
   );
+/* 우클릭 메뉴에는 `open` prop 이 없다 — 영역이 마운트되면 contextmenu 를 한 번 보내 연다(ContextMenu.stories 의 OpenedArea 와 같은 길). */
+function RightClicked({ children }: { children: React.ReactNode }) {
+  const area = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    area.current?.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
+  }, []);
+  return (
+    <ContextMenu modal={false}>
+      <ContextMenuTrigger asChild>
+        <div ref={area}>Area</div>
+      </ContextMenuTrigger>
+      {children}
+    </ContextMenu>
+  );
+}
+const openContextMenu =
+  (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
+  (p) => (
+    <RightClicked>
+      <ContextMenuContent>{child(p)}</ContextMenuContent>
+    </RightClicked>
+  );
+const inCommand =
+  (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
+  (p) => (
+    <Command>
+      <CommandInput />
+      <CommandList>{child(p)}</CommandList>
+    </Command>
+  );
+const openCombobox =
+  (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
+  (p) => (
+    <Combobox open defaultValue="a">
+      <ComboboxTrigger aria-label="Sheet">A</ComboboxTrigger>
+      <ComboboxContent>{child(p)}</ComboboxContent>
+    </Combobox>
+  );
+const inCollapsible =
+  (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
+  (p) => <Collapsible defaultOpen>{child(p)}</Collapsible>;
 const inTabs =
   (child: (p: Probe) => React.ReactNode): ContractSubject["render"] =>
   (p) => <Tabs defaultValue="a">{child(p)}</Tabs>;
@@ -257,6 +330,235 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       <Card>
         <CardWell {...p}>Well</CardWell>
       </Card>
+    ),
+  },
+  CollapsibleContent: {
+    slot: "collapsible-content",
+    render: inCollapsible((p) => (
+      <>
+        <CollapsibleTrigger>More</CollapsibleTrigger>
+        <CollapsibleContent {...p}>Body</CollapsibleContent>
+      </>
+    )),
+  },
+  CollapsibleTrigger: {
+    slot: "collapsible-trigger",
+    axes: ["variant"],
+    render: inCollapsible((p) => (
+      <>
+        <CollapsibleTrigger variant="inline" {...p}>
+          More
+        </CollapsibleTrigger>
+        <CollapsibleContent>Body</CollapsibleContent>
+      </>
+    )),
+  },
+  Combobox: {
+    // 자기 DOM 이 없는 루트(Radix Popover.Root 위) — 열린 상자로 slot · axe 를 본다.
+    slot: "combobox-content",
+    noDom: true,
+    render: (p) => (
+      <Combobox open defaultValue="a" {...p}>
+        <ComboboxTrigger aria-label="Sheet">A</ComboboxTrigger>
+        <ComboboxContent>
+          <ComboboxItem value="a">A</ComboboxItem>
+        </ComboboxContent>
+      </Combobox>
+    ),
+  },
+  ComboboxContent: {
+    slot: "combobox-content",
+    render: (p) => (
+      <Combobox open defaultValue="a">
+        <ComboboxTrigger aria-label="Sheet">A</ComboboxTrigger>
+        <ComboboxContent {...p}>
+          <ComboboxItem value="a">A</ComboboxItem>
+        </ComboboxContent>
+      </Combobox>
+    ),
+  },
+  ComboboxItem: {
+    slot: "combobox-item",
+    axes: ["tone"],
+    render: openCombobox((p) => (
+      <ComboboxItem value="a" {...p}>
+        A
+      </ComboboxItem>
+    )),
+  },
+  CommandDialog: {
+    slot: "command-dialog",
+    render: (p) => (
+      <CommandDialog open {...p}>
+        <Command>
+          <CommandInput />
+          <CommandList>
+            <CommandItem>Plan</CommandItem>
+          </CommandList>
+        </Command>
+      </CommandDialog>
+    ),
+  },
+  CommandEmpty: {
+    slot: "command-empty",
+    render: inCommand((p) => <CommandEmpty {...p}>No results found.</CommandEmpty>),
+  },
+  CommandGroup: {
+    slot: "command-group",
+    render: inCommand((p) => (
+      <CommandGroup heading="Sheets" {...p}>
+        <CommandItem>Plan</CommandItem>
+      </CommandGroup>
+    )),
+  },
+  CommandInput: {
+    slot: "command-input",
+    render: (p) => (
+      <Command>
+        <CommandInput {...p} />
+        <CommandList>
+          <CommandItem>Plan</CommandItem>
+        </CommandList>
+      </Command>
+    ),
+  },
+  CommandItem: {
+    slot: "command-item",
+    axes: ["tone"],
+    render: inCommand((p) => (
+      <CommandItem tone="destructive" {...p}>
+        Delete
+      </CommandItem>
+    )),
+  },
+  CommandList: {
+    slot: "command-list",
+    render: (p) => (
+      <Command>
+        <CommandInput />
+        <CommandList {...p}>
+          <CommandItem>Plan</CommandItem>
+        </CommandList>
+      </Command>
+    ),
+  },
+  CommandSeparator: {
+    slot: "command-separator",
+    render: inCommand((p) => (
+      <>
+        <CommandItem>Plan</CommandItem>
+        <CommandSeparator {...p} />
+        <CommandItem>Section</CommandItem>
+      </>
+    )),
+  },
+  ContextMenu: {
+    slot: "context-menu",
+    noDom: true,
+    render: (p) => (
+      <RightClicked {...p}>
+        <ContextMenuContent>
+          <ContextMenuItem>One</ContextMenuItem>
+        </ContextMenuContent>
+      </RightClicked>
+    ),
+  },
+  ContextMenuCheckboxItem: {
+    slot: "context-menu-checkbox-item",
+    render: openContextMenu((p) => (
+      <ContextMenuCheckboxItem checked {...p}>
+        Grid
+      </ContextMenuCheckboxItem>
+    )),
+  },
+  ContextMenuGroup: {
+    slot: "context-menu-group",
+    render: openContextMenu((p) => (
+      <ContextMenuGroup {...p}>
+        <ContextMenuItem>One</ContextMenuItem>
+      </ContextMenuGroup>
+    )),
+  },
+  ContextMenuItem: {
+    slot: "context-menu-item",
+    axes: ["tone"],
+    render: openContextMenu((p) => (
+      <ContextMenuItem tone="destructive" {...p}>
+        Delete
+      </ContextMenuItem>
+    )),
+  },
+  ContextMenuLabel: {
+    slot: "context-menu-label",
+    render: openContextMenu((p) => (
+      <>
+        <ContextMenuLabel {...p}>Section</ContextMenuLabel>
+        <ContextMenuItem>One</ContextMenuItem>
+      </>
+    )),
+  },
+  ContextMenuRadioGroup: {
+    slot: "context-menu-radio-group",
+    render: openContextMenu((p) => (
+      <ContextMenuRadioGroup value="a" {...p}>
+        <ContextMenuRadioItem value="a">A</ContextMenuRadioItem>
+      </ContextMenuRadioGroup>
+    )),
+  },
+  ContextMenuRadioItem: {
+    slot: "context-menu-radio-item",
+    render: openContextMenu((p) => (
+      <ContextMenuRadioGroup value="a">
+        <ContextMenuRadioItem value="a" {...p}>
+          A
+        </ContextMenuRadioItem>
+      </ContextMenuRadioGroup>
+    )),
+  },
+  ContextMenuSeparator: {
+    slot: "context-menu-separator",
+    render: openContextMenu((p) => <ContextMenuSeparator {...p} />),
+  },
+  ContextMenuSub: {
+    slot: "context-menu-sub-content",
+    noDom: true,
+    render: openContextMenu((p) => (
+      <ContextMenuSub open {...p}>
+        <ContextMenuSubTrigger>More</ContextMenuSubTrigger>
+        <ContextMenuSubContent>
+          <ContextMenuItem>Deep</ContextMenuItem>
+        </ContextMenuSubContent>
+      </ContextMenuSub>
+    )),
+  },
+  ContextMenuSubContent: {
+    slot: "context-menu-sub-content",
+    render: openContextMenu((p) => (
+      <ContextMenuSub open>
+        <ContextMenuSubTrigger>More</ContextMenuSubTrigger>
+        <ContextMenuSubContent {...p}>
+          <ContextMenuItem>Deep</ContextMenuItem>
+        </ContextMenuSubContent>
+      </ContextMenuSub>
+    )),
+  },
+  ContextMenuSubTrigger: {
+    slot: "context-menu-sub-trigger",
+    render: openContextMenu((p) => (
+      <ContextMenuSub>
+        <ContextMenuSubTrigger {...p}>More</ContextMenuSubTrigger>
+        <ContextMenuSubContent>
+          <ContextMenuItem>Deep</ContextMenuItem>
+        </ContextMenuSubContent>
+      </ContextMenuSub>
+    )),
+  },
+  ContextMenuTrigger: {
+    slot: "context-menu-trigger",
+    render: (p) => (
+      <ContextMenu>
+        <ContextMenuTrigger {...p}>Area</ContextMenuTrigger>
+      </ContextMenu>
     ),
   },
   Drawer: {
@@ -437,6 +739,26 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
           <barrel.Input />
         </FieldControl>
       </Field>
+    ),
+  },
+  HoverCard: {
+    slot: "hover-card",
+    noDom: true,
+    render: (p) => (
+      <HoverCard open {...p}>
+        <HoverCardTrigger href="#a">A</HoverCardTrigger>
+        <HoverCardContent>Body</HoverCardContent>
+      </HoverCard>
+    ),
+  },
+  HoverCardTrigger: {
+    slot: "hover-card-trigger",
+    render: (p) => (
+      <HoverCard>
+        <HoverCardTrigger href="#a" {...p}>
+          A
+        </HoverCardTrigger>
+      </HoverCard>
     ),
   },
   Lede: { slot: "lede", render: (p) => <Lede {...p}>Lede</Lede> },
