@@ -30,6 +30,15 @@
       "$value": "6px",
       "$description": "겹치는 스크롤바 두께 — 공간을 차지하지 않고 내용 위에만 겹친다(ScrollArea 계약)."
     },
+    "inspector": {
+      "$value": "340px",
+      "$description": "작업대 오른쪽 인스펙터 폭 — 3.0.0 이 지운 3열 셸의 옛 --inspect-w 값 그대로(#60). AppShell 의 인스펙터 칸이 w-(--size-inspector) 로 읽고, ResizablePanels 로 끌면 그 뒤로는 px 상태가 이긴다."
+    },
+    "topbar": {
+      "$description": "상단바 높이 두 단 — md 는 옛 3열 셸의 --topbar-h(56px) 그대로, sm 은 컨트롤 lg(44px)와 같아 30px 버튼이 위아래 7px 여백으로 앉는다(#60). TopBar 의 size 축이 h-(--size-topbar-*) 로 읽는다.",
+      "sm": { "$value": "44px" },
+      "md": { "$value": "56px" }
+    },
     "panel": {
       "$value": "300px",
       "$description": "펼친 사이드바·3열 셸 패널 폭 — 옛 --panel-w 값 그대로(#21). Sidebar 가 w-(--size-panel) 로 읽는다."

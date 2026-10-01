@@ -108,6 +108,9 @@ const {
   RadioGroupItem,
   Readout,
   ReadoutItem,
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanels,
   SectionLabel,
   Select,
   SelectContent,
@@ -856,6 +859,30 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       <Readout>
         <ReadoutItem label="Height" value="68.4" unit="m" tone="destructive" status="Over limit" {...p} />
       </Readout>
+    ),
+  },
+  ResizableHandle: {
+    slot: "resizable-handle",
+    axes: ["orientation"],
+    render: (p) => (
+      <ResizablePanels>
+        <ResizablePanel id="fixture-start" defaultSize={200}>
+          Start
+        </ResizablePanel>
+        <ResizableHandle controls="fixture-start" {...p} />
+        <ResizablePanel id="fixture-rest" className="flex-1" />
+      </ResizablePanels>
+    ),
+  },
+  ResizablePanel: {
+    slot: "resizable-panel",
+    render: (p) => (
+      <ResizablePanels>
+        <ResizablePanel id="fixture-start" defaultSize={200} {...p}>
+          Start
+        </ResizablePanel>
+        <ResizableHandle controls="fixture-start" />
+      </ResizablePanels>
     ),
   },
   SectionLabel: { slot: "section-label", render: (p) => <SectionLabel {...p}>Section</SectionLabel> },

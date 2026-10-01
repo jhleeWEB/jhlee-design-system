@@ -33,3 +33,20 @@ export {
 export { Toolbar, ToolbarDivider, ToolbarSpacer, type ToolbarProps } from "./Toolbar";
 export { Tabs, TabsContent, TabsList, TabsTrigger, type TabsListProps } from "./Tabs";
 export { tabsListVariants, tabsTriggerVariants } from "./Tabs.variants";
+export { AppShell, type AppShellProps } from "./AppShell";
+export { appShellVariants } from "./AppShell.variants";
+export {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanels,
+  type ResizableHandleProps,
+  type ResizablePanelProps,
+  type ResizablePanelsProps,
+} from "./ResizablePanels";
+export {
+  resizableHandleVariants,
+  resizablePanelsVariants,
+  resizablePanelVariants,
+} from "./ResizablePanels.variants";
+export { TopBar, type TopBarProps } from "./TopBar";
+export { topBarVariants } from "./TopBar.variants";

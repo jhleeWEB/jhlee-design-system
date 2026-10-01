@@ -6,6 +6,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 |---|---|---|---|---|
 | [Accordion](Accordion.md) | component | client | AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger | 접이식 구획 묶음 — `type="single"` 은 하나만, `"multiple"` 은 여럿을 연다 |
 | [Alert](Alert.md) | component | server ok |  | 인라인 경고 — 흐름 안에 남는 알림 |
+| [AppShell](AppShell.md) | component | client |  | 작업대 셸 — 상단바 · 사이드바 · 본문 · 인스펙터(접기 · 선택적 폭 조절) · 바닥줄. |
 | [BackButton](BackButton.md) | component | server ok |  | 뒤로가기의 동작은 라우터가 소유하고 모양·아이콘은 모든 페이지에서 공유한다. |
 | [Badge](Badge.md) | component | server ok |  | 배지 — 상태를 **글자와 함께** 말한다 |
 | [Breadcrumb](Breadcrumb.md) | component | client |  | 경로 — 「지금 무엇을 보고 있나」 |
@@ -40,6 +41,9 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Progress](Progress.md) | component | client |  | 진행 막대 — 값이 있을 때만 쓴다 |
 | [RadioGroup](RadioGroup.md) | component | client | RadioGroupItem | 라디오 묶음 — 여럿 중 하나를 고른다 |
 | [Readout](Readout.md) | component | server ok | ReadoutItem | 수치 묶음 — 칸(`ReadoutItem`)을 한 줄에 나란히 두고 좁으면 줄을 바꾼다 |
+| [ResizableHandle](ResizableHandle.md) | component | client |  | 패널 사이의 손잡이 — `role="separator"` |
+| [ResizablePanel](ResizablePanel.md) | component | client |  | 묶음 안의 패널 한 칸 |
+| [ResizablePanels](ResizablePanels.md) | component | client |  | 크기를 끌어 바꾸는 패널 묶음 |
 | [ScrollArea](ScrollArea.md) | component | client |  | 스크롤 영역 — 스크롤하거나 막대를 끄는 동안만 얇은 스크롤바가 보인다. |
 | [SectionLabel](SectionLabel.md) | component | client |  | 미세 라벨 — 구획의 이름(대문자 mono). |
 | [SegmentedControl](SegmentedControl.md) | component | client |  | 배타적 뷰 전환 — 트랙 위의 흰 pill 이 지금 고른 값이다(radiogroup · roving tabindex). |
@@ -62,6 +66,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [ToggleGroup](ToggleGroup.md) | component | client | ToggleGroupItem | 토글 묶음 — `type="single"`(값 하나, 다시 누르면 끈다) · `type="multiple"`(값 배열) |
 | [Toolbar](Toolbar.md) | component | server ok | ToolbarDivider, ToolbarSpacer | 툴바 — 캔버스 위 또는 그 바로 위의 한 줄 |
 | [Tooltip](Tooltip.md) | component | client | TooltipProvider | 툴팁 — 트리거(`children`) 위에 말풍선(`label`)을 띄운다 |
+| [TopBar](TopBar.md) | component | server ok |  | 상단바 — 제목 · eyebrow · 브레드크럼 · 동작 슬롯을 한 줄에 고정 순서로 놓는다. |
 | [Tr](Tr.md) | component | server ok |  | 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다. |
 | [usePanelLayout](usePanelLayout.md) | hook | client |  | 여러 패널의 접힘 상태를 한 곳에서 든다 |
 | [useSidebarCollapse](useSidebarCollapse.md) | hook | client |  | 접기/펴기 상태를 쓰는 쪽에서 들고 있기 위한 훅 |
