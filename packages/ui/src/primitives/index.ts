@@ -57,3 +57,9 @@ export {
   type ToggleGroupProps,
 } from "./ToggleGroup";
 export { toggleGroupItemVariants, toggleGroupVariants } from "./ToggleGroup.variants";
+export { Avatar, AvatarGroup, type AvatarGroupProps, type AvatarProps } from "./Avatar";
+export { avatarGroupVariants, avatarVariants } from "./Avatar.variants";
+export { Calendar, type CalendarProps } from "./Calendar";
+export { calendarDayVariants } from "./Calendar.variants";
+export { DatePicker, type DatePickerProps } from "./DatePicker";
+export { datePickerTriggerVariants } from "./DatePicker.variants";

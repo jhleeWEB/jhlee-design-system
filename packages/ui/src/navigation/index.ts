@@ -50,3 +50,7 @@ export {
 } from "./ResizablePanels.variants";
 export { TopBar, type TopBarProps } from "./TopBar";
 export { topBarVariants } from "./TopBar.variants";
+export { Pagination, PaginationLink, type PaginationLinkProps, type PaginationProps } from "./Pagination";
+export { paginationLinkVariants } from "./Pagination.variants";
+export { Stepper, type StepStatus, type StepperProps, type StepperStep } from "./Stepper";
+export { stepConnectorVariants, stepIndicatorVariants, stepperVariants } from "./Stepper.variants";

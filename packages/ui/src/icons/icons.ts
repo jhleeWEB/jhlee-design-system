@@ -26,6 +26,8 @@ export const IconMinus = /* @__PURE__ */ createIcon("minus");
 export const IconCheck = /* @__PURE__ */ createIcon("check");
 /** 글리프 `more-horizontal` — 정본 `glyphs.ts`. */
 export const IconMoreHorizontal = /* @__PURE__ */ createIcon("more-horizontal");
+/** 글리프 `calendar` — 정본 `glyphs.ts`. */
+export const IconCalendar = /* @__PURE__ */ createIcon("calendar");
 /** 글리프 `search` — 정본 `glyphs.ts`. */
 export const IconSearch = /* @__PURE__ */ createIcon("search");
 /** 글리프 `info` — 정본 `glyphs.ts`. */
@@ -159,6 +161,7 @@ export const icons = {
   minus: IconMinus,
   check: IconCheck,
   "more-horizontal": IconMoreHorizontal,
+  calendar: IconCalendar,
   search: IconSearch,
   info: IconInfo,
   "alert-triangle": IconAlertTriangle,

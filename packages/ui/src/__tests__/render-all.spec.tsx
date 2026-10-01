@@ -26,6 +26,7 @@ const {
   AccordionHeader,
   AccordionItem,
   AccordionTrigger,
+  AvatarGroup,
   ButtonGroup,
   Card,
   CardCollapse,
@@ -99,6 +100,7 @@ const {
   ModalFooter,
   ModalHeader,
   ModalTrigger,
+  PaginationLink,
   Popover,
   PopoverAnchor,
   PopoverClose,
@@ -288,6 +290,16 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
         <AccordionContent {...p}>B body</AccordionContent>
       </AccordionItem>
     )),
+  },
+  AvatarGroup: {
+    slot: "avatar-group",
+    axes: ["size"],
+    render: (p) => (
+      <AvatarGroup aria-label="Reviewers" max={1} {...p}>
+        <barrel.Avatar name="Ada Lovelace" />
+        <barrel.Avatar name="Alan Turing" />
+      </AvatarGroup>
+    ),
   },
   ButtonGroup: {
     slot: "button-group",
@@ -796,6 +808,15 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       <Modal>
         <ModalTrigger {...p}>Open</ModalTrigger>
       </Modal>
+    ),
+  },
+  PaginationLink: {
+    slot: "pagination-link",
+    axes: ["size"],
+    render: (p) => (
+      <PaginationLink isActive aria-label="Page 1" {...p}>
+        1
+      </PaginationLink>
     ),
   },
   Popover: {
