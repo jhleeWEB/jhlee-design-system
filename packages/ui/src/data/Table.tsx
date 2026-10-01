@@ -1,5 +1,4 @@
 import { cn } from "../cn";
-import { normalizeTone, type ToneInput } from "../lib/tone";
 import { ScrollArea } from "../navigation/ScrollArea";
 import { tableCellVariants, type CellTone } from "./Table.variants";
 
@@ -99,18 +98,18 @@ export interface TdProps extends Omit<React.ComponentProps<"td">, "tone"> {
    */
   numeric?: boolean;
   /**
-   * 판정이 붙는 칸 — 음수 잔액처럼. 색만이 아니라 부호가 이미 말하므로 색은 보조다. 옛 키는 한 마이너 동안 `normalizeTone()` 이 옮겨 준다.
+   * 판정이 붙는 칸 — 음수 잔액처럼. 색만이 아니라 부호가 이미 말하므로 색은 보조다.
    *  - `neutral` — 판정 없음(본문 글자색)
    *  - `success` — 통과
    *  - `warning` — 주의
    *  - `destructive` — 실패
    */
-  tone?: ToneInput<CellTone> | undefined;
+  tone?: CellTone | undefined;
 }
 
 /** 표 본문 칸(`<td>`) — `numeric` · `tone` 축은 `tableCellVariants` 가 소유하고 `data-tone`(해석된 값)으로 찍힌다. */
 export function Td({ className, numeric, tone, ...rest }: TdProps) {
-  const resolved = normalizeTone(tone) ?? "neutral";
+  const resolved = tone ?? "neutral";
   return (
     <td
       className={cn("px-4 py-3", tableCellVariants({ numeric, tone: resolved }), className)}

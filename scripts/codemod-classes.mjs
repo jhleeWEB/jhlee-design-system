@@ -13,24 +13,16 @@
  * 클래스 토큰의 경계: 앞은 공백·따옴표·백틱·`{`·`(`·`,`·줄 머리, 뒤는 공백·따옴표·백틱·`}`·`)`·`,`·줄 끝. variant 접두(`hover:`·`data-[x]:`)와
  * 불투명도(`/40`)는 그대로 둔다. `var(--chrome-…)` 는 다른 스크립트(codemod-css-vars.mjs)다. */
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { dirname, extname, join, resolve } from "node:path";
+import { extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { legacyClassRenames, legacyRenames } from "../packages/ui/tokens/legacy-map.mjs";
-import { readTokenSources, validateTokenSources } from "../packages/ui/tokens/schema.ts";
 
-const here = dirname(fileURLToPath(import.meta.url));
-const TOKENS = join(here, "..", "packages", "ui", "tokens");
 const EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx", ".mdx", ".md", ".html"]);
 const SKIP_DIRS = new Set(["node_modules", "dist", "storybook-static", ".git", "generated"]);
 
-const { errors, tokens, renames } = validateTokenSources(readTokenSources(TOKENS));
-if (errors.length) {
-  console.error(`tokens: 정본 검사 실패 ${errors.length}건 — 코드모드 표를 믿을 수 없다`);
-  process.exit(1);
-}
 // 린트 표는 `^…$` 로 클래스 하나를 맞춘다 — 여기서는 앵커를 떼고 토큰 경계로 감싸 본문 전체에 한 번 적용한다.
-const rules = legacyClassRenames(legacyRenames(tokens, renames)).map(({ pattern, fix }) => ({
+const rules = legacyClassRenames(legacyRenames()).map(({ pattern, fix }) => ({
   body: pattern.slice(1, -1),
   fix,
 }));

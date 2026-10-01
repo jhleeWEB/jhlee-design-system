@@ -16,14 +16,12 @@
  * 계산식(`0.2 * 1000`). 이 스펙은 **부주의한 재발**을 막는 것이지 작정한 우회를 막지 못한다 — 그쪽은 리뷰가 맡는다.
  *
  * 세는 대상은 제품 소스뿐이다 — 스펙·가드·스토리·생성물은 hex 와 px 를 문자열로 들고 있는 것이 정상이다(`source-graph.ts` 의 isExcludedPath).
- * 동결된 `legacy/` 도 세지 않는다(countsOf 의 주석).
  * 주석은 걷어내고 센다: theme.css 머리 주석의 `#0869e1` 과 «140ms 를 넘기면 기다림이 된다» 가 위반으로 잡히면 안 된다.
  */
-import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { LEGACY_FILE, readTokenSources, validateTokenSources } from "../../tokens/schema";
+import { LEGACY_RENAMES } from "../../tokens/legacy-map.mjs";
 import { matches, parseSource, sourceGraph, type Located, type SourceFileInfo } from "./source-graph";
 
 interface Pattern {
@@ -49,14 +47,14 @@ const cssValues = (file: SourceFileInfo, re: RegExp): readonly Located[] =>
   matches(withoutTokenDefinitions(file.code), re);
 
 /**
- * legacy.json 의 옛 이름(`--ink` · `--gap` · `--size-gap` · `--color-cool-500` …)을 정본에서 읽어 `var(--이름` 을 잡는 정규식으로 만든다.
- * 목록을 여기 복사하지 않는 이유: legacy 에 이름이 더해지거나 빠질 때 래칫이 저절로 따라가야 한다.
+ * 옛 이름(`--ink` · `--gap` · `--size-gap` · `--color-cool-500` · `--chrome-ink` · `--radius-chip` …)을 코드모드의 정적 표(tokens/legacy-map.mjs)에서
+ * 읽어 `var(--이름` 을 잡는 정규식으로 만든다. 3.0.0 에서 alias 를 지웠으므로(#49) 옛 이름은 이제 «정의가 없는 변수» 다 — 래칫은 0 을 지키는 경비다.
+ * `--chrome-accent` · `--chrome-muted` 는 옛 이름이자 오늘의 새 이름(글자가 같은 개명)이라 뺀다.
  */
-const LEGACY_NAMES = validateTokenSources(
-  readTokenSources(fileURLToPath(new URL("../../tokens/", import.meta.url))),
-)
-  .tokens.filter((t) => t.file === LEGACY_FILE)
-  .map((t) => `--${t.path.join("-")}`);
+const LEGACY_NAMES = [
+  ...Object.keys(LEGACY_RENAMES.baseVars),
+  ...Object.keys(LEGACY_RENAMES.cssVars).filter((n) => n !== "--chrome-accent" && n !== "--chrome-muted"),
+];
 const LEGACY_ALIAS_USE = new RegExp(
   `var\\(\\s*(?:${LEGACY_NAMES.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})\\s*[,)]`,
   "g",
@@ -157,7 +155,7 @@ const PATTERNS: readonly Pattern[] = [
   },
   {
     id: "domain-vocabulary",
-    why: "parcel · FSI · TBV · verdict · 필지 · 법규 는 원 저장소(인도 주거 컨피규레이터)의 도메인 어휘다 — 디자인 시스템은 도메인을 모른다. legacy 격리(`./legacy`)와 함께 앱으로 돌려보낸다",
+    why: "parcel · FSI · TBV · verdict · 필지 · 법규 는 원 저장소(인도 주거 컨피규레이터)의 도메인 어휘다 — 디자인 시스템은 도메인을 모른다. legacy 셸(`./legacy`, 3.0.0 에서 삭제 #49)과 함께 앱으로 돌려보냈다",
     kinds: ["ts", "tsx"],
     find: (file) => matches(file.code, /\b(?:parcel|FSI|TBV|verdict)\b|To be verified|필지|법규/g),
     // DescriptionList 의 잠정 값 툴팁 «To be verified» 는 #46 이 `provisionalLabel`(기본 "Provisional")로 앱에 넘겨 0 이다.
@@ -165,7 +163,7 @@ const PATTERNS: readonly Pattern[] = [
   },
   {
     id: "legacy-alias-use",
-    why: "var(--ink) · var(--gap) · var(--size-gap) · var(--color-cool-500) 같은 옛 이름은 legacy.json 의 $deprecated alias 다 — 새 정본 이름(--chrome-* · --canvas-* · --palette-* · --space-* · --font-stack-*)을 쓴다. 옛 이름 제거는 major 이고 그때 이 기준선이 0 이어야 한다(#18)",
+    why: "var(--ink) · var(--gap) · var(--size-gap) · var(--color-cool-500) 같은 옛 이름은 3.0.0 에서 alias 를 지워 정의가 없다(#49) — 새 정본 이름(--chrome-* · --canvas-* · --palette-* · --space-* · --font-stack-*)을 쓴다",
     kinds: ["ts", "tsx", "css"],
     find: (file) => matches(file.code, LEGACY_ALIAS_USE),
     // tokens.css 의 body 는 #20 · #24 에서 크롬(background · foreground)으로 옮겨 0 이다. canvas.css(--muted · --mono 폴백)와 Sidebar(--panel-w)는 #21 이 --canvas-muted · --font-stack-mono · --size-panel 로 옮겨 0 이다.
@@ -316,9 +314,7 @@ function countsOf(pattern: Pattern): {
   const counts: Record<string, number> = {};
   const where: Record<string, readonly number[]> = {};
   for (const file of graph.values()) {
-    // `legacy/` 는 격리·동결이다(#12: ESLint 도 기준선이 아니라 ignores) — 계획 §2.4 의 래칫도 `legacy/` 를 세지 않는다.
-    // 도메인 어휘(verdict·FSI)가 거기 살지만 그 코드는 «고치지 않고 앱으로 돌려보내는» 것이라 여기 잡아 둘 이유가 없다.
-    if (file.excluded || file.path.startsWith("legacy/") || !pattern.kinds.includes(file.kind)) continue;
+    if (file.excluded || !pattern.kinds.includes(file.kind)) continue;
     const hits = pattern.find(file);
     if (hits.length === 0) continue;
     counts[file.path] = hits.length;

@@ -9,7 +9,7 @@ export const LADDERS = {
   "text": ["micro", "label", "body", "control", "title", "readout", "display"],
   "tracking": ["tight", "caps"],
   "font-weight": ["normal", "medium", "semibold", "bold"],
-  "radius": ["none", "sm", "md", "lg", "xl", "full", "chip", "control", "card", "float", "modal"],
+  "radius": ["none", "sm", "md", "lg", "xl", "full"],
   "shadow": ["none", "chip", "card", "pop", "modal"],
   "layer": ["raised", "sticky", "scrim", "modal", "popover", "toast", "tooltip"],
   "height": ["ctl-sm", "ctl", "ctl-lg"],

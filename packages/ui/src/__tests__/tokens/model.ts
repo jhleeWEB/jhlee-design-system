@@ -60,13 +60,12 @@ export interface TokenModel {
 }
 
 /**
- * 모델이 읽는 파일 — 소비자가 `theme.css` 를 import 하면 @import 사슬로 도착하는 여섯 파일 전부(#18 · corner.css 는 #26 의 흔적, #36 뒤 비어 있다).
- * postcss 는 @import 를 따라가지 않으므로 여기 나열한다. 생성물 셋이 값이고 손 셋(tokens.css · corner.css · theme.css)은 요소 규칙 · keyframes ·
+ * 모델이 읽는 파일 — 소비자가 `theme.css` 를 import 하면 @import 사슬로 도착하는 다섯 파일 전부(#18 · corner.css 는 #26 의 흔적, #36 뒤 비어 있다).
+ * postcss 는 @import 를 따라가지 않으므로 여기 나열한다. 생성물 둘이 값이고 손 셋(tokens.css · corner.css · theme.css)은 요소 규칙 · keyframes ·
  * 손 @utility · `.ds-*` 다 — 손 파일의 `var()` 참조가 전부 정의돼 있는지도 같은 모델이 본다.
  */
 export const TOKEN_FILES = [
   "generated/tokens.css",
-  "generated/legacy.css",
   "generated/theme.tailwind.css",
   "tokens.css",
   "corner.css",

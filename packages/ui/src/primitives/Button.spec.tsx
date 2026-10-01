@@ -1,16 +1,7 @@
-import { describe, expect, it } from "vitest";
-
-import { runContract, storySubject } from "../__arch__/component-contract";
+import { describeComponentContract } from "../__arch__/component-contract";
 import * as stories from "./Button.stories";
 
-/* 공통 계약(C3) — 스토리 `Default` 가 유일한 픽스처다.
- * Button 만 slot-locked 가 예외다(공개 컴포넌트 중 유일, render-all.spec 참고): Toast · Modal · Drawer 의 닫기 버튼과 동결된 legacy Select 가
- * `data-slot` 을 넘겨 자기 이름을 붙이고, 배포되는 legacy/shell.css 가 `.ds-select[data-slot="select"]` 로 그 버튼을 그린다(Button.tsx 주석).
- * 지금 잠그면 소비 레포의 legacy Select 가 모양을 잃는다 — legacy 를 지우는 D8(#49, 3.0.0)에서 잠그고 여기를 describeComponentContract 로 바꾼다(#48 판단). */
-describe("component contract · button", () => {
-  it("slot-locked 만 실패한다(소비자 data-slot 을 받는 것이 의도)", async () => {
-    const subject = storySubject(stories, { slot: "button", axes: ["variant", "tone", "size"] });
-    const failures = await runContract(subject);
-    expect(failures.map((f) => f.id)).toEqual(["slot-locked"]);
-  });
-});
+/* 공통 계약(slot · slot-locked · className · ref · rest · axes · axe)을 스토리 `Default` 로(D3, #44).
+ * 2.x 까지 Button 만 slot-locked 가 예외였다 — legacy Select 가 `data-slot` 을 넘겨 shell.css 가 그 버튼을 그렸다. legacy 를 지운 3.0.0 에서
+ * 잠갔다(#49): DS 안에서 다른 이름이 필요한 자리(토스트 · 대화상자 닫기 · 패널 토글)는 내부 `SlottedButton` 으로 이름을 넘긴다. */
+describeComponentContract(stories, { slot: "button", axes: ["variant", "tone", "size"] });

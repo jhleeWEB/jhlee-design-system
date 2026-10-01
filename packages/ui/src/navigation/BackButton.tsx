@@ -51,8 +51,6 @@ export function BackButton({
       size={size}
       className={cn("gap-2 [&_svg]:size-4", className)}
       {...props}
-      /* 소비자의 data-slot 이 Button 의 것을 덮지 못하게 rest 뒤에 둔다(공통 계약 slot-locked). */
-      data-slot="button"
     >
       {/* 크기(16px)는 위 `[&_svg]:size-4` 가, 선 굵기는 Lucide 기본(2)이 정한다 — 숫자 prop 을 두지 않는다(jsx-size-number 래칫). */}
       <LuArrowLeft aria-hidden="true" focusable={false} />

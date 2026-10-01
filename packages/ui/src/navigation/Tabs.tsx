@@ -8,7 +8,7 @@ import { tabsListVariants, tabsTriggerVariants } from "./Tabs.variants";
 /* 탭 — **보이는 패널을 바꾼다**(tablist · tab · tabpanel). 값 하나를 고르는 것은 `SegmentedControl`(radiogroup)이다.
  * 둘이 같은 트랙 모양(`variant="segmented"`)을 쓰는 것은 의도다 — 눈에는 같은 «전환» 이고, 스크린리더에는 다른 의미로 읽힌다.
  *
- * 레거시 `Tabs`(src/legacy/shell.tsx)는 `options` 배열을 받아 탭 줄만 그렸고 패널 연결(aria-controls · tabpanel)이 없었다.
+ * 2.x 의 레거시 `Tabs`(`./legacy`, 3.0.0 에서 삭제 #49)는 `options` 배열을 받아 탭 줄만 그렸고 패널 연결(aria-controls · tabpanel)이 없었다.
  * 여기서는 Radix Tabs 로 목록 · 칸 · 패널을 합성한다 — roving tabindex · 화살표 · Home/End · 자동/수동 활성화는 Radix 의 것이다(#47).
  *
  * 부품마다 `data-slot` 을 `{...rest}` **뒤**에 둔다(slot-locked, D3 #44). */

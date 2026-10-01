@@ -7,7 +7,7 @@ import { fieldVariants } from "./Field.variants";
 
 /* 필드 — 라벨 · 컨트롤 · 설명 · 오류를 **id 로 잇는 일**을 소유한다.
  *
- * 레거시 `Field`(src/legacy/shell.tsx)는 라벨과 값 표시를 나란히 그리는 레이아웃일 뿐이라 라벨이 컨트롤과 이어지지 않았다 —
+ * 2.x 의 레거시 `Field`(`./legacy`, 3.0.0 에서 삭제 #49)는 라벨과 값 표시를 나란히 그리는 레이아웃일 뿐이라 라벨이 컨트롤과 이어지지 않았다 —
  * 스크린리더는 입력의 이름을 몰랐고 호출처마다 `aria-label` 을 따로 적었다. 여기서는 루트가 id 를 만들고(useId) 부품이 그 id 를
  * 나눠 쓴다: `FieldLabel` 의 htmlFor · `FieldControl` 의 id · aria-describedby · aria-invalid(#47).
  *

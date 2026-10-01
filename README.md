@@ -1,6 +1,7 @@
 # Squircle Design System
 
-`@jhleeweb/squircle-design-system` — 도면 캔버스와 UI 크롬을 가른 토큰, Radix 기반 오버레이·피드백 층, 3열 작업대 셸과 컨트롤.
+`@jhleeweb/squircle-design-system` — 도면 캔버스와 UI 크롬을 가른 토큰, Radix 기반 컨트롤 · 오버레이 · 피드백 · 내비게이션 · 데이터 층.
+3.0.0 에서 3열 작업대 셸(`./legacy`)과 옛 이름 alias 를 지웠다 — 이행은 [`packages/ui/README.md`](packages/ui/README.md) «2.x → 3.0».
 GitHub Packages(npm.pkg.github.com)에 **비공개**로 발행한다. `aaro-lab/apartment-configurator` 의 `packages/ui` 를 2026-09-29 에 이력째 분리했다.
 
 ## 쓰기

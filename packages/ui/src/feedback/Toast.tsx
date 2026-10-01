@@ -4,9 +4,8 @@ import { Toast as RadixToast } from "radix-ui";
 import { LuX } from "react-icons/lu";
 
 import { cn, type VariantProps } from "../cn";
-import { normalizeTone, type ToneInput } from "../lib/tone";
 import { toastVariants, toastViewportVariants, type ToastPosition, type ToastTone } from "./Toast.variants";
-import { Button } from "../primitives/Button";
+import { SlottedButton } from "../primitives/Button";
 import { MOTION } from "../generated/tokens";
 
 /* 토스트 — 지나가는 알림. 흐름에 남아야 하면 `Alert` 다.
@@ -29,9 +28,8 @@ export interface ToastOptions extends Omit<VariantProps<typeof toastVariants>, "
    * - `warning` — 주의. 되돌릴 수 있지만 확인이 필요하다
    * - `destructive` — 실패. 대개 `duration: 0` 과 함께 쓴다
    * @default "neutral"
-   * @deprecated 옛 키 `ok` · `warn` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
    */
-  tone?: ToneInput<ToastTone> | null | undefined;
+  tone?: ToastTone | null | undefined;
   /** 무슨 일인지 한 줄 — 굵게 그린다. */
   title: React.ReactNode;
   /**
@@ -179,7 +177,7 @@ export function ToastProvider({
         {queue.map((item) => (
           <RadixToast.Root
             data-slot="toast"
-            data-tone={normalizeTone(item.tone) ?? "neutral"}
+            data-tone={item.tone ?? "neutral"}
             key={item.id}
             open={item.open}
             /* Radix 의 `duration` 은 필수 number 라 `undefined` 를 넘기면 타입이 깨진다.
@@ -191,7 +189,7 @@ export function ToastProvider({
               if (open) return;
               dismiss(item.id);
             }}
-            className={cn(toastVariants({ tone: normalizeTone(item.tone) }))}
+            className={cn(toastVariants({ tone: item.tone }))}
           >
             <div className="min-w-0 flex-1 self-center [overflow-wrap:anywhere]">
               <RadixToast.Title className="font-semibold">{item.title}</RadixToast.Title>
@@ -202,19 +200,19 @@ export function ToastProvider({
               ) : null}
               {item.action ? (
                 <RadixToast.Action asChild altText={item.action.altText} onClick={item.action.onSelect}>
-                  <Button
-                    data-slot="toast-action"
+                  <SlottedButton
+                    slot="toast-action"
                     size="sm"
                     className="mt-3 h-auto min-h-(--size-control-sm) max-w-full py-1 whitespace-normal"
                   >
                     {item.action.label}
-                  </Button>
+                  </SlottedButton>
                 </RadixToast.Action>
               ) : null}
             </div>
             <RadixToast.Close asChild>
-              <Button
-                data-slot="toast-close"
+              <SlottedButton
+                slot="toast-close"
                 variant="ghost"
                 size="icon-sm"
                 aria-label="Dismiss"
@@ -222,7 +220,7 @@ export function ToastProvider({
               >
                 {/* 크기는 위 `[&_svg]:size-4` 가 정한다 — 아이콘 prop 의 숫자는 토큰 밖 값이다. */}
                 <LuX aria-hidden="true" focusable={false} />
-              </Button>
+              </SlottedButton>
             </RadixToast.Close>
           </RadixToast.Root>
         ))}

@@ -1,5 +1,6 @@
 /*
- * 옛 이름 → 새 이름 표(B5, #22) — legacy.json 이 세 출력의 원천이라는 약속의 성질을 검사한다.
+ * 옛 이름 → 새 이름 표(B5, #22) — 3.0.0 에서 alias(legacy.json · generated/legacy.css)를 지운 뒤에도 소비 레포의 이행 경로(린트 `--fix` ·
+ * 코드모드)가 읽는 정적 표(tokens/legacy-map.mjs, #49)의 성질을 검사한다.
  *
  * 두 성질이 무너지는 방식은 이미 한 번 실제로 났다: ① ESLint `--fix` 가 반복 검사하며 `bg-surface-2 → bg-muted → bg-muted-foreground` 로 두 번
  * 고쳤고(린트 표에 목적지가 다시 출발지가 되는 항목이 있었다), ② 스크립트가 규칙마다 따로 치환하며 같은 일을 했다. 그래서 여기서는
@@ -11,33 +12,57 @@ import { describe, expect, it } from "vitest";
 
 import { legacyClassRenames, legacyClassRestrictions, legacyRenames } from "../../../tokens/legacy-map.mjs";
 import { readTokenSources, validateTokenSources } from "../../../tokens/schema";
+import legacyClassesJson from "../../generated/legacy-classes.json" with { type: "json" };
 import { codemodClasses } from "../../../../../scripts/codemod-classes.mjs";
 import { codemodCssVars } from "../../../../../scripts/codemod-css-vars.mjs";
 
-const { errors, tokens, renames } = validateTokenSources(
+const { tokens } = validateTokenSources(
   readTokenSources(fileURLToPath(new URL("../../../tokens/", import.meta.url))),
 );
-const map = legacyRenames(tokens, renames);
+const map = legacyRenames();
+/** 새 정본의 CSS 변수 이름 — 표의 목적지가 실제로 있는지 본다. */
+const defined = new Set(tokens.map((t) => `--${t.path.join("-")}`));
 
 /** 패턴 하나가 어느 옛 이름을 맞추는가 — `-<old>((?:/…)?)$` 꼴에서 old 를 되읽는다. */
 const sourceOf = (pattern: string): string =>
   /-((?:[a-z0-9-]+?))(?:\(\(\?:\/|\$)/.exec(pattern.replace(/\\/g, ""))?.[1] ?? "";
 
 describe("legacy-map — 표", () => {
-  it("정본이 통과하고 renames 는 accent · muted 둘이다", () => {
-    expect(errors).toEqual([]);
-    expect(renames).toEqual({ "chrome.accent": "chrome.primary", "chrome.muted": "chrome.muted-foreground" });
+  it("renames(새 이름과 글자가 같은 옛 이름)는 accent · muted 둘이다", () => {
     expect(map.renameSources.sort()).toEqual(["accent", "muted"]);
   });
 
-  it("CSS 변수 표는 옛 chrome·radius 이름 전부 + renames 를 든다", () => {
+  it("목적지는 전부 오늘의 정본에 있다 — 정본에서 이름이 사라지면 코드모드가 죽은 이름으로 옮긴다", () => {
+    expect(Object.values(map.cssVars).filter((to) => !defined.has(to))).toEqual([]);
+    const utilityColors = new Set(
+      tokens.filter((t) => t.path[0] === "color" && t.sds.scope === "theme-inline").map((t) => t.path[1]),
+    );
+    expect(Object.values(map.colors).filter((to) => !utilityColors.has(to))).toEqual([]);
+    const radius = new Set(tokens.filter((t) => t.path[0] === "radius").map((t) => t.path[1]));
+    expect(Object.values(map.radius).filter((to) => !radius.has(to))).toEqual([]);
+  });
+
+  it("출발지(옛 이름)는 정본에 없다 — renames 둘만 예외(새 이름과 글자가 같다)", () => {
+    const renamed = new Set(["--chrome-accent", "--chrome-muted"]);
+    expect(Object.keys(map.cssVars).filter((from) => defined.has(from) && !renamed.has(from))).toEqual([]);
+  });
+
+  it("커밋된 린트 표(generated/legacy-classes.json)가 정적 표의 결과와 같다", () => {
+    expect(legacyClassesJson).toEqual(legacyClassRestrictions(map));
+  });
+
+  it("CSS 변수 표는 옛 chrome·radius 이름 전부 + renames + 옛 base 이름을 든다", () => {
     expect(map.cssVars["--chrome-ink"]).toBe("--chrome-foreground");
     expect(map.cssVars["--chrome-accent-soft"]).toBe("--chrome-accent");
     expect(map.cssVars["--chrome-accent"]).toBe("--chrome-primary");
     expect(map.cssVars["--chrome-muted"]).toBe("--chrome-muted-foreground");
     expect(map.cssVars["--radius-control"]).toBe("--radius-md");
     expect(map.cssVars["--radius-float"]).toBe("--radius-lg");
-    expect(Object.keys(map.cssVars).length).toBe(32 + 5 + 2);
+    expect(map.cssVars["--ink"]).toBe("--palette-gray-900");
+    expect(map.cssVars["--size-gap"]).toBe("--space-card-gap");
+    expect(map.cssVars["--color-cool-500"]).toBe("--palette-cool-500");
+    expect(map.cssVars["--inspect-w"]).toBeUndefined();
+    expect(Object.keys(map.cssVars).length).toBe(32 + 5 + 2 + 61);
   });
 
   it("린트 표(legacy-classes.json)는 사슬이 없다 — 목적지가 다시 출발지가 되는 항목이 없고 renames 는 빠져 있다", () => {

@@ -1,5 +1,5 @@
 {
-  "$description": "Tailwind @theme inline 매핑 — 모드가 갈리는 값은 반드시 var(--chrome-*|--canvas-*) 참조(혼용 규칙 ④). 리터럴은 0 이다(#18): white·black 은 모드와 무관하게 고정인 캔버스 흰색·잉크를 가리키고, transparent·current 는 Tailwind 4 가 --color-* 없이도 내는 키워드라(bg-transparent · text-current, 컴파일 실측) 적지 않는다. 이름은 chrome.* 의 `chrome-` 접두만 뗀 기계적 대응이다(B5 #22) — 예외는 input(shadcn 의 --input, border 와 같은 값)뿐이다. 옛 유틸 이름(text-ink · bg-surface …)은 legacy.json 이 한 마이너 동안 alias 로 낸다.",
+  "$description": "Tailwind @theme inline 매핑 — 모드가 갈리는 값은 반드시 var(--chrome-*|--canvas-*) 참조(혼용 규칙 ④). 리터럴은 0 이다(#18): white·black 은 모드와 무관하게 고정인 캔버스 흰색·잉크를 가리키고, transparent·current 는 Tailwind 4 가 --color-* 없이도 내는 키워드라(bg-transparent · text-current, 컴파일 실측) 적지 않는다. 이름은 chrome.* 의 `chrome-` 접두만 뗀 기계적 대응이다(B5 #22) — 예외는 input(shadcn 의 --input, border 와 같은 값)뿐이다. 옛 유틸 이름(text-ink · bg-surface …)의 alias 는 3.0.0 에서 지웠다(#49) — 린트 --fix 가 옮긴다.",
   "$extensions": { "sds": { "scope": "theme-inline" } },
   "color": {
     "$type": "color",

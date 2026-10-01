@@ -28,13 +28,11 @@ describe("exports", () => {
       [
         ".",
         "./canvas-metrics",
-        "./legacy",
         "./testing",
         "./eslint",
         "./theme.css",
         "./corner.css",
         "./tokens.css",
-        "./shell.css",
         "./canvas.css",
         "./package.json",
       ]
@@ -66,13 +64,7 @@ describe("exports", () => {
           "import": "./dist/eslint/index.js",
           "types": "./dist/eslint/index.d.ts",
         },
-        "./legacy": {
-          "default": "./dist/legacy/index.js",
-          "import": "./dist/legacy/index.js",
-          "types": "./dist/legacy/index.d.ts",
-        },
         "./package.json": "./package.json",
-        "./shell.css": "./dist/legacy/shell.css",
         "./testing": {
           "default": "./dist/testing/index.js",
           "import": "./dist/testing/index.js",

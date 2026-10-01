@@ -3,13 +3,13 @@
  * 다섯 규칙이 각각 «LLM 이 흔히 쓰는 위반» 을 잡는지가 계약이다: raw <button> · Tailwind 기본 사다리 `text-sm` · 옛 이름 `text-ink`(--fix) ·
  * hex/임의값/격자 밖 간격 · 인라인 색 · 옛 tone 키(--fix). 파서는 espree(JSX 켬)다 — 소비자가 typescript-eslint 를 쓰더라도 규칙은 AST 모양만 본다.
  */
-import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { ESLint } from "eslint";
 import { describe, expect, it } from "vitest";
 
 import { LEGACY_TONES, restrictedClassPatterns, squircleDesignSystem } from "../../eslint/index";
+import { toneValues } from "../../lib/tone";
 
 const ENTRY = fileURLToPath(new URL("../../theme.css", import.meta.url));
 
@@ -106,11 +106,18 @@ describe("eslint 프리셋", { timeout: 60_000 }, () => {
 });
 
 describe("프리셋의 원천", () => {
-  it("옛 tone 표는 tone.ts 와 같다 — 갈리면 --fix 가 런타임과 다른 키를 쓴다", () => {
-    const source = readFileSync(fileURLToPath(new URL("../../lib/tone.ts", import.meta.url)), "utf8");
-    const block = /const LEGACY_TONES = \{([\s\S]*?)\} as const/.exec(source)?.[1] ?? "";
-    const fromSource = Object.fromEntries([...block.matchAll(/(\w+):\s*"(\w+)"/g)].map((m) => [m[1], m[2]]));
-    expect(fromSource).toEqual({ ...LEGACY_TONES });
+  it("옛 tone 표는 오늘의 톤 어휘로만 옮긴다 — 3.0.0 에서 런타임 shim(normalizeTone)을 지워 표는 규칙이 홀로 든다(#49)", () => {
+    expect(Object.keys(LEGACY_TONES).sort()).toEqual([
+      "accent",
+      "current",
+      "danger",
+      "default",
+      "ok",
+      "warn",
+    ]);
+    for (const to of Object.values(LEGACY_TONES)) expect(toneValues).toContain(to);
+    // 옛 키가 새 어휘와 겹치면 --fix 가 멀쩡한 새 키를 바꾼다.
+    for (const from of Object.keys(LEGACY_TONES)) expect(toneValues).not.toContain(from);
   });
 
   it("제한 패턴은 개명 표(생성물) 뒤에 hex · 색 함수 · 단위 · 간격 넷이다", () => {

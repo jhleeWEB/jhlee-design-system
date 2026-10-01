@@ -54,7 +54,7 @@ _(DS 가 더하는 prop 없음 — 물려받는 속성만)_
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
-| `tone` | `ToneInput<"neutral" \| "destructive">` |  | `"neutral"` | 값: `neutral` — 일반 동작(기본) · `destructive` — 되돌릴 수 없는 동작(삭제). 글자와 강조 면이 붉다 · `current` — deprecated alias of "neutral" · `danger` — deprecated alias of "destructive" · `default` — deprecated alias of "neutral" |
+| `tone` | `"neutral" \| "destructive"` |  | `"neutral"` | 값: `neutral` — 일반 동작(기본) · `destructive` — 되돌릴 수 없는 동작(삭제). 글자와 강조 면이 붉다 |
 | `shortcut` | `string` |  | `undefined` | 오른쪽에 흐리게 붙는 단축키 표기 — "⌘S". 표기일 뿐 키를 묶지 않는다. |
 
 ### DropdownMenuLabel

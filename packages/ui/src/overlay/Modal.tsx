@@ -2,7 +2,7 @@
 import { Dialog } from "radix-ui";
 import { LuX } from "react-icons/lu";
 
-import { Button } from "../primitives/Button";
+import { SlottedButton } from "../primitives/Button";
 
 import { cn, type VariantProps } from "../cn";
 import { modalVariants } from "./Modal.variants";
@@ -132,8 +132,8 @@ export function ModalHeader({ className, title, description, children, ...rest }
       </div>
       {children}
       <Dialog.Close asChild>
-        <Button
-          data-slot="dialog-close"
+        <SlottedButton
+          slot="dialog-close"
           type="button"
           variant="ghost"
           size="icon-sm"
@@ -142,7 +142,7 @@ export function ModalHeader({ className, title, description, children, ...rest }
         >
           {/* 크기·굵기는 적지 않는다 — 버튼의 `[&_svg]:size-4`(16px) 가 1em 속성을 이기고, lucide 의 기본 stroke-width 가 2 다(jsx-size-number 0). */}
           <LuX aria-hidden="true" focusable={false} />
-        </Button>
+        </SlottedButton>
       </Dialog.Close>
     </div>
   );

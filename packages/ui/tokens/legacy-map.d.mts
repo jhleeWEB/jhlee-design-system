@@ -1,6 +1,4 @@
 /* legacy-map.mjs 의 선언 — 스펙(legacy-map.spec)이 import 한다. 규칙 패키지처럼 JS + JSDoc 이 정본이고 이 파일은 tsc 의 눈이다. */
-import type { FlatToken } from "./schema.ts";
-
 export interface LegacyRenameMap {
   readonly cssVars: Record<string, string>;
   readonly colors: Record<string, string>;
@@ -12,10 +10,14 @@ export interface ClassRestriction {
   readonly fix: string;
   readonly message: string;
 }
-export function legacyRenames(
-  tokens: readonly FlatToken[],
-  renames: Readonly<Record<string, string>>,
-): LegacyRenameMap;
+export const LEGACY_RENAMES: Readonly<{
+  cssVars: Record<string, string>;
+  baseVars: Record<string, string>;
+  colors: Record<string, string>;
+  radius: Record<string, string>;
+  renameSources: string[];
+}>;
+export function legacyRenames(): LegacyRenameMap;
 export function legacyClassRenames(
   map: LegacyRenameMap,
   options?: { lintSafe?: boolean },

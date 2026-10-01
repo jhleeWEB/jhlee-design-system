@@ -180,8 +180,6 @@ describe("스토리 계약", () => {
     expect(modules).toContain("primitives/Button");
   });
 
-  // `legacy/*`(shell·controls·design-system)는 여기 잡히지 않는다 — 루트 배럴이 `@deprecated` const 별칭으로만 내보내
-  // 스캐너(`export … from`)에 걸리지 않고, 격리·동결된 코드라 스토리 계약 밖이다(#10).
   it("컴포넌트 모듈마다 옆에 stories 가 있다", () => {
     const missing = modules.filter((m) => !existsSync(join(SRC, `${m}.stories.tsx`)));
     expect(missing, "새 컴포넌트는 stories 와 함께 만든다").toEqual([]);

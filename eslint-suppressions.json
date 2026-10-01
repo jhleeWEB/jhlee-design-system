@@ -35,22 +35,6 @@
       "count": 1
     }
   },
-  "packages/ui/src/__tests__/select.spec.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    },
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 2
-    }
-  },
-  "packages/ui/src/__tests__/shell-migration.spec.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 3
-    },
-    "better-tailwindcss/no-unknown-classes": {
-      "count": 1
-    }
-  },
   "packages/ui/src/__tests__/toast-queue.spec.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 2

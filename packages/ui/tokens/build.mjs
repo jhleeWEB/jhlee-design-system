@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-/* 토큰 생성기(계획 §2.2, #15) — `tokens/**\/*.json`(DTCG) → `src/generated/{tokens.css, theme.tailwind.css, legacy.css, tokens.ts, ladders.ts}`
- * + `src/generated/legacy-classes.json`(옛 유틸 이름 → 새 이름 코드모드 표, B5 #22 — 루트 eslint.config.js 와 소비자 프리셋(src/eslint)이 no-restricted-classes 의 restrict 로 읽는다).
+/* 토큰 생성기(계획 §2.2, #15) — `tokens/**\/*.json`(DTCG) → `src/generated/{tokens.css, theme.tailwind.css, tokens.ts, ladders.ts}`
+ * + `src/generated/legacy-classes.json`(옛 유틸 이름 → 새 이름 코드모드 표, B5 #22 — 루트 eslint.config.js 와 소비자 프리셋(src/eslint)이 no-restricted-classes 의 restrict 로 읽는다.
+ * 3.0.0 부터 원천은 정본 JSON 이 아니라 `legacy-map.mjs` 의 정적 표다 — 옛 이름 alias 를 지웠기 때문이다, #49).
  *
  *   node tokens/build.mjs           생성물을 쓴다
  *   node tokens/build.mjs --check   쓰지 않고 «커밋된 생성물이 최신인가» 만 본다 — CI 와 pnpm verify 가 이것을 돈다
@@ -29,7 +30,7 @@ const ESLINT_OUT = join(OUT_DIR, "legacy-classes.json");
 const check = process.argv.includes("--check");
 
 const sources = readTokenSources(here);
-const { errors, tokens: flat, dark, renames } = validateTokenSources(sources);
+const { errors, tokens: flat, dark } = validateTokenSources(sources);
 if (errors.length) {
   console.error(`tokens: 정본 검사 실패 ${errors.length}건\n${errors.map((e) => ` - ${e}`).join("\n")}`);
   process.exit(1);
@@ -86,11 +87,6 @@ const sd = new StyleDictionary({
           format: "sds/tailwind-theme",
           options: { outputReferences: true },
         },
-        {
-          destination: "legacy.css",
-          format: "sds/css-vars",
-          options: { outputReferences: true, legacy: true },
-        },
         { destination: "tokens.ts", format: "sds/ts-consts", options: { kind: "motion" } },
         { destination: "ladders.ts", format: "sds/ts-consts", options: { kind: "ladders" } },
       ],
@@ -104,11 +100,11 @@ const outputs = (await sd.formatPlatform("generated")).map(({ destination, outpu
   name: `src/generated/${relative(OUT_DIR, destination)}`,
   output,
 }));
-// 코드모드 표는 SD 를 거치지 않는다 — 편 토큰과 renames 만 있으면 된다. JSON 은 사람이 diff 로 읽으므로 2칸 들여쓰기로.
+// 코드모드 표는 SD 를 거치지 않는다 — legacy-map.mjs 의 정적 표에서 나온다(#49). JSON 은 사람이 diff 로 읽으므로 2칸 들여쓰기로.
 outputs.push({
   path: ESLINT_OUT,
   name: "src/generated/legacy-classes.json",
-  output: `${JSON.stringify(legacyClassRestrictions(legacyRenames(flat, renames)), null, 2)}\n`,
+  output: `${JSON.stringify(legacyClassRestrictions(legacyRenames()), null, 2)}\n`,
 });
 
 if (check) {

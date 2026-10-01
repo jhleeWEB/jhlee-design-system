@@ -6,7 +6,7 @@ import { selectTriggerVariants } from "./Select.variants";
 
 /* 선택 — 목록에서 **값 하나를 고른다.** 실행은 `DropdownMenu` 다(그 구분은 DropdownMenu 머리 주석).
  *
- * 레거시 `Select`(src/legacy/controls.tsx)는 `options` 배열을 받는 한 덩어리였고, DS 모드에서는 DropdownMenu 의 라디오 항목으로
+ * 2.x 의 레거시 `Select`(`./legacy`, 3.0.0 에서 삭제 #49)는 `options` 배열을 받는 한 덩어리였고, DS 모드에서는 DropdownMenu 의 라디오 항목으로
  * 흉내를 냈다 — 그래서 listbox/option 의미·타이핑 검색·선택 항목으로 스크롤이 없었다. 여기서는 Radix Select 의 부품을 그대로
  * 합성한다(#47). 설탕(`options` prop)은 두지 않는다 — 항목마다 비활성·묶음·머리글이 붙는 순간 배열 모양이 다시 자란다.
  *

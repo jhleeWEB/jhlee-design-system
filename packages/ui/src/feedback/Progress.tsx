@@ -2,7 +2,6 @@
 import { Progress as RadixProgress } from "radix-ui";
 
 import { cn, type VariantProps } from "../cn";
-import { normalizeTone, type ToneInput } from "../lib/tone";
 import { progressVariants, type ProgressTone } from "./Progress.variants";
 
 /* 진행 — 값이 있을 때만 쓴다. 값이 없으면 `Spinner` 다.
@@ -23,9 +22,8 @@ export interface ProgressProps
    * - `destructive` — 상한을 넘었다(100% 초과)
    * - `neutral` — 판정 없는 단순 채움
    * @default "primary"
-   * @deprecated 옛 키 `accent` · `ok` · `warn` · `danger` 는 다음 마이너에서 제거 — `normalizeTone()` 이 한 마이너 동안 옮겨 준다(ds/legacy-tone --fix)
    */
-  tone?: ToneInput<ProgressTone> | null | undefined;
+  tone?: ProgressTone | null | undefined;
   /**
    * 0–100(밖의 값은 잘라 그린다). `null` 이면 미판정(indeterminate)으로 그린다.
    * @default null
@@ -43,11 +41,11 @@ export function Progress({ className, value = null, tone, ...rest }: ProgressPro
       {...rest}
       /* 슬롯·축은 rest 뒤 — 소비자가 넘긴 data-slot 이 손잡이를 덮지 못하게 한다(공통 계약 slot-locked). */
       data-slot="progress"
-      data-tone={normalizeTone(tone) ?? "primary"}
+      data-tone={tone ?? "primary"}
     >
       <RadixProgress.Indicator
         className={cn(
-          progressVariants({ tone: normalizeTone(tone) }),
+          progressVariants({ tone }),
           /* 미판정은 폭을 모르므로 훑고 지나가는 띠로 그린다. */
           pct === null && "w-2/5 animate-in-rise",
         )}

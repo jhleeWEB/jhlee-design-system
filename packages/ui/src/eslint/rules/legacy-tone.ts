@@ -1,7 +1,7 @@
 /* ds/legacy-tone — `tone="accent"` · `tone: "ok"` 같은 옛 톤 키를 잡고 새 키로 고친다(B5, #22).
  *
- * 톤 어휘는 `src/lib/tone.ts` 의 한 벌(neutral · primary · success · warning · destructive · info)이고 옛 키는 한 마이너 동안
- * `normalizeTone()` 이 런타임에서 옮겨 준다. 그래서 옛 키는 «동작은 하지만 곧 사라지는» 것이고, 이 규칙의 `--fix` 가 곧 코드모드다 —
+ * 톤 어휘는 `src/lib/tone.ts` 의 한 벌(neutral · primary · success · warning · destructive · info)이다. 2.x 에서는 런타임 shim
+ * `normalizeTone()` 이 옛 키를 옮겨 줬지만 3.0.0 에서 지웠다(#49) — 옛 키는 이제 타입 오류이고, 이 규칙의 `--fix` 가 유일한 코드모드다 —
  * 이 패키지는 루트 eslint.config.js 로, 소비 레포는 프리셋(`@jhleeweb/squircle-design-system/eslint`)으로 같은 규칙을 돌린다.
  *
  * 왜 여기(패키지 소스)에 있는가: 프리셋이 규칙을 배포물에 실어야 하는데 `packages/eslint-rules` 는 발행하지 않고, tsdown unbundle 은
@@ -13,7 +13,7 @@
 import type { Rule } from "eslint";
 import type { Literal, Node } from "estree";
 
-/** 옛 키 → 새 키. tone.ts 의 LEGACY_TONES 와 같아야 한다 — 스펙이 그 파일을 읽어 대조한다. */
+/** 옛 키 → 새 키 — 이 규칙이 홀로 드는 표다(tone.ts 의 런타임 표는 3.0.0 에서 지웠다, #49). 목적지가 오늘의 어휘인지 eslint-preset.spec 이 본다. */
 export const LEGACY_TONES = Object.freeze({
   accent: "primary",
   ok: "success",

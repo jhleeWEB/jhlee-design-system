@@ -1,5 +1,5 @@
 {
-  "$description": "원시 팔레트 — 리터럴이 사는 유일한 색 층. cool·azure 는 참고 화면(Office Studio 2000×1070)에서 픽셀로 뽑은 값, mono 는 자매 저장소 globals.css 의 12단, gray 는 옛 base(Hotel v2.0 회색조 + 선 두 단)의 값을 사다리로 편 것(#18). moss·amber·rust 는 판정 3색의 사다리 — 500 이 오늘의 라이트 기본값, 300 이 오늘의 다크 기본값이고 나머지 단은 대비를 계산해 정했다(각 단 $description). 옛 --color-{hue}-* 이름은 legacy.json 의 alias 다.",
+  "$description": "원시 팔레트 — 리터럴이 사는 유일한 색 층. cool·azure 는 참고 화면(Office Studio 2000×1070)에서 픽셀로 뽑은 값, mono 는 자매 저장소 globals.css 의 12단, gray 는 옛 base(Hotel v2.0 회색조 + 선 두 단)의 값을 사다리로 편 것(#18). moss·amber·rust 는 판정 3색의 사다리 — 500 이 오늘의 라이트 기본값, 300 이 오늘의 다크 기본값이고 나머지 단은 대비를 계산해 정했다(각 단 $description). 옛 --color-{hue}-* 이름(legacy alias)은 3.0.0 에서 지웠다 — 코드모드가 --palette-{hue}-* 로 옮긴다(#49).",
   "$extensions": { "sds": { "scope": "root" } },
   "palette": {
     "$type": "color",
@@ -52,7 +52,7 @@
       "950": { "$value": "#09090b" }
     },
     "gray": {
-      "$description": "순회색 — 옛 base 의 회색조 10단(black … white)과 선 두 단(#dcdcdc · #bfbfbf), 한 단 들어간 면(#fafafa)을 밝기 순으로 편 것. 캔버스(도면 면)와 legacy alias 가 참조한다. 값은 옛 tokens.css 그대로다.",
+      "$description": "순회색 — 옛 base 의 회색조 10단(black … white)과 선 두 단(#dcdcdc · #bfbfbf), 한 단 들어간 면(#fafafa)을 밝기 순으로 편 것. 캔버스(도면 면)가 참조하고, 옛 base 이름(--ink · --steel …)의 코드모드 목적지다(#49). 값은 옛 tokens.css 그대로다.",
       "0": { "$value": "#ffffff" },
       "50": { "$value": "#fafafa" },
       "100": { "$value": "#f4f4f4" },

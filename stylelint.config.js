@@ -5,9 +5,8 @@
  *  - `src/generated/*.css` 는 생성물이라 리터럴이 사는 유일한 자리다(정본 JSON 이 원천, tokens:check 가 최신성을 본다).
  *  - `canvas.css` 는 캔버스 면의 고정값(흰 바탕·radius 0·무채색)이 곧 계약이라 토큰을 거치지 않는다.
  *  - `corner.css` 는 `corner-shape` 진행형 향상의 규칙 파일이다 — 보정 반경 계산식이 `calc(var(--radius-*) * var(--corner-k))` 라 규칙이 잘못 읽는다(#26).
- *  - `legacy/shell.css` 는 격리·동결(#10) — 규칙을 warning 으로 낮추고 실측 건수를 `--max-warnings` 로 붙든다(래칫: 줄어들기만 한다).
  *
- * 규칙 기준선(2026-09-30 첫 실측)은 shell.css 의 warning 뿐이다 — 나머지 손 CSS 의 위반은 같은 PR 에서 토큰으로 옮겼다(픽셀 동일, VRT 0 diff). */
+ * 기준선이 없다 — 손 CSS 의 위반은 0 이다. 유일한 warning 기준선이던 `legacy/shell.css`(122건, `--max-warnings`)는 3.0.0 에서 파일째 지웠다(#49). */
 
 /** 색이 들어가는 프로퍼티 — 값은 토큰 참조이거나 키워드다. 그림자·테두리 shorthand 도 색을 든다. */
 const COLOR_PROPS =
@@ -59,25 +58,4 @@ export default {
       },
     ],
   },
-  overrides: [
-    {
-      files: ["packages/ui/src/legacy/shell.css"],
-      rules: {
-        "color-no-hex": [true, { severity: "warning" }],
-        "declaration-property-value-allowed-list": [
-          {
-            [key(COLOR_PROPS)]: TOKEN_OR_KEYWORD,
-            [key(RADIUS_PROPS)]: TOKEN_OR_KEYWORD,
-            [key(FONT_PROPS)]: TOKEN_OR_KEYWORD,
-            [key(MOTION_PROPS)]: TOKEN_OR_KEYWORD,
-          },
-          { severity: "warning" },
-        ],
-        "declaration-property-value-disallowed-list": [
-          { [key(SPACING_PROPS)]: [/(^|[^\w.-])\d*\.?\d+px/] },
-          { severity: "warning" },
-        ],
-      },
-    },
-  ],
 };

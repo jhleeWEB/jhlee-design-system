@@ -17,7 +17,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | `header` | `ReactNode` |  | `undefined` | 머리줄을 명시하면 사용자 정의 컴포넌트로 감싸도 헤더 접기에서 항상 남는다. |
 | `collapsed` | `boolean` |  | `undefined` | 주면 이 카드는 접힌다. 제어 컴포넌트이므로 `onCollapsedChange` 도 함께 준다. 둘 다 없으면 접히지 않는 카드다. |
 | `onCollapsedChange` | `((collapsed: boolean) => void)` |  | `undefined` | 접기 버튼·세로 탭을 누르면 다음 상태로 불린다. |
-| `collapseTo` | `"strip" \| "header"` |  | `"header"` | 값: `header` — 머리줄만. **세로로 쌓인** 칸 — 접으면 높이를 아래에 돌려준다 · `strip` — 세로 탭. **가로로 나란히 놓인** 패널·뷰 — 접으면 폭을 옆에 돌려준다 |
+| `collapseTo` | `"header" \| "strip"` |  | `"header"` | 값: `header` — 머리줄만. **세로로 쌓인** 칸 — 접으면 높이를 아래에 돌려준다 · `strip` — 세로 탭. **가로로 나란히 놓인** 패널·뷰 — 접으면 폭을 옆에 돌려준다 |
 | `collapsedLabel` | `string` |  | `"panel"` | 세로 탭에 적히는 이름. `collapseTo="strip"` 이면 필수다. |
 | `collapsedSignal` | `ReactNode` |  | `undefined` | 접혔을 때도 남는 신호 — 미해결 판정 수 같은 것. 없으면 자리도 없다. |
 | `side` | `"left" \| "right"` |  | `"left"` | 값: `left` — 왼쪽 가장자리. 셰브론은 오른쪽(펼치면 내용이 오른쪽으로 자란다) · `right` — 오른쪽 가장자리. 셰브론은 왼쪽 |
@@ -53,7 +53,7 @@ _(DS 가 더하는 prop 없음 — 물려받는 속성만)_
 | `leading` | `ReactNode` |  | `undefined` | 제목 앞의 장식 — 아이콘 · 순번. |
 | `headingLevel` | `2 \| 3 \| 4` |  | `undefined` | 제목 요소의 수준. - `2` — `h2` - `3` — `h3` - `4` — `h4` |
 | `collapseButton` | `boolean` |  | `true` | 보기 전용 뷰도 본문 DOM 구조는 유지하고 접기 조작만 뺄 수 있다. |
-| `variant` | `"default" \| "panel" \| null` |  | `"default"` | 값: `panel` — 뷰·페이지 패널. 같은 최소 높이·아래 테두리·홈통을 공유한다 · `default` — 일반 카드의 여백 |
+| `variant` | `"default" \| "panel" \| null` |  | `"default"` | 값: `default` — 일반 카드의 여백 · `panel` — 뷰·페이지 패널. 같은 최소 높이·아래 테두리·홈통을 공유한다 |
 
 ### CardWell
 

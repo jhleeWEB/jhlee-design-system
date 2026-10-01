@@ -52,9 +52,11 @@ syntaxTester.run("legacy-tone", rule as never, {
   ],
 });
 
-it("규칙의 표가 packages/ui 의 tone.ts 와 같다 — 둘이 갈리면 --fix 가 런타임과 다른 키를 쓴다", () => {
+it("규칙의 표는 packages/ui 의 톤 어휘로만 옮긴다 — 런타임 표(normalizeTone)는 3.0.0 에서 지워 규칙이 홀로 든다(#49)", () => {
   const source = readFileSync(fileURLToPath(new URL("../../../ui/src/lib/tone.ts", import.meta.url)), "utf8");
-  const block = /const LEGACY_TONES = \{([\s\S]*?)\} as const/.exec(source)?.[1] ?? "";
-  const fromSource = Object.fromEntries([...block.matchAll(/(\w+):\s*"(\w+)"/g)].map((m) => [m[1], m[2]]));
-  expect(fromSource).toEqual({ ...LEGACY_TONES });
+  const block = /export const toneValues = \[([^\]]*)\]/.exec(source)?.[1] ?? "";
+  const tones = [...block.matchAll(/"(\w+)"/g)].map((m) => m[1]);
+  expect(tones.length).toBe(6);
+  for (const to of Object.values(LEGACY_TONES)) expect(tones).toContain(to);
+  for (const from of Object.keys(LEGACY_TONES)) expect(tones).not.toContain(from);
 });

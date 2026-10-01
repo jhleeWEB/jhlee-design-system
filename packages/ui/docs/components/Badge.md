@@ -14,7 +14,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
-| `tone` | `ToneInput<BadgeTone> \| null` |  | `"neutral"` | 값: `neutral` — 기본 · `primary` — 주된 것 · 지금 고른 것 · `success` — 통과 · `warning` — 주의 · `destructive` — 실패 · `accent` — deprecated alias of "primary" · `current` — deprecated alias of "neutral" · `danger` — deprecated alias of "destructive" · `default` — deprecated alias of "neutral" · `ok` — deprecated alias of "success" · `warn` — deprecated alias of "warning" |
+| `tone` | `BadgeTone \| null` |  | `"neutral"` | 값: `neutral` — 기본 · `primary` — 주된 것 · 지금 고른 것 · `success` — 통과 · `warning` — 주의 · `destructive` — 실패 |
 | `dot` | `boolean` |  | `false` | 글자 앞에 톤 색의 점을 둔다 — 목록에서 훑어 읽을 때. |
 | `children` | `ReactNode` | 예 |  | 상태를 말하는 글자 — 필수다(원칙 2: 상태는 텍스트와 병기한다). |
 | `provisional` | `boolean \| null` |  | `"false"` | 잠정 — 점선 테두리로 «아직 확정이 아니다» 를 말한다(검증 대기). |
