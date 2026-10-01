@@ -76,7 +76,7 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
   stories/                   페이지 스토리 — `Pages/Workbench`(제품 화면 복제, 영구 — `workbench/Workbench.tsx`) · `Radius` · ThemePair · Matrix. 옛 apps/ds-gallery 의
                              컴포넌트 명세 `Pages/Gallery` 는 Phase D 가 컴포넌트 스토리로 나눈 뒤 지웠다(#48)
-  vrt/                       Playwright 시각 회귀 — storybook-static/index.json 의 `vrt` 태그 스토리 × 라이트/다크, `maxDiffPixels: 0` · `threshold: 0`(C1 · #70 — 부분 래스터 끔 · CSS 전이 끔 · 글꼴 선적재로 결정론). 기준선은 도커로만(scripts/vrt-update.sh).
+  vrt/                       Playwright 시각 회귀 — storybook-static/index.json 의 `vrt` 태그 스토리 × 라이트/다크, `maxDiffPixels: 0` · `threshold: 0`(C1 · #70 — 부분 래스터 끔 · CSS 전이 끔 · 글꼴 선적재로 결정론). 기준선은 도커로만(scripts/vrt-update.sh, CI 와 같은 linux/amd64 — arm64 Mac 은 Rosetta).
   tsconfig.json              엄격 프로필 한 벌(src 전량, 스펙·스토리 제외) — tsdown dts 가 읽는다. app-profile(느슨한 2차 검사)은 하는 일이 없어 지웠다(#11)
   tsconfig.test.json         스펙·__arch__ 를 같은 엄격도로 검사. `exclude` 가 래칫(줄어들기만 한다, 오늘 비어 있다)
   tsconfig.stories.json      stories·.storybook·vrt 의 엄격 검사. 빌드 tsconfig 밖에 두어 d.ts 로 새지 않게 한다
