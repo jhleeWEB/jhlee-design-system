@@ -83,10 +83,10 @@ legacy-map.mjs  옛 이름 → 새 이름 정적 표(JSON 정본 밖) — 린트
 | 컨트롤 글자 | `text-control` | `font-medium` | Button · ToggleGroupItem · SegmentedControl 칸 · TabsTrigger · PaginationLink · Breadcrumb 크럼 · CollapsibleTrigger |
 | 입력 값 | `text-control` | normal | Input · Textarea · NumberInput · Select · Combobox · DatePicker 트리거의 값 |
 | 목록 · 메뉴 항목 | `text-body` | normal | Dropdown · Context · Select · Command · Combobox 항목 · SidebarItem |
-| 면 제목 | `text-body` | `font-semibold` | CardHeader · Toast · Alert · AccordionTrigger · MediaCard · Calendar 달 이름 · Popover/HoverCard 머리 |
+| 면 제목 | `text-body` | `font-semibold` | CardHeader · Toast · Alert · AccordionTrigger · Fieldset legend · MediaCard · Calendar 달 이름 · Popover/HoverCard 머리 |
 | 대화 · 화면 제목 | `text-title` | `font-semibold` | Modal · Drawer · AlertDialog · TopBar · EmptyState |
 | 필드 라벨 | `text-body` | `font-medium` | FieldLabel — 도움말 · 오류(`text-body`)와 같은 크기이고 굵기 · 색이 가른다. `text-label`(당시 11px)로 두었더니 아래 도움말(당시 13px)보다 작아 위계가 뒤집혔다(#80 검토) |
-| 보조 문장 | `text-body` | normal | 설명 · 도움말 — Modal/Drawer/Toast 설명 · FieldDescription · FieldError · EmptyState 설명 |
+| 보조 문장 | `text-body` | normal | 설명 · 도움말 — Modal/Drawer/Toast 설명 · FieldDescription · FieldError · EmptyState 설명 · Fieldset 설명 · AccordionContent 본문 |
 | 메타 · 구획 라벨 | `text-micro` | `font-medium` · `font-mono` · `uppercase` · `tracking-caps` | Eyebrow · SectionLabel · 표 머리(Th · DataTable · Calendar 요일) · 메뉴 묶음 머리글 · Readout 라벨 |
 
 - **크기 축은 높이와 여백만 바꾼다.** Button · Input · Select · DatePicker · Pagination 의 `sm` 도 `text-control` 이다(예전 Input · Select · DatePicker ·
@@ -105,7 +105,7 @@ legacy-map.mjs  옛 이름 → 새 이름 정적 표(JSON 정본 밖) — 린트
 | 작은 표시(16px 이하 상자) | `rounded-xs` 4px | Checkbox(sm 14 · md 16 · lg 20px) |
 | 칩 · 배지 · Kbd · 스켈레톤 | `rounded-sm` 6px | Badge · Kbd · Skeleton(bar) |
 | 컨트롤 · 메뉴 항목 | `rounded-md` 8px | Button · Input · Select · Combobox · DatePicker · NumberInput · ToggleGroup · 세그먼트 트랙(Tabs · ToggleGroup · SegmentedControl) · Pagination · Calendar 날 · Sidebar 항목 · 메뉴 항목 · Collapsible · Breadcrumb 링크(포커스 링) |
-| 면(흐름 안 · 떠 있는 패널) | `rounded-lg` 12px | Card · Alert · Toast · Popover · HoverCard · 메뉴 상자 · Select 목록 · Command · Tooltip · Toolbar(onCanvas) · Legend · Readout · Accordion 항목 · AppShell(inset) 칸 |
+| 면(흐름 안 · 떠 있는 패널) | `rounded-lg` 12px | Card · Alert · Toast · Popover · HoverCard · 메뉴 상자 · Select 목록 · Command · Tooltip · Toolbar(onCanvas) · Legend · Readout · Accordion 항목(contained 는 상자) · Fieldset · AppShell(inset) 칸 |
 | 화면을 가리는 것 | `rounded-xl` 16px | Modal · Drawer(아래쪽) · AlertDialog · CommandDialog |
 | 원형 · pill | `rounded-full` | Radio · Switch · Slider · Progress · StatusDot · Badge 점 · Avatar · Stepper 표시 원 |
 | 동심원(트랙 안의 칸) | `rounded-[calc(var(--radius-md)-var(--spacing))]` 4px | Tabs · ToggleGroup · SegmentedControl 칸(트랙 `rounded-md` − 여백 `p-1`) · MediaCard 선택 링(`lg − hairline`) |

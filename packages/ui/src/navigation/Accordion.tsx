@@ -19,14 +19,23 @@ import {
 } from "react";
 import { Accordion as Radix } from "radix-ui";
 
-import { cn } from "../cn";
+import { cn, type VariantProps } from "../cn";
+import { accordionVariants } from "./Accordion.variants";
 
 /**
- * 접이식 구획의 뿌리 — Radix Accordion 의 `type="single" | "multiple"` 유니언을 그대로 받는다. 접은 본문도 DOM 에 남아(`forceMount`)
- * 입력 초안이 보존된다.
+ * 접이식 구획의 뿌리 — Radix Accordion 의 `type="single" | "multiple"` 유니언을 그대로 받고 모양 축 `variant` 를 더한다. 접은 본문도 DOM 에
+ * 남아(`forceMount`) 입력 초안이 보존된다.
  */
-export type AccordionProps = ComponentPropsWithoutRef<typeof Radix.Root> & RefAttributes<HTMLDivElement>;
+export type AccordionProps = ComponentPropsWithoutRef<typeof Radix.Root> &
+  RefAttributes<HTMLDivElement> &
+  VariantProps<typeof accordionVariants>;
+
+/** 아코디언의 모양 — `separated` · `contained` · `flush`. */
+export type AccordionVariant = NonNullable<VariantProps<typeof accordionVariants>["variant"]>;
+
 const Values = createContext<readonly string[] | null>(null);
+/* 뿌리의 모양을 항목 · 트리거가 받아 자기 `data-variant` 로 찍는다 — theme.css 의 규칙이 그 속성으로 갈린다(Accordion.variants.ts 머리 주석). */
+const Variant = createContext<AccordionVariant>("separated");
 const ItemState = createContext<{ open: boolean; trigger: RefObject<HTMLButtonElement | null> } | null>(null);
 
 function useItemState() {
@@ -60,8 +69,13 @@ function usePartRef<T>(externalRef: Ref<T> | undefined, internalRef: RefObject<T
 
 /* 값의 정본은 제어 prop 또는 이 한 상태뿐이다. Radix에도 같은 값을 전달해 키보드 동작과
  * 보존된 본문의 inert 상태가 서로 다른 열림 상태를 읽지 않게 한다. */
-/** 접이식 구획 묶음 — `type="single"` 은 하나만, `"multiple"` 은 여럿을 연다. 제어(`value`)·비제어(`defaultValue`) 모두 받는다. */
-export function Accordion({ ref, ...props }: AccordionProps) {
+/**
+ * 접이식 구획 묶음 — `type="single"` 은 하나만, `"multiple"` 은 여럿을 연다. 제어(`value`)·비제어(`defaultValue`) 모두 받는다.
+ * 모양은 `variant` 가 고른다 — 따로 선 카드(`separated`) · 한 상자(`contained`) · 인스펙터 구획(`flush`).
+ * @slot accordion
+ */
+export function Accordion({ ref, variant, ...props }: AccordionProps) {
+  const resolved = variant ?? "separated";
   const [uncontrolled, setUncontrolled] = useState<string | string[]>(
     () => props.defaultValue ?? (props.type === "single" ? "" : []),
   );
@@ -70,37 +84,43 @@ export function Accordion({ ref, ...props }: AccordionProps) {
     const { value, onValueChange, className, ...rest } = props;
     const current = value ?? (typeof uncontrolled === "string" ? uncontrolled : "");
     return (
-      <Values.Provider value={current ? [current] : []}>
-        <Radix.Root
-          {...rest}
-          ref={ref}
-          data-slot="accordion"
-          className={cn("ds-accordion", className)}
-          value={current}
-          onValueChange={(next: string) => {
-            if (value === undefined) setUncontrolled(next);
-            onValueChange?.(next);
-          }}
-        />
-      </Values.Provider>
+      <Variant.Provider value={resolved}>
+        <Values.Provider value={current ? [current] : []}>
+          <Radix.Root
+            {...rest}
+            ref={ref}
+            data-slot="accordion"
+            data-variant={resolved satisfies AccordionVariant}
+            className={cn(accordionVariants({ variant: resolved }), className)}
+            value={current}
+            onValueChange={(next: string) => {
+              if (value === undefined) setUncontrolled(next);
+              onValueChange?.(next);
+            }}
+          />
+        </Values.Provider>
+      </Variant.Provider>
     );
   }
   const { value, onValueChange, className, ...rest } = props;
   const current = value ?? (Array.isArray(uncontrolled) ? uncontrolled : []);
   return (
-    <Values.Provider value={current}>
-      <Radix.Root
-        {...rest}
-        ref={ref}
-        data-slot="accordion"
-        className={cn("ds-accordion", className)}
-        value={current}
-        onValueChange={(next: string[]) => {
-          if (value === undefined) setUncontrolled(next);
-          onValueChange?.(next);
-        }}
-      />
-    </Values.Provider>
+    <Variant.Provider value={resolved}>
+      <Values.Provider value={current}>
+        <Radix.Root
+          {...rest}
+          ref={ref}
+          data-slot="accordion"
+          data-variant={resolved satisfies AccordionVariant}
+          className={cn(accordionVariants({ variant: resolved }), className)}
+          value={current}
+          onValueChange={(next: string[]) => {
+            if (value === undefined) setUncontrolled(next);
+            onValueChange?.(next);
+          }}
+        />
+      </Values.Provider>
+    </Variant.Provider>
   );
 }
 
@@ -108,6 +128,7 @@ export function Accordion({ ref, ...props }: AccordionProps) {
 export function AccordionItem({ className, ref, ...props }: ComponentProps<typeof Radix.Item>) {
   const values = useContext(Values);
   if (!values) throw new Error("AccordionItem must be inside Accordion");
+  const variant = useContext(Variant);
   const trigger = useRef<HTMLButtonElement>(null);
   const open = values.includes(props.value);
   const context = useMemo(() => ({ open, trigger }), [open]);
@@ -117,6 +138,7 @@ export function AccordionItem({ className, ref, ...props }: ComponentProps<typeo
         {...props}
         ref={ref}
         data-slot="accordion-item"
+        data-variant={variant satisfies AccordionVariant}
         className={cn("ds-accordion-item", className)}
       />
     </ItemState.Provider>
@@ -144,6 +166,7 @@ export function AccordionTrigger({
   ...props
 }: ComponentProps<typeof Radix.Trigger>) {
   const item = useItemState();
+  const variant = useContext(Variant);
   const composedRef = usePartRef(ref, item.trigger);
   return (
     <Radix.Trigger
@@ -151,7 +174,9 @@ export function AccordionTrigger({
       asChild={asChild}
       ref={composedRef}
       data-slot="accordion-trigger"
-      className={cn("ds-accordion-trigger", className)}
+      data-variant={variant satisfies AccordionVariant}
+      // 면 제목(#80) — 아코디언 항목은 면이고 트리거는 그 면의 제목이다(Card · Toast · Alert 와 같은 역할).
+      className={cn("ds-accordion-trigger text-body font-semibold", className)}
     >
       {asChild ? (
         children
@@ -182,7 +207,10 @@ export interface AccordionContentProps extends ComponentProps<typeof Radix.Conte
   contentClassName?: string;
 }
 
-/** 구획의 본문 — 접혀도 DOM 에 남고(`inert` · `aria-hidden`) 접힐 때 안의 포커스를 트리거로 돌려보낸다. */
+/**
+ * 구획의 본문 — 접혀도 DOM 에 남고(`inert` · `aria-hidden`) 접힐 때 안의 포커스를 트리거로 돌려보낸다.
+ * 글자는 보조 문장 역할(`text-body` · 흐린 글자)이다 — 제목과 크기가 같고 굵기 · 색이 가른다. 안에 놓인 컨트롤 · `Fieldset` 은 자기 글자색을 든다.
+ */
 export function AccordionContent({
   className,
   contentClassName,
@@ -198,10 +226,14 @@ export function AccordionContent({
     if (!item.open && node.current?.contains(document.activeElement)) item.trigger.current?.focus();
   }, [item.open, item.trigger]);
   // Radix는 자기 요소의 transition을 잠시 끄고 치수를 잰다. 실제 모션은 안쪽에 두어 그 측정에 끊기지 않는다.
+  // 본문 글자는 보조 문장(#80 — text-body · 흐린 글자)이다. 예전에는 크기를 바깥에서 물려받아(스토리 바닥 16px) text-body 제목보다 커 보였다(#84).
+  // 유틸리티로 두어 `contentClassName="text-foreground"` 가 twMerge 로 깔끔히 이긴다.
   const body = (content: ReactNode) => (
     <div className="ds-accordion-motion">
       <div className="ds-accordion-content-clip">
-        <div className={cn("ds-accordion-content-body", contentClassName)}>{content}</div>
+        <div className={cn("ds-accordion-content-body text-body text-muted-foreground", contentClassName)}>
+          {content}
+        </div>
       </div>
     </div>
   );

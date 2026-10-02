@@ -8,7 +8,9 @@ export {
   AccordionContent,
   type AccordionProps,
   type AccordionContentProps,
+  type AccordionVariant,
 } from "./Accordion";
+export { accordionVariants } from "./Accordion.variants";
 export {
   Collapsible,
   CollapsibleContent,
