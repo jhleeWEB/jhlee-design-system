@@ -46,7 +46,7 @@ export function EmptyState({ className, title, description, icon, action, size, 
       {/* 32px — 예전 `size-16`(64px)은 2px 격자 시절 값이 두 배로 남아 획(24 뷰박스의 2)이 5px 넘게 굵어졌다(#80). */}
       {icon ? <div className="text-foreground-disabled [&_svg]:size-8">{icon}</div> : null}
       <div className={emptyStateTitleVariants({ size })}>{title}</div>
-      {description ? <p className="max-w-[46ch] text-body text-muted-foreground">{description}</p> : null}
+      {description ? <p className="m-0 max-w-[46ch] text-body text-muted-foreground">{description}</p> : null}
       {action ? <div className="mt-2">{action}</div> : null}
     </div>
   );

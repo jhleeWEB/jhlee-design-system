@@ -88,7 +88,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [DataTable](docs/components/DataTable.md): 명세서 표 — 한 열 정렬 · 행 선택 · 합계 줄 · 줄 높이를 지키는 로딩 — "use client"
 - [DatePicker](docs/components/DatePicker.md): 날짜 고르기 — 트리거를 누르면 달력 팝오버가 열린다 — "use client"
 - [DescriptionList](docs/components/DescriptionList.md): 이름-값 목록(`<dl>` 격자) — 이름은 왼쪽에서 말줄임, 값은 오른쪽 정렬.
-- [DisplayHeading](docs/components/DisplayHeading.md): 들머리 제목 — 한 패널에 하나만.
+- [DisplayHeading](docs/components/DisplayHeading.md): 들머리 제목 — 한 패널에 하나만
 - [Drawer](docs/components/Drawer.md): 서랍의 루트 — 열림 상태와 모달성(`modal={false}` 면 비모달)을 든다 — 부품: DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger — "use client"
 - [DropdownMenu](docs/components/DropdownMenu.md): 메뉴의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 — 부품: DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger — "use client"
 - [EmptyState](docs/components/EmptyState.md): 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다.
@@ -98,7 +98,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [HoverCard](docs/components/HoverCard.md): 호버 카드의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 지연(`openDelay` · `closeDelay`)만 든다 — 부품: HoverCardContent, HoverCardTrigger — "use client"
 - [Input](docs/components/Input.md): 입력 — 글자와 수치 — "use client"
 - [Kbd](docs/components/Kbd.md): 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. — "use client"
-- [Lede](docs/components/Lede.md): 들머리 아래 한 문단 — 읽히도록 폭을 제한한다.
+- [Lede](docs/components/Lede.md): 들머리 아래 한 문단 — 읽히도록 폭을 제한한다
 - [Legend](docs/components/Legend.md): 범례 — `LegendItem` 의 목록 — 부품: LegendItem
 - [MediaCard](docs/components/MediaCard.md): 내용 카드 — 고를 수 있는 후보 한 개(썸네일 · 제목 · 메타 · 조치) — "use client"
 - [Modal](docs/components/Modal.md): 모달의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 모달성만 든다 — 부품: ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger — "use client"

@@ -51,7 +51,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole("heading", { name: "Candidate 03" })).toBeVisible();
+    const title = canvas.getByRole("heading", { name: "Candidate 03" });
+    await expect(title).toBeVisible();
+    // 제목 h3 · 설명 p 는 안쪽 요소라 소비자가 고칠 수 없다 — UA 여백이 남지 않아야 카드 패딩과 `mt-1` 이 간격의 전부다(#100).
+    await expect(getComputedStyle(title).margin).toBe("0px");
+    const description = title.parentElement?.querySelector("p");
+    if (description) await expect(getComputedStyle(description).marginBottom).toBe("0px");
   },
 };
 

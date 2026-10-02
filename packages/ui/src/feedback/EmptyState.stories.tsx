@@ -36,8 +36,12 @@ export const Default: Story = {
       <EmptyState {...args} />
     </div>
   ),
-  play: async ({ canvas }) => {
+  play: async ({ canvas, canvasElement }) => {
     await expect(canvas.getByRole("button", { name: "Create project" })).toBeEnabled();
+    // 설명 `<p>` 의 UA 위아래 1em 이 남으면 제목 · 동작과의 간격이 `gap` 과 어긋난다(#100).
+    const description = canvasElement.querySelector("[data-slot=empty-state] p");
+    if (!description) throw new Error("EmptyState 의 설명 <p> 가 그려지지 않았다");
+    await expect(getComputedStyle(description).margin).toBe("0px");
   },
 };
 

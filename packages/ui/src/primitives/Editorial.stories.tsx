@@ -7,6 +7,9 @@ import { DisplayHeading, Eyebrow, Lede } from "./Editorial";
 /* 3스토리 계약(본보기 Button.stories). Editorial 모듈의 대표는 DisplayHeading — 들머리 셋(Eyebrow · DisplayHeading · Lede)은 함께 쓰인다. */
 const asValues = ["h1", "h2", "h3"] as const;
 
+/** 계산된 네 쪽 여백 — preflight 없는 진입 CSS 에서 UA 여백(h*·p 의 0.67–1em)이 남지 않았는지 Chromium 에서 본다(#100). */
+const margins = (element: Element): string => getComputedStyle(element).margin;
+
 const meta = {
   title: "Primitives/Editorial",
   component: DisplayHeading,
@@ -19,12 +22,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole("heading", { level: 2, name: "Make room for work." })).toBeVisible();
+    const heading = canvas.getByRole("heading", { level: 2, name: "Make room for work." });
+    await expect(heading).toBeVisible();
+    await expect(margins(heading)).toBe("0px");
   },
 };
 
 export const Variants: Story = {
   tags: ["!manifest"],
+  play: async ({ canvas, canvasElement }) => {
+    // h1 · h2 · h3 는 UA 여백이 서로 다르다(0.67em · 0.83em · 1em) — 셋 다, 그리고 Lede 의 `<p>` 까지 0 이어야 `gap-2` 가 간격의 전부다.
+    for (const heading of canvas.getAllByRole("heading")) await expect(margins(heading)).toBe("0px");
+    for (const lede of canvasElement.querySelectorAll("[data-slot=lede]"))
+      await expect(margins(lede)).toBe("0px");
+  },
   render: (args) => (
     <div className="flex w-120 flex-col gap-8">
       {asValues.map((as) => (

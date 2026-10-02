@@ -162,7 +162,6 @@
 }
 .ds-accordion-header {
   display: flex;
-  margin: 0;
 }
 .ds-accordion-trigger {
   display: flex;

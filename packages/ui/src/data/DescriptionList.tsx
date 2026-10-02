@@ -41,7 +41,7 @@ export function DescriptionList({
 }: DescriptionListProps) {
   return (
     <dl
-      className={cn("grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-2 text-body", className)}
+      className={cn("m-0 grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-2 text-body", className)}
       {...rest}
       data-slot="description-list"
     >

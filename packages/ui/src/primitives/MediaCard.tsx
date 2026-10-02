@@ -130,7 +130,8 @@ export function MediaCard({
         ) : null}
 
         <div className="min-w-0">
-          <h3 className="truncate text-body font-semibold text-foreground">
+          {/* `m-0` · `mb-0` — 안쪽 요소라 소비자의 className 이 닿지 않는다. UA 여백이 남으면 카드 패딩 위에 1em 이 더해진다(#100). */}
+          <h3 className="m-0 truncate text-body font-semibold text-foreground">
             {onSelect ? (
               <button
                 data-slot="media-card-select"
@@ -153,7 +154,7 @@ export function MediaCard({
             )}
           </h3>
           {description ? (
-            <p className="mt-1 line-clamp-2 text-body text-muted-foreground">{description}</p>
+            <p className="mt-1 mb-0 line-clamp-2 text-body text-muted-foreground">{description}</p>
           ) : null}
         </div>
 
