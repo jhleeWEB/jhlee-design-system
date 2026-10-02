@@ -17,7 +17,7 @@
 ```
 packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown 산출물(커밋하지 않는다)
   tokens/                    **DTCG JSON 정본** — 사람이 토큰을 편집하는 유일한 곳(#15 · #18). `primitive/{color,dimension,typography,motion}`(리터럴이 사는 유일한 층 —
-                             `--palette-{cool,azure,mono,gray,moss,amber,rust}` · 치수·간격·시간 4단·굵기·자간·글꼴 스택) · `semantic/{canvas,chrome.light,chrome.dark,layer,tailwind}`
+                             `--palette-{cool,klein,azure,mono,gray,moss,amber,rust}` · 치수·간격·시간 4단·굵기·자간·글꼴 스택) · `semantic/{canvas,chrome.light,chrome.dark,layer,tailwind}`
                              (값은 전부 참조; 판정 3색은 톤마다 DEFAULT/hover/ink/soft/line, `layer` 는 z-index 층) · `component/{control,collapse,toast,scroll,tooltip,overlay}` ·
                              옛 이름 alias 파일 `legacy.json` 은 3.0.0 에서 지웠다(#49 — 다시 생기면 schema 가 실패한다).
                              파일 머리(또는 그룹)의 `$extensions.sds.scope` 가 생성물의 어느 블록으로 나가는지 정한다(root · chrome · theme · theme-inline);
@@ -101,7 +101,8 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 - **캔버스인가 크롬인가.** 새 컴포넌트를 만들 때 묻는 질문은 언제나 이것 하나다. 도면 요소·치수선·범례 스와치는 캔버스(흰 바탕 고정·radius 0·무채색·다크 없음),
   그 밖은 전부 크롬(듀얼 테마·작은 radius·부유 레이어에만 그림자). 한 부품에 둘이 섞이면 요소마다 가른다 — **범례 상자는 크롬, 스와치는 캔버스**(#80: 상자는
   `rounded-lg`·테두리·카드 면·`shadow-pop` 의 떠 있는 패널로 다크를 따르고, 스와치는 흰 캔버스 타일 위에 각진 무채색으로 선다).
-- **유채색은 판정에만**(base 원칙 2) — `primary` azure `#0869e1` 은 «지금 고른 것·주된 동작», 판정색 `success`·`warning`·`destructive`·`info` 는 «통과했는가». 상태는 항상 텍스트와 병기한다.
+- **브랜드는 Cool graphite + Klein blue**(#83) — 중립은 `palette.cool`, 유일한 비판정 시그널은 `palette.klein`(라이트 `#1F3BDB` · 다크 `#6E86FF`).
+- **유채색은 판정에만**(base 원칙 2) — `primary` Klein `#1F3BDB` 은 «지금 고른 것·주된 동작», 판정색 `success`·`warning`·`destructive`·`info` 는 «통과했는가». 상태는 항상 텍스트와 병기한다.
 - **수치는 mono + tabular-nums**(원칙 3).
 - **토큰 밖 값을 쓰지 않는다.** 색·간격·반경·글자·시간·층위는 생성물 사다리만 — 크롬 색은 **shadcn 어휘**(`bg-background` `bg-card` `bg-muted` `bg-secondary` `text-foreground`
   `text-muted-foreground` `border-border` `bg-primary` `text-primary-foreground` `bg-accent` `ring-ring` `bg-destructive-soft` …, B5 #22), 캔버스는 `canvas-*`, 그 밖은 역할 이름

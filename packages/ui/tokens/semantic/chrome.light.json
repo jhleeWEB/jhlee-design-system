@@ -36,31 +36,31 @@
       "$description": "강한 테두리 — 컨트롤 외곽(옛 line-strong)."
     },
     "primary": {
-      "$value": "{palette.azure.500}",
-      "$description": "유채색 액센트 — «지금 고른 것 · 주된 동작»(옛 accent). 판정 4색과 뜻이 갈린다."
+      "$value": "{palette.klein.500}",
+      "$description": "브랜드 시그널 Klein blue(#83) — «지금 고른 것 · 주된 동작»(옛 accent). 판정 4색과 뜻이 갈린다. 흰 글자 7.76:1."
     },
-    "primary-hover": { "$value": "{palette.azure.600}" },
+    "primary-hover": { "$value": "{palette.klein.600}" },
     "primary-foreground": { "$value": "#ffffff", "$description": "primary 위의 글자(옛 accent-ink)." },
     "primary-track": {
-      "$value": "{palette.azure.100}",
+      "$value": "{palette.klein.100}",
       "$description": "슬라이더 · 진행 막대의 바닥(옛 accent-track)."
     },
     "primary-line": {
-      "$value": "{palette.azure.400}",
-      "$description": "primary 테두리 — 흰 면 위 3.01:1(info-line 과 같은 단, 같은 방법). 옛 Badge border-primary/40 을 이것으로(#24)."
+      "$value": "{palette.klein.300}",
+      "$description": "primary 테두리 — 흰 면 위 3.22:1(info-line 과 같은 단, 같은 방법). 옛 Badge border-primary/40 을 이것으로(#24)."
     },
     "accent": {
-      "$value": "{palette.azure.50}",
-      "$description": "옅은 액센트 면 — 선택된 행 · 배지 바탕(옛 accent-soft). shadcn 의 accent 는 **옅은 면**이다 — 옛 이름 accent(azure)는 primary 가 됐다."
+      "$value": "{palette.klein.50}",
+      "$description": "옅은 액센트 면 — 선택된 행 · 배지 바탕(옛 accent-soft). shadcn 의 accent 는 **옅은 면**이다 — 옛 이름 accent(azure → 지금 Klein)는 primary 가 됐다."
     },
     "accent-foreground": {
-      "$value": "{palette.azure.500}",
+      "$value": "{palette.klein.500}",
       "$description": "accent 면 위의 글자 — 옛 조합 bg-accent-soft + text-accent 의 글자색 그대로."
     },
-    "selection-fill": { "$value": "rgb(8 105 225 / 0.14)" },
-    "selection-stroke": { "$value": "{palette.azure.500}" },
+    "selection-fill": { "$value": "rgb(31 59 219 / 0.14)" },
+    "selection-stroke": { "$value": "{palette.klein.500}" },
     "scrim": { "$value": "rgb(15 19 26 / 0.38)" },
-    "ring": { "$value": "{palette.azure.500}", "$description": "포커스 링(옛 focus)." },
+    "ring": { "$value": "{palette.klein.500}", "$description": "포커스 링(옛 focus)." },
     "tooltip": {
       "$value": "{palette.cool.900}",
       "$description": "툴팁만 면을 뒤집는다 — «일시적이고 내 것이 아니다»(옛 tooltip-bg)."
@@ -103,15 +103,15 @@
     "destructive-soft": { "$value": "{palette.rust.50}" },
     "destructive-line": { "$value": "{palette.rust.300}" },
     "info": {
-      "$value": "{palette.azure.500}",
-      "$description": "판정 «안내» — 신설(#22). 오늘은 primary 와 같은 azure 사다리를 공유한다. Alert 의 info 톤이 옛 border-l-accent 로 이미 이 색을 썼다."
+      "$value": "{palette.klein.500}",
+      "$description": "판정 «안내» — 신설(#22). primary 와 같은 시그널 사다리(Klein, #83)를 공유한다 — 안내는 판정이 아니라 «알아 둘 것» 이라 브랜드 색이 맡는다."
     },
-    "info-hover": { "$value": "{palette.azure.600}" },
-    "info-foreground": { "$value": "{palette.cool.0}", "$description": "흰색 5.10:1." },
-    "info-soft": { "$value": "{palette.azure.50}" },
+    "info-hover": { "$value": "{palette.klein.600}" },
+    "info-foreground": { "$value": "{palette.cool.0}", "$description": "흰색 7.76:1." },
+    "info-soft": { "$value": "{palette.klein.50}" },
     "info-line": {
-      "$value": "{palette.azure.400}",
-      "$description": "테두리 — 흰 면 위 3.01:1 까지 밝힌 값(다른 판정색의 line 과 같은 방법)."
+      "$value": "{palette.klein.300}",
+      "$description": "테두리 — 흰 면 위 3.22:1(다른 판정색의 line 과 같은 방법)."
     }
   }
 }

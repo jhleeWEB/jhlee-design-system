@@ -26,7 +26,7 @@ legacy-map.mjs  옛 이름 → 새 이름 정적 표(JSON 정본 밖) — 린트
 | 테두리 사다리 | `border` → `border-strong` | 구획선 · 컨트롤 외곽 |
 | 반경 | `xs` `sm` `md` `lg` `xl` `full` = 4 / 6 / 8 / 12 / 16 / 9999 px 고정(원호 — 스쿼클은 #36 에서 폐기) | 작은 표시 · 칩 · 컨트롤 · 면 · 모달 — 아래 «역할 → 토큰» |
 
-**뜻이 갈리는 두 이름**: `primary`(azure 채움, «지금 고른 것 · 주된 동작»)와 `accent`(옅은 azure 면 — 선택된 행 · 배지 바탕). shadcn 과 같다. 옛 이름에서
+**뜻이 갈리는 두 이름**: `primary`(브랜드 시그널 Klein 채움, «지금 고른 것 · 주된 동작»)와 `accent`(옅은 Klein 면 — 선택된 행 · 배지 바탕). shadcn 과 같다. 옛 이름에서
 `accent` 는 azure 채움이었고 `muted` 는 회색 **글자**였다 — 그래서 그 둘은 2.x 에서도 alias 로 살릴 수 없었고 코드모드로만 옮긴다(아래).
 
 **JSON 경로 → CSS → Tailwind** 는 기계적이다: `chrome.muted-foreground` → `--chrome-muted-foreground` → `text-muted-foreground`(`chrome-` 접두만 뗀다).
@@ -34,6 +34,19 @@ legacy-map.mjs  옛 이름 → 새 이름 정적 표(JSON 정본 밖) — 린트
 
 **판정색**은 `success · warning · destructive · info` 마다 `DEFAULT / hover / foreground / soft / line` 다섯 역할이 원시 사다리(moss · amber · rust · azure)에서
 나온다 — 값과 대비 근거는 `primitive/color.json` 의 각 단에 있다.
+
+## 브랜드 팔레트(#83)
+
+사용자 결정(2026-10-02): **Cool graphite 중립 + Klein blue 시그널** — 흑백 계열 브랜드에 시그널 하나.
+
+| 층 | 원시 사다리 | 쓰임 |
+|---|---|---|
+| 중립(Cool graphite) | `palette.cool` 0 – 950(ink ≈ cool.950 `#0f131a`) | 면 · 글자 · 테두리 — 푸른 기 도는 흑연 회색이라 도면 · CAD 의 차가운 톤과 맞는다 |
+| 시그널(Klein blue) | `palette.klein` — 500 `#1f3bdb`(라이트) · 300 `#6e86ff`(다크) | `primary` · `info` · `ring` · `selection-*` · `accent`(옅은 면) · `primary-track` · `{primary,info}-line` — **화면에서 유일한 비판정 유채색** |
+| 판정 | `moss` · `amber` · `rust` | `success` · `warning` · `destructive` — 시그널과 섞지 않는다 |
+
+시그널이 Klein 으로 정해지며 옛 액센트 `palette.azure`(#0869e1)는 크롬이 참조하지 않는다 — 공개 CSS 변수라 지우지 않는다. `info` 는 원래 primary 와
+같은 사다리를 공유했으므로(«안내» 는 판정이 아니다) 함께 Klein 으로 옮겼다. 단마다의 대비는 `primitive/color.json` 의 `$description` 이 정본이다.
 
 ## 역할 → 토큰(#80)
 
