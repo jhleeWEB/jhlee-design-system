@@ -17,4 +17,4 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 |---|---|---|---|---|
 | `legend` | `ReactNode` | 예 |  | 묶음의 이름 — 위 테두리선에 걸치는 `<legend>`. 스크린리더가 이 글자를 묶음(role `group`)의 이름으로 읽는다. 면 제목 역할(`text-body font-semibold`). |
 | `description` | `ReactNode` |  | `undefined` | legend 아래 보조 문장 — 묶음의 `aria-describedby` 로 이어진다(보조 문장 역할, 흐린 `text-body`). 넘긴 `aria-describedby` 는 그 뒤에 붙는다. |
-| `disabled` | `boolean` |  | `false` | 묶음 전체를 끈다(네이티브) — 안의 input · select · textarea · button 이 꺼지고, legend · 설명 · 안의 FieldLabel · FieldDescription 이 흐려진다. role 만 단 비(非)폼 컨트롤(Radix Slider 손잡이)은 꺼지지 않으니 그 컨트롤에도 `disabled` 를 준다. |
+| `disabled` | `boolean` |  | `false` | 묶음 전체를 끈다(네이티브) — 안의 input · select · textarea · button 이 꺼지고, legend · 설명 · 안의 FieldLabel · FieldDescription 이 흐려진다. 네이티브가 닿지 않는 DS `Slider`(손잡이가 role 만 단 span)도 컨텍스트로 함께 꺼진다. 안에 다시 둔 Fieldset 도 꺼진다(네이티브와 같다). |

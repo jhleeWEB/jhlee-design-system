@@ -10,6 +10,7 @@ import {
 } from "../../stories/helpers/Inspector";
 import { Switch } from "./Choice";
 import { Fieldset, type FieldsetProps } from "./Fieldset";
+import { Slider } from "./Slider";
 
 /* 3스토리 계약(본보기 Button.stories). 축(cva)이 없는 컴포넌트라 Variants 는 설명 유무 · 비활성 · 내용의 밀도(한 행 · 여러 행 · 안에 다시 묶음)와
  * 인스펙터 폭의 양 끝(280 · 440px)을 나란히 둔다. Default 는 사용자 앱 인스펙터의 복제다 — 설정 항목마다 상자 하나를 세우고 위아래로 쌓는다(#84). */
@@ -19,7 +20,7 @@ function InspectorStack(args: Partial<FieldsetProps>) {
   return (
     <>
       <Fieldset legend="North" {...args}>
-        <InspectorAngle disabled={args.disabled ?? false} />
+        <InspectorAngle />
       </Fieldset>
       <Fieldset legend="Road widths">
         <InspectorRow label="Edit road widths" description="Set a width per edge in Plan">
@@ -93,6 +94,14 @@ export const Variants: Story = {
             <InspectorRow label="Road widening">
               <InspectorAmount unit="m²" />
             </InspectorRow>
+            {/* disabled 를 주지 않았다 — 손잡이 · 값 표기가 Fieldset 의 컨텍스트로 꺼진다(#90). */}
+            <Slider
+              aria-label="Rotation"
+              defaultValue={[30]}
+              max={359}
+              showValue
+              formatValue={(v) => `${v}°`}
+            />
           </Fieldset>
         </InspectorPanel>
         <InspectorPanel className="w-(--size-panel)">

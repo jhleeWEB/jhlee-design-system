@@ -78,6 +78,9 @@ export const Default: Story = {
     const description = canvas.getByText("Gross area inside the boundary.");
     await expect(input).toHaveAttribute("aria-describedby", description.id);
     await expect(input).not.toHaveAttribute("aria-invalid");
+    // `<p>` 의 UA 여백(1em)이 남으면 설명이 컨트롤에서 14px 떨어지고 필드의 gap 과 어긋난다(#90).
+    const { marginTop, marginBottom } = getComputedStyle(description);
+    await expect([marginTop, marginBottom]).toEqual(["0px", "0px"]);
   },
 };
 

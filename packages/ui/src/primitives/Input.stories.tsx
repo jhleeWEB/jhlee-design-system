@@ -9,6 +9,17 @@ import { Input, Textarea } from "./Input";
 const sizeValues = ["sm", "md", "lg"] as const;
 const kindValues = ["text", "numeric", "suffix", "invalid", "disabled"] as const;
 
+/* 값의 끝 → 단위의 앞 간격(px). 수치는 오른쪽 정렬이라 값의 끝은 입력 내용 상자의 오른쪽 끝이다 — 글자 폭을 재지 않아도 된다.
+   패딩 공식이 단위의 글자 크기가 아니라 입력의 `ch` 로 셀 때 이 값이 1.4(m) · 3.8(m²) 로 흔들렸다(#90). */
+const suffixGap = (input: HTMLElement): number => {
+  const suffix = input.nextElementSibling;
+  if (!(suffix instanceof HTMLElement)) throw new Error(`${input.getAttribute("aria-label")} 에 단위가 없다`);
+  const style = getComputedStyle(input);
+  const valueEnd =
+    input.getBoundingClientRect().right - parseFloat(style.borderRightWidth) - parseFloat(style.paddingRight);
+  return suffix.getBoundingClientRect().left - valueEnd;
+};
+
 const meta = {
   title: "Primitives/Input",
   component: Input,
@@ -27,6 +38,12 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
+  play: async ({ canvas }) => {
+    for (const size of sizeValues) {
+      const gap = suffixGap(canvas.getByRole("textbox", { name: `${size} suffix` }));
+      await expect(Math.abs(gap - 4)).toBeLessThan(0.5);
+    }
+  },
   render: (args) => (
     <div className="flex flex-col gap-6">
       <Matrix
@@ -55,6 +72,11 @@ export const Variants: Story = {
 };
 
 export const ThemeContrast: Story = {
+  play: async ({ canvas }) => {
+    // 한 글자 단위 — 옛 공식에서 값에 붙던 경우다.
+    for (const input of canvas.getAllByRole("textbox", { name: "Floor height" }))
+      await expect(Math.abs(suffixGap(input) - 4)).toBeLessThan(0.5);
+  },
   render: (args) => (
     <ThemePair>
       <Input {...args} className="w-40" />

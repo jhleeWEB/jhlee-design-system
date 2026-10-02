@@ -1,5 +1,5 @@
 "use client";
-import { useId, type ReactNode } from "react";
+import { createContext, useContext, useId, type ReactNode } from "react";
 
 import { cn } from "../cn";
 import {
@@ -16,7 +16,8 @@ import {
  *     선을 가려야 하고, 그러려면 상자가 놓인 면(카드 · 패널 · 배경)의 색을 알아야 한다. 네이티브 끊김은 바탕을 몰라도 된다.
  *  2. 그룹 의미 — role `group`, 이름은 legend 의 글자다. 스크린리더가 묶음에 들어설 때 그 이름을 읽는다.
  *  3. `disabled` — 안의 폼 컨트롤(input · select · textarea · button)이 전부 진짜로 꺼진다. Radix 의 Switch · Checkbox · Radio · Select 트리거도
- *     button 이라 함께 꺼진다. Radix Slider 의 손잡이처럼 role 만 단 span 은 폼 컨트롤이 아니어서 꺼지지 않는다 — 그런 컨트롤에는 `disabled` 를 따로 준다.
+ *     button 이라 함께 꺼진다. Radix Slider 의 손잡이처럼 role 만 단 span 은 폼 컨트롤이 아니어서 네이티브로는 꺼지지 않는다 — 그 빈자리를
+ *     컨텍스트(`useFieldsetDisabled`)가 메운다: DS `Slider` 가 읽어 함께 꺼진다(#90). 직접 만든 role 컨트롤에는 `disabled` 를 따로 준다.
  *
  * legend 줄 오른쪽의 동작(`action`)은 두지 않는다 — 깔끔하게 놓을 자리가 없다. 브라우저가 끊어 주는 것은 렌더된 legend 하나의 폭뿐이라
  *  - 동작을 legend 안에 넣으면 그 글자가 묶음 이름에 섞이고(«North Reset»), 오른쪽 끝에 두려고 legend 를 폭 전체로 늘리면 위 테두리가 통째로 끊긴다.
@@ -35,10 +36,19 @@ export interface FieldsetProps extends React.ComponentPropsWithRef<"fieldset"> {
   description?: ReactNode;
   /**
    * 묶음 전체를 끈다(네이티브) — 안의 input · select · textarea · button 이 꺼지고, legend · 설명 · 안의 FieldLabel · FieldDescription 이 흐려진다.
-   * role 만 단 비(非)폼 컨트롤(Radix Slider 손잡이)은 꺼지지 않으니 그 컨트롤에도 `disabled` 를 준다.
+   * 네이티브가 닿지 않는 DS `Slider`(손잡이가 role 만 단 span)도 컨텍스트로 함께 꺼진다. 안에 다시 둔 Fieldset 도 꺼진다(네이티브와 같다).
    * @default false
    */
   disabled?: boolean | undefined;
+}
+
+/* 네이티브 `disabled` 의 빈자리 — 조상 fieldset 이 꺼지면 브라우저는 폼 컨트롤만 끄고, role 만 단 손잡이(Radix Slider 의 span)는 포커스 · 키 · 드래그가
+   그대로 산다(#90). 그런 컨트롤이 이 값을 읽는다. 바깥 묶음이 꺼지면 안 묶음도 꺼진다 — 자손 fieldset 이 `:disabled` 가 되는 네이티브 규칙과 같다. */
+const FieldsetDisabledContext = createContext(false);
+
+/** 둘러싼 Fieldset 이 꺼졌는가 — 네이티브 `disabled` 가 닿지 않는 role 컨트롤(Slider)이 읽는다. 배럴에 내보내지 않는다(DS 안의 약속). */
+export function useFieldsetDisabled(): boolean {
+  return useContext(FieldsetDisabledContext);
 }
 
 /** 내용이 있는가 — `false` · 빈 문자열은 «없음» 이다(조건부 `cond && "…"` 를 그대로 넘겨도 빈 설명이 서지 않는다). */
@@ -54,30 +64,35 @@ export function Fieldset({
   className,
   legend,
   description,
+  disabled = false,
   children,
   "aria-describedby": describedBy,
   ...rest
 }: FieldsetProps) {
+  const inheritedDisabled = useFieldsetDisabled();
   const descriptionId = useId();
   const hasDescription = present(description);
   const ids = [hasDescription ? descriptionId : undefined, describedBy].filter(Boolean).join(" ");
   return (
-    <fieldset
-      aria-describedby={ids || undefined}
-      className={cn(fieldsetClassName, className)}
-      {...rest}
-      data-slot="fieldset"
-    >
-      {/* 첫 자식이어야 «렌더된 legend» 다 — 그래야 브라우저가 이것을 테두리선에 세우고 묶음 이름으로 삼는다. */}
-      <legend data-slot="fieldset-legend" className={fieldsetLegendClassName}>
-        {legend}
-      </legend>
-      {hasDescription ? (
-        <p id={descriptionId} data-slot="fieldset-description" className={fieldsetDescriptionClassName}>
-          {description}
-        </p>
-      ) : null}
-      {children}
-    </fieldset>
+    <FieldsetDisabledContext.Provider value={disabled || inheritedDisabled}>
+      <fieldset
+        aria-describedby={ids || undefined}
+        disabled={disabled}
+        className={cn(fieldsetClassName, className)}
+        {...rest}
+        data-slot="fieldset"
+      >
+        {/* 첫 자식이어야 «렌더된 legend» 다 — 그래야 브라우저가 이것을 테두리선에 세우고 묶음 이름으로 삼는다. */}
+        <legend data-slot="fieldset-legend" className={fieldsetLegendClassName}>
+          {legend}
+        </legend>
+        {hasDescription ? (
+          <p id={descriptionId} data-slot="fieldset-description" className={fieldsetDescriptionClassName}>
+            {description}
+          </p>
+        ) : null}
+        {children}
+      </fieldset>
+    </FieldsetDisabledContext.Provider>
   );
 }

@@ -3,6 +3,7 @@ import { useState, type ReactNode } from "react";
 import { Slider as Radix } from "radix-ui";
 
 import { cn, type VariantProps } from "../cn";
+import { useFieldsetDisabled } from "./Fieldset";
 import { sliderThumbClassName, sliderTrackVariants, sliderVariants } from "./Slider.variants";
 
 /* 슬라이더 — 연속 범위에서 값 하나(또는 범위의 두 끝)를 고른다.
@@ -72,11 +73,15 @@ export function Slider({
   value,
   defaultValue,
   onValueChange,
+  disabled = false,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
   ...rest
 }: SliderProps) {
   const resolvedSize = size ?? "md";
+  /* 손잡이는 role 만 단 span 이라 조상 `<fieldset disabled>` 가 끄지 못한다 — 포커스 · 화살표 · 드래그가 산다(#90). Fieldset 이 알려 주는 값을 더한다. */
+  const fieldsetDisabled = useFieldsetDisabled();
+  const off = disabled || fieldsetDisabled;
   /* 비제어여도 값을 여기서 든다 — 손잡이 수와 `showValue` 의 표기가 드래그 중의 값을 따라가야 한다. Radix 에는 늘 제어 값으로 넘긴다.
      값이 없으면 min 하나(Radix 의 기본과 같다). */
   const [inner, setInner] = useState<number[]>(() => defaultValue ?? [min]);
@@ -97,12 +102,20 @@ export function Slider({
       data-slot="slider"
       // `satisfies` — 문자열 축이지 불리언이 아니다(boolean-string-data-attr 래칫, Tabs 와 같다).
       data-size={resolvedSize satisfies SliderSize}
-      className={cn("flex w-full min-w-0 items-center gap-3", className)}
+      data-disabled={off ? "" : undefined}
+      className={cn(
+        "flex w-full min-w-0 items-center gap-3",
+        /* 조작부는 Radix 의 data-disabled 로 45% 흐려진다(Slider.variants). 루트 밖의 값 표기는 같은 45% 로 흐리면 axe color-contrast 에 걸린다
+           (2.73:1, #90) — 비활성 예외는 aria-disabled 인 루트 안에만 닿는다. 그래서 값은 흐린 글자색(AA)으로만 낮춘다. 눈금 라벨은 이미 흐린 글자다. */
+        "data-disabled:[&_[data-slot=slider-value]]:text-muted-foreground",
+        className,
+      )}
     >
       <div className="flex min-w-0 flex-1 flex-col">
         <Radix.Root
           min={min}
           max={max}
+          disabled={off}
           value={values}
           onValueChange={(next) => {
             if (value === undefined) setInner(next);
