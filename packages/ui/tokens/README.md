@@ -50,7 +50,7 @@ legacy-map.mjs  옛 이름 → 새 이름 정적 표(JSON 정본 밖) — 린트
 | 목록 · 메뉴 항목 | `text-body` | normal | Dropdown · Context · Select · Command · Combobox 항목 · SidebarItem |
 | 면 제목 | `text-body` | `font-semibold` | CardHeader · Toast · Alert · AccordionTrigger · MediaCard · Calendar 달 이름 · Popover/HoverCard 머리 |
 | 대화 · 화면 제목 | `text-title` | `font-semibold` | Modal · Drawer · AlertDialog · TopBar · EmptyState |
-| 필드 라벨 | `text-label` | `font-medium` | FieldLabel · Slider 라벨 |
+| 필드 라벨 | `text-body` | `font-medium` | FieldLabel — 도움말 · 오류(`text-body`)와 같은 크기이고 굵기 · 색이 가른다. 11px(`text-label`)로 두었더니 아래 13px 도움말보다 작아 위계가 뒤집혔다(#80 검토) |
 | 보조 문장 | `text-body` | normal | 설명 · 도움말 — Modal/Drawer/Toast 설명 · FieldDescription · FieldError · EmptyState 설명 |
 | 메타 · 구획 라벨 | `text-micro` | `font-medium` · `font-mono` · `uppercase` · `tracking-caps` | Eyebrow · SectionLabel · 표 머리(Th · DataTable · Calendar 요일) · 메뉴 묶음 머리글 · Readout 라벨 |
 

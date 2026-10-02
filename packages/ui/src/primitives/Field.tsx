@@ -96,7 +96,7 @@ export function FieldLabel({ className, ...rest }: React.ComponentPropsWithRef<t
     <RadixLabel.Root
       htmlFor={field.controlId}
       className={cn(
-        "text-label font-medium text-foreground select-none",
+        "text-body font-medium text-foreground select-none",
         field.disabled && "pointer-events-none opacity-45",
         className,
       )}

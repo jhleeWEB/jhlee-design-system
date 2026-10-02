@@ -57,8 +57,8 @@ const TYPE_ROLES: readonly TypeRole[] = [
   },
   {
     role: "Field label",
-    tokens: "text-label · font-medium",
-    className: "text-label font-medium text-foreground",
+    tokens: "text-body · font-medium",
+    className: "text-body font-medium text-foreground",
     sample: "Floor height",
     examples: "FieldLabel · Slider label",
   },

@@ -111,7 +111,7 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
   `tone` prop 도 같은 어휘다: `neutral | primary | success | warning | destructive | info`(옛 키는 3.0.0 에서 타입 오류 — ESLint `ds/legacy-tone --fix`).
 - **역할이 글자와 모서리를 정한다**(#80 — 정본 표 [`packages/ui/tokens/README.md`](packages/ui/tokens/README.md) «역할 → 토큰», 견본 `Foundations/Roles`).
   글자: 컨트롤 `text-control font-medium` · 입력 값 `text-control` · 목록·메뉴 항목 `text-body` · 면 제목 `text-body font-semibold` · 대화·화면 제목
-  `text-title font-semibold` · 필드 라벨 `text-label font-medium` · 보조 문장 `text-body` · 메타·구획 라벨 `font-mono text-micro font-medium tracking-caps uppercase`.
+  `text-title font-semibold` · 필드 라벨 `text-body font-medium`(도움말과 같은 크기 — 굵기 · 색이 가른다) · 보조 문장 `text-body` · 메타·구획 라벨 `font-mono text-micro font-medium tracking-caps uppercase`.
   굵기는 400·500·600 셋만(`font-bold` 래칫), 크기 축은 높이·여백만 바꾼다(예외: 트랙 안 22px 칸은 `text-label`). 모서리: 작은 표시(16px 이하 — 체크박스) `xs` ·
   칩·배지·Kbd `sm` · 컨트롤·메뉴 항목·세그먼트 트랙 `md` · 면(카드·알림·토스트·팝오버·메뉴·툴팁·범례) `lg` · 화면을 가리는 것 `xl` · 원형·pill `full`.
   선택 컨트롤(Checkbox·RadioGroupItem·Switch)은 `size` sm·md·lg(기본 md — 체크박스·라디오 14/16/20px, 스위치 28×16/36×20/44×24px).
