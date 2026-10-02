@@ -66,7 +66,7 @@ export const Variants: Story = {
           </Legend>
         ))}
       </div>
-      <Legend {...args} orientation="horizontal" aria-label="Horizontal legend" className="w-dialog-sm">
+      <Legend {...args} orientation="horizontal" aria-label="Horizontal legend" className="w-fit">
         <LegendItem swatch="ink">Wall</LegendItem>
         <LegendItem swatch="muted" pattern="hatch">
           Core

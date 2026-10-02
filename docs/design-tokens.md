@@ -16,7 +16,8 @@ LLM 의 사전 분포는 shadcn/ui 다 — 그와 **같은 이름**은 설명 �
 | 자리 | shadcn | 이 시스템 | 왜 |
 |---|---|---|---|
 | 캔버스(도면이 사는 면) | 없음 | `bg-canvas` `text-canvas-ink` `text-canvas-ink-2` `text-canvas-muted` `border-canvas-line` `border-canvas-line-strong` `bg-canvas-surface` `bg-canvas-grid` | 도면은 인쇄되고 색각 이상에서도 읽혀야 한다 — 흰 바탕 고정 · radius 0 · 무채색 · **다크 없음**. 크롬(`--chrome-*`)과 다른 면이다. 새 컴포넌트마다 «캔버스인가 크롬인가» 를 먼저 묻는다 |
-| 글자 사다리 | `text-sm` `text-base`(크기) | `text-micro`(10) `text-label`(11) `text-body`(13) `text-control`(13.5) `text-title`(15) `text-readout`(22) `text-display`(26) — **역할 이름** | 이 제품의 본문은 13px 다. Tailwind 기본 사다리는 `--text-*: initial` 로 지웠으므로 `text-sm` 은 **CSS 없이 조용히 무시된다** — 린트(`no-unknown-classes`)가 잡는다 |
+| 글자 사다리 | `text-sm` `text-base`(크기) | `text-micro`(10/14) `text-label`(12/16) `text-body`(14/20) `text-control`(14/20) `text-title`(16/24) `text-readout`(22/28) `text-display`(26/32) — **역할 이름**, 크기/줄 높이(px) 모두 짝수 | 이 제품의 본문은 14px 다. Tailwind 기본 사다리는 `--text-*: initial` 로 지웠으므로 `text-sm` 은 **CSS 없이 조용히 무시된다** — 린트(`no-unknown-classes`)가 잡는다 |
+| 줄 높이 | `leading-tight/snug/normal/relaxed`(비율) | 쓰지 않는다 — 글자 토큰이 짝수 px 줄 높이를 함께 낸다(여러 줄 문단도). 한 줄 컨트롤만 `leading-none` | 비율은 크기와 곱해 소수 px(13 × 1.625 = 21.1px)를 낸다 — «치수는 짝수 px»(#82). 비율 세 단은 정본에 없어 린트가 모르는 클래스로 잡는다 |
 | 굵기·자간 | `font-bold` `tracking-wide` | `font-normal/medium/semibold/bold`(400/500/600/700) · `tracking-tight` `tracking-caps` 만 — 컴포넌트는 **400 · 500 · 600 셋만** 쓰고 역할이 굵기를 정한다(컨트롤 글자 · 필드 라벨 · 메타 라벨 medium, 제목 semibold, 나머지 normal, #80) | 그 밖(`font-light` `tracking-wide`)은 initial 리셋으로 사라졌다 |
 | 반경 | `rounded-sm/md/lg/xl/full`(원호) | 같은 이름 + `rounded-xs`(4/6/8/12/16/9999px 고정, 원호) — **역할이 단을 정한다**: 작은 표시(16px 이하 · 체크박스) `xs` · 칩 `sm` · 컨트롤 · 메뉴 항목 `md` · 면(카드 · 알림 · 토스트 · 팝오버 · 메뉴 · 툴팁 · 범례) `lg` · 화면을 가리는 것 `xl` | 값만 이 제품의 밀도다. 임의값은 동심원 `rounded-[calc(var(--radius-…)-…)]` 만, 원형은 `rounded-full` 로만. `corner-shape`(스쿼클)는 쓰지 않는다 — 2026-09-30 폐기(#36). 역할 표는 `packages/ui/tokens/README.md` «역할 → 토큰»(#80) |
 | 그림자 | `shadow-sm/md/lg` | `shadow-chip` `shadow-card` `shadow-pop` `shadow-modal` — 부유 층위의 이름 | 3·4단은 inset 헤어라인을 그림자 안에 넣는다(부유 레이어가 테두리를 따로 그리지 않게). 기본 사다리는 지웠다 |
@@ -28,6 +29,7 @@ LLM 의 사전 분포는 shadcn/ui 다 — 그와 **같은 이름**은 설명 �
 | 툴팁 | 없음(popover 재사용) | `bg-tooltip` `text-tooltip-foreground` — 면을 뒤집는다 | 툴팁만 «일시적이고 내 것이 아니다» 를 어두운 면으로 말한다 |
 | 선택 | 없음 | `bg-selection-fill` `border-selection-stroke` | 캔버스 위 선택 상자 |
 | 간격 | 8px 격자 관행 | 4px 기반 + 허용 스텝 `0 1 2 3 4 5 6 8 10 12 16 20 24`(간격 계열 p/m/gap/space/inset 만) | 실측 디자인(12·30/36/44)과 shadcn 자체(`h-9 px-3 gap-1.5`)가 8 의 배수가 아니다. 반스텝·7·9·11·임의 px 는 린트가 막는다 |
+| 치수의 짝수 규칙 | 없음 | 모든 치수(글자 크기 · 줄 높이 · 간격 · 반경 · 오버레이 꼬리 12×6 · 8×4 · 오프셋)는 짝수 px. 예외는 헤어라인 1px(테두리 · 구분선 · 그림자 속 선 · 포커스 링 간격)과 그 동심원 · pill 9999px · 홀수여야 맞는 아이콘(오늘 0) | 홀수 · 소수 px 는 가운데 정렬마다 반 픽셀을 낳는다(#82). 래칫 `even-dimensions.spec` · 표는 `packages/ui/tokens/README.md` «짝수 치수» |
 | 오버레이 치수 | 임의 값 | `max-w-dialog-sm/md/lg/xl`(380/560/880/1180) `max-w-drawer-sm/md/lg`(280/400/620) `min-w-menu`(168) `min-w-popover-min` `max-w-popover-max` + 유동 `w-dialog-fluid` `h-dialog-fluid` `max-h-dialog-fluid` `max-w-popover-fluid` | «유동 폭 + 상한» 이 `w-[min(560px,calc(100vw-24px))]` 를 대신한다 |
 | 층위·시간 | `z-50` `duration-200` | `z-raised/sticky/scrim/modal/popover/toast/tooltip`(1/10/40/41/50/60/70) · `duration-instant/fast/base/slow`(0/100/150/200) | 겹침 순서와 박자를 이름이 정한다 |
 | CSS 변수 | `var(--primary)` | `var(--chrome-primary)` · `var(--canvas-ink)` — 면 접두가 있다 | 접두가 곧 «어느 면인가» 이고 다크가 갈리는 집합(chrome)을 이름이 말한다. Tailwind 유틸에서는 접두를 뗀다(`bg-primary`) |

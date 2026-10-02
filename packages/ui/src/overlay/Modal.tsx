@@ -121,11 +121,9 @@ export function ModalHeader({ className, title, description, children, ...rest }
       data-slot="modal-header"
     >
       <div className="min-w-0 flex-1">
-        <Dialog.Title className="m-0 text-title leading-snug font-semibold text-foreground">
-          {title}
-        </Dialog.Title>
+        <Dialog.Title className="m-0 text-title font-semibold text-foreground">{title}</Dialog.Title>
         {description ? (
-          <Dialog.Description className="mt-1 text-body leading-relaxed text-muted-foreground">
+          <Dialog.Description className="mt-1 text-body text-muted-foreground">
             {description}
           </Dialog.Description>
         ) : null}

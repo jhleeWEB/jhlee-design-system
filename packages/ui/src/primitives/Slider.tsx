@@ -139,7 +139,7 @@ export function Slider({
               .map((mark) => (
                 <span
                   key={mark.value}
-                  className="absolute top-0 flex -translate-x-1/2 flex-col items-center gap-px font-mono text-micro text-muted-foreground tabular-nums"
+                  className="absolute top-0 flex -translate-x-1/2 flex-col items-center font-mono text-micro text-muted-foreground tabular-nums"
                   style={{ left: markOffset(clampPercent(mark.value, min, max)) }}
                 >
                   <span className="h-1 w-px bg-border-strong" />

@@ -35,7 +35,7 @@ export function Badge({ className, tone, provisional, dot, children, ...rest }: 
       data-provisional={provisional ? "" : undefined}
       className={cn(badgeVariants({ tone: resolvedTone, provisional }), className)}
     >
-      {/* 6px — 11px 글자 옆의 점. 예전 `size-3`(12px)은 2px 격자 시절 값이 두 배로 남아 글자보다 컸다(#80). */}
+      {/* 6px — 12px 글자 옆의 점. 예전 `size-3`(12px)은 2px 격자 시절 값이 두 배로 남아 글자보다 컸다(#80). */}
       {dot ? <i aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-current" /> : null}
       {children}
     </span>

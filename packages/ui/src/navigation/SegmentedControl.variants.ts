@@ -14,7 +14,8 @@ export const segmentedControlVariants = cva(
 );
 
 /** 세그먼트 한 칸의 변형 — `size`. 굵기는 컨트롤 글자(medium)이고 크기는 칸 높이를 따른다 — md 28px 칸은 `text-control`, sm 22px 칸은 `text-label`
- *  (13.5px 글자가 22px 칸을 꽉 채워 위아래 여백이 1.5px 로 줄었다, #80 실측 — ToggleGroup 의 segmented sm 과 같다). */
+ *  (13.5px 글자가 22px 칸을 꽉 채워 위아래 여백이 1.5px 로 줄었다, #80 실측 — ToggleGroup 의 segmented sm 과 같다). 짝수 사다리(#82)에서도
+ *  같다: text-control(14/20)이면 위아래 1px, text-label(12/16)이면 3px 가 남는다. */
 export const segmentedControlItemVariants = cva(
   [
     "appearance-none border-0 bg-transparent",

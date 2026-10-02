@@ -26,20 +26,20 @@
     "$description": "오버레이 꼬리(Radix Arrow) 치수 — 컴포넌트가 JSX 숫자(width={10})로 들던 것을 이름으로 옮겼다(D3, #44). `--size-*` 는 :root 커스텀 프로퍼티라 `w-(--size-arrow-…)` 로 읽는다. Radix 의 width/height 속성보다 CSS 가 이긴다.",
     "arrow": {
       "popover": {
-        "$description": "팝오버 꼬리 — Radix 기본값과 같은 10×5.",
-        "width": { "$value": "10px" },
-        "height": { "$value": "5px" }
+        "$description": "팝오버 꼬리 12×6 — Radix 기본 10×5 의 2:1 모양을 지키며 짝수로 올렸다(#82). 높이가 짝수라 Radix 가 띄우는 거리(sideOffset 6 + 꼬리 높이)도 11px → 12px 로 짝수가 되고, 폭이 짝수라 꼭짓점(폭 ÷ 2)이 픽셀 경계에 선다.",
+        "width": { "$value": "12px" },
+        "height": { "$value": "6px" }
       },
       "tooltip": {
-        "$description": "툴팁 꼬리 — 작은 말풍선(text-label)에 맞춰 팝오버보다 한 치 작은 9×4.",
-        "width": { "$value": "9px" },
+        "$description": "툴팁 꼬리 8×4 — 작은 말풍선(text-label)에 맞춰 팝오버보다 한 단 작게. 옛 9×4 의 홀수 폭을 짝수로 내리며 모양이 팝오버와 같은 2:1 이 됐다(#82).",
+        "width": { "$value": "8px" },
         "height": { "$value": "4px" }
       }
     },
     "command": {
       "list": {
         "$value": "300px",
-        "$description": "Command(명령 팔레트 · Combobox 목록)의 목록 최대 높이 — 항목 한 줄(py-2 + text-body ≈ 36px)이 여덟 줄 남짓 보이고 그 밖은 목록 안에서 스크롤한다. cmdk·shadcn 의 관행값(300px)과 같다(#61). 높이가 고정이 아니라 상한이라 거른 결과가 적으면 줄어든다."
+        "$description": "Command(명령 팔레트 · Combobox 목록)의 목록 최대 높이 — 항목 한 줄(py-2 + text-body 20px = 36px)이 여덟 줄 남짓 보이고 그 밖은 목록 안에서 스크롤한다. cmdk·shadcn 의 관행값(300px)과 같다(#61). 높이가 고정이 아니라 상한이라 거른 결과가 적으면 줄어든다."
       }
     }
   }

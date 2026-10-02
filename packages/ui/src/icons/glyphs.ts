@@ -1,7 +1,7 @@
 /* 아이콘 글리프의 정본(#64) — 컴포넌트(`./index.ts`)와 커서(`../cursors/cursors.ts`)가 이 한 벌을 읽는다.
  *
  * 문법은 lucide 와 같다: 24 뷰박스 · 획 2 · round cap/join · fill none · currentColor · 가장자리 2 여백. 이 문법이면 16px 에서 획이 1.33px 로
- * 크롬 글자(13px)의 굵기와 맞는다. 값은 SVG 좌표라 토큰 사다리 밖이다 — 글리프는 «모양» 이고 크기·색은 쓰는 자리(클래스 · currentColor)가 정한다.
+ * 크롬 글자(본문 14px)의 굵기와 맞는다. 값은 SVG 좌표라 토큰 사다리 밖이다 — 글리프는 «모양» 이고 크기·색은 쓰는 자리(클래스 · currentColor)가 정한다.
  *
  * `lucide` 가 있는 항목은 lucide(ISC, 고지 `./LICENSE-lucide.txt`)의 경로를 **글자 그대로** 옮겼다. react-icons 5.7.0 이 싣던 lucide
  * (v5.1.0-6-g438f572e)에서 렌더 결과를 뽑았으므로 react-icons 를 쓰던 자리의 픽셀이 같다(기존 VRT 0 diff 가 그 증거다).

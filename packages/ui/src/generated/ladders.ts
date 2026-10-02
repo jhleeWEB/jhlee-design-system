@@ -8,7 +8,6 @@ export const LADDERS = {
   "duration": ["instant", "fast", "base", "slow"],
   "text": ["micro", "label", "body", "control", "title", "readout", "display"],
   "tracking": ["tight", "caps"],
-  "leading": ["snug", "normal", "relaxed"],
   "font-weight": ["normal", "medium", "semibold", "bold"],
   "radius": ["none", "xs", "sm", "md", "lg", "xl", "full"],
   "shadow": ["none", "chip", "card", "pop", "modal"],

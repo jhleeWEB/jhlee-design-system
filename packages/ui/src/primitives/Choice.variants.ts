@@ -7,7 +7,8 @@ import { cva, type VariantProps } from "../cn";
  * 그래서 세 단을 새로 정하고 기본을 md 로 둔다. 켜짐 · 섞임 · 비활성은 축이 아니라 상태다 — Radix 가 찍는 `data-state` · `disabled` 를 읽는다.
  *   체크박스 · 라디오  sm 14 · md 16 · lg 20px 정사각. 체크박스 모서리는 `xs`(4px — 16px 이하 작은 표시, sm 6px 이면 변의 3/4 가 곡선이라
  *                     라디오 원과 구분이 흐려진다), 라디오는 원. 체크 표시는 상자 안을 채워 함께 커지고 라디오 점은 상자의 절반 남짓이다.
- *   스위치            sm 28×16 · md 36×20 · lg 44×24px. 손잡이 = 트랙 높이 − 4(테두리 1 + 여백 1 이 위아래), 이동 거리 = 트랙 폭 − 손잡이 − 4. */
+ *   스위치            sm 28×16 · md 36×20 · lg 44×24px. 손잡이 = 트랙 높이 − 4(트랙과 같은 색의 2px 테두리가 위아래), 이동 거리 = 트랙 폭 − 손잡이 − 4.
+ *                     예전에는 테두리 1 + 여백 `p-px` 1 이었다 — 테두리가 트랙과 같은 색이라 픽셀은 같고, 1px 여백(홀수 치수)만 사라졌다(#82). */
 
 /** 체크박스 · 라디오가 함께 쓰는 상자 — 꺼짐은 입력과 같은 옅은 면 · 강한 테두리, 켜짐 · 섞임은 주색 채움(«지금 고른 것»).
  *  `p-0` — 상자는 Radix 의 `<button>` 이고 preflight 를 싣지 않으므로 UA 의 `padding: 1px 6px` 이 남는다. 28px 상자에서는 넘친 아이콘이
@@ -62,7 +63,7 @@ export const radioIndicatorVariants = cva("block rounded-full bg-current", {
 /** 스위치 트랙의 변형 — `size`. 꺼짐은 강한 테두리색 트랙, 켜짐은 주색 트랙이다. */
 export const switchVariants = cva(
   [
-    "peer inline-flex shrink-0 cursor-pointer appearance-none items-center rounded-full border border-solid border-border-strong bg-border-strong p-px",
+    "peer inline-flex shrink-0 cursor-pointer appearance-none items-center rounded-full border-2 border-solid border-border-strong bg-border-strong p-0",
     "transition-colors duration-fast motion-reduce:transition-none",
     "data-[state=checked]:border-primary data-[state=checked]:bg-primary",
     "focus-visible:focus-ring focus-visible:outline-none",

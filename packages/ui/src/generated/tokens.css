@@ -103,7 +103,7 @@
   --size-panel: 300px;
   --size-sheet-sm: 280px;
   --size-sheet-md: 460px;
-  --size-toast: 352px;
+  --size-toast: 384px;
   --size-textarea: 56px;
   --size-kbd: 20px;
   --space-hairline: 1px;
@@ -151,9 +151,9 @@
   --motion-collapse-easing: var(--ease-out-quick);
 
   /* component/overlay.json */
-  --size-arrow-popover-width: 10px;
-  --size-arrow-popover-height: 5px;
-  --size-arrow-tooltip-width: 9px;
+  --size-arrow-popover-width: 12px;
+  --size-arrow-popover-height: 6px;
+  --size-arrow-tooltip-width: 8px;
   --size-arrow-tooltip-height: 4px;
   --size-command-list: 300px;
 

@@ -5,7 +5,8 @@ import { cva } from "../cn";
  * `segmented` 의 트랙은 Tabs · SegmentedControl 과 같은 컨트롤이다(#80) — `rounded-md` + 여백 `p-1` + 칸(sm 22 · md 28px) = 컨트롤 높이(30 · 36px).
  * 칸의 반경은 동심원 `calc(var(--radius-md) - var(--spacing))`(4px)다. 예전 트랙은 `rounded-lg` 에 sm 칸 24px 이라 sm 묶음이 32px 로 서서
  * 같은 줄의 작은 버튼(30px)보다 컸다. 글자는 상자 높이를 따른다 — 30px 이상의 상자(md 칸 · 홀로 선 outline 칸)는 컨트롤 글자(`text-control`),
- * 트랙 안의 22px 칸(sm segmented)만 `text-label` 이다(13.5px 글자가 22px 칸을 꽉 채워 위아래 여백이 1.5px 로 줄었다, #80 실측). 굵기는 둘 다 medium. */
+ * 트랙 안의 22px 칸(sm segmented)만 `text-label` 이다(13.5px 글자가 22px 칸을 꽉 채워 위아래 여백이 1.5px 로 줄었다, #80 실측 — 짝수 사다리(#82)의
+ * text-control 14/20 이면 1px, text-label 12/16 이면 3px). 굵기는 둘 다 medium. */
 
 /**
  * 토글 묶음의 변형 — `variant` · `size`.

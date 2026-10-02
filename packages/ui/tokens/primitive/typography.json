@@ -1,16 +1,38 @@
 {
-  "$description": "글자 — 계단 7단 · 자간 · 굵기는 Tailwind @theme(text-* · tracking-* · font-*), 글꼴 스택 둘은 :root(--font-stack-*)다. 본문 13px · 제목 26px 은 참고 화면 실측. reset 은 Tailwind 기본 사다리(text-sm · font-black · tracking-wide)를 지워 역할 이름만 남긴다 — 남겨 두면 «굵기·자간은 역할이 정한다» 가 관습에 진다.",
+  "$description": "글자 — 계단 7단 · 자간 · 굵기는 Tailwind @theme(text-* · tracking-* · font-*), 글꼴 스택 둘은 :root(--font-stack-*)다. 계단은 **짝수 사다리(compact)** 다(#82, 사용자 결정 2026-10-02 «치수는 최대한 짝수로»): 크기와 줄 높이가 모두 짝수 px 이고 줄 높이는 비율이 아니라 px 로 적는다 — 비율은 13 × 1.55 = 20.15px · 11 × 1.45 = 15.95px · 13.5px 같은 소수 px 를 내 글자 상자가 픽셀 격자에서 미끄러졌다. 본문은 참고 화면 실측 13px 에서 한 단 올린 14px, 제목 26px 은 실측 그대로. reset 은 Tailwind 기본 사다리(text-sm · font-black · tracking-wide)를 지워 역할 이름만 남긴다 — 남겨 두면 «굵기·자간은 역할이 정한다» 가 관습에 진다.",
   "$extensions": { "sds": { "scope": "theme" } },
   "text": {
     "$type": "typography",
     "$extensions": { "sds": { "reset": true } },
-    "micro": { "$value": { "fontSize": "10px", "lineHeight": 1.4 } },
-    "label": { "$value": { "fontSize": "11px", "lineHeight": 1.45 } },
-    "body": { "$value": { "fontSize": "13px", "lineHeight": 1.55 } },
-    "control": { "$value": { "fontSize": "13.5px", "lineHeight": 1.4 } },
-    "title": { "$value": { "fontSize": "15px", "lineHeight": 1.4 } },
-    "readout": { "$value": { "fontSize": "22px", "lineHeight": 1.2 } },
-    "display": { "$value": { "fontSize": "26px", "lineHeight": 1.16 } }
+    "$description": "크기 / 줄 높이(px). 줄 높이는 각 크기의 «한 줄 칸» 이다 — 여러 줄 문단(설명 · 알림 · 토스트)도 이 칸을 쓰고 비율 leading(snug · normal · relaxed)은 쓰지 않는다(#82). 한 줄짜리 컨트롤 글자는 leading-none(줄 높이 = 크기, 짝수)으로 칸을 접을 수 있다. 역할 표는 tokens/README.md «역할 → 토큰».",
+    "micro": {
+      "$value": { "fontSize": "10px", "lineHeight": "14px" },
+      "$description": "메타 · 구획 라벨(mono · uppercase · tracking-caps) · Kbd · 단위 · 표 머리. 10 × 1.4 = 14 로 옛 비율과 픽셀이 같다."
+    },
+    "label": {
+      "$value": { "fontSize": "12px", "lineHeight": "16px" },
+      "$description": "배지 · 툴팁 · 범례 · 트랙 안 22px 칸(ToggleGroup segmented · SegmentedControl 의 sm). 옛 11px / 1.45(15.95px)에서 한 단 올렸다 — 22px 칸에서 위아래 3px 가 남는다."
+    },
+    "body": {
+      "$value": { "fontSize": "14px", "lineHeight": "20px" },
+      "$description": "본문 · 목록 · 메뉴 항목 · 면 제목 · 필드 라벨 · 보조 문장. 옛 13px / 1.55(20.15px) — 줄 칸 20px 는 그대로 두고 글자만 한 단 올렸다."
+    },
+    "control": {
+      "$value": { "fontSize": "14px", "lineHeight": "20px" },
+      "$description": "컨트롤 글자(font-medium) · 입력 값. 값은 body 와 같지만 역할이 달라 이름을 남긴다 — 옛 13.5px 는 소수라 짝수 사다리에서 14px 로 body 와 합쳐졌다. Button 은 leading-none 으로 칸을 14px 로 접는다."
+    },
+    "title": {
+      "$value": { "fontSize": "16px", "lineHeight": "24px" },
+      "$description": "대화 · 화면 제목(font-semibold) — Modal · Drawer · AlertDialog · TopBar · EmptyState. 옛 15px / 1.4(21px)."
+    },
+    "readout": {
+      "$value": { "fontSize": "22px", "lineHeight": "28px" },
+      "$description": "Readout 값(tnum). 크기는 그대로, 줄 높이만 옛 1.2(26.4px)에서 짝수 px 로."
+    },
+    "display": {
+      "$value": { "fontSize": "26px", "lineHeight": "32px" },
+      "$description": "들머리 제목(DisplayHeading) — 참고 화면 실측 26px. 줄 높이만 옛 1.16(30.16px)에서 짝수 px 로."
+    }
   },
   "tracking": {
     "$type": "dimension",
@@ -20,13 +42,6 @@
       "$description": "들머리 제목 — Tailwind 의 tracking-tight 값 그대로(이름만 남긴다)."
     },
     "caps": { "$value": "0.09em", "$description": "대문자 미세라벨 전용 — eyebrow · 섹션 라벨." }
-  },
-  "leading": {
-    "$type": "number",
-    "$description": "줄높이 3단 — 모달·드로어 제목(snug) · 배지(normal) · 설명 문단(relaxed)이 쓴다. 값은 Tailwind 기본 테마의 같은 이름 그대로라 픽셀은 같다(#55): 이 시스템의 소비 진입 CSS 가 tailwindcss/theme.css 를 싣기 때문에 leading-* 은 늘 그려졌지만, 정본에 없어 린트(no-unknown-classes, entryPoint = theme.css)가 «모르는 클래스» 로 잡았다 — 쓰는 세 단만 정본에 올린다. reset 하지 않는다: tight · loose 를 지우면 소비자 코드가 깨져 major 다.",
-    "snug": { "$value": 1.375 },
-    "normal": { "$value": 1.5 },
-    "relaxed": { "$value": 1.625 }
   },
   "font-weight": {
     "$type": "number",

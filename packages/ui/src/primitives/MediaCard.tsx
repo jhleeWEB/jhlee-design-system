@@ -153,7 +153,7 @@ export function MediaCard({
             )}
           </h3>
           {description ? (
-            <p className="mt-1 line-clamp-2 text-body leading-relaxed text-muted-foreground">{description}</p>
+            <p className="mt-1 line-clamp-2 text-body text-muted-foreground">{description}</p>
           ) : null}
         </div>
 

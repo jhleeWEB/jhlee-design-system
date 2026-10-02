@@ -47,8 +47,9 @@ export const TW_MERGE_CONFIG = {
   },
   extend: {
     // container 는 리셋하지 않았다 — Tailwind 의 max-w-xs 같은 기본 이름이 살아 있으므로 override 가 아니라 extend 다.
-    // leading 도 리셋하지 않았다(#55 — 쓰는 세 단만 정본에 올렸고 tight · loose 는 Tailwind 기본으로 산다).
-    theme: { container: [...LADDERS.container], leading: [...LADDERS.leading] },
+    // leading 은 정본에 없다 — #55 가 올린 비율 세 단(snug · normal · relaxed)은 #82 에서 내렸다(글자 토큰의 짝수 px 줄 높이를 쓴다).
+    // 남은 leading-none(정적) · leading-(--size-kbd)(임의값)과 소비자의 Tailwind 기본 이름은 twMerge 기본 leading 그룹이 이미 안다.
+    theme: { container: [...LADDERS.container] },
     classGroups: {
       h: [{ h: [...HAND_UTILITIES.h] }],
       w: [{ w: [...HAND_UTILITIES.w] }],
