@@ -1,6 +1,7 @@
 # @jhleeweb/jhlee-design-system
 
 jhlee design system 의 발행 패키지. 사용법·토큰·컴포넌트 계약은 저장소 루트 README 와 CLAUDE.md 를 본다.
+컴포넌트를 눈으로 보려면 카탈로그(Storybook) https://jhleeweb.github.io/jhlee-design-system/ — 컴포넌트마다 Docs · Default · Variants · ThemeContrast(라이트/다크).
 
 - 진입: `import { … } from "@jhleeweb/jhlee-design-system"` · `…/canvas-metrics` · `…/testing` · `…/eslint` · `…/icons`(`./legacy` 는 3.0.0 에서 지웠다 — 아래 «2.x → 3.0»)
 - 아이콘: `…/icons` — `import { IconOrbit, IconMove, icons } from "@jhleeweb/jhlee-design-system/icons"`(#64). 24 뷰박스 · 획 2 · currentColor, 기본 16px(`--size-icon-md`), `title` 을 주면 `role="img"`(없으면 `aria-hidden`). 크롬 · 툴 클러스터(선택 · 오빗 · 팬 · 줌 · 이동/회전/축척 · 그리기 · 오프셋/돌출/단면 · 측정 · 카메라 뷰) · 글자 서식 70개 — lucide 에서 옮긴 글리프의 ISC 고지는 `dist/icons/LICENSE-lucide.txt`. `react-icons` 의존은 없다.
