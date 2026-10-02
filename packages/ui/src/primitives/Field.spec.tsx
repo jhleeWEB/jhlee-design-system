@@ -73,6 +73,21 @@ describe("Field 의 id 연결", () => {
     expect(input).not.toHaveAttribute("aria-invalid");
   });
 
+  it("설명 · 오류의 `<p>` 는 UA 위아래 여백을 걷는다 — 계산값은 스토리 play 가 Chromium 에서 본다(#90)", () => {
+    render(
+      <Field>
+        <FieldLabel>Setback</FieldLabel>
+        <FieldControl>
+          <Input />
+        </FieldControl>
+        <FieldDescription>Distance from the boundary.</FieldDescription>
+        <FieldError>Must be at least 3 m.</FieldError>
+      </Field>,
+    );
+    expect(screen.getByText("Distance from the boundary.")).toHaveClass("m-0");
+    expect(screen.getByText("Must be at least 3 m.")).toHaveClass("m-0");
+  });
+
   it("invalid · disabled 를 컨트롤에 꽂는다", () => {
     render(
       <Field invalid disabled>

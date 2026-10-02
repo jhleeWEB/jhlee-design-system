@@ -34,8 +34,7 @@ export function InspectorRow({
     <Field orientation="horizontal" className="flex-nowrap justify-between">
       <div className="flex min-w-0 flex-col">
         <FieldLabel>{label}</FieldLabel>
-        {/* FieldDescription 은 `<p>` 의 UA 여백을 아직 걷지 않는다 — 행 안에서는 m-0 으로 붙인다. */}
-        {description ? <FieldDescription className="m-0">{description}</FieldDescription> : null}
+        {description ? <FieldDescription>{description}</FieldDescription> : null}
       </div>
       <FieldControl>{children}</FieldControl>
     </Field>
@@ -63,7 +62,7 @@ export function InspectorAmount({
 }
 
 /** «North» 묶음의 내용 — 라벨 + 오른쪽 수치(mono · tnum), 슬라이더, mono 도움말이 세로로 쌓인다. */
-export function InspectorAngle({ disabled = false }: { disabled?: boolean }) {
+export function InspectorAngle() {
   const [angle, setAngle] = useState([0]);
   const labelId = useId();
   return (
@@ -74,7 +73,7 @@ export function InspectorAngle({ disabled = false }: { disabled?: boolean }) {
         </span>
         <span className="tnum">{angle[0]}°</span>
       </div>
-      {/* 손잡이는 role 만 단 span 이라 fieldset 의 disabled 가 닿지 않는다 — 직접 준다(Fieldset 머리 주석 3). */}
+      {/* 손잡이는 role 만 단 span 이라 네이티브 fieldset 의 disabled 가 닿지 않는다 — Slider 가 Fieldset 의 컨텍스트를 읽어 함께 꺼진다(#90). */}
       <Slider
         aria-labelledby={labelId}
         min={0}
@@ -82,7 +81,6 @@ export function InspectorAngle({ disabled = false }: { disabled?: boolean }) {
         value={angle}
         onValueChange={setAngle}
         formatValue={(v) => `${v}°`}
-        disabled={disabled}
       />
       <p className="m-0 font-mono text-micro text-muted-foreground">
         Display only — the drawing turns, north stays up

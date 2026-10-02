@@ -136,9 +136,19 @@ export function Input({
             : onInput
         }
         /* 오른쪽 패딩은 **접미사 길이에 따라** 잡는다. 고정값을 주면 "bays" 처럼 긴 단위가
-           값 위에 겹친다(실측). `ch` 는 mono 글꼴에서 글자 하나 폭이므로 정확하다.
+           값 위에 겹친다(실측). 패딩 = 접미사 자리(`right-3`) + 접미사 폭 + 값과의 간격 4px − 테두리 헤어라인(패딩은 테두리 안에서 잰다).
+           접미사 폭은 **접미사의 글자 크기**(`text-micro`)로 센다 — mono 의 글자 폭은 0.6em 이다(Geist Mono · SF Mono · Menlo).
+           입력의 `ch` 로 세던 때는 그것이 값 글자(`text-control`)의 폭이라 글자마다 2.4px 씩 어긋나, 간격이 단위 길이를 따라
+           1.4px(m) · 3.8px(m²)(#90, Storybook 실측) · 네 글자(bays)면 8.6px 로 흔들렸다.
            `{...rest}` **뒤에** 와야 한다 — 앞에 두면 호출처의 `style` 이 통째로 덮어쓴다. */
-        style={suffix ? { paddingRight: `calc(${suffix.length}ch + 10px)`, ...rest.style } : rest.style}
+        style={
+          suffix
+            ? {
+                paddingRight: `calc(var(--spacing) * 3 + ${suffix.length} * 0.6 * var(--text-micro) + var(--spacing) - var(--space-hairline))`,
+                ...rest.style,
+              }
+            : rest.style
+        }
       />
       {suffix ? (
         <span
