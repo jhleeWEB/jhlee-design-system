@@ -25,7 +25,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 서버에서도 렌더 가능(지시문 없음) · 원본 `src/navigation/Toolbar.tsx`
 
-툴바 안의 시각적 구분. `role="separator"` 를 주면 스크린리더가 툴바 항목 수를 잘못 센다.
+툴바 안의 시각적 구분(높이 20px). `role="separator"` 를 주면 스크린리더가 툴바 항목 수를 잘못 센다.
 
 물려받는 props: `ClassAttributes<HTMLSpanElement>`, `HTMLAttributes<HTMLSpanElement>`
 

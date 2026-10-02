@@ -8,8 +8,8 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 서버에서도 렌더 가능(지시문 없음) · 원본 `src/Legend.tsx`
 
-캔버스 범례 — `LegendItem` 의 목록. 흰 바탕 · 옅은 선 테두리 · radius 0, 테마와 무관하게 같은 모양이다.
-스크린리더 이름은 기본 «Legend» 이고 `aria-label` 로 바꾼다.
+범례 — `LegendItem` 의 목록. 상자는 도면 위에 뜨는 크롬 패널(`rounded-lg` · 테두리 · 카드 면 · `shadow-pop`, 다크를 따른다)이고
+스와치만 캔버스(흰 타일 위 각진 무채색)다. 스크린리더 이름은 기본 «Legend» 이고 `aria-label` 로 바꾼다.
 
 물려받는 props: `ComponentPropsWithRef<"ul">`
 
@@ -25,7 +25,8 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 서버에서도 렌더 가능(지시문 없음) · 원본 `src/Legend.tsx`
 
-범례 한 줄 — 스와치(장식, 스크린리더는 건너뛴다) + 라벨(`children`). 스와치는 캔버스 무채색 한 단(`swatch`)과 무늬(`pattern`)로 그린다.
+범례 한 줄 — 스와치(장식, 스크린리더는 건너뛴다) + 라벨(`children`). 스와치는 흰 캔버스 타일 위에 캔버스 무채색 한 단(`swatch`)과
+무늬(`pattern`)로 그린다.
 
 물려받는 props: `ComponentPropsWithRef<"li">`
 

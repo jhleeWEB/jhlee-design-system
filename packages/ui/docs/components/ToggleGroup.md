@@ -16,7 +16,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
 | `variant` | `"segmented" \| "outline" \| null` |  | `"segmented"` | 값: `segmented` — 옅은 파란 트랙 위에 켜진 칸이 흰 pill 로 선다(Tabs · SegmentedControl 과 같은 모양). 보기 방식 같은 작은 전환 · `outline` — 테두리 상자들이 붙은 줄. 켜진 칸은 옅은 주색 바탕 · 주색 글자. 도구 막대의 서식 토글(굵게 · 기울임) |
-| `size` | `"sm" \| "md" \| null` |  | `"md"` | 값: `sm` — 낮은 칸 · 라벨 글자 · `md` — 기본 칸 · 컨트롤 글자 |
+| `size` | `"sm" \| "md" \| null` |  | `"md"` | 값: `sm` — 작은 컨트롤 높이(30px) · `md` — 기본 컨트롤 높이(36px) |
 
 ## 부품
 

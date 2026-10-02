@@ -18,5 +18,5 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | `value` | `T` | 예 |  | 지금 고른 값(제어). |
 | `onChange` | `(value: T) => void` | 예 |  | 칸을 누르거나 화살표·Home·End 로 옮겼을 때 새 값을 받는다. |
 | `label` | `string` | 예 |  | 스크린리더가 읽는 이 컨트롤의 이름 — "View mode" 처럼. |
-| `size` | `"sm" \| "md"` |  | `"md"` | 값: `sm` — 24px, 라벨 글자 · `md` — 28px, 컨트롤 글자 |
+| `size` | `"sm" \| "md"` |  | `"md"` | 값: `sm` — 30px(작은 컨트롤 높이) · 칸 22px · 라벨 글자 · `md` — 36px(기본 컨트롤 높이) · 칸 28px · 컨트롤 글자 |
 | `disabled` | `boolean` |  | `false` | 컨트롤 전체를 고를 수 없게 한다 — 탭 순서에서도 빠진다. |

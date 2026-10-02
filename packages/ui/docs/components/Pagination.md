@@ -20,7 +20,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | `onPageChange` | `((page: number) => void)` |  | `undefined` | 쪽을 옮길 때 — 새 쪽 번호. 링크 모드(`renderLink`)에서도 누를 때 함께 불린다. |
 | `siblingCount` | `number` |  | `1` | 지금 쪽 양옆에 늘 보일 이웃 쪽 수 — 그 밖은 첫 쪽 · 끝 쪽만 남기고 생략(…)한다. |
 | `renderLink` | `((page: number, children: ReactNode) => ReactElement<unknown, string \| JSXElementConstructor<any>>)` |  | `undefined` | 쪽마다 칸을 얹을 링크 요소 — `(page, children) => <a href={`?page=${page}`}>{children}</a>` 나 라우터의 `<Link>`. `children`(번호 · 이전 · 다음)을 그대로 넣는다. 모양 · `aria-current` · 이름은 칸이 얹는다. 주지 않으면 칸은 `<button>` 이다. |
-| `size` | `"sm" \| "md" \| null` |  | `"md"` | 값: `sm` — 작은 컨트롤 높이 · 본문 글자. 표 아래 · 패널 안 · `md` — 기본 컨트롤 높이. 페이지 아래 |
+| `size` | `"sm" \| "md" \| null` |  | `"md"` | 값: `sm` — 작은 컨트롤 높이. 표 아래 · 패널 안 · `md` — 기본 컨트롤 높이. 페이지 아래 |
 
 ## 부품
 

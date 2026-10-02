@@ -35,7 +35,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Input](Input.md) | component | client |  | 입력 — 글자와 수치 |
 | [Kbd](Kbd.md) | component | client |  | 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. |
 | [Lede](Lede.md) | component | server ok |  | 들머리 아래 한 문단 — 읽히도록 폭을 제한한다. |
-| [Legend](Legend.md) | component | server ok | LegendItem | 캔버스 범례 — `LegendItem` 의 목록 |
+| [Legend](Legend.md) | component | server ok | LegendItem | 범례 — `LegendItem` 의 목록 |
 | [MediaCard](MediaCard.md) | component | client |  | 내용 카드 — 고를 수 있는 후보 한 개(썸네일 · 제목 · 메타 · 조치) |
 | [Modal](Modal.md) | component | client | ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger | 모달의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 모달성만 든다 |
 | [NumberInput](NumberInput.md) | component | client |  | 수치 입력 — 범위(`min` · `max`) · 보폭(`step`, Shift ×10) · 단위(`unit`) · 증감 버튼(`stepper`) |

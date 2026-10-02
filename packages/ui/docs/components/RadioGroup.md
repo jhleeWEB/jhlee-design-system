@@ -22,8 +22,10 @@ _(DS 가 더하는 prop 없음 — 물려받는 속성만)_
 
 클라이언트 컴포넌트(`"use client"` — 서버 컴포넌트에서 렌더할 수 없다) · 원본 `src/primitives/Choice.tsx`
 
-라디오 한 개 — `RadioGroup` 안에서만 쓴다.
+라디오 한 개 — `RadioGroup` 안에서만 쓴다. 한 묶음의 항목은 같은 `size` 로 둔다.
 
-물려받는 props: `RadioGroupItemProps`, `RefAttributes<HTMLButtonElement>`
+물려받는 props: `React.ComponentPropsWithRef<typeof RadixRadio.Item>`
 
-_(DS 가 더하는 prop 없음 — 물려받는 속성만)_
+| prop | 타입 | 필수 | 기본값 | 설명 · 값 |
+|---|---|---|---|---|
+| `size` | `"sm" \| "md" \| "lg" \| null` |  | `"md"` | 값: `sm` — 14px · 표 칸 · 촘촘한 목록 · `md` — 16px · 폼과 설정 패널(기본) · `lg` — 20px · 터치 화면 · 넓은 선택 카드 |

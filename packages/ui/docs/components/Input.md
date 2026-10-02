@@ -15,6 +15,6 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
 | `suffix` | `string` |  | `undefined` | 값 뒤에 붙는 단위 — "m", "m²", "%". 입력 안에 겹쳐 그리므로 값이 가려지지 않게 패딩을 준다. 주면 `className` 은 입력이 아니라 래퍼(`data-slot="input-wrapper"`)로 간다. |
-| `size` | `"sm" \| "md" \| "lg" \| null` |  | `"md"` | 값: `sm` — 작은 컨트롤 높이 · 본문 글자 · `md` — 기본 컨트롤 높이 · `lg` — 큰 컨트롤 높이 · 넓은 가로 여백 |
+| `size` | `"sm" \| "md" \| "lg" \| null` |  | `"md"` | 값: `sm` — 작은 컨트롤 높이 · `md` — 기본 컨트롤 높이 · `lg` — 큰 컨트롤 높이 · 넓은 가로 여백 |
 | `numeric` | `boolean \| null` |  | `"false"` | 수치 — 오른쪽 정렬 + mono tabular-nums(원칙 3). |
 | `invalid` | `boolean \| null` |  | `"false"` | 검증 실패 — 파괴색 테두리와 `aria-invalid`. |
