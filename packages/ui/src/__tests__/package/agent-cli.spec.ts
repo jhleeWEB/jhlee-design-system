@@ -15,6 +15,7 @@ import {
   LEGACY_SKILL,
   defaultPackageDir,
   parseArgs,
+  repoSlug,
   sync,
   upsertBlock,
 } from "../../agent/cli";
@@ -62,10 +63,16 @@ describe("sync", { timeout: 30_000 }, () => {
         "# Consumer\n\n규칙 하나.\n\n<!-- jds:begin -->\n## 디자인 시스템 계약(에이전트) — @jhleeweb/jhlee-design-system v",
       ),
     ).toBe(true);
-    expect(agents).not.toContain("{{name}}");
+    // 채워지지 않은 자리표시자가 없다 — `{{` 자체는 본문의 JSX 예(`style={{ … }}`)에도 있다.
+    expect(agents).not.toMatch(/\{\{(name|version|repo)\}\}/);
+    // 없는 컴포넌트는 지어내지 않고 요청한다 — 양식 URL 은 package.json 의 repository 에서 채워진다(#96).
+    expect(agents).toContain(
+      "https://github.com/jhleeWEB/jhlee-design-system/issues/new?template=component-request.yml",
+    );
     expect(agents.trimEnd().endsWith(END)).toBe(true);
     const skill = readFileSync(join(cwd, ".claude/skills/jhlee-ds/SKILL.md"), "utf8");
     expect(skill.startsWith("---\nname: jhlee-ds\n")).toBe(true);
+    expect(skill).not.toMatch(/\{\{(name|version|repo)\}\}/);
     expect(skill).toContain(
       "jq '.components[] | select(.name == \"Select\")' node_modules/@jhleeweb/jhlee-design-system/dist/components.manifest.json",
     );
@@ -95,6 +102,18 @@ describe("sync", { timeout: 30_000 }, () => {
 
   it("패키지 루트는 src/agent 와 dist/agent 에서 같은 곳이다", () => {
     expect(existsSync(join(defaultPackageDir(), "agent", "AGENTS.block.md"))).toBe(true);
+  });
+});
+
+describe("repoSlug", () => {
+  it("package.json repository.url 의 여러 꼴에서 <owner>/<repo> 를 읽고, GitHub 가 아니면 null 이다(#96)", () => {
+    expect(repoSlug("git+https://github.com/jhleeWEB/jhlee-design-system.git")).toBe(
+      "jhleeWEB/jhlee-design-system",
+    );
+    expect(repoSlug("https://github.com/o/r/")).toBe("o/r");
+    expect(repoSlug("git@github.com:o/r.git")).toBe("o/r");
+    expect(repoSlug("https://gitlab.com/o/r")).toBeNull();
+    expect(repoSlug(undefined)).toBeNull();
   });
 });
 

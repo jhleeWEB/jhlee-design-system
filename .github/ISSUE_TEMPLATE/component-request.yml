@@ -1,0 +1,70 @@
+name: 컴포넌트 요청
+description: 필요한 컴포넌트 · 부품 · 변형이 jhlee design system 에 없을 때 — 소비 레포에서 따로 짓기 전에 여기 요청한다.
+title: "[컴포넌트 요청] "
+labels: ["component-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        먼저 [`llms.txt`](https://github.com/jhleeWEB/jhlee-design-system/blob/main/packages/ui/llms.txt) 의 컴포넌트 색인에서 이미 있는지 찾아 주세요 — 기존 부품의 변형(`variant` · `size` · `tone`)으로 될 수도 있습니다.
+        **원하는 모양의 이미지를 첨부해 주세요**(스크린샷 · 시안 · 손그림 사진 · 참고한 서비스의 화면). 글 한 단락보다 이미지 한 장이 정확합니다 — 아래 «참고 이미지» 칸에 끌어다 놓거나 붙여 넣으면 올라갑니다.
+  - type: input
+    id: name
+    attributes:
+      label: 컴포넌트 이름
+      description: 영어 이름 제안. 기존 컴포넌트의 변형이면 «`Button` 에 `variant="…"`» 처럼 적는다.
+      placeholder: e.g. TreeView
+    validations:
+      required: true
+  - type: textarea
+    id: images
+    attributes:
+      label: 참고 이미지 (권장)
+      description: 원하는 컴포넌트의 스크린샷 · 시안(Figma 내보내기) · 손그림 사진 · 참고한 서비스의 화면. 상태가 여럿이면 상태별로(기본 · 호버 · 선택 · 비활성 · 다크) 한 장씩.
+      placeholder: 이미지를 여기에 끌어다 놓거나 붙여 넣으세요.
+    validations:
+      required: false
+  - type: textarea
+    id: usage
+    attributes:
+      label: 어디에 쓰나
+      description: 화면 · 흐름 · 다루는 데이터. 한 화면에 몇 개가 서고 무엇을 조작하는가.
+    validations:
+      required: true
+  - type: textarea
+    id: gap
+    attributes:
+      label: 지금 DS 로 안 되는 이유
+      description: 가장 가까운 기존 부품(`Select` · `Tabs` · `DataTable` …)과 그것으로 안 되는 점.
+    validations:
+      required: true
+  - type: textarea
+    id: api
+    attributes:
+      label: 필요한 변형 · 상태 · props
+      description: 크기 · 톤 · 비활성 · 로딩 · 키보드 조작 · 접근성(역할 · 이름) 요구.
+      placeholder: |
+        - size: sm / md
+        - 상태: 선택 · 비활성
+        - 키보드: 화살표로 이동, Enter 로 선택
+  - type: dropdown
+    id: surface
+    attributes:
+      label: 캔버스인가 크롬인가
+      description: 도면 위 요소(흰 바탕 고정 · 무채색 · 다크 없음)인가, UI 크롬(라이트/다크)인가.
+      options:
+        - 크롬 — 패널 · 폼 · 오버레이 같은 UI
+        - 캔버스 — 도면 요소 · 치수 · 범례 스와치
+        - 모르겠다
+    validations:
+      required: true
+  - type: input
+    id: consumer
+    attributes:
+      label: 소비 레포 · 패키지 버전
+      placeholder: e.g. aaro-lab/apartment-configurator · @jhleeweb/jhlee-design-system@4.0.0
+  - type: textarea
+    id: workaround
+    attributes:
+      label: 지금의 임시 대안
+      description: 기다리는 동안 어떻게 버티는가 — 있는 부품으로 임시 조립했다면 그 위치(`// TODO(jhlee-design-system#<이슈>)`).

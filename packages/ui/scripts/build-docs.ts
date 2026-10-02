@@ -18,6 +18,7 @@ import {
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { repoSlug } from "../src/agent/cli.ts";
 import {
   buildManifest,
   IMPORT_PATH,
@@ -30,6 +31,12 @@ import {
 /** 저장소 루트의 «shadcn 과 다른 점» 정본. */
 export const DIFFERENCES_DOC = join(PKG_DIR, "..", "..", "docs", "design-tokens.md");
 const COMPONENT_DOCS_DIR = "docs/components";
+
+/** 없는 컴포넌트를 요청하는 이슈 양식(#96) — 저장소는 package.json `repository.url` 한 곳에서 읽는다(에이전트 블록 · 스킬의 `{{repo}}` 와 같은 값). */
+const REQUEST_URL = `https://github.com/${repoSlug(
+  (JSON.parse(readFileSync(join(PKG_DIR, "package.json"), "utf8")) as { repository?: { url?: string } })
+    .repository?.url,
+)}/issues/new?template=component-request.yml`;
 
 const cell = (text: string): string => text.replace(/\|/g, "\\|").replace(/\n+/g, " ").trim();
 const code = (text: string): string => (text ? `\`${text.replace(/`/g, "")}\`` : "");
@@ -128,7 +135,7 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
     `> \`${manifest.package.name}\` — Radix + Tailwind v4 디자인 시스템. 크롬(UI) 어휘는 shadcn 이름, 도면 캔버스는 \`canvas-*\`, 크롬 모서리는 일반 border-radius 원호 사다리. 이 파일은 \`components.manifest.json\` 에서 생성된다(\`scripts/build-docs.ts\`) — 손으로 고치지 않는다.`,
     ``,
     `정본 순서: 이 파일 → \`dist/components.manifest.json\`(prop·값·기본값·client 의 기계 판독 정본, \`jq '.components[]|select(.name=="Button")'\`) → \`docs/components/*.md\` → \`dist/**/*.d.ts\`.`,
-    `매니페스트에 없는 컴포넌트·부품·prop 은 **지어내지 않는다** — «DS 확장 필요» 로 보고한다.`,
+    `매니페스트에 없는 컴포넌트·부품·prop 은 **지어내지 않는다** — «DS 확장 필요» 로 보고하고, 사용자 동의를 받아 [요청 이슈](${REQUEST_URL})를 연다.`,
     ``,
     `## 사용 규칙`,
     ``,
@@ -147,6 +154,7 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
     `- \`tone\` 은 한 어휘다: \`neutral | primary | success | warning | destructive | info\`. 옛 키(\`accent\` \`ok\` \`warn\` \`danger\`)·옛 유틸 이름(\`text-ink\` \`bg-surface\` \`rounded-control\`)·옛 CSS 변수는 3.0.0 에서 지웠다 — \`eslint --fix\`(프리셋)와 코드모드가 새 이름으로 바꾼다.`,
     `- 유채색은 판정에만(\`success\`·\`warning\`·\`destructive\`·\`info\`), \`primary\` 는 «지금 고른 것·주된 동작». 상태는 항상 텍스트와 병기한다. 수치는 \`font-mono tabular-nums\`(\`.num\`).`,
     `- 다크는 크롬에만(\`html[data-theme="dark"]\`) — 캔버스(\`canvas-*\`)는 흰 바탕·radius 0·무채색으로 불변이다. 새 컴포넌트마다 «캔버스인가 크롬인가» 를 먼저 묻는다.`,
+    `- **없으면 요청한다.** 필요한 컴포넌트 · 부품 · 변형이 없으면 소비 레포에서 따로 짓기 전에 [컴포넌트 요청 양식](${REQUEST_URL})(라벨 \`component-request\`)으로 이슈를 연다 — **원하는 모양의 이미지(스크린샷 · 시안 · 손그림)를 첨부한다**. \`gh issue create\` 는 이미지를 올리지 못하므로 이미지는 웹 양식에서 끌어다 놓는다. 기다리는 동안의 임시 구현은 DS 부품 · 토큰 유틸만으로 짓고 이슈 번호를 단 TODO 를 남긴다.`,
     `- 검증: 소비 레포 \`eslint.config.js\` 에 \`jhleeDesignSystem({ entryPoint })\`(\`${IMPORT_PATH}/eslint\`)를 펼치고 \`eslint\` + \`tsc --noEmit\` 위반 0. 에이전트 절차는 \`npx jds-agent sync\` 가 심는 \`.claude/skills/jhlee-ds/SKILL.md\`(Analyze → Compose → Audit).`,
     ``,
     `## shadcn 과 다른 점`,
