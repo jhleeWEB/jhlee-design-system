@@ -39,6 +39,7 @@ export {
   type FieldProps,
 } from "./Field";
 export { fieldVariants } from "./Field.variants";
+export { Fieldset, type FieldsetProps } from "./Fieldset";
 export { Input, Textarea, type InputProps } from "./Input";
 export { inputVariants } from "./Input.variants";
 export { Kbd, SectionLabel, Separator } from "./Misc";

@@ -93,6 +93,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [EmptyState](docs/components/EmptyState.md): 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다.
 - [Eyebrow](docs/components/Eyebrow.md): 들머리 눈썹 — 대문자 mono 한 줄
 - [Field](docs/components/Field.md): 필드의 루트 — 라벨 · 컨트롤 · 설명 · 오류가 쓸 id 를 만들어 나눠 준다 — 부품: FieldControl, FieldDescription, FieldError, FieldLabel — "use client"
+- [Fieldset](docs/components/Fieldset.md): 묶음 상자 — 테두리 상자 위 선에 제목(legend)이 걸치는 네이티브 fieldset — "use client"
 - [HoverCard](docs/components/HoverCard.md): 호버 카드의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 지연(`openDelay` · `closeDelay`)만 든다 — 부품: HoverCardContent, HoverCardTrigger — "use client"
 - [Input](docs/components/Input.md): 입력 — 글자와 수치 — "use client"
 - [Kbd](docs/components/Kbd.md): 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. — "use client"
@@ -144,6 +145,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 
 ## 유틸리티
 
+- `accordionVariants`: cva — 축 variant(separated | contained | flush); 기본 variant=separated. 서버에서 호출 가능.
 - `alertVariants`: cva — 축 tone(info | success | warning | destructive); 기본 tone=info. 서버에서 호출 가능.
 - `appShellVariants`: cva — 축 variant(flush | inset); 기본 variant=flush. 서버에서 호출 가능.
 - `avatarGroupVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.

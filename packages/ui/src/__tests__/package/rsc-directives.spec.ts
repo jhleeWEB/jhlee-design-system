@@ -89,6 +89,7 @@ describe('"use client"', () => {
         "primitives/Combobox.tsx",
         "primitives/DatePicker.tsx",
         "primitives/Field.tsx",
+        "primitives/Fieldset.tsx",
         "primitives/Input.tsx",
         "primitives/MediaCard.tsx",
         "primitives/Misc.tsx",
