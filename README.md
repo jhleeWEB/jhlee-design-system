@@ -2,8 +2,8 @@
 
 `@jhleeweb/jhlee-design-system` — 도면 캔버스와 UI 크롬을 가른 토큰, Radix 기반 컨트롤 · 오버레이 · 피드백 · 내비게이션 · 데이터 층.
 3.0.0 에서 3열 작업대 셸(`./legacy`)과 옛 이름 alias 를 지웠다 — 이행은 [`packages/ui/README.md`](packages/ui/README.md) «2.x → 3.0».
-4.0.0 에서 이름을 `squircle-design-system`(패키지 `@jhleeweb/squircle-design-system`)에서 바꿨다(#91) — 이행은 같은 파일의 «3.x → 4.0».
-GitHub Packages(npm.pkg.github.com)에 **비공개**로 발행한다. `aaro-lab/apartment-configurator` 의 `packages/ui` 를 2026-09-29 에 이력째 분리했다.
+4.0.0 에서 이름을 `squircle-design-system`(패키지 `@jhleeweb/squircle-design-system`)에서 바꿨다(#91) — 이행은 [`packages/ui/README.md`](packages/ui/README.md) «3.x → 4.0».
+GitHub Packages(npm.pkg.github.com)에 **공개(public) 패키지**로 발행한다 — 저장소(소스)는 비공개다(#94). `aaro-lab/apartment-configurator` 의 `packages/ui` 를 2026-09-29 에 이력째 분리했다.
 
 ## 쓰기
 
@@ -14,8 +14,11 @@ GitHub Packages(npm.pkg.github.com)에 **비공개**로 발행한다. `aaro-lab/
 ```
 
 ```bash
-NODE_AUTH_TOKEN=<classic PAT read:packages> pnpm add @jhleeweb/jhlee-design-system
+NODE_AUTH_TOKEN=$(gh auth token) pnpm add @jhleeweb/jhlee-design-system
 ```
+
+공개 패키지지만 **토큰은 여전히 필요하다** — GitHub Packages 의 npm 레지스트리는 공개 패키지도 익명 설치를 받지 않는다(익명 요청 401 · `read:packages` 토큰 200, 2026-10-02 실측).
+GitHub 계정이 있는 누구나 자기 토큰(classic PAT `read:packages`, 또는 `gh auth token`)으로 설치한다 — 초대는 필요 없다. 배포 빌드(Vercel · Docker …)는 `NODE_AUTH_TOKEN` 을 빌드 환경 변수로 준다.
 
 ```css
 /* 앱 진입 CSS */
@@ -24,6 +27,9 @@ NODE_AUTH_TOKEN=<classic PAT read:packages> pnpm add @jhleeweb/jhlee-design-syst
 @import "tailwindcss/utilities.css" source(none);
 @source "./";
 ```
+
+이 네 줄이 컴포넌트의 여백 · 패딩 · 간격(`px-3` · `gap-3` · `m-0` …)과 토큰(`--spacing: 4px` …)을 앱 CSS 로 만든다 — `theme.css` 의 `@source "./"` 가 패키지 dist 를 훑으므로
+소비자가 따로 `@source` 를 적지 않아도 DS 컴포넌트가 쓰는 유틸이 모두 생긴다(Next 스모크 빌드 실측, #94). Tailwind v4 없이 쓰면 컴포넌트는 스타일 없이 그려진다.
 
 ```tsx
 import { Button, Card, ToastProvider } from "@jhleeweb/jhlee-design-system";
@@ -50,8 +56,9 @@ pnpm --filter @jhleeweb/jhlee-design-system vrt            # 시각 회귀(story
 ## 발행
 
 `main` 머지 → `release.yml` 이 semantic-release 로 버전·태그·Release·publish. PR 제목의 type 이 버전을 정한다(`fix` patch · `feat` minor · `feat!:` major).
-접근 권한은 이 레포의 권한을 상속한다 — 패키지를 읽어야 하는 사람은 collaborator 로 초대한다. 다른 소유자의 레포 CI 는 GITHUB_TOKEN 이 아니라
-classic PAT(`read:packages`)로 읽는다.
+패키지 가시성은 **public** 이다(2026-10-02 사용자 결정, #94 — 공개 패키지는 다시 비공개로 돌릴 수 없다). 읽기는 GitHub 계정이 있는 누구나 토큰으로 하고,
+**발행은 이 레포의 쓰기 권한(release.yml 의 GITHUB_TOKEN)만** 한다. 다른 레포의 Actions 는 자기 GITHUB_TOKEN(`permissions: packages: read`)으로 공개 패키지를
+읽을 수 있다(GitHub 문서 기준, 실측 전) — 안 되면 classic PAT(`read:packages`) 시크릿을 쓴다. 저장소(소스)는 비공개라 소비자가 받는 것은 빌드 산출물(dist · d.ts · docs · llms.txt)뿐이다.
 
 ## 관련
 

@@ -1,7 +1,8 @@
 # CLAUDE.md — jhlee-design-system
 
 **jhlee design system** — 도면 캔버스와 UI 크롬을 가른 토큰(방향 C), 그 위의 Radix 기반 컨트롤 · 오버레이 · 피드백 · 내비게이션 · 데이터 층
-(3열 작업대 셸 `./legacy` 는 3.0.0 에서 지웠다, #49). 패키지 `@jhleeweb/jhlee-design-system` 으로 GitHub Packages(npm.pkg.github.com)에 비공개 발행한다.
+(3열 작업대 셸 `./legacy` 는 3.0.0 에서 지웠다, #49). 패키지 `@jhleeweb/jhlee-design-system` 으로 GitHub Packages(npm.pkg.github.com)에 **공개(public)** 발행한다
+(2026-10-02 사용자 결정, #94 — 저장소는 비공개 그대로. GitHub Packages 의 npm 레지스트리는 공개 패키지도 토큰을 요구한다 — 익명 401 실측).
 `aaro-lab/apartment-configurator` 의 `packages/ui` 를 2026-09-29 에 이력째 분리했다(원 저장소 이슈 #1432).
 옛 이름은 `squircle-design-system`(패키지 `@jhleeweb/squircle-design-system`)이다 — 스쿼클 모서리를 폐기(#36)한 뒤 이름이 디자인을 말하지 않아
 2026-10-02 사용자 결정으로 패키지 · 저장소 · 이름에서 나온 공개 API 를 함께 바꿨다(4.0.0, #91). 표시 이름은 소문자 `jhlee design system` 이다.
@@ -155,6 +156,9 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 @jhleeweb:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}    ← 소비 레포의 .npmrc(fail-fast)
 ```
+
+공개 패키지라 GitHub 계정이 있는 누구나 자기 `read:packages` 토큰으로 설치한다(초대 불필요) — 토큰 없는 설치는 없다. 발행은 이 레포의 release.yml 만 한다.
+옛 패키지 `@jhleeweb/squircle-design-system` 은 2026-10-02 에 레지스트리에서 지워졌다 — 3.x 를 고정한 소비 레포는 새 설치에서 실패하므로 4.0.0 으로 옮긴다.
 
 ## 빌드·검증
 

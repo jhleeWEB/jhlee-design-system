@@ -38,7 +38,8 @@ main            기본 브랜치이자 유일한 장기 브랜치. 모든 PR 의
 
 한국어 설명만으로는 major 가 오르지 않는다 — 파괴적 변경은 반드시 `!` 또는 `BREAKING CHANGE:` 를 적는다.
 반대로 `!` 는 언제나 major 다 — 스쿼클 폐기(#37)가 2.0.0 을, 새 부품 Select·Field·Tabs(#47)와 legacy 셸·옛 이름 alias·`normalizeTone`·루트 배럴 legacy 별칭 제거(D8 #49)를 한 PR 로 묶은 것이 **3.0.0** 을, 패키지 · 저장소 개명(`squircle-design-system` → `jhlee-design-system`, #91)이 **4.0.0** 을 냈다. 다음 파괴적 변경은 5.0.0 이다. 소비 레포는 정확 버전을 고정하므로 major 가 잦아도 깨지지 않는다.
-잘못 올린 버전은 삭제하지 않고 patch 를 하나 더 올린다. 가시성은 private 유지(public 은 되돌릴 수 없다).
+잘못 올린 버전은 삭제하지 않고 patch 를 하나 더 올린다. 패키지 가시성은 **public** 이다(2026-10-02 사용자 결정, #94 — 공개 패키지는 다시 비공개가 되지 않는다).
+저장소(소스)는 private 그대로다. 공개여도 GitHub Packages 의 npm 레지스트리는 설치에 토큰(`read:packages`)을 요구한다.
 
 ## 커밋 메시지
 

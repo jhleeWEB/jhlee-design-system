@@ -8,7 +8,7 @@
     [
       "@semantic-release/exec",
       {
-        "publishCmd": "pnpm --filter @jhleeweb/jhlee-design-system publish --no-git-checks --access restricted"
+        "publishCmd": "pnpm --filter @jhleeweb/jhlee-design-system publish --no-git-checks --access public"
       }
     ],
     "@semantic-release/github"
