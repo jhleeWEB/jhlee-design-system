@@ -35,7 +35,7 @@ describe("legacy-map — 표", () => {
   it("목적지는 전부 오늘의 정본에 있다 — 정본에서 이름이 사라지면 코드모드가 죽은 이름으로 옮긴다", () => {
     expect(Object.values(map.cssVars).filter((to) => !defined.has(to))).toEqual([]);
     const utilityColors = new Set(
-      tokens.filter((t) => t.path[0] === "color" && t.sds.scope === "theme-inline").map((t) => t.path[1]),
+      tokens.filter((t) => t.path[0] === "color" && t.jds.scope === "theme-inline").map((t) => t.path[1]),
     );
     expect(Object.values(map.colors).filter((to) => !utilityColors.has(to))).toEqual([]);
     const radius = new Set(tokens.filter((t) => t.path[0] === "radius").map((t) => t.path[1]));

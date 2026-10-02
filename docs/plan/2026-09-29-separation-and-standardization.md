@@ -1,5 +1,8 @@
 # 디자인 시스템 독립 레포 분리 · GitHub Packages 비공개 배포 · 표준화 계획
 
+> **개명 메모(2026-10-02, #91).** 이 계획이 세운 레포 · 패키지의 이름은 `squircle-design-system`(`@jhleeweb/squircle-design-system`, bin `sds-agent`, 스킬 `squircle-ds`)이었다.
+> 4.0.0 에서 `jhlee-design-system`(`@jhleeweb/jhlee-design-system`, `jds-agent`, `jhlee-ds`)으로 바꿨고, 이 문서의 이름도 새 이름으로 고쳤다. 모서리 결정(스쿼클, §Q5)은 기록이라 그대로 둔다 — #36 에서 폐기했다.
+
 ## Context
 
 `packages/ui`(`@buildos/ui` 0.1.0)는 이 모노레포 안에서만 쓰이는 워크스페이스 전용 패키지다. 사용자 요청은
@@ -33,8 +36,8 @@
 - **조용히 깨지는 지점**: 네 앱 `src/ds.css` 의 `@source "../../../packages/ui/src"`(india `:25`). 틀려도 에러 없이
   민짜로 렌더된다.
 - **조직·레지스트리**: 원격 `aaro-lab/apartment-configurator`. GitHub Packages 는 **스코프 = 레포 소유자(소문자)** 강제
-  → `@buildos/ui` 로는 발행 불가. 사용자가 지정한 새 레포는 **개인 계정** `jhleeWEB/squircle-design-system`(2026-09-29 생성, 비공개, 빈 상태,
-  이 계정 ADMIN) → 패키지 이름 `@jhleeweb/squircle-design-system`(스코프 소문자). 개인 계정 패키지의 권한은 그 레포 권한을 상속하므로 조직 동료는
+  → `@buildos/ui` 로는 발행 불가. 사용자가 지정한 새 레포는 **개인 계정** `jhleeWEB/jhlee-design-system`(2026-09-29 생성, 비공개, 빈 상태,
+  이 계정 ADMIN) → 패키지 이름 `@jhleeweb/jhlee-design-system`(스코프 소문자). 개인 계정 패키지의 권한은 그 레포 권한을 상속하므로 조직 동료는
   이 레포의 collaborator 여야 읽을 수 있고, «Manage Actions access» 는 같은 소유자의 레포만 추가할 수 있어 `aaro-lab/*` 의 CI 는 GITHUB_TOKEN 이 아니라
   PAT 로 읽는다(Phase 0 에서 실측). 현재 `gh` 토큰에 `read:packages`/`write:packages` 없음.
   인증은 **classic PAT 만** 지원. 조직 선례 `aaro-lab/platform`(changesets + `release.yml`, `packages: write`,
@@ -53,9 +56,9 @@
 
 - 새 비공개 레포가 `packages/ui`·`packages/typescript-config`·`apps/ds-gallery`·`docs/architecture/design-system-patterns.md`
   를 **같은 상대 경로**로 갖고 이력(25+ 커밋)을 보존한다.
-- `@jhleeweb/squircle-design-system` 가 GitHub Packages 에 비공개 발행되고, CI 가 매 PR 에서 정적·토큰·단위/a11y·시각·패키지 계약을
+- `@jhleeweb/jhlee-design-system` 가 GitHub Packages 에 비공개 발행되고, CI 가 매 PR 에서 정적·토큰·단위/a11y·시각·패키지 계약을
   검사하며, main 머지 → changesets Version PR → 자동 publish 로 돈다.
-- 이 저장소는 별칭 `"@buildos/ui": "npm:@jhleeweb/squircle-design-system@x.y.z"` 로 소비해 소스 `.ts/.tsx` 0파일 변경으로 전환하고,
+- 이 저장소는 별칭 `"@buildos/ui": "npm:@jhleeweb/jhlee-design-system@x.y.z"` 로 소비해 소스 `.ts/.tsx` 0파일 변경으로 전환하고,
   검증 창 뒤 `packages/ui`·`apps/ds-gallery` 를 삭제한다.
 - 토큰은 DTCG JSON 정본 → 생성물(CSS 변수·Tailwind `@theme`·TS 상수), 유틸 어휘는 shadcn 표준 이름(+우리 확장), 컴포넌트는 열 줄 규칙
   (cva·부품 먼저·JSDoc 계약), 모서리는 토큰 하나로 스쿼클을 받는다.
@@ -76,8 +79,8 @@
 
 | # | 질문 | 결정 | 근거 |
 |---|---|---|---|
-| Q1 | 새 레포 위치·이름 | **`jhleeWEB/squircle-design-system`**(사용자 지정, 개인 계정, 이미 생성됨) | 조직 `aaro-lab` 이 아니라 개인 계정이므로 스코프는 `@jhleeweb`, 패키지 권한 = 레포 권한(협업자 초대), Actions 교차 접근은 PAT. 조직으로 옮길 때 별칭 지정자·`.npmrc` 두 줄만 바뀌게 설계한다 |
-| Q2 | 패키지 이름과 소비자 지정자 | 레지스트리 `@jhleeweb/squircle-design-system`(레포 이름과 동일) + 이 저장소 manifest 별칭 `"@buildos/ui": "npm:@jhleeweb/squircle-design-system@…"` | 스코프=소유자는 공식 규칙. 별칭은 소스 0파일·되돌리기 manifest 5개. 전면 개명(import 76+CSS 5+vi.mock 3+문서 6)은 별도 chore PR 로 언제든 가능. 더 짧은 이름(`@jhleeweb/ui`)을 원하면 첫 발행 전 `name` 한 줄 |
+| Q1 | 새 레포 위치·이름 | **`jhleeWEB/jhlee-design-system`**(사용자 지정, 개인 계정, 이미 생성됨) | 조직 `aaro-lab` 이 아니라 개인 계정이므로 스코프는 `@jhleeweb`, 패키지 권한 = 레포 권한(협업자 초대), Actions 교차 접근은 PAT. 조직으로 옮길 때 별칭 지정자·`.npmrc` 두 줄만 바뀌게 설계한다 |
+| Q2 | 패키지 이름과 소비자 지정자 | 레지스트리 `@jhleeweb/jhlee-design-system`(레포 이름과 동일) + 이 저장소 manifest 별칭 `"@buildos/ui": "npm:@jhleeweb/jhlee-design-system@…"` | 스코프=소유자는 공식 규칙. 별칭은 소스 0파일·되돌리기 manifest 5개. 전면 개명(import 76+CSS 5+vi.mock 3+문서 6)은 별도 chore PR 로 언제든 가능. 더 짧은 이름(`@jhleeweb/ui`)을 원하면 첫 발행 전 `name` 한 줄 |
 | Q3 | 토큰·tone·반경 어휘를 shadcn 표준 이름으로 개명하는가 | **개명**(`bg-surface`→`bg-card`, `text-ink`→`text-foreground`, `bg-accent`→`bg-primary`, `ok/warn/danger`→`success/warning/destructive`, `rounded-control`→`rounded-md` …; `canvas-*`·`text-body` 류 역할명·`shadow-*`·`h-ctl*` 는 유지). 값은 불변, 한 PR 원자 코드모드(린트 자동 수정), 한 마이너 별칭 | LLM 사전 분포가 shadcn. 유지하면 `--color-*: initial` 때문에 LLM 이 쓴 `bg-background` 가 CSS 없이 조용히 무시되고, alias 병행은 `accent`·`muted` 가 이름은 같고 뜻이 반대라 불가. 비용은 UI 256+69건, 앱 57+138+tone 93건이지만 값이 안 바뀌어 VRT 0px 로 검증된다 |
 | Q4 | 릴리스 방식 | **semantic-release**(main push → Conventional Commits 로 버전·태그·Release·publish, 봇 PR 없음, PR 제목 린트 필수) | 사용자 문서의 «main 머지 시 자동» 을 그대로 지킨다. 조직 선례는 changesets 이지만 이 조직 실측(`allow_auto_merge=false`, Actions PR 생성 꺼짐)과 2026-06-11 GitHub 변경(봇 PR 의 CI 는 사람 승인 필요) 때문에 Version PR 경로는 승인 대기 또는 CI 전 즉시 머지로 고장난다. 릴리스 노트의 사람 검토가 더 중요하면 changesets(Actions PR 생성 허용 + 봇 PR CI 승인 클릭 감수) |
 | Q5 | 모서리 — 데모 브라우저와 폴백 | 데모는 프레젠터 노트북 **Chrome/Edge ≥139** 로 고정(체크리스트에 버전 확인), 미지원 엔진은 **원호 강등** 만(런타임 폴백 없음), `squircle`(K=2)·보정 계수 1.5 로 시작해 카탈로그에서 1.84·n=5 와 비교 | Safari 27 정식·Firefox 정식은 `corner-shape` 미지원 → 고객 Mac Safari 로 데모하면 이 작업의 데모 가치가 0(그 경우 데모 뒤로 미룬다). clip-path/mask/Houdini 폴백은 그림자·헤어라인·포커스 링을 잘라 WCAG 2.4.7 위반. 1.84 는 30px 컨트롤을 pill 에 가깝게 만든다 |
@@ -96,7 +99,7 @@
 | `read:packages` 토큰 주체 | 개인 classic PAT 로 시작(로컬 각자, Vercel 은 owner 한 사람, 발급자·만료일 README 기록). 소비 레포 둘 이상이면 머신 유저 |
 | 새 레포 브랜치 | `main` 단일 + PR 필수·squash. 라이브러리는 발행 버전이 곧 승격이라 develop/main 이중이 하는 일이 없고 changesets Version PR 은 기본 브랜치에 열린다. AGENTS.md 사본에 «라이브러리 레포 예외» |
 | 릴리스 | changesets(조직 선례). GITHUB_TOKEN 이 연 Version PR 에는 CI 가 안 돌므로 필수 체크를 걸지 않는다 |
-| 소비자 버전 고정 | 정확 버전 `npm:@jhleeweb/squircle-design-system@0.1.0` + arch 스펙으로 manifest 5개 값 일치 강제(앱·module1 이 한 벌로 풀려야 Provider 컨텍스트가 안 끊긴다) |
+| 소비자 버전 고정 | 정확 버전 `npm:@jhleeweb/jhlee-design-system@0.1.0` + arch 스펙으로 manifest 5개 값 일치 강제(앱·module1 이 한 벌로 풀려야 Provider 컨텍스트가 안 끊긴다) |
 | `packages/ui`·`apps/ds-gallery` 삭제 | 검증 창(최대 2주) 뒤 별도 PR-2. 창 동안 되돌리기는 revert 1건 |
 | git 이력 | `git filter-repo` 로 네 경로 보존(blame·상대경로·`extends` 유지) |
 | Tailwind `@source` 책임 | DS `theme.css` 에 `@source "./"` 자기 등록(tailwindcss 4.3.3 `lib.js` 에서 선언 파일 디렉터리 기준 등록 확인) + PR-1 은 소비자 줄 병행 후 PR-2 에서 제거 |
@@ -106,7 +109,7 @@
 | 리터럴 금지 도구 | vitest 래칫 + ESLint **10** 부트스트랩을 Phase A 에(warn + baseline), stylelint 16 은 Phase C, 0 된 규칙부터 error |
 | tone 어휘 | Q3 에 따라 `neutral/primary/success/warning/destructive/info`(개명 시) — 한 마이너 `normalizeTone()` shim + 린트 자동 수정 |
 | 시각 회귀 | Playwright × `storybook-static`(스토리 수준, 라이트/다크), 스냅샷 git 커밋(linux-chromium 한 벌, 도커로만 갱신), `maxDiffPixels` A 50 → C 0 |
-| 레거시 셸·컨트롤 | `@jhleeweb/squircle-design-system/legacy` 서브패스로 격리·동결, 루트 배럴 한 버전 `@deprecated`. v1.0 부터 배럴의 `Select`·`Tabs`·`Field`·`Tooltip` 은 컴파운드 부품 Root(shell `Field` → `legacy` 의 `HudField`) |
+| 레거시 셸·컨트롤 | `@jhleeweb/jhlee-design-system/legacy` 서브패스로 격리·동결, 루트 배럴 한 버전 `@deprecated`. v1.0 부터 배럴의 `Select`·`Tabs`·`Field`·`Tooltip` 은 컴파운드 부품 Root(shell `Field` → `legacy` 의 `HudField`) |
 | forwardRef → ref prop | 컴포넌트별 PR(래칫 0 까지) |
 | base 30개 옛 이름 | alias 로 유지·래칫으로 감소, 제거는 major 에서 일괄 |
 | 대비 게이트 | WCAG 2.x AA(4.5/3.0) + `KNOWN_FAILURES` 래칫, APCA 는 정보 열 |
@@ -126,7 +129,7 @@
 ### 1.1 목표 레포 구성 (이 저장소와 같은 상대 경로)
 
 ```
-squircle-design-system/
+jhlee-design-system/
 ├── .releaserc.json                   # semantic-release: branches main · conventionalcommits · npm + github (git 플러그인 없음)
 ├── .github/actions/setup/action.yml  # pnpm/action-setup@v4 + setup-node@v4(node 24, cache pnpm) + frozen install (registry-url 은 주지 않는다 — 프로젝트 .npmrc 가 스코프 매핑)
 ├── .github/workflows/ci.yml          # PR·main: static · unit · tokens · visual · package (Part 2 D-6)
@@ -140,23 +143,23 @@ squircle-design-system/
 ├── packages/ui/                      # 통째로 — src 66파일·tsconfig·vitest.config 무변경(이식 PR)
 │   ├── package.json                  # ★ 1.2
 │   └── src/theme.css                 # ★ `@source "./"` 한 줄 추가(이식 PR 의 유일한 소스 변경)
-└── apps/ds-gallery/                  # 이식 PR 은 그대로(`@buildos/ui` → `@jhleeweb/squircle-design-system` 4곳). Phase A 에서 packages/ui/stories/gallery/ 로 이식 후 삭제(§2.5-e)
+└── apps/ds-gallery/                  # 이식 PR 은 그대로(`@buildos/ui` → `@jhleeweb/jhlee-design-system` 4곳). Phase A 에서 packages/ui/stories/gallery/ 로 이식 후 삭제(§2.5-e)
 ```
 
 ### 1.2 `packages/ui/package.json` (빌드 산출물 배포. `./legacy`·`./eslint`·manifest·`bin` 은 Phase A~D 에서 차례로 생긴다)
 
 ```jsonc
 {
-  "name": "@jhleeweb/squircle-design-system",                        // 스코프 = 레포 소유자 — publish 의 전제
+  "name": "@jhleeweb/jhlee-design-system",                        // 스코프 = 레포 소유자 — publish 의 전제
   "version": "0.1.0",                            // semantic-release 채택 시 "0.0.0-managed"
   "description": "AARO 디자인 시스템 — 도면 캔버스와 UI 크롬을 가른 토큰(방향 C), Radix 기반 오버레이·피드백 층, 3열 작업대 셸, 그리고 그 위의 컨트롤.",
   "license": "UNLICENSED",
   "type": "module",
-  "repository": { "type": "git", "url": "https://github.com/jhleeWEB/squircle-design-system.git", "directory": "packages/ui" },
+  "repository": { "type": "git", "url": "https://github.com/jhleeWEB/jhlee-design-system.git", "directory": "packages/ui" },
   "publishConfig": { "registry": "https://npm.pkg.github.com", "access": "restricted" },
   "sideEffects": ["**/*.css"],                   // 소비자가 theme.css 를 side-effect import 한다 — false 면 webpack 프로덕션에서 제거될 수 있다
   "files": ["dist", "llms.txt", "docs", "agent", "README.md", "CHANGELOG.md"],
-  "bin": { "sds-agent": "./dist/agent/cli.js" },
+  "bin": { "jds-agent": "./dist/agent/cli.js" },
   "exports": {                                   // 조건 순서 types → import → default. "./*" 와일드카드는 닫는다(실소비 서브패스는 canvas-metrics 뿐)
     ".":                { "types": "./dist/index.d.ts",          "import": "./dist/index.js",          "default": "./dist/index.js" },
     "./canvas-metrics": { "types": "./dist/canvas-metrics.d.ts", "import": "./dist/canvas-metrics.js", "default": "./dist/canvas-metrics.js" },
@@ -202,7 +205,7 @@ squircle-design-system/
 ### 1.3 루트 파일 · Actions · 규약
 
 - 루트 `package.json`: `packageManager pnpm@10.11.0`, `engines node>=24`, scripts `build`·`typecheck`·`test`·`verify`·
-  `storybook`(`pnpm --filter @jhleeweb/squircle-design-system storybook`, 6006)·`release`(Q4: semantic-release 면 `pnpm exec semantic-release`, changesets 면 `changeset publish`),
+  `storybook`(`pnpm --filter @jhleeweb/jhlee-design-system storybook`, 6006)·`release`(Q4: semantic-release 면 `pnpm exec semantic-release`, changesets 면 `changeset publish`),
   devDependencies `semantic-release`, `conventional-changelog-conventionalcommits`, `@semantic-release/{commit-analyzer,release-notes-generator,npm,github}`.
 - `release.yml` — **semantic-release(Q4 확정)**: `on: push main`, `permissions: contents write · issues write · pull-requests write · packages write · id-token write`,
   checkout(fetch-depth 0) → pnpm → setup-node(**`registry-url` 을 주지 않는다** — 프로젝트 `.npmrc` 와 충돌) → `pnpm install --frozen-lockfile && pnpm build && pnpm test:package`
@@ -213,22 +216,22 @@ squircle-design-system/
   (대안으로 남겨 두는 changesets — `aaro-lab/platform` 선례 — 는 `changesets/action@v2` + Actions PR 생성 허용 + 봇 PR CI 승인 클릭이 필요하다.)
 - `ci.yml`: §2.5-f 의 6 job(static·unit·tokens·storybook·vrt·package) + pr-title. 이식 PR 시점에는 `static`(typecheck)·`unit`(vitest)·`package`(pack 계약: tarball 에
   `dist/index.js`·`dist/index.d.ts`·CSS 4개, `__tests__`·stories 없음)만 켜고 나머지는 Phase A 에서 붙인다.
-- ruleset: `aaro-harness` 체크아웃의 `policy/scripts/apply-ruleset.mjs --repo jhleeWEB/squircle-design-system`(`AGENTS.md:122` 의
+- ruleset: `aaro-harness` 체크아웃의 `policy/scripts/apply-ruleset.mjs --repo jhleeWEB/jhlee-design-system`(`AGENTS.md:122` 의
   `scripts/apply-ruleset.mjs` 는 이 저장소에 **없다** — 별도 docs 이슈). `gh repo edit … --default-branch main
   --enable-squash-merge --enable-merge-commit=false --enable-rebase-merge=false --delete-branch-on-merge`.
 
 ### 1.4 단계
 
 **Phase 0 — 전제(사용자 실행, 코드 변경 없음)**
-1. Q1~Q5 는 확정됐다(«결정됨» 표). 이 저장소에 이슈 «디자인 시스템을 독립 레포로 분리하고 `@jhleeweb/squircle-design-system` 레지스트리 패키지로 소비한다».
+1. Q1~Q5 는 확정됐다(«결정됨» 표). 이 저장소에 이슈 «디자인 시스템을 독립 레포로 분리하고 `@jhleeweb/jhlee-design-system` 레지스트리 패키지로 소비한다».
 2. 토큰: `gh auth refresh -h github.com -s read:packages,write:packages` 뒤
    `NODE_AUTH_TOKEN=$(gh auth token) npm whoami --registry=https://npm.pkg.github.com` 실측. 401 이면 classic PAT
    (read:packages + write:packages, 조직 SSO 승인). `~/.npmrc` 의 기존 `npm.pkg.github.com` 줄(platform 용 추정) 충돌 확인.
 3. 개인 계정이라 조직 패키지 정책은 없다. 조직 동료가 패키지를 읽어야 하면 이 레포에 collaborator(read)로 초대한다 — 패키지 권한은 레포 권한을 상속한다.
    «Manage Actions access» 에 `aaro-lab/apartment-configurator` 를 추가할 수 있는지 실측(문서상 같은 소유자 레포만) — 안 되면 이 저장소 CI 는 PAT.
-4. 레포는 이미 있다(비공개·빈 상태·ADMIN). 첫 push 뒤 `gh repo edit jhleeWEB/squircle-design-system --default-branch main --enable-squash-merge
+4. 레포는 이미 있다(비공개·빈 상태·ADMIN). 첫 push 뒤 `gh repo edit jhleeWEB/jhlee-design-system --default-branch main --enable-squash-merge
    --enable-merge-commit=false --enable-rebase-merge=false --delete-branch-on-merge` → aaro-harness 체크아웃의 `node policy/scripts/apply-ruleset.mjs
-   --repo jhleeWEB/squircle-design-system --dry-run` 뒤 실제 적용(개인 레포에도 admin 이면 된다; 스크립트가 조직을 전제하면 `gh api` 로 같은 규칙을 직접) →
+   --repo jhleeWEB/jhlee-design-system --dry-run` 뒤 실제 적용(개인 레포에도 admin 이면 된다; 스크립트가 조직을 전제하면 `gh api` 로 같은 규칙을 직접) →
    필수 체크(static·unit·tokens·storybook·vrt·package·pr-title)는 job 이 생기는 Phase A 에 등록 → **정정(#10)**: ruleset 불가(무료 플랜) — CI 필수 체크 대신 규약. semantic-release 라 Actions PR 생성 허용은 불필요.
 - 완료 조건: `npm whoami` 가 계정명 반환 · 레포 존재 · ~~ruleset 적용~~(무료 개인 플랜 비공개 레포는 ruleset 불가 — 규약으로 대신, #10) · Actions PR 생성 허용.
 
@@ -236,37 +239,37 @@ squircle-design-system/
 1. 이력 보존(별도 클론, 원 저장소 무변경):
    ```bash
    brew install git-filter-repo
-   git clone --no-local https://github.com/aaro-lab/apartment-configurator.git sds-split && cd sds-split
+   git clone --no-local https://github.com/aaro-lab/apartment-configurator.git jds-split && cd jds-split
    git filter-repo --path packages/ui --path packages/typescript-config --path apps/ds-gallery --path docs/architecture/design-system-patterns.md
-   git branch -m develop main && git remote add origin https://github.com/jhleeWEB/squircle-design-system.git && git push -u origin main
+   git branch -m develop main && git remote add origin https://github.com/jhleeWEB/jhlee-design-system.git && git push -u origin main
    ```
    스냅샷 기준 develop tip `1edca9e2`.
 2. 골격(1.3) 추가 → `pnpm install` → `pnpm -r build:types && pnpm -r typecheck && pnpm -r test` 가 원 레포와 같은 104 `it`
    통과(실패 = 이식 누락).
 3. manifest 교정(1.2) + `theme.css` 자기 등록 + 갤러리 4곳 개명 + `src/index.ts:16-23`·`theme.css:25-28` 사용법 주석 갱신.
-   `pnpm --filter @jhleeweb/squircle-design-system pack` → tarball 내용 검사 → 이식 시점에는 아직 `apps/ds-gallery`(5186)로 눈 확인(Phase A 뒤에는 `pnpm storybook` 6006).
-4. CI·release 워크플로 PR → main squash. 첫 발행 `pnpm --filter @jhleeweb/squircle-design-system publish --no-git-checks`(로컬 PAT). 이후 changesets.
-   `gh api /user/packages/npm/squircle-design-system --jq '.visibility,.repository.full_name'` → private · jhleeWEB/squircle-design-system.
+   `pnpm --filter @jhleeweb/jhlee-design-system pack` → tarball 내용 검사 → 이식 시점에는 아직 `apps/ds-gallery`(5186)로 눈 확인(Phase A 뒤에는 `pnpm storybook` 6006).
+4. CI·release 워크플로 PR → main squash. 첫 발행 `pnpm --filter @jhleeweb/jhlee-design-system publish --no-git-checks`(로컬 PAT). 이후 changesets.
+   `gh api /user/packages/npm/jhlee-design-system --jq '.visibility,.repository.full_name'` → private · jhleeWEB/jhlee-design-system.
    «Manage Actions access» 는 같은 소유자(jhleeWEB)의 레포만 받으므로 `aaro-lab/apartment-configurator` 의 장래 CI 는 classic PAT(secret `GH_PACKAGES_TOKEN`)로 읽는다.
-- 완료 조건: 새 레포 CI 초록 · `@jhleeweb/squircle-design-system@0.1.0` 이 private 로 레포에 연결 · tarball 에 `dist/*.d.ts`+JS+CSS, `__tests__` 없음 ·
+- 완료 조건: 새 레포 CI 초록 · `@jhleeweb/jhlee-design-system@0.1.0` 이 private 로 레포에 연결 · tarball 에 `dist/*.d.ts`+JS+CSS, `__tests__` 없음 ·
   갤러리 화면 동일.
 
 **Phase 2 — 이 저장소 소비 전환 PR-1 (`build/consume-aaro-lab-ui`, base develop)**
 1. 루트 `.npmrc`(신규):
    ```
-   # GitHub Packages — @jhleeweb 스코프만 npm.pkg.github.com 에서 받는다(@buildos/ui 는 @jhleeweb/squircle-design-system 의 별칭).
+   # GitHub Packages — @jhleeweb 스코프만 npm.pkg.github.com 에서 받는다(@buildos/ui 는 @jhleeweb/jhlee-design-system 의 별칭).
    # NODE_AUTH_TOKEN 이 없으면 pnpm 이 여기서 즉시 실패한다 — 401 로 늦게 죽는 것보다 낫다. CLAUDE.md 「빌드·검증」 참조.
    @jhleeweb:registry=https://npm.pkg.github.com
    //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
    ```
-2. manifest 5곳 `"@buildos/ui": "workspace:*"` → `"npm:@jhleeweb/squircle-design-system@0.1.0"`. 별칭이라 `node_modules/@buildos/ui` 이름이 유지되어
+2. manifest 5곳 `"@buildos/ui": "workspace:*"` → `"npm:@jhleeweb/jhlee-design-system@0.1.0"`. 별칭이라 `node_modules/@buildos/ui` 이름이 유지되어
    import 76·`vi.mock` 3·`worker-imports.spec.ts:9`·`reachability.spec.ts:174`·CSS `@import` 전부 무변경.
 3. `src/ds.css` 4곳: `@source "../../../packages/ui/src"` → `@source "../node_modules/@buildos/ui/dist"`(자기 등록과 중복, 무해; PR-2 제거).
    india 의 `../../../packages/module1/src/ui` 줄 유지. 주석 3번 갱신.
-4. `pnpm install` → lockfile 재생성(importers 의 `link:../../packages/ui` 5건 → `npm:@jhleeweb/squircle-design-system@0.1.0`).
+4. `pnpm install` → lockfile 재생성(importers 의 `link:../../packages/ui` 5건 → `npm:@jhleeweb/jhlee-design-system@0.1.0`).
 5. Vite/Vitest 설정 무변경으로 시작. 실측 실패 시 `optimizeDeps.exclude: ["@buildos/ui"]` + `include: ["@buildos/ui > radix-ui", …]`,
    Vitest `server.deps.inline: ["@buildos/ui"]`.
-6. `packages/ui/package.json` description 에 «동결 — 정본은 jhleeWEB/squircle-design-system» 표기(창 동안 죽은 사본 수정 방지).
+6. `packages/ui/package.json` description 에 «동결 — 정본은 jhleeWEB/jhlee-design-system» 표기(창 동안 죽은 사본 수정 방지).
 7. 검증(§검증 3~8) → `gh pr create --base develop … Closes #N` → `gh pr merge --squash --delete-branch`.
 - 완료 조건: 소스 `.ts/.tsx` 변경 0 · `pnpm typecheck && pnpm test && pnpm build` 통과 · 빌드 CSS 에 `.rounded-control`·`--radius-control` ·
   `pnpm dev`(5179) 에서 Modal·Toast·Card 스타일 렌더 · 프레시 클론 `--frozen-lockfile` 성공.
@@ -274,11 +277,11 @@ squircle-design-system/
 **Phase 3 — 인증 배치 · 검증 창 · PR-2**
 - 3a(코드 변경 없음): Vercel env `NODE_AUTH_TOKEN`(Production·Preview, classic PAT read:packages, 만료 1년+알림); 개발자 셸
   `export NODE_AUTH_TOKEN=…`(워크트리 상속); 장래 CI 는 secret `GH_PACKAGES_TOKEN`(classic PAT) 을 `NODE_AUTH_TOKEN` 으로(개인 계정 패키지라 GITHUB_TOKEN 불가).
-- 3b 검증 창(≤2주): 프레시 클론 빌드 성공 + DS patch(0.1.1) 한 번 발행 → `pnpm -r update @buildos/ui@npm:@jhleeweb/squircle-design-system@0.1.1` 로
+- 3b 검증 창(≤2주): 프레시 클론 빌드 성공 + DS patch(0.1.1) 한 번 발행 → `pnpm -r update @buildos/ui@npm:@jhleeweb/jhlee-design-system@0.1.1` 로
   manifest 5 + lockfile 만 바뀌는 PR 1회.
 - 3c PR-2 `chore/remove-ui-workspace`: `git rm -r packages/ui apps/ds-gallery`; 루트 `package.json:26 dev:ds-gallery`·
   `.claude/launch.json:39-43` 삭제; `design-system-patterns.md` → 5줄 스텁; ds.css 3곳 `@source` 제거; `packages/module1/package.json`
-  ui·react 를 peer+dev 로; 문서(`CLAUDE.md` 「저장소 구조」 12개→11개 + «ui 는 외부 `@jhleeweb/squircle-design-system` 별칭», 「공유 패키지」 절 예외 문단
+  ui·react 를 peer+dev 로; 문서(`CLAUDE.md` 「저장소 구조」 12개→11개 + «ui 는 외부 `@jhleeweb/jhlee-design-system` 별칭», 「공유 패키지」 절 예외 문단
   (별칭·정확 버전·`NODE_AUTH_TOKEN`·link 루프·turbo 밖), 「빌드·검증」 토큰 전제; `AGENTS.md` ui 명령; `README.md` §14;
   `docs/architecture/react-app-structure.md:193,292`; `docs/module5/VISUALIZATION-AI-HANDOFF.md:140,167`; `apps/module5/src/tokens.css:9`);
   arch 스펙(`apps/india-residential-configurator/src/__arch__/`: `@buildos/ui` 지정자 집합 크기 1, 루트 `pnpm.overrides` 없음).
@@ -286,15 +289,15 @@ squircle-design-system/
   `turbo run build:types --dry-run` 에 ui 없음 · module1 이 peer 로 앱과 한 벌.
 
 **Phase 4 — 개발 루프 · 버전 운영**
-- 개발 루프(권장, 커밋 금지): DS 레포를 `~/Coding/squircle-design-system` 에 두고 이 저장소 루트 `package.json` 에 임시
-  `"pnpm": {"overrides": {"@jhleeweb/squircle-design-system": "link:../squircle-design-system/packages/ui"}}` → `pnpm install`(별칭 키가 실명/별칭 어느 쪽에 먹는지
+- 개발 루프(권장, 커밋 금지): DS 레포를 `~/Coding/jhlee-design-system` 에 두고 이 저장소 루트 `package.json` 에 임시
+  `"pnpm": {"overrides": {"@jhleeweb/jhlee-design-system": "link:../jhlee-design-system/packages/ui"}}` → `pnpm install`(별칭 키가 실명/별칭 어느 쪽에 먹는지
   `pnpm why` 로 첫 연동 때 실측). 앱 `vite.config.ts` 의 `server.fs.allow` 에 영구적으로
   `[searchForWorkspaceRoot(process.cwd()), ...(process.env.DS_LINK ? [process.env.DS_LINK] : [])]`(india 는 신설) →
-  `DS_LINK=$HOME/Coding/squircle-design-system pnpm dev`. DS 쪽 `tsdown --watch`. 끝나면 override 삭제 + `pnpm install`, `git diff package.json pnpm-lock.yaml` 빈 것 확인.
+  `DS_LINK=$HOME/Coding/jhlee-design-system pnpm dev`. DS 쪽 `tsdown --watch`. 끝나면 override 삭제 + `pnpm install`, `git diff package.json pnpm-lock.yaml` 빈 것 확인.
   대안: `pnpm pack` 후 `file:` override(발행 산출물 그대로 검증, HMR 없음). 비권장: `pnpm link --global`, yalc.
 - 버전: 0.x 는 `0.MINOR` breaking(changeset 첫 줄 `BREAKING:`), 그 외 patch. changeset 본문 한국어, 커밋 `chore(release): 버전 올림`.
   갱신 자동화는 `.github/dependabot.yml`(`registries.github-npm`, Dependabot secret) 시도 → pnpm `npm:` 별칭을 못 다루면
-  `bump-ui.yml`(schedule + `pnpm -r update …@latest` + create-pull-request, 제목 `build(ui): @jhleeweb/squircle-design-system 를 x.y.z 로 올린다`).
+  `bump-ui.yml`(schedule + `pnpm -r update …@latest` + create-pull-request, 제목 `build(ui): @jhleeweb/jhlee-design-system 를 x.y.z 로 올린다`).
   잘못 올린 버전은 삭제 대신 patch 추가. 가시성 private 유지(public 은 비가역).
 - 완료 조건: link 루프 HMR 확인 · patch 한 사이클(Version PR → publish → 태그 → 갱신 PR) 완주 · 자동 갱신 첫 PR.
 
@@ -445,8 +448,8 @@ vitest 5.0.2(단 `@storybook/addon-vitest` peer 가 `^3||^4` → **vitest 4 고�
 
 **a. 전달 모델 — 블랙박스/화이트박스.** 패키지에 실리는 것: `dist/**/*.js`(tsdown `unbundle: true`, 모듈 구조 보존) · `dist/**/*.d.ts`(JSDoc 포함, 에이전트
 Analyze 1차) · `dist/components.manifest.json`(TS 컴파일러 API 생성기 — «지어낸 prop 차단의 정본») · CSS 4종(Style Dictionary 산출물을 tsdown `copy` 로
-원본 그대로) · `llms.txt`(manifest 에서 생성, 사용 규칙 + 컴포넌트/토큰 색인) · `docs/*.md` · `dist/eslint/index.js`(소비자 린트 프리셋 `@jhleeweb/squircle-design-system/eslint`) ·
-`agent/AGENTS.block.md` + `agent/skills/squircle-ds/SKILL.md` + bin `sds-agent sync`(소비 레포 AGENTS.md 관리 블록 upsert + 스킬 복사).
+원본 그대로) · `llms.txt`(manifest 에서 생성, 사용 규칙 + 컴포넌트/토큰 색인) · `docs/*.md` · `dist/eslint/index.js`(소비자 린트 프리셋 `@jhleeweb/jhlee-design-system/eslint`) ·
+`agent/AGENTS.block.md` + `agent/skills/jhlee-ds/SKILL.md` + bin `jds-agent sync`(소비 레포 AGENTS.md 관리 블록 upsert + 스킬 복사).
 화이트박스(소비 레포 기능 디렉터리)는 부품 조립만 하고, «인라인 CSS 덮어쓰기 금지» 는 문서가 아니라 프리셋이 고정한다: `react/forbid-elements`(button
 input select textarea dialog table) · `better-tailwindcss/no-unknown-classes`(토큰 밖 클래스 — LLM 의 `text-sm`·`bg-gray-100` 즉시 오류) ·
 `no-restricted-classes`(격자·hex·arbitrary) · `no-restricted-syntax`(`style={{color|background|border}}`, 캔버스·3D 디렉터리 제외).
@@ -562,16 +565,16 @@ RSC 검사 `rsc-directives.spec`(Phase A 필수): 훅·핸들러·Radix 사용 �
 **g. 배포 갱신.** Next App Router 호환 0 비용 선행(Phase A): tsdown `{ entry: [index, legacy/index, canvas-metrics, eslint/index, agent/cli], format: "esm", unbundle: true,
 dts: true, platform: "neutral", copy: [CSS 4종] }` — **`banner` 로 지시문을 붙이지 않는다**(번들 모드는 지시문을 조용히 떼고 banner 는 패키지 전체를 클라이언트로 만든다);
 `"use client"` 첫 줄 24파일; cva 를 `Name.variants.ts` 로 분리(`cardVariants` 가 클라이언트 파일에서 export 되어 서버 호출 불가한 첫 사례); `toast.css`·`card-motion.css` 를
-`theme.css` 로 합쳐 JS→CSS import 0; 소비자 가이드 `@source "../node_modules/@jhleeweb/squircle-design-system/dist"`. 자동 버전 올림은 Q4(semantic-release 권고 — 이 조직 실측
+`theme.css` 로 합쳐 JS→CSS import 0; 소비자 가이드 `@source "../node_modules/@jhleeweb/jhlee-design-system/dist"`. 자동 버전 올림은 Q4(semantic-release 권고 — 이 조직 실측
 `allow_auto_merge=false`·Actions PR 생성 꺼짐·2026-06-11 GitHub 변경(봇 PR 의 CI 는 사람 승인 필요) 때문에 changesets Version PR 경로는 승인 대기·즉시 머지 중
 하나로 고장난다; 단일 패키지, 최근 커밋 300/300 Conventional, 한글 설명은 파서에 문제없음). 사용자 문서의 `npm publish --registry=https://github.com` 은 오류 →
 `https://npm.pkg.github.com`.
 
 **h. 에이전트 실행 루프.** 규칙은 항상 로드되는 AGENTS.md 에, 절차는 스킬에(Vercel 실측: AGENTS.md 100% vs 스킬 53~79%). 패키지 안 AGENTS.md 는 소비 레포가
-자동으로 읽지 않으므로 `sds-agent sync` 가 관리 블록을 upsert 한다(Next.js `node_modules/next/dist/docs` 방식). 새 레포 AGENTS.md «디자인 시스템 계약(에이전트)» 절:
+자동으로 읽지 않으므로 `jds-agent sync` 가 관리 블록을 upsert 한다(Next.js `node_modules/next/dist/docs` 방식). 새 레포 AGENTS.md «디자인 시스템 계약(에이전트)» 절:
 토큰 유틸만(shadcn 이름 + 우리 확장, raw 값 금지) · 간격 허용 스텝 · shadcn 과 다른 점(`text-body` 13px 등 역할명, `h-ctl*`, `canvas-*`) · 폴더 규칙 · 부품 먼저 ·
 JSDoc 계약 · `*.variants.ts`·`"use client"` · 3스토리 · 검증 명령(`test`·`test:stories`·`vrt`·`build` 후 rsc/manifest spec, 스냅샷 갱신은 `vrt:update` 만) ·
-커밋 규약 + `feat!:`/`BREAKING CHANGE:`. 소비 레포 `.claude/skills/squircle-ds/SKILL.md`: **Analyze**(`llms.txt` → `components.manifest.json` 에서 대상 찾기
+커밋 규약 + `feat!:`/`BREAKING CHANGE:`. 소비 레포 `.claude/skills/jhlee-ds/SKILL.md`: **Analyze**(`llms.txt` → `components.manifest.json` 에서 대상 찾기
 `jq '.components[]|select(.name=="Select")'`, 없는 부품·prop 은 지어내지 않고 «DS 확장 필요» 로 보고) → **Compose**(부품 조립, 설탕은 부족할 때만, className 은
 토큰 유틸만) → **Audit**(`eslint`(프리셋) + `tsc --noEmit` 위반 0, `data-theme="dark"` 에서 canvas-* 불변 확인). 이 저장소는 `CLAUDE.md → @AGENTS.md` 라 블록이 자동 적용.
 
@@ -581,7 +584,7 @@ JSDoc 계약 · `*.variants.ts`·`"use client"` · 3스토리 · 검증 명령(`
 |---|---|---|
 | A | 개명·publishConfig·exports 명시·`files: dist`·tsdown unbundle · `"use client"` 24 + `*.variants.ts` + CSS import 제거 + `rsc-directives.spec` · ESLint 10 부트스트랩(warn + baseline, 로컬 규칙 골격) · 릴리스(Q4)·pr-title·~~ruleset 필수 체크~~(ruleset 불가(무료 플랜) — CI 필수 체크 대신 규약) · Storybook 골격 + vitest projects + `tsconfig.stories.json` · ds-gallery → `Pages/Gallery`·`Workbench` 이식 + 앱 삭제 · `stories-contract.spec`(`STORIES_MISSING` = 전 컴포넌트) · VRT 크롤러 + 워크플로 6 job + 기준선 · `./legacy` 신설 | publint·attw·rsc 통과, VRT 기준선 커밋, `a11y: 'todo'` |
 | B | DTCG semantic 을 shadcn 이름으로 + `legacy.json` → 3 출력 · **원자 코드모드 PR**(eslint --fix UI 256+앱 57 · css-vars 69+138 · cn.ts 동치 테스트 · tone shim) · 간격 화이트리스트·hex·arbitrary 규칙 + baseline · 서브트리 다크·폰트 self-host·ThemePair/Matrix | 코드모드 PR 은 VRT **0px** |
-| C | `@jhleeweb/squircle-design-system/eslint` 프리셋 배포 + forbid-elements 래칫 + no-unknown-classes · `build-manifest`·`manifest.spec`(KNOWN_GAPS)·`llms.txt`·docs 생성 · `agent/` 블록·스킬 + `sds-agent sync` · `a11y: 'error'` + `KNOWN_A11Y_FAILURES` · VRT `maxDiffPixels: 0` · Next 스모크(비필수) | 린트 error 승격, `--max-warnings=0` |
+| C | `@jhleeweb/jhlee-design-system/eslint` 프리셋 배포 + forbid-elements 래칫 + no-unknown-classes · `build-manifest`·`manifest.spec`(KNOWN_GAPS)·`llms.txt`·docs 생성 · `agent/` 블록·스킬 + `jds-agent sync` · `a11y: 'error'` + `KNOWN_A11Y_FAILURES` · VRT `maxDiffPixels: 0` · Next 스모크(비필수) | 린트 error 승격, `--max-warnings=0` |
 | D | 부품 1차(Select/Field/Tabs/Tooltip/AlertDialog/Table) + `compound.contract` · 2차(Sidebar/Toolbar/Breadcrumb/DescriptionList/Toast/MediaCard) + 설탕 @deprecated + `aaro/legacy-api` · Spec 17 → stories 31, `__tests__` 16 → 폴더 spec(composeStories), `Pages/Gallery` 삭제 · JSDoc 전수(`@default` 0→전수)·KNOWN_GAPS 0·앱 tone 93건 · (선택) `componentsManifest: true` + addon-mcp | STORIES_MISSING 0 · KNOWN_GAPS 0 · 다음 `feat!:`(= 2.0.0) 로 legacy 제거 |
 
 사용자 문서에서 고쳐 넣은 것: 레지스트리 URL · «ESLint 로 implicit any» → tsc · 8px 격자 → 4px 화이트리스트 · `SelectError` → `FieldError` · shadcn `accent`/`muted` 의 뜻 ·
@@ -594,7 +597,7 @@ LLM 분포 이동 시 부품 구조 차이 가능, llms.txt 에 명시) · `@def
 |---|---|---|
 | **A** 이식 직후 | A1 CI 뼈대(`static`·`unit`·`package`) + 루트 `verify` · A2 tsconfig 엄격 1벌 + test 프로필, 주석 현행화 · A3 `"./*"` 닫기 + `exports.spec` + publint/attw · A4 래칫 스펙 이식 + vitest projects + `tokens-snapshot`·`ladders`·`references`·`dark-parity` · A5 버그 2건 | CI 초록, attw 와일드카드 오류 0, 래칫 기준선 실측 확정 |
 | **B** 토큰 정본화 | B1 `tokens/motion.ts`+`motion.spec` · B2 DTCG JSON + SD + 포맷 3 + `generated/` 미연결(해석 맵 == 스냅샷) · B3 연결(스냅샷·dark-parity 삭제, 앱 4개 빌드·갤러리 확인) · B4 새 토큰({tone}-ink/-line, rust/moss/amber, layer, duration, size, overlay, font-weight/tracking initial, corner) + `legacy.json` + `legacy-alias-use` 래칫 · B5 `lib/tone.ts`+statusRecipe, 리터럴→유틸리티, 앱 `tone="info"` 7곳 | `tokens:check` CI, `@theme inline` 리터럴 0·정적 `var(` 0, 죽은 원시 0, `tsx-arbitrary-literal`·`js-ms-literal` 0, 다크 1벌 |
-| **C** 시각·대비·a11y·린트 | C1 스토리 결정론화(폰트 self-host·storageKey·reducedMotion) + `#tokens` + VRT `maxDiffPixels 0` + `vrt` 필수 · C2 `contrast.spec`+`KNOWN_FAILURES`, `tokens` job, addon-a11y `test: 'error'` + `KNOWN_A11Y_FAILURES` · C3 user-event·jest-dom·axe·coverage, `render-all`·`describeComponentContract(stories)`, 문턱 실측 · C4 ESLint error 승격/stylelint/Prettier(포맷 전용 PR) + `@jhleeweb/squircle-design-system/eslint` 프리셋 배포 · C5 크기 드리프트 브라우저 확인 뒤 교정 · C6 manifest·llms.txt·docs 생성 + `agent/` 블록·스킬 + `sds-agent sync` | 여섯 job + pr-title 전부 필수, `KNOWN_FAILURES`·`KNOWN_A11Y_FAILURES` 감소 시작, 스토리 스냅샷 라이트·다크 커밋, 캔버스 불변 통과, 소비 레포 린트 프리셋 적용 |
+| **C** 시각·대비·a11y·린트 | C1 스토리 결정론화(폰트 self-host·storageKey·reducedMotion) + `#tokens` + VRT `maxDiffPixels 0` + `vrt` 필수 · C2 `contrast.spec`+`KNOWN_FAILURES`, `tokens` job, addon-a11y `test: 'error'` + `KNOWN_A11Y_FAILURES` · C3 user-event·jest-dom·axe·coverage, `render-all`·`describeComponentContract(stories)`, 문턱 실측 · C4 ESLint error 승격/stylelint/Prettier(포맷 전용 PR) + `@jhleeweb/jhlee-design-system/eslint` 프리셋 배포 · C5 크기 드리프트 브라우저 확인 뒤 교정 · C6 manifest·llms.txt·docs 생성 + `agent/` 블록·스킬 + `jds-agent sync` | 여섯 job + pr-title 전부 필수, `KNOWN_FAILURES`·`KNOWN_A11Y_FAILURES` 감소 시작, 스토리 스냅샷 라이트·다크 커밋, 캔버스 불변 통과, 소비 레포 린트 프리셋 적용 |
 | **D** 컴포넌트 정렬 | P1·P2 항목을 컴포넌트 단위 PR(의존 역순 Spinner → Button → Choice/Input → Badge/Alert/Toast → Card(CollapseToggle) → DropdownMenu → 나머지), 만지는 김에 폴더 재배치·spec/gallery 병치; legacy/도메인 격리는 앱 PR 과 짝 | `forward-ref`·`non-cva`·`boolean-string`·`domain` 기준선 0, 전 `*Variants/*Props` export, 무테스트 0, 로컬 ESLint 규칙 4개 error |
 
 ---
@@ -706,7 +709,7 @@ Apple 기기 사용자에게 원호로 보이는 것은 진행형 향상의 본�
 | 패턴 | 대표 경로 | PR |
 |---|---|---|
 | 신규 `.npmrc` | 루트 | PR-1 |
-| manifest 5개 `workspace:*` → `npm:@jhleeweb/squircle-design-system@0.1.0` | `apps/india-residential-configurator/package.json` 외 module5·parking-studio·ds-gallery·`packages/module1` | PR-1 |
+| manifest 5개 `workspace:*` → `npm:@jhleeweb/jhlee-design-system@0.1.0` | `apps/india-residential-configurator/package.json` 외 module5·parking-studio·ds-gallery·`packages/module1` | PR-1 |
 | `src/ds.css` 4곳 `@source` | `apps/india-residential-configurator/src/ds.css:25`(module5·parking-studio `:25`, ds-gallery `:9`) | PR-1 교체 → PR-2 제거 |
 | `pnpm-lock.yaml` | 루트 | PR-1·PR-2 |
 | `packages/ui/package.json` «동결» | | PR-1 |
@@ -717,7 +720,7 @@ Apple 기기 사용자에게 원호로 보이는 것은 진행형 향상의 본�
 | `server.fs.allow` + `DS_LINK` | `apps/{india-residential-configurator,module5,parking-studio}/vite.config.ts` | Phase 4 |
 | 갱신 자동화 | `.github/dependabot.yml` 또는 `.github/workflows/bump-ui.yml` | Phase 4 |
 | Part 2·3 의 앱 쪽 코드모드 | shadcn 어휘 개명(유틸 57 + `var(--chrome-*)` 138 + `tone=` 93, 린트 `--fix`) · `[&_svg]:size-4` 15곳 · 레거시 import 32파일(`Select`·`Field`·`Tabs`·`KeyValue` → `@buildos/ui/legacy`) · 우회 `rounded-*`/`border-radius` | DS 버전 갱신 PR 에 짝지어 |
-| 소비자 린트 프리셋 · 에이전트 배선 | 루트 `eslint.config.js`(신설, `import ui from "@buildos/ui/eslint"`; module5·parking-studio 의 `forbid-elements` 는 ignores 로 시작) · `AGENTS.md` 관리 블록(`sds-agent sync` 가 upsert) · `.claude/skills/squircle-ds/SKILL.md` · `src/ds.css` 의 `@source` 를 `dist` 로 | Phase C |
+| 소비자 린트 프리셋 · 에이전트 배선 | 루트 `eslint.config.js`(신설, `import ui from "@buildos/ui/eslint"`; module5·parking-studio 의 `forbid-elements` 는 ignores 로 시작) · `AGENTS.md` 관리 블록(`jds-agent sync` 가 upsert) · `.claude/skills/jhlee-ds/SKILL.md` · `src/ds.css` 의 `@source` 를 `dist` 로 | Phase C |
 | 무변경 | 소스 `.ts/.tsx` 65파일(PR-1), `turbo.json`, `tsconfig*`, `vercel.json`, `packages/typescript-config` | — |
 
 ---
@@ -726,15 +729,15 @@ Apple 기기 사용자에게 원호로 보이는 것은 진행형 향상의 본�
 
 1. **DS 레포 CI**: `pnpm verify && pnpm build` — 15스펙 104 `it`(tokens.spec 방향 C·cn 사다리 포함) → 표준화 뒤 여섯 job + pr-title 초록.
    pack 계약: tarball 에 `dist/index.js`·`dist/index.d.ts`·`dist/canvas-metrics.*`·CSS 6개, `__tests__` 없음. publint `--strict`·attw 오류 0.
-2. **레지스트리**: `gh api /user/packages/npm/squircle-design-system` → `visibility: private`, `repository: jhleeWEB/squircle-design-system`;
-   `npm view @jhleeweb/squircle-design-system --registry https://npm.pkg.github.com` 로 버전·exports.
+2. **레지스트리**: `gh api /user/packages/npm/jhlee-design-system` → `visibility: private`, `repository: jhleeWEB/jhlee-design-system`;
+   `npm view @jhleeweb/jhlee-design-system --registry https://npm.pkg.github.com` 로 버전·exports.
 3. **이 저장소 clean clone**:
    ```bash
    env -i HOME=$HOME PATH=$PATH NODE_AUTH_TOKEN=$NODE_AUTH_TOKEN sh -c 'cd $(mktemp -d) && git clone --depth 1 -b build/consume-aaro-lab-ui git@github.com:aaro-lab/apartment-configurator.git . && pnpm install --frozen-lockfile && pnpm --filter india-residential-configurator build'
    unset NODE_AUTH_TOKEN; pnpm install --frozen-lockfile; echo "exit=$?"   # env 치환 오류로 실패해야 한다(기대 동작)
    ```
-4. **별칭·lockfile**: `node_modules/@buildos/ui` realpath 가 `.pnpm/@jhleeweb+squircle-design-system@0.1.0…`, `pnpm why @jhleeweb/squircle-design-system` 한 버전,
-   `grep -c 'link:../../packages/ui' pnpm-lock.yaml` = 0, `grep -c 'npm:@jhleeweb/squircle-design-system@0.1.0'` = 5.
+4. **별칭·lockfile**: `node_modules/@buildos/ui` realpath 가 `.pnpm/@jhleeweb+jhlee-design-system@0.1.0…`, `pnpm why @jhleeweb/jhlee-design-system` 한 버전,
+   `grep -c 'link:../../packages/ui' pnpm-lock.yaml` = 0, `grep -c 'npm:@jhleeweb/jhlee-design-system@0.1.0'` = 5.
 5. **typecheck/test/build**: `pnpm build:types && pnpm typecheck:all && pnpm test:all && pnpm build`. `tsc --traceResolution` 에서
    `@buildos/ui` → `.pnpm/…/dist/index.d.ts`. india 스펙(`vi.mock` 3)·`worker-imports.spec`·`reachability.spec`·module1 UI 스펙 통과.
 6. **Tailwind**: `grep -c 'rounded-control' apps/india-residential-configurator/dist/index.html` > 0, `--radius-control`·`--text-title`·
@@ -742,16 +745,16 @@ Apple 기기 사용자에게 원호로 보이는 것은 진행형 향상의 본�
 7. **dev 서버**: `pnpm dev`(5179) 콘솔에 «Module externalized»·«React is not defined»·CSS 404 없음, Button/Card/Modal/Toast/ScrollArea
    스타일 렌더, `node_modules/.vite/deps/@buildos_ui.js` 로 사전 번들 경로 실측. parking-studio·module5 도 1회. DS `pnpm storybook`(6006) 의 `Pages/Workbench` 가 원 갤러리와 동일.
 8. **React 단일 인스턴스**: react 청크 하나, ToastProvider/TooltipProvider 컨텍스트 오류 없음.
-9. **Vercel**: `NODE_AUTH_TOKEN` 설정 후 프리뷰 로그에서 `@jhleeweb/squircle-design-system` 수신(blocked 와 분리 판단).
+9. **Vercel**: `NODE_AUTH_TOKEN` 설정 후 프리뷰 로그에서 `@jhleeweb/jhlee-design-system` 수신(blocked 와 분리 판단).
 10. **되돌리기 리허설**: PR-1 머지 후 별도 브랜치 `git revert <squash>` → 토큰 없이 `pnpm install` → `pnpm typecheck && pnpm test` 통과.
-11. **릴리스 사이클**: patch changeset → Version PR → 머지 → publish → 태그 `@jhleeweb/squircle-design-system@0.1.1` → 이 저장소 갱신 PR diff 가 manifest 5 + lockfile 뿐.
+11. **릴리스 사이클**: patch changeset → Version PR → 머지 → publish → 태그 `@jhleeweb/jhlee-design-system@0.1.1` → 이 저장소 갱신 PR diff 가 manifest 5 + lockfile 뿐.
 12. **개발 루프**: override link + `DS_LINK=… pnpm dev` 에서 DS 저장 → HMR, 해제 후 `git diff package.json pnpm-lock.yaml` 빈 것.
 13. **PR-2 후**: 문서 grep 0건, `turbo run build:types --dry-run` 에 ui 없음.
 14. **표준화(Part 2)**: Phase 마다 `pnpm verify && pnpm build && publint` 초록, 래칫 기준선 합계 ≤ 직전, public-api 스냅샷 diff 가 의도한 것뿐,
     스토리 시각 스냅샷 라이트·다크·캔버스 불변.
 16. **AI 친화(§2.5)**: `rsc-directives.spec`(24파일 지시문·dist 잔존·`export *` 없음) · `manifest.spec`(export 전수·`@default`·값별 doc·`client` 일치, KNOWN_GAPS 0) ·
     `stories-contract.spec`(STORIES_MISSING 0, 3 export) · `compound.contract.spec` · addon-a11y `error` 에서 스토리 전부 통과(KNOWN_A11Y_FAILURES 0) · shadcn 개명 PR 의 VRT 0px ·
-    소비 레포에서 `pnpm eslint`(프리셋) 위반 0 · `sds-agent sync` 뒤 `AGENTS.md` 블록·`.claude/skills/squircle-ds` 존재 · 에이전트 스모크: 이 저장소에서 «Select 로 필드 하나 추가» 를
+    소비 레포에서 `pnpm eslint`(프리셋) 위반 0 · `jds-agent sync` 뒤 `AGENTS.md` 블록·`.claude/skills/jhlee-ds` 존재 · 에이전트 스모크: 이 저장소에서 «Select 로 필드 하나 추가» 를
     Claude Code 에 시켜 manifest 에 없는 prop 을 쓰지 않고 린트 0 으로 끝나는지 1회 확인 · Next 야간 스모크 녹색(비필수).
 15. **모서리(Part 3)**: `corner.spec` 7검사 통과 · Chromium 에서 CSSOM 스윕 빈 배열, card 견본 12×K px, 킬 스위치 시 12 · 5단 견본 프로파일 판정이
     `CSS.supports` 와 일치 · Chromium 스냅샷 육안 승인(포커스 링 추종·헤어라인 단선) · Safari 정식판 스크린샷이 «미지원 — 원호 폴백» 이고 반경이
@@ -763,7 +766,7 @@ Apple 기기 사용자에게 원호로 보이는 것은 진행형 향상의 본�
 
 | 위험 | 완화 | 되돌리기 |
 |---|---|---|
-| 스코프 불일치로 `@buildos/ui` 발행 불가 | `@jhleeweb/squircle-design-system` + 별칭 | — |
+| 스코프 불일치로 `@buildos/ui` 발행 불가 | `@jhleeweb/jhlee-design-system` + 별칭 | — |
 | Tailwind 조용한 실패(민짜 렌더) | theme.css 자기 등록 + PR-1 중복 `@source` + 산출물 grep(검증 6) | ds.css 한 줄 |
 | tarball 에 dist 누락 → TS7016 전량 | `files` dist, `prepack`, CI pack 계약·publint·attw | patch 재발행 |
 | 빌드 산출물이 CSS side-effect import·상대 `@import` 를 깨뜨림 | tsdown `copy`/`unbundle` 실측, 실패 시 tsc emit + cp 로 대체, 소비자 스모크가 잡음 | 소스 배포(Q3 대안)로 전환 |

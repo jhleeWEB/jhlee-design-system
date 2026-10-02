@@ -1,6 +1,6 @@
 {
   "$description": "캔버스 — 도면이 사는 면. 흰 바탕 고정 · radius 0 · 무채색. 다크 파일이 없다는 것이 곧 계약이다(schema 가 canvas.dark.json 을 거부). 값은 전부 palette.gray 참조다(옛 hex 와 같은 값, #18) — plan-bg 만 따뜻한 회색이라 리터럴로 남는다.",
-  "$extensions": { "sds": { "scope": "root" } },
+  "$extensions": { "jds": { "scope": "root" } },
   "canvas": {
     "$type": "color",
     "bg": { "$value": "{palette.gray.0}" },

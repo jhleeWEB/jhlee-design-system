@@ -1,9 +1,9 @@
 {
   "$description": "글자 — 계단 7단 · 자간 · 굵기는 Tailwind @theme(text-* · tracking-* · font-*), 글꼴 스택 둘은 :root(--font-stack-*)다. 계단은 **짝수 사다리(compact)** 다(#82, 사용자 결정 2026-10-02 «치수는 최대한 짝수로»): 크기와 줄 높이가 모두 짝수 px 이고 줄 높이는 비율이 아니라 px 로 적는다 — 비율은 13 × 1.55 = 20.15px · 11 × 1.45 = 15.95px · 13.5px 같은 소수 px 를 내 글자 상자가 픽셀 격자에서 미끄러졌다. 본문은 참고 화면 실측 13px 에서 한 단 올린 14px, 제목 26px 은 실측 그대로. reset 은 Tailwind 기본 사다리(text-sm · font-black · tracking-wide)를 지워 역할 이름만 남긴다 — 남겨 두면 «굵기·자간은 역할이 정한다» 가 관습에 진다.",
-  "$extensions": { "sds": { "scope": "theme" } },
+  "$extensions": { "jds": { "scope": "theme" } },
   "text": {
     "$type": "typography",
-    "$extensions": { "sds": { "reset": true } },
+    "$extensions": { "jds": { "reset": true } },
     "$description": "크기 / 줄 높이(px). 줄 높이는 각 크기의 «한 줄 칸» 이다 — 여러 줄 문단(설명 · 알림 · 토스트)도 이 칸을 쓰고 비율 leading(snug · normal · relaxed)은 쓰지 않는다(#82). 한 줄짜리 컨트롤 글자는 leading-none(줄 높이 = 크기, 짝수)으로 칸을 접을 수 있다. 역할 표는 tokens/README.md «역할 → 토큰».",
     "micro": {
       "$value": { "fontSize": "10px", "lineHeight": "14px" },
@@ -36,7 +36,7 @@
   },
   "tracking": {
     "$type": "dimension",
-    "$extensions": { "sds": { "reset": true } },
+    "$extensions": { "jds": { "reset": true } },
     "tight": {
       "$value": "-0.025em",
       "$description": "들머리 제목 — Tailwind 의 tracking-tight 값 그대로(이름만 남긴다)."
@@ -45,7 +45,7 @@
   },
   "font-weight": {
     "$type": "number",
-    "$extensions": { "sds": { "reset": true } },
+    "$extensions": { "jds": { "reset": true } },
     "$description": "굵기 4단 — 스토리북이 self-host 하는 가중치와 같다(Instrument Sans 400·500·600·700). 이름은 Tailwind 의 것을 지켜 font-medium 이 그대로 500 을 낸다.",
     "normal": { "$value": 400 },
     "medium": { "$value": 500 },
@@ -54,7 +54,7 @@
   },
   "font-stack": {
     "$type": "fontFamily",
-    "$extensions": { "sds": { "scope": "root" } },
+    "$extensions": { "jds": { "scope": "root" } },
     "$description": "UI 글꼴 스택 둘 — 맨 앞이 이 제품의 글꼴(Instrument Sans · Geist Mono)이고 그 뒤가 한글 폴백까지 든 시스템 스택(옛 --sans · --mono)이다. Tailwind 의 font-sans · font-mono(semantic/tailwind.json)와 body · .num · tnum 이 **같은 스택**을 읽는다(#80). 예전에는 맨 앞 글꼴을 Tailwind 쪽에서만 붙여, font-sans 를 스스로 들지 않은 컴포넌트와 포털(메뉴 · 대화상자 · 툴팁)이 body 의 시스템 스택(macOS 의 Noto Sans KR · Apple SD Gothic Neo)으로 그려져 같은 13px 가 한 단 굵어 보였고, tnum 수치는 font-mono 라벨(Geist Mono)과 다른 시스템 mono 로 그려졌다. 글꼴 파일은 앱(스토리북은 @fontsource)이 싣는다 — 없으면 시스템 스택으로 떨어진다.",
     "sans": {
       "$value": "\"Instrument Sans\", \"Noto Sans KR\", Pretendard, \"Apple SD Gothic Neo\", system-ui, -apple-system, sans-serif"

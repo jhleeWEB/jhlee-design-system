@@ -48,7 +48,7 @@ describe("components.manifest.json", { timeout: 120_000 }, () => {
         expect(byName.get(part)?.kind, `${c.name}.parts 의 ${part}`).toBe("compound");
         expect(part.startsWith(c.name)).toBe(true);
       }
-      expect(c.importPath).toBe("@jhleeweb/squircle-design-system");
+      expect(c.importPath).toBe("@jhleeweb/jhlee-design-system");
       expect(c.sugar).toEqual([]);
     }
     expect(byName.get("DropdownMenu")?.parts).toContain("DropdownMenuSubContent"); // 부품의 부품이 아니라 루트의 부품

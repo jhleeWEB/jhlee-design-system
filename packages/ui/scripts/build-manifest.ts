@@ -29,7 +29,7 @@ export const PKG_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 /** 생성물 위치 — dist 는 커밋하지 않으므로 `pnpm build` 가 tsdown 뒤에 만든다. */
 export const MANIFEST_PATH = join(PKG_DIR, "dist", "components.manifest.json");
 /** 소비자가 쓰는 import 경로 — 서브패스가 아닌 것은 전부 루트 배럴이다. */
-export const IMPORT_PATH = "@jhleeweb/squircle-design-system";
+export const IMPORT_PATH = "@jhleeweb/jhlee-design-system";
 
 /** 유니언 리터럴 하나. */
 export interface ManifestValue {
@@ -389,7 +389,7 @@ export function tokenIndex(): ManifestTokens {
   if (errors.length) throw new Error(`tokens: ${errors.join("\n")}`);
   const names = (group: string, scope?: string): string[] =>
     tokens
-      .filter((t) => t.path[0] === group && (scope === undefined || t.sds.scope === scope))
+      .filter((t) => t.path[0] === group && (scope === undefined || t.jds.scope === scope))
       .map((t) => t.path.slice(1).join("-"));
   return {
     colors: names("color", "theme-inline"),

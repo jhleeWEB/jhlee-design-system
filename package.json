@@ -1,29 +1,29 @@
 {
-  "name": "squircle-design-system",
+  "name": "jhlee-design-system",
   "version": "0.0.0-managed",
   "private": true,
   "type": "module",
-  "description": "Squircle Design System 워크스페이스 루트 — 패키지 @jhleeweb/squircle-design-system 과 Storybook 카탈로그. 버전은 semantic-release 가 관리한다.",
+  "description": "jhlee design system 워크스페이스 루트 — 패키지 @jhleeweb/jhlee-design-system 과 Storybook 카탈로그. 버전은 semantic-release 가 관리한다.",
   "packageManager": "pnpm@10.11.0",
   "engines": {
     "node": ">=24",
     "pnpm": ">=10"
   },
   "scripts": {
-    "build": "pnpm --filter @jhleeweb/squircle-design-system build",
+    "build": "pnpm --filter @jhleeweb/jhlee-design-system build",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "lint": "eslint . --max-warnings 0",
     "lint:css": "stylelint \"packages/ui/**/*.css\" \"packages/ui/.storybook/*.css\" --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "tokens:build": "pnpm --filter @jhleeweb/squircle-design-system tokens:build",
-    "tokens:check": "pnpm --filter @jhleeweb/squircle-design-system tokens:check",
-    "manifest:build": "pnpm --filter @jhleeweb/squircle-design-system manifest:build",
-    "manifest:check": "pnpm --filter @jhleeweb/squircle-design-system manifest:check",
+    "tokens:build": "pnpm --filter @jhleeweb/jhlee-design-system tokens:build",
+    "tokens:check": "pnpm --filter @jhleeweb/jhlee-design-system tokens:check",
+    "manifest:build": "pnpm --filter @jhleeweb/jhlee-design-system manifest:build",
+    "manifest:check": "pnpm --filter @jhleeweb/jhlee-design-system manifest:check",
     "verify": "pnpm typecheck && pnpm lint && pnpm lint:css && pnpm format:check && pnpm tokens:check && pnpm manifest:check && pnpm test && pnpm build",
-    "storybook": "pnpm --filter @jhleeweb/squircle-design-system storybook",
-    "storybook:build": "pnpm --filter @jhleeweb/squircle-design-system storybook:build",
+    "storybook": "pnpm --filter @jhleeweb/jhlee-design-system storybook",
+    "storybook:build": "pnpm --filter @jhleeweb/jhlee-design-system storybook:build",
     "release": "semantic-release"
   },
   "devDependencies": {

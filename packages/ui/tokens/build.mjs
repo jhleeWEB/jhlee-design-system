@@ -38,7 +38,7 @@ if (errors.length) {
   process.exit(1);
 }
 
-/** 편 토큰 → SD 가 읽는 중첩 객체. `$extensions.sds` 에 file · order 를 실어 포맷이 출처와 순서를 안다. */
+/** 편 토큰 → SD 가 읽는 중첩 객체. `$extensions.jds` 에 file · order 를 실어 포맷이 출처와 순서를 안다. */
 function nest(list) {
   const root = {};
   for (const t of list) {
@@ -48,7 +48,7 @@ function nest(list) {
     node[t.path.at(-1)] = {
       $type: t.type,
       $value: t.value,
-      $extensions: { sds: { ...t.sds, file: t.file, order: t.order } },
+      $extensions: { jds: { ...t.jds, file: t.file, order: t.order } },
       ...(t.deprecated !== undefined ? { $deprecated: t.deprecated } : {}),
     };
   }
@@ -56,13 +56,13 @@ function nest(list) {
 }
 
 StyleDictionary.registerTransform({
-  name: "name/sds",
+  name: "name/jds",
   type: "name",
   transform: (token) => token.path.join("-"),
 });
-StyleDictionary.registerFormat({ name: "sds/css-vars", format: cssVars });
-StyleDictionary.registerFormat({ name: "sds/tailwind-theme", format: tailwindTheme });
-StyleDictionary.registerFormat({ name: "sds/ts-consts", format: tsConsts });
+StyleDictionary.registerFormat({ name: "jds/css-vars", format: cssVars });
+StyleDictionary.registerFormat({ name: "jds/tailwind-theme", format: tailwindTheme });
+StyleDictionary.registerFormat({ name: "jds/ts-consts", format: tsConsts });
 
 // 다크는 리터럴이거나 원시 참조다 — 스키마가 참조 존재를 봤으므로 여기서는 선언으로만 바꾼다.
 const darkDeclarations = dark.map((t) => ({
@@ -76,21 +76,21 @@ const sd = new StyleDictionary({
   tokens: nest(flat),
   platforms: {
     generated: {
-      transforms: ["name/sds"],
+      transforms: ["name/jds"],
       buildPath: `${OUT_DIR}/`,
       files: [
         {
           destination: "tokens.css",
-          format: "sds/css-vars",
+          format: "jds/css-vars",
           options: { outputReferences: true, dark: darkDeclarations },
         },
         {
           destination: "theme.tailwind.css",
-          format: "sds/tailwind-theme",
+          format: "jds/tailwind-theme",
           options: { outputReferences: true },
         },
-        { destination: "tokens.ts", format: "sds/ts-consts", options: { kind: "motion" } },
-        { destination: "ladders.ts", format: "sds/ts-consts", options: { kind: "ladders" } },
+        { destination: "tokens.ts", format: "jds/ts-consts", options: { kind: "motion" } },
+        { destination: "ladders.ts", format: "jds/ts-consts", options: { kind: "ladders" } },
       ],
     },
   },

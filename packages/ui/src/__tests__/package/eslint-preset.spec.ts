@@ -1,5 +1,5 @@
 /*
- * 소비자 린트 프리셋(`@jhleeweb/squircle-design-system/eslint`, 계획 §2.5-a, #31) — 소비자가 붙이는 모양 그대로 ESLint API 로 돌려 본다.
+ * 소비자 린트 프리셋(`@jhleeweb/jhlee-design-system/eslint`, 계획 §2.5-a, #31) — 소비자가 붙이는 모양 그대로 ESLint API 로 돌려 본다.
  * 다섯 규칙이 각각 «LLM 이 흔히 쓰는 위반» 을 잡는지가 계약이다: raw <button> · Tailwind 기본 사다리 `text-sm` · 옛 이름 `text-ink`(--fix) ·
  * hex/임의값/격자 밖 간격 · 인라인 색 · 옛 tone 키(--fix). 파서는 espree(JSX 켬)다 — 소비자가 typescript-eslint 를 쓰더라도 규칙은 AST 모양만 본다.
  */
@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { ESLint } from "eslint";
 import { describe, expect, it } from "vitest";
 
-import { LEGACY_TONES, restrictedClassPatterns, squircleDesignSystem } from "../../eslint/index";
+import { LEGACY_TONES, restrictedClassPatterns, jhleeDesignSystem } from "../../eslint/index";
 import { toneValues } from "../../lib/tone";
 
 const ENTRY = fileURLToPath(new URL("../../theme.css", import.meta.url));
@@ -27,7 +27,7 @@ function linter(fix = false): ESLint {
           parserOptions: { ecmaFeatures: { jsx: true } },
         },
       },
-      ...squircleDesignSystem({ entryPoint: ENTRY, files: ["**/*.jsx"], styleIgnores: ["**/scene/**"] }),
+      ...jhleeDesignSystem({ entryPoint: ENTRY, files: ["**/*.jsx"], styleIgnores: ["**/scene/**"] }),
     ],
   });
 }
@@ -95,7 +95,7 @@ describe("eslint 프리셋", { timeout: 60_000 }, () => {
       overrideConfigFile: true,
       overrideConfig: [
         { files: ["**/*.jsx"], languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } } },
-        ...squircleDesignSystem({ entryPoint: ENTRY, files: ["**/*.jsx"], severity: "warn" }),
+        ...jhleeDesignSystem({ entryPoint: ENTRY, files: ["**/*.jsx"], severity: "warn" }),
       ],
     });
     const [result] = await eslint.lintText("export const A = () => <button>x</button>;", {

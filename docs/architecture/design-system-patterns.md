@@ -105,7 +105,7 @@ React 19에서는 ref를 prop으로 받을 수 있다. 단순 래퍼는 native/R
 벌어져 **1px 테두리가 모서리에서 두꺼워 보였다**. CSS 만으로 안쪽 윤곽을 따로 그릴 길이 없어(clip-path·mask 는 테두리·outline·그림자를 지운다)
 사용자 결정으로 폐기하고 원호로 돌아갔다. `src/corner.css` 는 서브패스 호환용 빈 파일, `--corner-shape`·`--corner-k` 는 `round`·`1` 고정 호환 alias 다.
 `src/__tests__/corner.spec.ts` 가 «배포 CSS·제품 소스에 `corner-shape` 없음 · 사다리 px 고정 · 원시 반경 래칫 · 임의값은 동심원만» 을 지키고,
-소비 레포는 `@jhleeweb/squircle-design-system/testing` 의 `auditCorners` 로 같은 규칙을 래칫에 건다.
+소비 레포는 `@jhleeweb/jhlee-design-system/testing` 의 `auditCorners` 로 같은 규칙을 래칫에 건다.
 
 ## 검증 기준
 

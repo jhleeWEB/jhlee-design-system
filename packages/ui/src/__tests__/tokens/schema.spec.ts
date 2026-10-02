@@ -29,7 +29,7 @@ function errorsWith(overrides: Record<string, unknown>): readonly string[] {
 }
 
 const rootScoped = (scope: string, body: Record<string, unknown>): Record<string, unknown> => ({
-  $extensions: { sds: { scope } },
+  $extensions: { jds: { scope } },
   ...body,
 });
 
@@ -125,7 +125,7 @@ describe("검출기", () => {
   it("파일 머리에 scope 가 없으면 실패", () => {
     expect(
       errorsWith({ "primitive/x.json": { x: { $type: "color", $value: "#000000" } } }).join("\n"),
-    ).toMatch(/\$extensions\.sds\.scope/);
+    ).toMatch(/\$extensions\.jds\.scope/);
   });
 
   it("같은 토큰을 두 파일에 두면 실패", () => {
@@ -171,25 +171,25 @@ describe("검출기", () => {
     expect(errorsWith({ [DARK_FILE]: dark }).join("\n")).toMatch(/chrome\.extra 가 라이트에 없다/);
   });
 
-  it("sds.ts 는 duration 에만, MOTION 키는 한 번, reset · utility 는 그룹에만", () => {
+  it("jds.ts 는 duration 에만, MOTION 키는 한 번, reset · utility 는 그룹에만", () => {
     expect(
       errorsWith({
         "component/x.json": rootScoped("root", {
-          x: { $type: "color", $value: "#000000", $extensions: { sds: { ts: "xMs" } } },
+          x: { $type: "color", $value: "#000000", $extensions: { jds: { ts: "xMs" } } },
         }),
       }).join("\n"),
-    ).toMatch(/sds\.ts 는 duration 에만/);
+    ).toMatch(/jds\.ts 는 duration 에만/);
     expect(
       errorsWith({
         "component/x.json": rootScoped("root", {
-          x: { $type: "duration", $value: "1ms", $extensions: { sds: { ts: "collapseMs" } } },
+          x: { $type: "duration", $value: "1ms", $extensions: { jds: { ts: "collapseMs" } } },
         }),
       }).join("\n"),
     ).toMatch(/MOTION\.collapseMs 가 .* 에도 있다/);
     expect(
       errorsWith({
         "component/x.json": rootScoped("theme", {
-          x: { $type: "duration", $value: "1ms", $extensions: { sds: { reset: true } } },
+          x: { $type: "duration", $value: "1ms", $extensions: { jds: { reset: true } } },
         }),
       }).join("\n"),
     ).toMatch(/reset 은 그룹에만/);
@@ -199,7 +199,7 @@ describe("검출기", () => {
           x: {
             $type: "number",
             $value: 1,
-            $extensions: { sds: { utility: { prefix: "z", properties: ["z-index"] } } },
+            $extensions: { jds: { utility: { prefix: "z", properties: ["z-index"] } } },
           },
         }),
       }).join("\n"),

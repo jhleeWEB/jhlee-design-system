@@ -7,7 +7,7 @@ import { defineConfig } from "tsdown";
  *  - 소비자는 publishConfig.exports(dist) 를, 워크스페이스(갤러리·Storybook)는 exports(src) 를 본다 — pnpm 이 발행 시 바꿔 끼운다. */
 export default defineConfig({
   // testing/index 는 소비 레포의 __arch__ 래칫이 부르는 검사기(corner-audit, #26 · 규칙은 #36 에서 «corner-shape 금지» 로) — 배럴에 닿지 않으므로 별도 entry 다.
-  // eslint/index 는 소비자 린트 프리셋(`./eslint` 서브패스), agent/cli 는 bin `sds-agent` — 둘 다 배럴에 닿지 않는 별도 entry 다(#31).
+  // eslint/index 는 소비자 린트 프리셋(`./eslint` 서브패스), agent/cli 는 bin `jds-agent` — 둘 다 배럴에 닿지 않는 별도 entry 다(#31).
   entry: [
     "src/index.ts",
     "src/canvas-metrics.ts",

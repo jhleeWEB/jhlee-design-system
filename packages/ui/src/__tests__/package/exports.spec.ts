@@ -110,8 +110,8 @@ describe("exports", () => {
     expect(pkg.files).toEqual(["dist", "agent", "docs", "llms.txt", "README.md", "CHANGELOG.md"]);
   });
 
-  it("bin 은 sds-agent 하나이고 dist 의 별도 entry 다(#31)", () => {
-    expect(pkg.bin).toEqual({ "sds-agent": "./dist/agent/cli.js" });
+  it("bin 은 jds-agent 하나이고 dist 의 별도 entry 다(#31)", () => {
+    expect(pkg.bin).toEqual({ "jds-agent": "./dist/agent/cli.js" });
   });
 });
 
@@ -144,7 +144,7 @@ describe("pack 내용", () => {
 
   it("에이전트 산출물이 실린다 — AGENTS 블록 · 스킬 · llms.txt · 컴포넌트 문서(#31)", () => {
     expect(files).toContain("agent/AGENTS.block.md");
-    expect(files).toContain("agent/skills/squircle-ds/SKILL.md");
+    expect(files).toContain("agent/skills/jhlee-ds/SKILL.md");
     expect(files).toContain("llms.txt");
     expect(files).toContain("docs/components/README.md");
     expect(files).toContain("docs/components/Button.md");

@@ -1,13 +1,13 @@
 {
   "$description": "토스트 시간 — toast.css 의 keyframes 길이(--duration-toast-enter/exit)와 ToastProvider 의 큐 정리 유예·기본 표시 시간(MOTION.toast*Ms)이 같은 정본에서 나온다. 퇴장(exit)은 큐 유예(queue-grace)보다 짧아야 한다(motion.spec).",
-  "$extensions": { "sds": { "scope": "root" } },
+  "$extensions": { "jds": { "scope": "root" } },
   "duration": {
     "$type": "duration",
     "toast": {
-      "enter": { "$value": "220ms", "$extensions": { "sds": { "ts": "toastEnterMs" } } },
-      "exit": { "$value": "180ms", "$extensions": { "sds": { "ts": "toastExitMs" } } },
-      "queue-grace": { "$value": "240ms", "$extensions": { "sds": { "ts": "toastQueueGraceMs" } } },
-      "default": { "$value": "4200ms", "$extensions": { "sds": { "ts": "toastDefaultMs" } } }
+      "enter": { "$value": "220ms", "$extensions": { "jds": { "ts": "toastEnterMs" } } },
+      "exit": { "$value": "180ms", "$extensions": { "jds": { "ts": "toastExitMs" } } },
+      "queue-grace": { "$value": "240ms", "$extensions": { "jds": { "ts": "toastQueueGraceMs" } } },
+      "default": { "$value": "4200ms", "$extensions": { "jds": { "ts": "toastDefaultMs" } } }
     }
   }
 }

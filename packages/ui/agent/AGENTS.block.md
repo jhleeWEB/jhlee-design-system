@@ -1,6 +1,6 @@
 ## 디자인 시스템 계약(에이전트) — {{name}} v{{version}}
 
-`npx sds-agent sync` 가 관리하는 블록이다 — 손으로 고치지 않는다(다음 sync 가 덮는다). 절차는 `.claude/skills/squircle-ds/SKILL.md`(Analyze → Compose → Audit), 색인은 `node_modules/{{name}}/llms.txt`, 기계 판독 정본은 `node_modules/{{name}}/dist/components.manifest.json`.
+`npx jds-agent sync` 가 관리하는 블록이다 — 손으로 고치지 않는다(다음 sync 가 덮는다). 절차는 `.claude/skills/jhlee-ds/SKILL.md`(Analyze → Compose → Audit), 색인은 `node_modules/{{name}}/llms.txt`, 기계 판독 정본은 `node_modules/{{name}}/dist/components.manifest.json`.
 
 - **정본 순서.** `llms.txt` → `components.manifest.json` → `docs/components/*.md` → `dist/**/*.d.ts`. 매니페스트에 없는 컴포넌트·부품·prop 은 **지어내지 않는다** — «DS 확장 필요» 로 보고하고 멈춘다.
 - **import 는 루트 배럴 하나** `{{name}}` — 아이콘만 서브패스 `{{name}}/icons`(`IconOrbit` · `IconMove` · `icons["zoom-in"]`, 장식은 그대로 · 이름이 필요하면 `title`). `react-icons` · `lucide-react` 를 따로 들이지 않는다. 툴 커서는 `cursor-cad-<이름>` 또는 `cursor: var(--cursor-<이름>)`. 3열 작업대 셸(`./legacy` · `shell.css`)은 3.0.0 에서 지웠다 — 폼은 `Field` · `Select` · `Tabs` 부품으로 조립한다.
@@ -15,5 +15,5 @@
 - **`tone` 은 한 어휘** `neutral | primary | success | warning | destructive | info`. 옛 키(`accent` `ok` `warn` `danger`)·옛 유틸(`text-ink` `bg-surface` `rounded-control`)·옛 CSS 변수(`--ink` `--chrome-line`)는 3.0.0 에서 지웠다 — 린트 `--fix` · 코드모드가 바꾼다.
 - **클라이언트 경계(Next App Router).** 매니페스트 `client: true` 컴포넌트는 서버 컴포넌트 트리에서 렌더하지 않는다 — `"use client"` 파일에서 조립한다. 서버에서 className 만 필요하면 `*Variants`(지시문 없음)를 호출한다: `buttonVariants({ variant: "solid" })`.
 - **폴더 규칙(DS 안).** `Name.tsx · Name.variants.ts · Name.stories.tsx · Name.spec.tsx · index.ts`. 훅·핸들러·컨텍스트·Radix 를 쓰는 파일은 첫 줄 `"use client"`, `*.variants.ts`·배럴에는 없다. 공개 심볼은 `/** */` JSDoc(optional prop `@default`, 유니언은 값마다 «`값` — 설명» 한 줄, 컴포넌트는 `@example` 하나). 스토리는 `Default · Variants · ThemeContrast` 셋.
-- **검증.** 소비 레포: `eslint.config.js` 에 `squircleDesignSystem({ entryPoint })`(`{{name}}/eslint`)를 펼치고 `eslint` + `tsc --noEmit` 위반 0, `data-theme="dark"` 에서 `canvas-*` 불변. DS 레포: `pnpm verify`(typecheck · lint · tokens:check · manifest:check · test · build), `test:stories`, `vrt`(스냅샷 갱신은 `vrt:update` 도커만).
+- **검증.** 소비 레포: `eslint.config.js` 에 `jhleeDesignSystem({ entryPoint })`(`{{name}}/eslint`)를 펼치고 `eslint` + `tsc --noEmit` 위반 0, `data-theme="dark"` 에서 `canvas-*` 불변. DS 레포: `pnpm verify`(typecheck · lint · tokens:check · manifest:check · test · build), `test:stories`, `vrt`(스냅샷 갱신은 `vrt:update` 도커만).
 - **커밋·버전.** Conventional Commits(영문 type + 한글 설명). `fix` patch · `feat` minor · `feat!:`/`BREAKING CHANGE:` major — 0.x 특례 없음. 한글 설명만으로는 major 가 오르지 않는다.
