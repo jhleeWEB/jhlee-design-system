@@ -1,5 +1,5 @@
 {
-  "$description": "크롬 다크 — 생성기가 한 번 읽어 @media (prefers-color-scheme: dark) 블록과 [data-theme=dark] 블록에 같은 본문을 찍는다. 이름은 라이트와 같은 shadcn 어휘(B5, #22). 판정색은 원시 사다리 참조(값은 옛 다크 hex 그대로), 뉴트럴·primary·info 는 아직 raw hex 다. 다크에서는 세 톤 모두 solid 위 흰 글자가 4.5:1 을 못 넘어 foreground 가 cool.950 이고 hover 는 밝아진다(#18).",
+  "$description": "크롬 다크 — 생성기가 한 번 읽어 @media (prefers-color-scheme: dark) 블록과 [data-theme=dark] 블록에 같은 본문을 찍는다. 이름은 라이트와 같은 shadcn 어휘(B5, #22). 판정색은 원시 사다리 참조(값은 옛 다크 hex 그대로), 뉴트럴은 아직 raw hex 다(primary · info 는 #83 에서 Klein 사다리 참조로 옮겼다). 다크에서는 세 톤 모두 solid 위 흰 글자가 4.5:1 을 못 넘어 foreground 가 cool.950 이고 hover 는 밝아진다(#18).",
   "$extensions": { "sds": { "scope": "chrome" } },
   "chrome": {
     "$type": "color",
@@ -14,23 +14,29 @@
     "foreground-disabled": { "$value": "#5b6474" },
     "border": { "$value": "#242a34" },
     "border-strong": { "$value": "#333b48" },
-    "primary": { "$value": "#4d9bff" },
-    "primary-hover": { "$value": "#6fb0ff" },
-    "primary-foreground": { "$value": "#061018" },
-    "primary-track": { "$value": "#1a2b42" },
+    "primary": {
+      "$value": "{palette.klein.300}",
+      "$description": "브랜드 시그널 Klein(#83)의 다크 단 — card 위 5.41:1."
+    },
+    "primary-hover": { "$value": "{palette.klein.200}" },
+    "primary-foreground": {
+      "$value": "#061018",
+      "$description": "klein.300 위의 어두운 글자 — 5.8:1(흰 글자는 3.22:1 로 미달)."
+    },
+    "primary-track": { "$value": "{palette.klein.850}" },
     "primary-line": {
-      "$value": "#005fd8",
-      "$description": "다크 info-line 과 같은 값 — card 위 3.01:1(#24)."
+      "$value": "{palette.klein.400}",
+      "$description": "다크 info-line 과 같은 값 — card 위 3.60:1(#24 · #83)."
     },
-    "accent": { "$value": "#14243a" },
+    "accent": { "$value": "{palette.klein.900}" },
     "accent-foreground": {
-      "$value": "#4d9bff",
-      "$description": "옛 조합 bg-accent-soft + text-accent 의 다크 글자색 그대로."
+      "$value": "{palette.klein.300}",
+      "$description": "accent(klein.900) 위의 글자 — 5.10:1."
     },
-    "selection-fill": { "$value": "rgb(77 155 255 / 0.20)" },
-    "selection-stroke": { "$value": "#4d9bff" },
+    "selection-fill": { "$value": "rgb(110 134 255 / 0.20)" },
+    "selection-stroke": { "$value": "{palette.klein.300}" },
     "scrim": { "$value": "rgb(0 0 0 / 0.60)" },
-    "ring": { "$value": "#6fb0ff" },
+    "ring": { "$value": "{palette.klein.200}" },
     "tooltip": { "$value": "#eaedf3" },
     "tooltip-foreground": { "$value": "#0e1116" },
     "success": { "$value": "{palette.moss.300}" },
@@ -48,16 +54,16 @@
     "destructive-foreground": { "$value": "{palette.cool.950}" },
     "destructive-soft": { "$value": "{palette.rust.900}" },
     "destructive-line": { "$value": "{palette.rust.600}" },
-    "info": { "$value": "#4d9bff", "$description": "다크 primary 와 같은 값." },
-    "info-hover": { "$value": "#6fb0ff" },
+    "info": { "$value": "{palette.klein.300}", "$description": "다크 primary 와 같은 값(Klein, #83)." },
+    "info-hover": { "$value": "{palette.klein.200}" },
     "info-foreground": {
       "$value": "{palette.cool.950}",
-      "$description": "#4d9bff 위의 흰 글자는 2.82:1 — 어두운 글자 6.60:1."
+      "$description": "klein.300 위의 흰 글자는 3.22:1 — 어두운 글자 5.78:1."
     },
-    "info-soft": { "$value": "#14243a" },
+    "info-soft": { "$value": "{palette.klein.900}" },
     "info-line": {
-      "$value": "#005fd8",
-      "$description": "다크 card(#161a21) 위 3.01:1 까지 어둡힌 값(#4d9bff 의 HSL 밝기 42%)."
+      "$value": "{palette.klein.400}",
+      "$description": "다크 card(#161a21) 위 3.60:1."
     }
   }
 }

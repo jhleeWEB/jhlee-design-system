@@ -28,7 +28,7 @@
       }
     },
     "azure": {
-      "$description": "액센트 — 실측 #0869e1.",
+      "$description": "옛 액센트 — 실측 #0869e1. 브랜드 시그널이 Klein blue(#83)로 바뀐 뒤로 크롬은 참조하지 않는다 — 공개 CSS 변수(--palette-azure-*)라 지우지 않는다.",
       "50": { "$value": "#eef5fe" },
       "100": { "$value": "#e6eff8" },
       "200": { "$value": "#c9e0fb" },
@@ -39,6 +39,36 @@
       "500": { "$value": "#0869e1" },
       "600": { "$value": "#0a5cc4" },
       "700": { "$value": "#0b4da4" }
+    },
+    "klein": {
+      "$description": "브랜드 시그널 — Klein blue(사용자 결정 2026-10-02, #83). Cool graphite 중립 위의 유일한 시그널로 «지금 고른 것 · 주된 동작» 과 info 를 맡는다. 대비는 실측(WCAG 2.x).",
+      "50": {
+        "$value": "#eef1fd",
+        "$description": "라이트 옅은 면(accent · info-soft) — 500 글자 6.89:1, muted-foreground 4.75:1."
+      },
+      "100": {
+        "$value": "#e8ebfc",
+        "$description": "라이트 트랙(primary-track) — muted-foreground 4.52:1(SegmentedControl 비선택 항목), 500 글자 6.55:1."
+      },
+      "200": { "$value": "#8599ff", "$description": "다크 hover · 포커스 링 — 다크 card 위 6.64:1." },
+      "300": {
+        "$value": "#6e86ff",
+        "$description": "다크 primary · info — 다크 card 위 5.41:1, 그 위 어두운 글자(cool.950) 5.78:1. 라이트에서는 line — 흰 면 위 3.22:1(1.4.11)."
+      },
+      "400": { "$value": "#4a63f0", "$description": "다크 line — 다크 card 위 3.60:1(1.4.11)." },
+      "500": {
+        "$value": "#1f3bdb",
+        "$description": "라이트 primary · info · ring · selection — 흰 글자 7.76:1, 흰 면 위 글자 7.76:1."
+      },
+      "600": { "$value": "#1a31b8", "$description": "라이트 hover — 흰 글자 9.65:1." },
+      "850": {
+        "$value": "#1c2346",
+        "$description": "다크 트랙(primary-track) — muted-foreground 4.92:1, 300 글자 4.73:1."
+      },
+      "900": {
+        "$value": "#161d3d",
+        "$description": "다크 옅은 면(accent · info-soft) — 300 글자 5.10:1, foreground 14.02:1."
+      }
     },
     "mono": {
       "$description": "자매 저장소 globals.css 의 mono 12단 — 무채색이 필요한 자리에서 계속 쓴다.",

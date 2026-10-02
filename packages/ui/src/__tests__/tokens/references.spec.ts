@@ -63,7 +63,9 @@ describe("참조 무결성", () => {
        지우지 않는다: 코드모드 표(tokens/legacy-map.mjs 의 baseVars)가 옛 이름을 «값이 같은» 이 원시로 옮기므로 목적지가 살아 있어야 한다.
        #55 에서 라이트 글자 AA 를 위해 시맨틱이 한 단 어두운 새 단(cool.550 · moss.550 · rust.550 · amber.650)으로 옮겨 다섯이 더해졌다(27개) —
        cool.500 · moss.500 · amber.500 · rust.500 은 같은 이유(코드모드 목적지 `--color-cool-500` · `--ok` · `--warn` · `--danger`)로 값째 남고,
-       amber.600(옛 라이트 hover)은 발행된 CSS 변수라 지우면 major 라서 남긴다. */
+       amber.600(옛 라이트 hover)은 발행된 CSS 변수라 지우면 major 라서 남긴다.
+       #83 에서 브랜드 시그널이 Klein 사다리로 옮겨 azure 의 쓰이던 다섯(50 · 100 · 400 · 500 · 600)이 미참조가 됐다(32개) — 공개 CSS 변수
+       `--palette-azure-*` 라 지우면 major 다. */
     const referrers = new Map<string, string[]>();
     for (const t of model.tokens)
       for (const ref of t.refs) referrers.set(ref, [...(referrers.get(ref) ?? []), t.name]);
@@ -79,7 +81,12 @@ describe("참조 무결성", () => {
       [
         "--palette-amber-500",
         "--palette-amber-600",
+        "--palette-azure-100",
         "--palette-azure-200",
+        "--palette-azure-400",
+        "--palette-azure-50",
+        "--palette-azure-500",
+        "--palette-azure-600",
         "--palette-azure-700",
         "--palette-cool-50",
         "--palette-cool-500",
