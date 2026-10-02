@@ -38,6 +38,15 @@ export const LEGACY_MARKERS = ["<!-- sds:begin -->", "<!-- sds:end -->"] as cons
 /** 3.x 가 복사한 스킬 폴더 이름 — `sync` 가 지운다(#91). */
 export const LEGACY_SKILL = "squircle-ds";
 
+/**
+ * `repository.url`(`git+https://github.com/<owner>/<repo>.git`) → `<owner>/<repo>` — 블록 · 스킬의 `{{repo}}` 가 된다.
+ * 없는 컴포넌트를 요청할 저장소를 package.json 한 곳에서 읽으려는 것이다(#96) — URL 을 원문에 적으면 저장소 이름이 바뀔 때 뒤처진다(#91 의 개명이 그랬다).
+ */
+export function repoSlug(url: string | undefined): string | null {
+  const match = url?.match(/github\.com[/:]([^/]+\/[^/]+?)(?:\.git)?\/?$/);
+  return match?.[1] ?? null;
+}
+
 /** `sync` 의 입력. */
 export interface SyncOptions {
   /** 소비 레포 루트 — AGENTS.md 와 .claude/skills/ 가 여기 생긴다. */
@@ -126,11 +135,14 @@ export function sync(options: SyncOptions): SyncResult {
   const pkg = JSON.parse(readFileSync(join(packageDir, "package.json"), "utf8")) as {
     name: string;
     version: string;
+    repository?: { url?: string };
   };
+  const repo = repoSlug(pkg.repository?.url);
+  if (!repo) throw new Error(`${packageDir}/package.json 의 repository.url 에서 GitHub 저장소를 못 읽었다`);
+  const fill = (text: string): string =>
+    text.replaceAll("{{name}}", pkg.name).replaceAll("{{version}}", pkg.version).replaceAll("{{repo}}", repo);
   const agentDir = join(packageDir, "agent");
-  const block = readFileSync(join(agentDir, "AGENTS.block.md"), "utf8")
-    .replaceAll("{{name}}", pkg.name)
-    .replaceAll("{{version}}", pkg.version);
+  const block = fill(readFileSync(join(agentDir, "AGENTS.block.md"), "utf8"));
 
   const agentsFile = join(options.cwd, "AGENTS.md");
   const existing = existsSync(agentsFile) ? readFileSync(agentsFile, "utf8") : null;
@@ -145,9 +157,7 @@ export function sync(options: SyncOptions): SyncResult {
   const skillFiles = walk(skillSource).map((file) => {
     const rel = relative(skillSource, file);
     const target = join(skillDir, rel);
-    const text = readFileSync(file, "utf8")
-      .replaceAll("{{name}}", pkg.name)
-      .replaceAll("{{version}}", pkg.version);
+    const text = fill(readFileSync(file, "utf8"));
     return { path: rel, status: writeIfChanged(target, text) };
   });
 

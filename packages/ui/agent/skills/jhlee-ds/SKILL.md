@@ -19,7 +19,10 @@ description: jhlee design system({{name}})으로 화면을 조립할 때 — 컴
    jq '.utilities[] | select(.kind == "variants") | {name, axes, defaults}' node_modules/{{name}}/dist/components.manifest.json
    jq '.tokens' node_modules/{{name}}/dist/components.manifest.json
    ```
-3. **없는 부품·prop 은 지어내지 않는다.** 매니페스트에 없으면 «DS 확장 필요 — <무엇이, 왜>» 로 보고하고 그 자리는 가장 가까운 있는 부품으로 임시 조립한 뒤 TODO 로 표시한다. `@deprecated` 인 것은 새 코드에 고르지 않는다(3.0.0 에서 `./legacy` · 옛 tone 키 · 옛 토큰 이름은 지웠다).
+3. **없는 부품·prop 은 지어내지 않는다.** 매니페스트에 없으면 «DS 확장 필요 — <무엇이, 왜>» 로 보고하고, 사용자 동의를 받아 요청 이슈를 연다 —
+   https://github.com/{{repo}}/issues/new?template=component-request.yml (원하는 모양의 **이미지 첨부를 권한다** — CLI 는 이미지를 못 올리니 이 URL 을 사용자에게 건넨다.
+   글로만이면 `gh issue create --repo {{repo}} --label component-request …`). 그 자리는 가장 가까운 있는 부품으로 임시 조립하고 `// TODO({{repo}}#<이슈>)` 로 표시한다.
+   `@deprecated` 인 것은 새 코드에 고르지 않는다(3.0.0 에서 `./legacy` · 옛 tone 키 · 옛 토큰 이름은 지웠다).
 4. 클라이언트 경계를 정한다 — `client: true` 컴포넌트는 `"use client"` 파일에서만 렌더한다. 서버 컴포넌트에서는 `*Variants` 호출만.
 
 ## 2. Compose — 부품 조립, className 은 토큰 유틸만
@@ -40,4 +43,4 @@ description: jhlee design system({{name}})으로 화면을 조립할 때 — 컴
    `pnpm exec eslint <바꾼 파일>` — `no-unknown-classes`(토큰 밖 클래스) · `no-restricted-classes`(옛 이름·hex·임의값·격자 밖 간격, `--fix` 가 개명) · `no-restricted-syntax`(raw 요소 · 인라인 색) · `ds/legacy-tone` 이 0 이어야 한다.
 2. 타입 — `pnpm exec tsc --noEmit` 0. 매니페스트에 없는 prop 은 여기서도 잡힌다.
 3. 다크 — `html[data-theme="dark"]` 에서 크롬만 바뀌고 `canvas-*` 는 불변인지 스토리·화면으로 확인한다.
-4. 보고 — 바꾼 파일, 쓴 부품, «DS 확장 필요» 목록, 린트·타입 결과를 한 번에 적는다.
+4. 보고 — 바꾼 파일, 쓴 부품, «DS 확장 필요» 목록과 연 요청 이슈(또는 사용자에게 건넨 양식 URL), 린트·타입 결과를 한 번에 적는다.

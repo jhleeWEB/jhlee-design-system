@@ -3,7 +3,7 @@
 `@jhleeweb/jhlee-design-system` — 도면 캔버스와 UI 크롬을 가른 토큰, Radix 기반 컨트롤 · 오버레이 · 피드백 · 내비게이션 · 데이터 층.
 3.0.0 에서 3열 작업대 셸(`./legacy`)과 옛 이름 alias 를 지웠다 — 이행은 [`packages/ui/README.md`](packages/ui/README.md) «2.x → 3.0».
 4.0.0 에서 이름을 `squircle-design-system`(패키지 `@jhleeweb/squircle-design-system`)에서 바꿨다(#91) — 이행은 [`packages/ui/README.md`](packages/ui/README.md) «3.x → 4.0».
-GitHub Packages(npm.pkg.github.com)에 **공개(public) 패키지**로 발행한다 — 저장소(소스)는 비공개다(#94). `aaro-lab/apartment-configurator` 의 `packages/ui` 를 2026-09-29 에 이력째 분리했다.
+GitHub Packages(npm.pkg.github.com)에 **공개(public) 패키지**로 발행하고, 저장소(소스)도 공개다(2026-10-02, #94 · #96). `aaro-lab/apartment-configurator` 의 `packages/ui` 를 2026-09-29 에 이력째 분리했다.
 
 ## 쓰기
 
@@ -58,7 +58,13 @@ pnpm --filter @jhleeweb/jhlee-design-system vrt            # 시각 회귀(story
 `main` 머지 → `release.yml` 이 semantic-release 로 버전·태그·Release·publish. PR 제목의 type 이 버전을 정한다(`fix` patch · `feat` minor · `feat!:` major).
 패키지 가시성은 **public** 이다(2026-10-02 사용자 결정, #94 — 공개 패키지는 다시 비공개로 돌릴 수 없다). 읽기는 GitHub 계정이 있는 누구나 토큰으로 하고,
 **발행은 이 레포의 쓰기 권한(release.yml 의 GITHUB_TOKEN)만** 한다. 다른 레포의 Actions 는 자기 GITHUB_TOKEN(`permissions: packages: read`)으로 공개 패키지를
-읽을 수 있다(GitHub 문서 기준, 실측 전) — 안 되면 classic PAT(`read:packages`) 시크릿을 쓴다. 저장소(소스)는 비공개라 소비자가 받는 것은 빌드 산출물(dist · d.ts · docs · llms.txt)뿐이다.
+읽을 수 있다(GitHub 문서 기준, 실측 전) — 안 되면 classic PAT(`read:packages`) 시크릿을 쓴다. 저장소도 공개라 이슈는 GitHub 계정이 있는 누구나 연다(아래 «컴포넌트 요청»).
+
+## 컴포넌트 요청
+
+필요한 컴포넌트 · 부품 · 변형이 없으면 소비 레포에서 따로 짓기 전에 [컴포넌트 요청 양식](https://github.com/jhleeWEB/jhlee-design-system/issues/new?template=component-request.yml)으로
+이슈를 연다(라벨 `component-request`). **원하는 모양의 이미지(스크린샷 · 시안 · 손그림)를 첨부해 주세요** — 양식의 «참고 이미지» 칸에 끌어다 놓으면 올라간다.
+소비 레포의 에이전트도 같은 길을 간다 — `npx jds-agent sync` 가 심는 계약 블록과 `jhlee-ds` 스킬이 «지어내지 말고, 사용자 동의를 받아 이 양식으로 요청한다» 를 싣는다(#96).
 
 ## 관련
 

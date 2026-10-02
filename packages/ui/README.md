@@ -27,6 +27,7 @@ npx jds-agent sync --cwd ../other-repo
 - `docs/components/*.md` — 루트 컴포넌트마다 한 장(부품은 하위 절).
 - `agent/AGENTS.block.md` — «디자인 시스템 계약(에이전트)» 절. sync 가 소비 레포 AGENTS.md 에 심는다(규칙은 항상 로드되는 곳에).
 - `agent/skills/jhlee-ds/SKILL.md` — 절차 Analyze(매니페스트에서 찾기) → Compose(부품 조립, 토큰 유틸만) → Audit(프리셋 린트 + tsc + 다크).
+- 없는 컴포넌트 — 지어내지 않고 [요청 양식](https://github.com/jhleeWEB/jhlee-design-system/issues/new?template=component-request.yml)으로 이 저장소에 이슈를 연다(원하는 모양의 이미지 첨부 권장, #96). 블록 · 스킬의 양식 URL 은 `repository.url` 에서 채워진다.
 
 세 생성물은 소스의 JSDoc 에서 나온다(`scripts/build-manifest.ts` · `build-docs.ts`) — 설명을 고치려면 JSDoc 을 고치고 `pnpm manifest:build` 로 다시 만든다.
 
