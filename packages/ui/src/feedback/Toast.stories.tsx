@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useRef } from "react";
-import { expect } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 
+import { MOTION } from "../generated/tokens";
+import { Button } from "../primitives/Button";
 import { ToastProvider, useToast, type ToastOptions } from "./Toast";
 
 /* 3스토리 계약(본보기 primitives/Button.stories). 대상은 ToastProvider — 큐 밖의 속성은 뷰포트(ol)로 간다.
@@ -97,4 +99,55 @@ export const ThemeContrast: Story = {
       ))}
     </div>
   ),
+};
+
+/** 타이머 토스트를 버튼으로 띄운다 — 하단 막대가 남은 시간을 줄이고, 뷰포트에 마우스를 올리면 타이머와 막대가 함께 멈춘다. */
+function TimerDemo() {
+  const { toast } = useToast();
+  return (
+    <div className="flex flex-wrap gap-2">
+      {toneValues.map((tone) => (
+        <Button
+          key={tone}
+          size="sm"
+          variant="outline"
+          /* duration 을 비워 Provider 의 기본 시간(MOTION.toastDefaultMs)을 쓴다 — SAMPLE 의 duration: 0 을 덮어 지운다. */
+          onClick={() => toast({ ...SAMPLE[tone], tone, duration: undefined })}
+        >
+          Show {tone}
+        </Button>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * 시간이 있는 토스트 — 하단 막대가 남은 시간을 보여 준다. 실시간이라 VRT 에서 뺀다(`!vrt`): 막대는 유한 애니메이션이라
+ * 스냅샷이 끝 프레임(빈 막대)만 찍어 쓸모가 없고, 자동 해제가 촬영과 경주한다. 동작은 play 가 본다.
+ */
+export const Timer: Story = {
+  tags: ["!vrt", "!manifest"],
+  args: { limit: toneValues.length },
+  render: (args) => (
+    <ToastProvider {...args}>
+      <TimerDemo />
+    </ToastProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const doc = canvasElement.ownerDocument;
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Show success" }));
+    const toastEl = await waitFor(() => {
+      const el = doc.querySelector<HTMLElement>('[data-slot="toast"][data-tone="success"]');
+      if (!el) throw new Error("toast not shown");
+      return el;
+    });
+    const bar = toastEl.querySelector<HTMLElement>('[data-slot="toast-progress"]');
+    await expect(bar).not.toBeNull();
+    await expect(bar?.style.animationDuration).toBe(`${MOTION.toastDefaultMs}ms`);
+    /* 뷰포트에 포인터가 들어오면 Radix 가 타이머를 멈추고 막대도 멈춘다. */
+    await userEvent.hover(toastEl);
+    await waitFor(() => expect(toastEl).toHaveAttribute("data-paused"));
+    await userEvent.unhover(toastEl);
+    await waitFor(() => expect(toastEl).not.toHaveAttribute("data-paused"));
+  },
 };

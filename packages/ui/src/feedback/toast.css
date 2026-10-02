@@ -64,3 +64,23 @@
     transition: none;
   }
 }
+
+/* 남은 시간 막대(#76) — 길이는 Toast.tsx 가 인라인 animation-duration 으로 Radix 에 넘긴 시간과 같게 준다.
+   Radix 가 타이머를 멈추면(뷰포트 hover · focus · 창 blur) data-paused 가 붙어 같이 멈춘다.
+   reduced-motion 에서도 돈다: 남은 시간이라는 «정보» 이고 느린 선형 변화라 전정 자극이 없다 — 대신 멈출 수 있다(WCAG 2.2.2). */
+.ds-toast-progress {
+  animation-name: ds-toast-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+.ds-toast[data-paused] .ds-toast-progress {
+  animation-play-state: paused;
+}
+@keyframes ds-toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}

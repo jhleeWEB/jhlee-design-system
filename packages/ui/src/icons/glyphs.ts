@@ -145,6 +145,25 @@ const table = {
       ["path", { d: "M12 8h.01" }],
     ],
   },
+  /** lucide `circle-check` — 토스트의 success 표시(#76). */
+  "circle-check": {
+    category: "chrome",
+    lucide: "circle-check",
+    nodes: [
+      ["circle", { cx: "12", cy: "12", r: "10" }],
+      ["path", { d: "m9 12 2 2 4-4" }],
+    ],
+  },
+  /** lucide `circle-x` — 토스트의 destructive 표시(#76). */
+  "circle-x": {
+    category: "chrome",
+    lucide: "circle-x",
+    nodes: [
+      ["circle", { cx: "12", cy: "12", r: "10" }],
+      ["path", { d: "m15 9-6 6" }],
+      ["path", { d: "m9 9 6 6" }],
+    ],
+  },
   /** lucide `triangle-alert` */
   "alert-triangle": {
     category: "chrome",

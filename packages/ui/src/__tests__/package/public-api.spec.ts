@@ -229,6 +229,7 @@ describe("공개 API", () => {
         "tableCellVariants",
         "tabsListVariants",
         "tabsTriggerVariants",
+        "toastDescriptionVariants",
         "toastVariants",
         "toastViewportVariants",
         "toggleGroupItemVariants",

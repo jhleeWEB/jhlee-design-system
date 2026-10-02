@@ -32,6 +32,10 @@ export const IconCalendar = /* @__PURE__ */ createIcon("calendar");
 export const IconSearch = /* @__PURE__ */ createIcon("search");
 /** 글리프 `info` — 정본 `glyphs.ts`. */
 export const IconInfo = /* @__PURE__ */ createIcon("info");
+/** 글리프 `circle-check` — 정본 `glyphs.ts`. */
+export const IconCircleCheck = /* @__PURE__ */ createIcon("circle-check");
+/** 글리프 `circle-x` — 정본 `glyphs.ts`. */
+export const IconCircleX = /* @__PURE__ */ createIcon("circle-x");
 /** 글리프 `alert-triangle` — 정본 `glyphs.ts`. */
 export const IconAlertTriangle = /* @__PURE__ */ createIcon("alert-triangle");
 /** 글리프 `trash` — 정본 `glyphs.ts`. */
@@ -164,6 +168,8 @@ export const icons = {
   calendar: IconCalendar,
   search: IconSearch,
   info: IconInfo,
+  "circle-check": IconCircleCheck,
+  "circle-x": IconCircleX,
   "alert-triangle": IconAlertTriangle,
   trash: IconTrash,
   copy: IconCopy,

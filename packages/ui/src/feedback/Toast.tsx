@@ -3,8 +3,14 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { Toast as RadixToast } from "radix-ui";
 
 import { cn, type VariantProps } from "../cn";
-import { IconX } from "../icons/icons";
-import { toastVariants, toastViewportVariants, type ToastPosition, type ToastTone } from "./Toast.variants";
+import { IconAlertTriangle, IconCircleCheck, IconCircleX, IconX } from "../icons/icons";
+import {
+  toastDescriptionVariants,
+  toastVariants,
+  toastViewportVariants,
+  type ToastPosition,
+  type ToastTone,
+} from "./Toast.variants";
 import { SlottedButton } from "../primitives/Button";
 import { MOTION } from "../generated/tokens";
 
@@ -22,7 +28,7 @@ import { MOTION } from "../generated/tokens";
 /** `toast()` 한 번에 넘기는 알림 한 건. */
 export interface ToastOptions extends Omit<VariantProps<typeof toastVariants>, "tone"> {
   /**
-   * 톤 — 왼쪽 띠의 색. 판정일 때만 유채색이다.
+   * 톤 — 면 · 테두리 · 글자를 물들이고 판정이면 앞에 톤 아이콘을 둔다. 판정일 때만 유채색이다.
    * - `neutral` — 판정 없는 알림(저장됨·복사됨, 기본)
    * - `success` — 통과·완료
    * - `warning` — 주의. 되돌릴 수 있지만 확인이 필요하다
@@ -44,9 +50,10 @@ export interface ToastOptions extends Omit<VariantProps<typeof toastVariants>, "
   action?: ToastAction;
   /**
    * ms. `0` 이면 사용자가 닫을 때까지 남는다 — 실패 알림에만 쓴다. 비우면 `ToastProvider` 의 `duration` 을 따른다.
+   * 시간이 있으면 하단에 남은 시간 막대가 줄어든다(뷰포트에 마우스 · 포커스가 있거나 창이 흐려지면 타이머와 함께 멈춘다).
    * @default undefined
    */
-  duration?: number;
+  duration?: number | undefined;
 }
 
 /** 토스트 본문 아래의 조치 버튼 하나. */
@@ -112,6 +119,102 @@ export interface ToastProviderProps extends Omit<
   position?: ToastPosition | null | undefined;
 }
 
+/** 판정 톤의 앞 아이콘 — neutral 은 아이콘 없이 글자만 둔다(판정이 아니다). 색은 토스트 글자색(currentColor)을 따른다. */
+const TONE_ICON: Readonly<Record<ToastTone, typeof IconX | null>> = {
+  neutral: null,
+  success: IconCircleCheck,
+  warning: IconAlertTriangle,
+  destructive: IconCircleX,
+};
+
+/**
+ * 토스트 한 건. 진행 막대는 CSS 애니메이션(toast.css `ds-toast-progress`)이고 길이는 Radix 에 넘긴 시간과 같다.
+ * Radix 는 뷰포트에 포인터 · 포커스가 들어오거나 창이 흐려지면 타이머를 멈추고 남은 시간으로 다시 잰다 — 그 순간을 `onPause` · `onResume` 이
+ * 알려 주므로 `data-paused` 로 애니메이션을 같이 멈춘다. 둘이 같은 «지난 시간» 을 들고 다녀 막대가 끝나는 순간 토스트가 닫힌다.
+ */
+function ToastItem({
+  item,
+  providerDuration,
+  onDismiss,
+}: {
+  item: QueuedToast;
+  providerDuration: number;
+  onDismiss: (id: number) => void;
+}) {
+  const [paused, setPaused] = useState(false);
+  const tone = item.tone ?? "neutral";
+  const Icon = TONE_ICON[tone];
+  /* 0 은 «닫을 때까지 남는다» — 막대가 없다. */
+  const ms = item.duration ?? providerDuration;
+  const timed = Number.isFinite(ms) && ms > 0;
+  return (
+    <RadixToast.Root
+      data-slot="toast"
+      data-tone={item.tone ?? "neutral"}
+      data-paused={paused ? "" : undefined}
+      open={item.open}
+      /* Radix 의 `duration` 은 필수 number 라 `undefined` 를 넘기면 타입이 깨진다.
+         값이 없을 때는 Provider 의 기본값이 이겨야 하므로 **prop 자체를 빼야** 한다. */
+      {...(item.duration === undefined ? {} : { duration: item.duration === 0 ? Infinity : item.duration })}
+      onOpenChange={(open) => {
+        if (open) return;
+        onDismiss(item.id);
+      }}
+      onPause={() => setPaused(true)}
+      onResume={() => setPaused(false)}
+      className={cn(toastVariants({ tone }))}
+    >
+      {Icon ? (
+        /* 첫 줄(13px × 1.55 ≈ 20px) 높이의 칸 가운데에 16px 아이콘을 앉힌다 — 여러 줄 제목에서도 첫 줄에 붙는다. */
+        <span className="flex h-5 shrink-0 items-center">
+          <Icon data-slot="toast-icon" className="size-4" />
+        </span>
+      ) : null}
+      <div className="min-w-0 flex-1 self-center [overflow-wrap:anywhere]">
+        <RadixToast.Title className="font-semibold">{item.title}</RadixToast.Title>
+        {item.description ? (
+          <RadixToast.Description className={toastDescriptionVariants({ tone })}>
+            {item.description}
+          </RadixToast.Description>
+        ) : null}
+        {item.action ? (
+          <RadixToast.Action asChild altText={item.action.altText} onClick={item.action.onSelect}>
+            <SlottedButton
+              slot="toast-action"
+              size="sm"
+              variant="outline"
+              /* 톤 면 위의 흰(다크에선 남색) 버튼은 면과 따로 놀았다 — 테두리 · 글자를 토스트 글자색으로, 면은 투명하게 둔다(#76). */
+              className="mt-3 h-auto min-h-(--size-control-sm) max-w-full border-current/30 bg-transparent py-1 whitespace-normal text-current hover:bg-current/10 hover:text-current"
+            >
+              {item.action.label}
+            </SlottedButton>
+          </RadixToast.Action>
+        ) : null}
+      </div>
+      <RadixToast.Close asChild>
+        <SlottedButton
+          slot="toast-close"
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Dismiss"
+          /* 톤 면 위에서 회색 hover(bg-muted)는 얼룩처럼 뜬다 — 글자색(currentColor)의 옅은 면으로 누른다. neutral 은 그대로 회색 계열이다. */
+          className="-mt-1 -mr-1 shrink-0 text-current opacity-70 hover:bg-current/10 hover:text-current hover:opacity-100"
+        >
+          <IconX />
+        </SlottedButton>
+      </RadixToast.Close>
+      {timed ? (
+        <span
+          aria-hidden
+          data-slot="toast-progress"
+          className="ds-toast-progress pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left bg-current opacity-35"
+          style={{ animationDuration: `${ms}ms` }}
+        />
+      ) : null}
+    </RadixToast.Root>
+  );
+}
+
 /** 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다. 알림은 `useToast().toast()` 로 띄운다. */
 export function ToastProvider({
   children,
@@ -175,54 +278,7 @@ export function ToastProvider({
       <RadixToast.Provider duration={duration === 0 ? Infinity : duration} swipeDirection="right">
         {children}
         {queue.map((item) => (
-          <RadixToast.Root
-            data-slot="toast"
-            data-tone={item.tone ?? "neutral"}
-            key={item.id}
-            open={item.open}
-            /* Radix 의 `duration` 은 필수 number 라 `undefined` 를 넘기면 타입이 깨진다.
-               값이 없을 때는 Provider 의 기본값이 이겨야 하므로 **prop 자체를 빼야** 한다. */
-            {...(item.duration === undefined
-              ? {}
-              : { duration: item.duration === 0 ? Infinity : item.duration })}
-            onOpenChange={(open) => {
-              if (open) return;
-              dismiss(item.id);
-            }}
-            className={cn(toastVariants({ tone: item.tone }))}
-          >
-            <div className="min-w-0 flex-1 self-center [overflow-wrap:anywhere]">
-              <RadixToast.Title className="font-semibold">{item.title}</RadixToast.Title>
-              {item.description ? (
-                <RadixToast.Description className="m-0 mt-1 leading-relaxed text-muted-foreground">
-                  {item.description}
-                </RadixToast.Description>
-              ) : null}
-              {item.action ? (
-                <RadixToast.Action asChild altText={item.action.altText} onClick={item.action.onSelect}>
-                  <SlottedButton
-                    slot="toast-action"
-                    size="sm"
-                    className="mt-3 h-auto min-h-(--size-control-sm) max-w-full py-1 whitespace-normal"
-                  >
-                    {item.action.label}
-                  </SlottedButton>
-                </RadixToast.Action>
-              ) : null}
-            </div>
-            <RadixToast.Close asChild>
-              <SlottedButton
-                slot="toast-close"
-                variant="ghost"
-                size="icon-sm"
-                aria-label="Dismiss"
-                className="shrink-0 [&_svg]:size-4"
-              >
-                {/* 크기는 위 `[&_svg]:size-4` 가 정한다 — 아이콘 prop 의 숫자는 토큰 밖 값이다. */}
-                <IconX />
-              </SlottedButton>
-            </RadixToast.Close>
-          </RadixToast.Root>
+          <ToastItem key={item.id} item={item} providerDuration={duration} onDismiss={dismiss} />
         ))}
         <RadixToast.Viewport
           className={cn(toastViewportVariants({ position }), className)}
