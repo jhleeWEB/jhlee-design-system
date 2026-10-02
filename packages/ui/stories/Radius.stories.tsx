@@ -248,10 +248,10 @@ function CornerComponents() {
 
       <section className="flex flex-col gap-3">
         <Alert tone="info" title="Heads up">
-          A 3px left band on a curved corner — drawn in one stroke.
+          Tinted surface, border and text — no side band.
         </Alert>
         <Alert tone="success" title="Saved">
-          Border is success-line — 3:1 against the soft surface.
+          The border is the tone at 25% over its soft surface.
         </Alert>
         <div className={toastVariants({ tone: "success" })}>
           <div className="min-w-0 flex-1">
