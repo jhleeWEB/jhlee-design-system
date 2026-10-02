@@ -16,11 +16,13 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 |---|---|---|---|---|
 | `columns` | `readonly Column<Row>[]` | 예 |  | 열 정의. 순서대로 그린다. |
 | `rows` | `readonly Row[]` | 예 |  | 행 데이터. 정렬해도 이 배열은 바꾸지 않는다. |
-| `rowKey` | `(row: Row, index: number) => string` | 예 |  | 각 행의 안정적인 키. |
+| `rowKey` | `(row: Row, index: number) => string` | 예 |  | 각 행의 안정적인 키 — React key 와 선택 키로만 쓰는 내부 id 다. 화면 · 스크린리더에 읽히지 않는다(이름은 `rowLabel`). |
+| `rowLabel` | `((row: Row, index: number) => string)` |  | `undefined` | 선택 radio 가 읽는 행의 이름 — 사람이 아는 이름을 준다(«Kitchen»). 없으면 첫 열에 그려진 글자가 이름이 된다. 첫 열이 버튼 · 입력 같은 컨트롤을 담으면 그 글자까지 이름에 섞이므로 이 prop 으로 정한다. |
+| `selectLabel` | `string` |  | `"Select row"` | 선택 radio 이름의 앞말 — 이름은 «앞말 + 행 이름» 이다(`Select row Kitchen`). 제품 어휘는 앱이 정한다. |
 | `caption` | `string` | 예 |  | 표의 이름. 스크린리더가 읽고, `captionVisible` 이면 화면에도 보인다. |
 | `captionVisible` | `boolean` |  | `false` | 캡션을 화면에도 보인다. 끄면 스크린리더만 읽는다. |
 | `selectedKey` | `string` |  | `undefined` | 선택된 행의 키. 캔버스 선택과 연동하는 자리다. |
-| `onSelect` | `((key: string, row: Row) => void)` |  | `undefined` | 행을 골랐을 때 — 주면 첫 칸에 선택 radio 가 붙고 행 클릭이 선택이 된다. 없으면 표는 읽기 전용이다. |
+| `onSelect` | `((key: string, row: Row) => void)` |  | `undefined` | 행을 골랐을 때 — 주면 첫 칸에 선택 radio 가 붙고 행 클릭이 선택이 된다. 없으면 표는 읽기 전용이다. radio 의 이름은 `selectLabel` + `rowLabel`(없으면 첫 칸의 글자)이다. |
 | `totalLabel` | `string` |  | `"Total"` | 합계 줄 첫 칸의 라벨 — 합계 줄은 `columns[].total` 이 하나라도 있으면 자동으로 켜진다. |
 | `loading` | `boolean` |  | `false` | 값이 아직 없다. 줄 높이를 유지한 스켈레톤을 그린다. |
 | `loadingRows` | `number` |  | `4` | 로딩 중 스켈레톤 줄 수. |
