@@ -111,7 +111,7 @@ describe("components.manifest.json", { timeout: 120_000 }, () => {
     const t = manifest().tokens;
     expect(t.colors).toContain("primary");
     expect(t.colors).not.toContain("ink");
-    expect(t.radius).toEqual(["none", "sm", "md", "lg", "xl", "full"]);
+    expect(t.radius).toEqual(["none", "xs", "sm", "md", "lg", "xl", "full"]);
     expect(t.text).toEqual(["micro", "label", "body", "control", "title", "readout", "display"]);
     expect(t.spacingSteps).toEqual([0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24]);
   });

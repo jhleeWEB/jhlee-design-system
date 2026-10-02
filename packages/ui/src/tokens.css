@@ -20,7 +20,9 @@
   box-sizing: border-box;
 }
 
-/* body 의 바닥·글자색은 크롬이다 — 다크를 따른다(#20 · #24 결정, 2026-09-30). 옛 base 이름(--bg · --ink)은 3.0.0 에서 지웠다(#49). */
+/* body 의 바닥·글자색은 크롬이다 — 다크를 따른다(#20 · #24 결정, 2026-09-30). 옛 base 이름(--bg · --ink)은 3.0.0 에서 지웠다(#49).
+   글꼴은 Tailwind font-sans 와 같은 UI 스택이다(--font-stack-sans 맨 앞이 Instrument Sans, #80) — 예전 시스템 스택이면 font-sans 를 들지 않은
+   컴포넌트와 포털(메뉴 · 대화상자 · 툴팁)만 다른 글꼴로 그려져 한 단 굵어 보였다. */
 body {
   margin: 0;
   background: var(--chrome-background);

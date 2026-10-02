@@ -43,6 +43,7 @@
 
   --radius-*: initial;
   --radius-none: 0;
+  --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -130,8 +131,8 @@
   --color-info-soft: var(--chrome-info-soft);
   --color-info-line: var(--chrome-info-line);
 
-  --font-sans: "Instrument Sans", var(--font-stack-sans);
-  --font-mono: "Geist Mono", var(--font-stack-mono);
+  --font-sans: var(--font-stack-sans);
+  --font-mono: var(--font-stack-mono);
 }
 
 /* 생성 유틸리티 — Tailwind 네임스페이스가 아닌 :root 토큰(--layer-* · --duration-*)을 클래스로 낸다. */

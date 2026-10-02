@@ -1,10 +1,14 @@
 {
-  "$description": "층위 — radius · shadow 사다리(Tailwind @theme)와 z-index 층(:root --layer-* + 생성 @utility z-*, #18). radius·shadow 는 shipped 캔버스 툴(tldraw)의 라이브 DOM 값을 이 제품의 밀도로 누른 것. radius 이름은 shadcn 의 sm/md/lg/xl(6/8/12/16 체감값, B5 #22) — 옛 역할 이름(chip/control/card/float/modal)의 alias 는 3.0.0 에서 지웠다(#49). reset 은 Tailwind 기본 사다리를 지워 역할 이름만 남긴다. 값은 전부 px 리터럴 고정이다 — 스쿼클(#26·#27)은 사용자 결정(2026-09-30, #36)으로 폐기했다.",
+  "$description": "층위 — radius · shadow 사다리(Tailwind @theme)와 z-index 층(:root --layer-* + 생성 @utility z-*, #18). radius·shadow 는 shipped 캔버스 툴(tldraw)의 라이브 DOM 값을 이 제품의 밀도로 누른 것. radius 이름은 shadcn 의 sm/md/lg/xl(6/8/12/16 체감값, B5 #22)에 16px 이하 작은 표시용 xs(4px, #80)를 더했다 — 옛 역할 이름(chip/control/card/float/modal)의 alias 는 3.0.0 에서 지웠다(#49). reset 은 Tailwind 기본 사다리를 지워 역할 이름만 남긴다. 값은 전부 px 리터럴 고정이다 — 스쿼클(#26·#27)은 사용자 결정(2026-09-30, #36)으로 폐기했다.",
   "$extensions": { "sds": { "scope": "theme" } },
   "radius": {
     "$type": "dimension",
     "$extensions": { "sds": { "reset": true } },
     "none": { "$value": "0", "$description": "캔버스 · 도면 요소 · 표 셀." },
+    "xs": {
+      "$value": "4px",
+      "$description": "16px 이하의 작은 표시 상자 — 체크박스(14 · 16 · 20px). sm(6px)을 16px 상자에 주면 변의 3/4 가 곡선이라 라디오(원)와 구분이 흐려진다(#80). 역할 표는 tokens/README.md «역할 → 토큰»."
+    },
     "sm": { "$value": "6px", "$description": "배지 · 칩 · 스켈레톤 바(옛 chip)." },
     "md": { "$value": "8px", "$description": "버튼 · 입력 · 셀렉트 — 잡는 것(옛 control)." },
     "lg": {
