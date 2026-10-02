@@ -188,6 +188,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `tableCellVariants`: cva — 축 numeric(true | false) · tone(neutral | success | warning | destructive); 기본 numeric=false, tone=neutral. 서버에서 호출 가능.
 - `tabsListVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.
 - `tabsTriggerVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.
+- `toastDescriptionVariants`: cva — 축 tone(neutral | success | warning | destructive); 기본 tone=neutral. 서버에서 호출 가능.
 - `toastVariants`: cva — 축 tone(neutral | success | warning | destructive); 기본 tone=neutral. 서버에서 호출 가능.
 - `toastViewportVariants`: cva — 축 position(bottom-right | bottom-center | top-right | top-center); 기본 position=bottom-right. 서버에서 호출 가능.
 - `toggleGroupItemVariants`: cva — 축 variant(segmented | outline) · size(sm | md); 기본 variant=segmented, size=md. 서버에서 호출 가능.

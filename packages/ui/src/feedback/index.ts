@@ -16,4 +16,10 @@ export {
   type ToastOptions,
   type ToastProviderProps,
 } from "./Toast";
-export { toastVariants, toastViewportVariants, type ToastPosition, type ToastTone } from "./Toast.variants";
+export {
+  toastDescriptionVariants,
+  toastVariants,
+  toastViewportVariants,
+  type ToastPosition,
+  type ToastTone,
+} from "./Toast.variants";
