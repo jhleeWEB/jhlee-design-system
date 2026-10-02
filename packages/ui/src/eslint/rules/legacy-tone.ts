@@ -2,7 +2,7 @@
  *
  * 톤 어휘는 `src/lib/tone.ts` 의 한 벌(neutral · primary · success · warning · destructive · info)이다. 2.x 에서는 런타임 shim
  * `normalizeTone()` 이 옛 키를 옮겨 줬지만 3.0.0 에서 지웠다(#49) — 옛 키는 이제 타입 오류이고, 이 규칙의 `--fix` 가 유일한 코드모드다 —
- * 이 패키지는 루트 eslint.config.js 로, 소비 레포는 프리셋(`@jhleeweb/squircle-design-system/eslint`)으로 같은 규칙을 돌린다.
+ * 이 패키지는 루트 eslint.config.js 로, 소비 레포는 프리셋(`@jhleeweb/jhlee-design-system/eslint`)으로 같은 규칙을 돌린다.
  *
  * 왜 여기(패키지 소스)에 있는가: 프리셋이 규칙을 배포물에 실어야 하는데 `packages/eslint-rules` 는 발행하지 않고, tsdown unbundle 은
  * src 밖 파일을 dist 로 옮기지 못한다. 그래서 정본은 이 파일이고 `packages/eslint-rules/src/rules/legacy-tone.js` 는 이것을 재수출한다(#31).

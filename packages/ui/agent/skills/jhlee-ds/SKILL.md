@@ -1,9 +1,9 @@
 ---
-name: squircle-ds
-description: Squircle Design System({{name}})으로 화면을 조립할 때 — 컴포넌트·부품·prop 을 매니페스트에서 찾고(Analyze), 토큰 유틸만으로 조립하고(Compose), 린트·타입·다크로 검사한다(Audit). UI 컴포넌트 추가·수정, className·tone·variant 선택, "use client" 경계, 디자인 시스템 위반 수정에 쓴다.
+name: jhlee-ds
+description: jhlee design system({{name}})으로 화면을 조립할 때 — 컴포넌트·부품·prop 을 매니페스트에서 찾고(Analyze), 토큰 유틸만으로 조립하고(Compose), 린트·타입·다크로 검사한다(Audit). UI 컴포넌트 추가·수정, className·tone·variant 선택, "use client" 경계, 디자인 시스템 위반 수정에 쓴다.
 ---
 
-# Squircle DS — Analyze → Compose → Audit
+# jhlee design system — Analyze → Compose → Audit
 
 규칙은 AGENTS.md 의 «디자인 시스템 계약(에이전트)» 블록에 있다(항상 로드된다). 이 스킬은 **절차**다. 세 단계를 건너뛰지 않는다.
 
@@ -34,8 +34,8 @@ description: Squircle Design System({{name}})으로 화면을 조립할 때 — 
 
 1. 린트 — 소비 레포 `eslint.config.js` 에 프리셋이 있어야 한다(없으면 추가한다):
    ```js
-   import { squircleDesignSystem } from "{{name}}/eslint";
-   export default [...squircleDesignSystem({ entryPoint: new URL("./src/app/globals.css", import.meta.url).pathname })];
+   import { jhleeDesignSystem } from "{{name}}/eslint";
+   export default [...jhleeDesignSystem({ entryPoint: new URL("./src/app/globals.css", import.meta.url).pathname })];
    ```
    `pnpm exec eslint <바꾼 파일>` — `no-unknown-classes`(토큰 밖 클래스) · `no-restricted-classes`(옛 이름·hex·임의값·격자 밖 간격, `--fix` 가 개명) · `no-restricted-syntax`(raw 요소 · 인라인 색) · `ds/legacy-tone` 이 0 이어야 한다.
 2. 타입 — `pnpm exec tsc --noEmit` 0. 매니페스트에 없는 prop 은 여기서도 잡힌다.

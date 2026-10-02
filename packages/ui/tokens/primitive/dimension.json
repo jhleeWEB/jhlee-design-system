@@ -1,6 +1,6 @@
 {
   "$description": "간격과 치수. `spacing` 만 Tailwind @theme(p-4 · gap-3 의 단위)이고 `size`·`space` 는 :root 의 커스텀 프로퍼티다 — `--size-*`·`--space-*` 는 Tailwind 네임스페이스가 아니라 유틸리티를 낳지 않고, @theme 에 두면 쓰이지 않는 변수가 출력에서 잘린다(Tailwind 4 는 사용된 테마 변수만 낸다). 카드 사이 12px · 레일 64px 은 참고 화면 실측(#18 이전 theme.css 주석).",
-  "$extensions": { "sds": { "scope": "theme" } },
+  "$extensions": { "jds": { "scope": "theme" } },
   "spacing": {
     "$type": "dimension",
     "$value": "4px",
@@ -8,7 +8,7 @@
   },
   "size": {
     "$type": "dimension",
-    "$extensions": { "sds": { "scope": "root" } },
+    "$extensions": { "jds": { "scope": "root" } },
     "icon": {
       "$description": "아이콘 세 단 — 컨트롤 안 16px 이 기본(lib/icons 의 실측), 미세라벨 옆 12px, 빈 상태·헤더 20px.",
       "sm": { "$value": "12px" },
@@ -63,7 +63,7 @@
   },
   "space": {
     "$type": "dimension",
-    "$extensions": { "sds": { "scope": "root" } },
+    "$extensions": { "jds": { "scope": "root" } },
     "$description": "역할이 있는 간격 — 4px 격자의 어느 칸인지가 아니라 «무엇 사이» 인지로 이름 짓는다.",
     "hairline": {
       "$value": "1px",

@@ -123,7 +123,7 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
     return bits.join(" — ");
   };
   const lines: string[] = [
-    `# Squircle Design System`,
+    `# jhlee design system`,
     ``,
     `> \`${manifest.package.name}\` — Radix + Tailwind v4 디자인 시스템. 크롬(UI) 어휘는 shadcn 이름, 도면 캔버스는 \`canvas-*\`, 크롬 모서리는 일반 border-radius 원호 사다리. 이 파일은 \`components.manifest.json\` 에서 생성된다(\`scripts/build-docs.ts\`) — 손으로 고치지 않는다.`,
     ``,
@@ -147,7 +147,7 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
     `- \`tone\` 은 한 어휘다: \`neutral | primary | success | warning | destructive | info\`. 옛 키(\`accent\` \`ok\` \`warn\` \`danger\`)·옛 유틸 이름(\`text-ink\` \`bg-surface\` \`rounded-control\`)·옛 CSS 변수는 3.0.0 에서 지웠다 — \`eslint --fix\`(프리셋)와 코드모드가 새 이름으로 바꾼다.`,
     `- 유채색은 판정에만(\`success\`·\`warning\`·\`destructive\`·\`info\`), \`primary\` 는 «지금 고른 것·주된 동작». 상태는 항상 텍스트와 병기한다. 수치는 \`font-mono tabular-nums\`(\`.num\`).`,
     `- 다크는 크롬에만(\`html[data-theme="dark"]\`) — 캔버스(\`canvas-*\`)는 흰 바탕·radius 0·무채색으로 불변이다. 새 컴포넌트마다 «캔버스인가 크롬인가» 를 먼저 묻는다.`,
-    `- 검증: 소비 레포 \`eslint.config.js\` 에 \`squircleDesignSystem({ entryPoint })\`(\`${IMPORT_PATH}/eslint\`)를 펼치고 \`eslint\` + \`tsc --noEmit\` 위반 0. 에이전트 절차는 \`npx sds-agent sync\` 가 심는 \`.claude/skills/squircle-ds/SKILL.md\`(Analyze → Compose → Audit).`,
+    `- 검증: 소비 레포 \`eslint.config.js\` 에 \`jhleeDesignSystem({ entryPoint })\`(\`${IMPORT_PATH}/eslint\`)를 펼치고 \`eslint\` + \`tsc --noEmit\` 위반 0. 에이전트 절차는 \`npx jds-agent sync\` 가 심는 \`.claude/skills/jhlee-ds/SKILL.md\`(Analyze → Compose → Audit).`,
     ``,
     `## shadcn 과 다른 점`,
     ``,
@@ -194,7 +194,7 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
     ``,
     `- [컴포넌트 문서 색인](${COMPONENT_DOCS_DIR}/README.md)`,
     `- \`dist/components.manifest.json\` — 기계 판독 정본`,
-    `- \`agent/AGENTS.block.md\` — 소비 레포 AGENTS.md 에 심는 계약(\`npx sds-agent sync\`)`,
+    `- \`agent/AGENTS.block.md\` — 소비 레포 AGENTS.md 에 심는 계약(\`npx jds-agent sync\`)`,
   ];
   void byName;
   return (

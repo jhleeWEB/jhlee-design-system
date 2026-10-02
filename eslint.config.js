@@ -174,7 +174,7 @@ export default tseslint.config(
               message: "Import the module directly, not the barrel.",
             },
             {
-              group: ["@jhleeweb/squircle-design-system", "@jhleeweb/squircle-design-system/*"],
+              group: ["@jhleeweb/jhlee-design-system", "@jhleeweb/jhlee-design-system/*"],
               message: "Inside the package, import relative modules.",
             },
             {

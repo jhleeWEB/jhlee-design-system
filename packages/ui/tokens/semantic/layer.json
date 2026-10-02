@@ -1,9 +1,9 @@
 {
   "$description": "층위 — radius · shadow 사다리(Tailwind @theme)와 z-index 층(:root --layer-* + 생성 @utility z-*, #18). radius·shadow 는 shipped 캔버스 툴(tldraw)의 라이브 DOM 값을 이 제품의 밀도로 누른 것. radius 이름은 shadcn 의 sm/md/lg/xl(6/8/12/16 체감값, B5 #22)에 16px 이하 작은 표시용 xs(4px, #80)를 더했다 — 옛 역할 이름(chip/control/card/float/modal)의 alias 는 3.0.0 에서 지웠다(#49). reset 은 Tailwind 기본 사다리를 지워 역할 이름만 남긴다. 값은 전부 px 리터럴 고정이다 — 스쿼클(#26·#27)은 사용자 결정(2026-09-30, #36)으로 폐기했다.",
-  "$extensions": { "sds": { "scope": "theme" } },
+  "$extensions": { "jds": { "scope": "theme" } },
   "radius": {
     "$type": "dimension",
-    "$extensions": { "sds": { "reset": true } },
+    "$extensions": { "jds": { "reset": true } },
     "none": { "$value": "0", "$description": "캔버스 · 도면 요소 · 표 셀." },
     "xs": {
       "$value": "4px",
@@ -20,7 +20,7 @@
   },
   "corner": {
     "$description": "곡률 — 결정 기록. #26·#27 이 `corner-shape: squircle`(K=2) + 보정 계수 1.5 를 `@supports` 안에서 들였으나, Chromium 에서 초타원의 안쪽 윤곽 간격 특성으로 1px 테두리가 모서리에서 두꺼워 보여 사용자 결정(2026-09-30, #36)으로 폐기했다. 값은 원호(round)·계수 1 고정이고 `@supports` 재정의는 없다 — 두 변수는 옛 소비자의 `var(--corner-*)` 참조가 비지 않게 남긴 호환 alias 다. 규칙 파일 src/corner.css 는 비어 있다.",
-    "$extensions": { "sds": { "scope": "root" } },
+    "$extensions": { "jds": { "scope": "root" } },
     "shape": {
       "$type": "keyword",
       "$value": "round",
@@ -34,7 +34,7 @@
   },
   "shadow": {
     "$type": "shadow",
-    "$extensions": { "sds": { "reset": true } },
+    "$extensions": { "jds": { "reset": true } },
     "none": { "$value": "none" },
     "chip": { "$value": "0 1px 2px rgb(25 31 40 / 0.05)" },
     "card": { "$value": "0 1px 2px rgb(25 31 40 / 0.04), 0 4px 12px rgb(25 31 40 / 0.05)" },
@@ -49,7 +49,7 @@
   "layer": {
     "$type": "number",
     "$description": "z-index 층 — 이름이 곧 순서다. 오늘 모든 오버레이가 z-50 하나라 겹치는 순서가 DOM 순서(포털이 붙는 순)에 달렸다. scrim(40) 바로 위에 modal(41)이 서고, 그 위에 팝오버 → 토스트 → 툴팁이 선다.",
-    "$extensions": { "sds": { "scope": "root", "utility": { "prefix": "z", "properties": ["z-index"] } } },
+    "$extensions": { "jds": { "scope": "root", "utility": { "prefix": "z", "properties": ["z-index"] } } },
     "raised": { "$value": 1, "$description": "같은 스택 안에서 한 칸 위 — 고정 헤더 · 카드 위의 조치 버튼." },
     "sticky": { "$value": 10, "$description": "스크롤을 따라 붙는 것 — 표 머리 · 상단바." },
     "scrim": { "$value": 40, "$description": "모달·서랍의 어둡히는 막." },

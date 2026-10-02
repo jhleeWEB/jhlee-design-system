@@ -1,4 +1,4 @@
-/* Squircle 디자인 시스템 — 토큰(#18)
+/* jhlee design system — 토큰(#18)
  *
  * 토큰 값은 여기 없다. 정본은 `packages/ui/tokens/` 의 DTCG JSON 이고 생성기(`tokens/build.mjs`)가 아래 파일을 쓴다:
  *   generated/tokens.css   :root 원시(--palette-*) · 캔버스(--canvas-*) · 치수·간격·시간·층위 · 크롬 라이트/다크(--chrome-*) · reduced-motion
@@ -7,7 +7,7 @@
  * 손 CSS 로 값을 적던 때(#15 이전)의 원칙 세 개는 그대로다 — 1. 도면 면은 radius 0 · 그림자 없음 · 무채색 · 다크 없음(캔버스),
  * 2. 유채색은 판정에만, 3. 수치는 mono + tabular-nums. 아래 요소 규칙이 그 원칙의 직접 결과이고, 값이 아니라 «규칙» 이라 손으로 남는다.
  *
- * 쓰는 법: 토큰만 필요하면 `@import "@jhleeweb/squircle-design-system/tokens.css"`. 컴포넌트까지 쓰면 theme.css 가 이 파일을 먼저 싣는다.
+ * 쓰는 법: 토큰만 필요하면 `@import "@jhleeweb/jhlee-design-system/tokens.css"`. 컴포넌트까지 쓰면 theme.css 가 이 파일을 먼저 싣는다.
  */
 
 @import "./generated/tokens.css";

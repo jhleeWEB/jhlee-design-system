@@ -1,11 +1,11 @@
 /**
- * `@jhleeweb/squircle-design-system` — Squircle Design System(AARO 디자인 시스템에서 분리).
+ * `@jhleeweb/jhlee-design-system` — jhlee design system(AARO 디자인 시스템에서 분리).
  *
  * 도면 캔버스와 UI 크롬을 가른 토큰 위의 컨트롤 · 오버레이 · 피드백 · 내비게이션 · 데이터 층이다. Tailwind v4 로 그려지므로 앱이
  * **테마 CSS 를 함께** 불러야 한다:
  *
  *     @import "tailwindcss";
- *     @import "@jhleeweb/squircle-design-system/theme.css";
+ *     @import "@jhleeweb/jhlee-design-system/theme.css";
  *
  * theme.css 가 `@source "./"` 로 자기 자신을 등록하므로 소비자는 이 한 줄로 끝난다. 그래도 컴포넌트가
  * 스타일 없이 렌더되면(에러가 나지 않는 조용한 실패) 산출 CSS 에 `.rounded-md` 가 있는지부터 본다.

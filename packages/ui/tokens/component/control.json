@@ -1,6 +1,6 @@
 {
   "$description": "컨트롤 높이 — Tailwind @theme 의 옛 이름 --height-ctl*(h-ctl · w-ctl 유틸리티는 theme.css 가 손으로 낸다)이 :root 의 size.control.* 을 참조한다. 값은 30/36/44 그대로이고 개명은 B5.",
-  "$extensions": { "sds": { "scope": "theme" } },
+  "$extensions": { "jds": { "scope": "theme" } },
   "height": {
     "$type": "dimension",
     "ctl-sm": { "$value": "{size.control.sm}" },

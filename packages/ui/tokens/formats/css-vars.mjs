@@ -1,4 +1,4 @@
-/* sds/css-vars — `generated/tokens.css`(scope root · chrome). 옛 이름 alias 의 `generated/legacy.css`(scope legacy)는 3.0.0 에서 지웠다(#49).
+/* jds/css-vars — `generated/tokens.css`(scope root · chrome). 옛 이름 alias 의 `generated/legacy.css`(scope legacy)는 3.0.0 에서 지웠다(#49).
  *
  * 블록 모양은 `src/__tests__/tokens/model.ts` 의 scopeOf 가 선택자로 읽는 것과 같아야 한다(옛 손 theme.css 의 모양이다):
  *   :root                                  base · palette(+alias) · canvas · component
@@ -9,7 +9,7 @@
  * `@supports` 블록은 없다 — #26 의 진행형 향상(corner-shape)은 스쿼클 폐기(#36)와 함께 지웠다. 모든 토큰은 어느 엔진에서나 한 값이다.
  * 다크를 두 번 찍는 이유(손 CSS 주석 그대로): OS 설정을 따르되 토글이 이기고, `ThemeContrast` 스토리가 서브트리에 속성을 단다.
  * 다크 본문은 options.dark 로 받는다 — source 로 넣으면 같은 키가 두 번 정의돼 SD 가 충돌을 낸다. */
-import { block, byOrder, decl, groupBy, HEADER, sds, tokenDeclarations } from "./shared.mjs";
+import { block, byOrder, decl, groupBy, HEADER, jds, tokenDeclarations } from "./shared.mjs";
 
 const LIGHT_SELECTOR = ':root,\n[data-theme="light"]';
 const DARK_MEDIA = "@media (prefers-color-scheme: dark)";
@@ -20,7 +20,7 @@ const REDUCED_MOTION = "@media (prefers-reduced-motion: reduce)";
 /** `:root` 본문 — 파일마다 `/* file *\/` 한 줄로 출처를 남긴다. */
 function rootLines(tokens, outputReferences) {
   const lines = [];
-  for (const [file, group] of groupBy(tokens, (t) => sds(t).file)) {
+  for (const [file, group] of groupBy(tokens, (t) => jds(t).file)) {
     if (lines.length) lines.push("");
     lines.push(`/* ${file} */`);
     for (const t of group) lines.push(...tokenDeclarations(t, outputReferences).map(decl));
@@ -31,18 +31,18 @@ function rootLines(tokens, outputReferences) {
 /** reducedMotion 재정의가 있는 토큰 → `--name: value;`. */
 export const reducedMotionLines = (tokens) =>
   tokens
-    .filter((t) => sds(t).reducedMotion !== undefined)
-    .map((t) => `--${t.name}: ${sds(t).reducedMotion};`);
+    .filter((t) => jds(t).reducedMotion !== undefined)
+    .map((t) => `--${t.name}: ${jds(t).reducedMotion};`);
 
 /** @type {import("style-dictionary/types").Format["format"]} */
 export function cssVars({ dictionary, options }) {
   const { outputReferences = true, dark = [] } = options;
   const all = dictionary.allTokens
-    .filter((t) => sds(t).scope === "root" || sds(t).scope === "chrome")
+    .filter((t) => jds(t).scope === "root" || jds(t).scope === "chrome")
     .sort(byOrder);
 
-  const root = all.filter((t) => sds(t).scope === "root");
-  const chrome = all.filter((t) => sds(t).scope === "chrome");
+  const root = all.filter((t) => jds(t).scope === "root");
+  const chrome = all.filter((t) => jds(t).scope === "chrome");
 
   // 다크는 라이트와 같은 이름 집합이어야 한다 — 스키마가 먼저 보지만, 포맷도 자기 입력을 믿지 않는다.
   const lightNames = chrome.map((t) => t.name).sort();

@@ -9,7 +9,7 @@
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 PKG="$ROOT/packages/ui"
-WORK=${SMOKE_NEXT_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/sds-smoke-next.XXXXXX")}
+WORK=${SMOKE_NEXT_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/jds-smoke-next.XXXXXX")}
 NEXT_VERSION=${SMOKE_NEXT_VERSION:-latest}
 echo "smoke-next: work dir $WORK (next@$NEXT_VERSION)"
 
@@ -24,12 +24,12 @@ APP="$WORK/app"
 mkdir -p "$APP/app/client"
 cat > "$APP/package.json" <<JSON
 {
-  "name": "sds-smoke-next",
+  "name": "jds-smoke-next",
   "private": true,
   "type": "module",
   "scripts": { "build": "next build" },
   "dependencies": {
-    "@jhleeweb/squircle-design-system": "file:$TARBALL",
+    "@jhleeweb/jhlee-design-system": "file:$TARBALL",
     "next": "$NEXT_VERSION",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -64,7 +64,7 @@ cat > "$APP/tsconfig.json" <<'JSON'
 JSON
 cat > "$APP/app/globals.css" <<'CSS'
 @import "tailwindcss/theme.css" layer(theme);
-@import "@jhleeweb/squircle-design-system/theme.css";
+@import "@jhleeweb/jhlee-design-system/theme.css";
 @import "tailwindcss/utilities.css" source(none);
 @source "./";
 CSS
@@ -83,7 +83,7 @@ TSX
 # 서버 컴포넌트 — *Variants 만 부른다(지시문 없는 모듈이어야 서버에서 실행된다).
 cat > "$APP/app/page.tsx" <<'TSX'
 import Link from "next/link";
-import { alertVariants, badgeVariants, buttonVariants, cardVariants, inputVariants, modalVariants, toastVariants } from "@jhleeweb/squircle-design-system";
+import { alertVariants, badgeVariants, buttonVariants, cardVariants, inputVariants, modalVariants, toastVariants } from "@jhleeweb/jhlee-design-system";
 
 export default function Page() {
   const classes = [
@@ -107,8 +107,8 @@ TSX
 # 클라이언트 페이지 — 전 export 를 로드하고 안정된 부분집합을 렌더한다.
 cat > "$APP/app/client/page.tsx" <<'TSX'
 "use client";
-import * as DS from "@jhleeweb/squircle-design-system";
-import { Alert, Badge, Button, ButtonGroup, Card, Input, Progress, Separator, Skeleton, Spinner, StatusDot, ToastProvider, TooltipProvider } from "@jhleeweb/squircle-design-system";
+import * as DS from "@jhleeweb/jhlee-design-system";
+import { Alert, Badge, Button, ButtonGroup, Card, Input, Progress, Separator, Skeleton, Spinner, StatusDot, ToastProvider, TooltipProvider } from "@jhleeweb/jhlee-design-system";
 
 export default function ClientPage() {
   const names = Object.keys(DS).sort();

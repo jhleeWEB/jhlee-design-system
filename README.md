@@ -1,7 +1,8 @@
-# Squircle Design System
+# jhlee design system
 
-`@jhleeweb/squircle-design-system` — 도면 캔버스와 UI 크롬을 가른 토큰, Radix 기반 컨트롤 · 오버레이 · 피드백 · 내비게이션 · 데이터 층.
+`@jhleeweb/jhlee-design-system` — 도면 캔버스와 UI 크롬을 가른 토큰, Radix 기반 컨트롤 · 오버레이 · 피드백 · 내비게이션 · 데이터 층.
 3.0.0 에서 3열 작업대 셸(`./legacy`)과 옛 이름 alias 를 지웠다 — 이행은 [`packages/ui/README.md`](packages/ui/README.md) «2.x → 3.0».
+4.0.0 에서 이름을 `squircle-design-system`(패키지 `@jhleeweb/squircle-design-system`)에서 바꿨다(#91) — 이행은 같은 파일의 «3.x → 4.0».
 GitHub Packages(npm.pkg.github.com)에 **비공개**로 발행한다. `aaro-lab/apartment-configurator` 의 `packages/ui` 를 2026-09-29 에 이력째 분리했다.
 
 ## 쓰기
@@ -13,19 +14,19 @@ GitHub Packages(npm.pkg.github.com)에 **비공개**로 발행한다. `aaro-lab/
 ```
 
 ```bash
-NODE_AUTH_TOKEN=<classic PAT read:packages> pnpm add @jhleeweb/squircle-design-system
+NODE_AUTH_TOKEN=<classic PAT read:packages> pnpm add @jhleeweb/jhlee-design-system
 ```
 
 ```css
 /* 앱 진입 CSS */
 @import "tailwindcss/theme.css" layer(theme);
-@import "@jhleeweb/squircle-design-system/theme.css";
+@import "@jhleeweb/jhlee-design-system/theme.css";
 @import "tailwindcss/utilities.css" source(none);
 @source "./";
 ```
 
 ```tsx
-import { Button, Card, ToastProvider } from "@jhleeweb/squircle-design-system";
+import { Button, Card, ToastProvider } from "@jhleeweb/jhlee-design-system";
 ```
 
 토큰 값·이름·컴포넌트 계약은 [`CLAUDE.md`](CLAUDE.md) 「도메인 지침」과 [`docs/architecture/design-system-patterns.md`](docs/architecture/design-system-patterns.md).
@@ -33,8 +34,8 @@ import { Button, Card, ToastProvider } from "@jhleeweb/squircle-design-system";
 ## AGENTS
 
 에이전트가 이 패키지를 지어내지 않고 쓰게 하는 산출물이 패키지에 실린다 — `llms.txt`(색인) · `dist/components.manifest.json`(기계 판독 정본) ·
-`docs/components/*.md` · 린트 프리셋 `@jhleeweb/squircle-design-system/eslint` · bin `sds-agent`. 소비 레포 루트에서 `npx sds-agent sync` 를 한 번 돌리면
-`AGENTS.md` 에 «디자인 시스템 계약(에이전트)» 관리 블록이 들어가고 `.claude/skills/squircle-ds/`(Analyze → Compose → Audit)가 생긴다(멱등, 갱신 때마다 다시).
+`docs/components/*.md` · 린트 프리셋 `@jhleeweb/jhlee-design-system/eslint` · bin `jds-agent`. 소비 레포 루트에서 `npx jds-agent sync` 를 한 번 돌리면
+`AGENTS.md` 에 «디자인 시스템 계약(에이전트)» 관리 블록이 들어가고 `.claude/skills/jhlee-ds/`(Analyze → Compose → Audit)가 생긴다(멱등, 갱신 때마다 다시).
 자세한 것은 [`packages/ui/README.md`](packages/ui/README.md) «AGENTS».
 
 ## 개발
@@ -42,8 +43,8 @@ import { Button, Card, ToastProvider } from "@jhleeweb/squircle-design-system";
 ```bash
 pnpm install && pnpm storybook   # 카탈로그 http://localhost:6006 (Pages/Workbench 가 제품 화면 복제, 컴포넌트마다 Default · Variants · ThemeContrast)
 pnpm verify                      # typecheck + lint + tokens:check + manifest:check + test + build
-pnpm --filter @jhleeweb/squircle-design-system test:stories   # 스토리를 Chromium 에서 play + axe
-pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 기준선 갱신은 vrt:update(도커)만
+pnpm --filter @jhleeweb/jhlee-design-system test:stories   # 스토리를 Chromium 에서 play + axe
+pnpm --filter @jhleeweb/jhlee-design-system vrt            # 시각 회귀(storybook:build 뒤). 기준선 갱신은 vrt:update(도커)만
 ```
 
 ## 발행

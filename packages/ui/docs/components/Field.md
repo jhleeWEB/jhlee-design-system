@@ -1,6 +1,6 @@
 # Field
 
-`import { Field, FieldControl, FieldDescription, FieldError, FieldLabel } from "@jhleeweb/squircle-design-system"`
+`import { Field, FieldControl, FieldDescription, FieldError, FieldLabel } from "@jhleeweb/jhlee-design-system"`
 
 _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만든다. 손으로 고치지 않는다; 설명은 소스의 JSDoc 을 고친다._
 

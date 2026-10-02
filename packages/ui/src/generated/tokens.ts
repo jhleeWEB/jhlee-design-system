@@ -1,7 +1,7 @@
 /* 생성물 — 손으로 고치지 않는다.
  * 정본: packages/ui/tokens/ 의 DTCG JSON → tokens/build.mjs · 재생성 `pnpm tokens:build` · 최신성 `pnpm tokens:check` (#15) */
 
-/** 시간 상수(ms) — tokens/**.json 의 duration 가운데 `$extensions.sds.ts` 가 붙은 것. CSS 쪽 짝(--duration-*)은 같은 토큰에서 나온다. */
+/** 시간 상수(ms) — tokens/**.json 의 duration 가운데 `$extensions.jds.ts` 가 붙은 것. CSS 쪽 짝(--duration-*)은 같은 토큰에서 나온다. */
 export const MOTION = {
   /** duration.instant — 0ms */
   instantMs: 0,

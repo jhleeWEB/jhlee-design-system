@@ -25,7 +25,7 @@ jobs:
       # 생성 문서(llms.txt · docs/components)가 매니페스트(소스의 export·JSDoc)와 같은가 — JSDoc 을 고치고 재생성을 잊은 PR 을 잡는다(#31)
       - run: pnpm manifest:check
       # arch 프로젝트의 토큰 스펙만 — 참조 무결성 · 사다리 · 스키마 · MOTION↔CSS · WCAG 대비 래칫(contrast.spec, C2)
-      - run: pnpm --filter @jhleeweb/squircle-design-system test:tokens
+      - run: pnpm --filter @jhleeweb/jhlee-design-system test:tokens
   unit:
     runs-on: ubuntu-latest
     steps:
@@ -48,7 +48,7 @@ jobs:
           name: storybook-static
           path: packages/ui/storybook-static
           retention-days: 7
-      - run: pnpm --filter @jhleeweb/squircle-design-system test:stories
+      - run: pnpm --filter @jhleeweb/jhlee-design-system test:stories
   vrt:
     needs: storybook
     runs-on: ubuntu-latest
@@ -89,7 +89,7 @@ jobs:
           pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics testing eslint icons   # CSS 서브패스는 타입 해석 대상이 아니다
           tar -tzf /tmp/pack/*.tgz | tee /tmp/pack/list.txt
           # AI 친화 산출물(#31): 프리셋 · bin · 매니페스트 · llms.txt · AGENTS 블록 · 스킬 · 컴포넌트 문서
-          for f in package/dist/index.js package/dist/index.d.ts package/dist/canvas-metrics.js package/dist/testing/index.js package/dist/testing/index.d.ts package/dist/eslint/index.js package/dist/eslint/index.d.ts package/dist/agent/cli.js package/dist/components.manifest.json package/llms.txt package/agent/AGENTS.block.md package/agent/skills/squircle-ds/SKILL.md package/docs/components/README.md package/dist/theme.css package/dist/corner.css package/dist/tokens.css package/dist/generated/tokens.css package/dist/generated/theme.tailwind.css package/dist/canvas.css; do
+          for f in package/dist/index.js package/dist/index.d.ts package/dist/canvas-metrics.js package/dist/testing/index.js package/dist/testing/index.d.ts package/dist/eslint/index.js package/dist/eslint/index.d.ts package/dist/agent/cli.js package/dist/components.manifest.json package/llms.txt package/agent/AGENTS.block.md package/agent/skills/jhlee-ds/SKILL.md package/docs/components/README.md package/dist/theme.css package/dist/corner.css package/dist/tokens.css package/dist/generated/tokens.css package/dist/generated/theme.tailwind.css package/dist/canvas.css; do
             grep -qx "$f" /tmp/pack/list.txt || { echo "missing $f"; exit 1; }
           done
           ! grep -q '__tests__' /tmp/pack/list.txt
@@ -97,7 +97,7 @@ jobs:
           ! grep -q 'package/dist/legacy/' /tmp/pack/list.txt   # ./legacy · shell.css 는 3.0.0 에서 지웠다(#49)
           ! grep -q '\.stories\.' /tmp/pack/list.txt   # stories 가 d.ts 로 새면 여기서 잡힌다(tsconfig.stories.json 주석)
       - name: 패키지 계약 스펙 — dist 가 있을 때만 타는 분기(publishConfig 대상 존재 · dist 첫 줄 "use client" 잔존, #11)
-        run: pnpm --filter @jhleeweb/squircle-design-system exec vitest run --project=arch src/__tests__/package
+        run: pnpm --filter @jhleeweb/jhlee-design-system exec vitest run --project=arch src/__tests__/package
   pr-title:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest

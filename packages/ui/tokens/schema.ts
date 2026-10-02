@@ -15,7 +15,7 @@ import { join, relative, sep } from "node:path";
 
 import { z } from "zod";
 
-/** 토큰이 어느 생성물의 어느 블록으로 나가는가 — 파일 머리의 `$extensions.sds.scope` 가 정하고 그룹·토큰이 물려받거나 덮는다(dimension.json 의 size 그룹처럼). */
+/** 토큰이 어느 생성물의 어느 블록으로 나가는가 — 파일 머리의 `$extensions.jds.scope` 가 정하고 그룹·토큰이 물려받거나 덮는다(dimension.json 의 size 그룹처럼). */
 export const SCOPES = ["root", "chrome", "theme", "theme-inline"] as const;
 /** 스코프 이름. */
 export type Scope = (typeof SCOPES)[number];
@@ -63,7 +63,7 @@ const utilitySchema = z.strictObject({
   properties: z.array(z.string().min(1)).min(1),
 });
 
-const sdsSchema = z.strictObject({
+const jdsSchema = z.strictObject({
   scope: z.enum(SCOPES).optional(),
   /** 그룹에만 — `--<ns>-*: initial` 로 Tailwind 기본 사다리를 지운다(혼용 규칙 ③·④). */
   reset: z.boolean().optional(),
@@ -74,7 +74,7 @@ const sdsSchema = z.strictObject({
   /** 토큰에만 — `@media (prefers-reduced-motion: reduce)` 에서의 값. */
   reducedMotion: z.string().optional(),
 });
-const extensionsSchema = z.looseObject({ sds: sdsSchema.optional() });
+const extensionsSchema = z.looseObject({ jds: jdsSchema.optional() });
 
 const dimension = z
   .string()
@@ -115,8 +115,8 @@ const valueSchemas: Readonly<Record<TokenType, z.ZodType>> = {
   animation: z.string().min(1),
 };
 
-/** `$extensions.sds` 의 모양. */
-export type SdsExtension = z.infer<typeof sdsSchema>;
+/** `$extensions.jds` 의 모양. */
+export type JdsExtension = z.infer<typeof jdsSchema>;
 /** 토큰 값 — `$type` 이 정한다. */
 export type TokenValue =
   string | number | readonly number[] | { readonly fontSize: string; readonly lineHeight: string };
@@ -128,7 +128,7 @@ export interface FlatToken {
   readonly type: TokenType;
   readonly value: TokenValue;
   /** 파일·그룹에서 물려받은 것 위에 토큰 자신의 것을 얹은 결과. `scope` 는 늘 있다. */
-  readonly sds: SdsExtension & { readonly scope: Scope };
+  readonly jds: JdsExtension & { readonly scope: Scope };
   /** 층 순서(primitive → semantic → component) → 파일 → 선언 순. 생성물이 이 순서를 지킨다. */
   readonly order: number;
   readonly description?: string;
@@ -181,7 +181,7 @@ export function referencesIn(value: TokenValue): string[] {
 
 interface Inherited {
   readonly type: TokenType | undefined;
-  readonly sds: SdsExtension;
+  readonly jds: JdsExtension;
   /** 그룹의 `$deprecated` 는 안의 토큰이 물려받는다 — 파일 머리에 한 번 적으면 된다. */
   readonly deprecated: boolean | string | undefined;
 }
@@ -198,8 +198,8 @@ function walkFile(
     return;
   }
   const rootExt = extensionsSchema.safeParse(root.$extensions ?? {});
-  const scope = rootExt.success ? rootExt.data.sds?.scope : undefined;
-  if (!scope) errors.push(`${file}: 파일 머리에 $extensions.sds.scope 가 있어야 한다(${SCOPES.join(" | ")})`);
+  const scope = rootExt.success ? rootExt.data.jds?.scope : undefined;
+  if (!scope) errors.push(`${file}: 파일 머리에 $extensions.jds.scope 가 있어야 한다(${SCOPES.join(" | ")})`);
 
   const visit = (node: Record<string, unknown>, path: readonly string[], inherited: Inherited): void => {
     const where = `${file} ${path.join(".") || "(root)"}`;
@@ -217,7 +217,7 @@ function walkFile(
       errors.push(
         `${where}: $extensions — ${ext.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`,
       );
-    const own: SdsExtension = ext.success ? (ext.data.sds ?? {}) : {};
+    const own: JdsExtension = ext.success ? (ext.data.jds ?? {}) : {};
     const isToken = "$value" in node;
     if (
       node.$deprecated !== undefined &&
@@ -233,17 +233,17 @@ function walkFile(
       if (own.reset !== undefined) errors.push(`${where}: reset 은 그룹에만 둔다`);
       if (own.utility !== undefined) errors.push(`${where}: utility 는 그룹에만 둔다`);
       if (!type) errors.push(`${where}: $type 이 없다(자기 것도, 물려받은 것도)`);
-      const sds = { ...inherited.sds, ...own };
+      const jds = { ...inherited.jds, ...own };
       if (type) {
         const parsed = valueSchemas[type].safeParse(node.$value);
         if (!parsed.success)
           errors.push(`${where}: ${type} 값 — ${parsed.error.issues.map((i) => i.message).join("; ")}`);
-        if (sds.ts !== undefined && type !== "duration")
-          errors.push(`${where}: sds.ts 는 duration 에만 붙는다`);
-        if (sds.reducedMotion !== undefined && type !== "duration" && type !== "animation")
-          errors.push(`${where}: sds.reducedMotion 은 duration·animation 에만 붙는다`);
+        if (jds.ts !== undefined && type !== "duration")
+          errors.push(`${where}: jds.ts 는 duration 에만 붙는다`);
+        if (jds.reducedMotion !== undefined && type !== "duration" && type !== "animation")
+          errors.push(`${where}: jds.reducedMotion 은 duration·animation 에만 붙는다`);
       }
-      if (sds.reset && sds.scope !== "theme" && sds.scope !== "theme-inline")
+      if (jds.reset && jds.scope !== "theme" && jds.scope !== "theme-inline")
         errors.push(`${where}: reset 은 theme · theme-inline 스코프에서만 뜻이 있다`);
       if (node.$description !== undefined && typeof node.$description !== "string")
         errors.push(`${where}: $description 은 문자열`);
@@ -254,7 +254,7 @@ function walkFile(
         file,
         type: type ?? "number",
         value: node.$value as TokenValue,
-        sds: { ...sds, scope: sds.scope ?? "root" },
+        jds: { ...jds, scope: jds.scope ?? "root" },
         order: counter.n++,
         ...(typeof node.$description === "string" ? { description: node.$description } : {}),
         ...(deprecated !== undefined ? { deprecated } : {}),
@@ -264,7 +264,7 @@ function walkFile(
 
     if (own.ts !== undefined || own.reducedMotion !== undefined)
       errors.push(`${where}: ts · reducedMotion 은 토큰에만 둔다`);
-    const next: Inherited = { type, sds: { ...inherited.sds, ...own }, deprecated };
+    const next: Inherited = { type, jds: { ...inherited.jds, ...own }, deprecated };
     for (const [key, child] of Object.entries(node)) {
       if (key.startsWith("$")) continue;
       if (!isObject(child)) {
@@ -274,7 +274,7 @@ function walkFile(
       visit(child, [...path, key], next);
     }
   };
-  visit(root, [], { type: undefined, sds: scope ? { scope } : {}, deprecated: undefined });
+  visit(root, [], { type: undefined, jds: scope ? { scope } : {}, deprecated: undefined });
 }
 
 /**
@@ -348,7 +348,7 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
       errors.push(`${t.file}: chrome.* 는 ${CHROME_LIGHT_FILE} 에만 둔다`);
     if (t.file === CHROME_LIGHT_FILE && t.path[0] !== "chrome")
       errors.push(`${t.file}: 크롬 파일에 chrome.* 아닌 ${key(t)}`);
-    if (t.sds.scope === "chrome" && t.file !== CHROME_LIGHT_FILE)
+    if (t.jds.scope === "chrome" && t.file !== CHROME_LIGHT_FILE)
       errors.push(`${t.file}: chrome 스코프는 크롬 파일만 쓴다`);
     if (t.path[0] === "canvas" && t.file !== CANVAS_FILE)
       errors.push(`${t.file}: canvas.* 는 ${CANVAS_FILE} 에만 둔다`);
@@ -361,7 +361,7 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
   for (const t of dark) {
     if (t.path[0] !== "chrome")
       errors.push(`${DARK_FILE}: 다크는 크롬만 갈린다 — ${key(t)} 는 여기 둘 수 없다`);
-    if (t.sds.scope !== "chrome") errors.push(`${DARK_FILE}: 스코프는 chrome 이어야 한다`);
+    if (t.jds.scope !== "chrome") errors.push(`${DARK_FILE}: 스코프는 chrome 이어야 한다`);
     if (!chromeLight.has(key(t))) errors.push(`${DARK_FILE}: ${key(t)} 가 라이트에 없다`);
   }
   for (const k of chromeLight)
@@ -370,10 +370,10 @@ export function validateTokenSources(files: TokenSources): ValidationResult {
 
   const tsNames = new Map<string, string>();
   for (const t of light) {
-    if (t.sds.ts === undefined) continue;
-    const prev = tsNames.get(t.sds.ts);
-    if (prev) errors.push(`${t.file}: MOTION.${t.sds.ts} 가 ${prev} 에도 있다`);
-    else tsNames.set(t.sds.ts, key(t));
+    if (t.jds.ts === undefined) continue;
+    const prev = tsNames.get(t.jds.ts);
+    if (prev) errors.push(`${t.file}: MOTION.${t.jds.ts} 가 ${prev} 에도 있다`);
+    else tsNames.set(t.jds.ts, key(t));
   }
 
   return { errors, tokens: light, dark };

@@ -10,13 +10,13 @@ export const HEADER = [
   "",
 ].join("\n");
 
-/** 토큰의 `$extensions.sds` — 없으면 빈 객체. */
-export const sds = (token) => token.$extensions?.sds ?? {};
+/** 토큰의 `$extensions.jds` — 없으면 빈 객체. */
+export const jds = (token) => token.$extensions?.jds ?? {};
 
 /** 정본 순서(층 → 파일 → 선언). */
-export const byOrder = (a, b) => sds(a).order - sds(b).order;
+export const byOrder = (a, b) => jds(a).order - jds(b).order;
 
-/** `{a.b-c}` → `var(--a-b-c)`. 이름 규칙은 name/sds 변환(path.join("-"))과 같다. */
+/** `{a.b-c}` → `var(--a-b-c)`. 이름 규칙은 name/jds 변환(path.join("-"))과 같다. */
 export const refsToVars = (text) =>
   text.replace(/\{([a-z0-9.-]+)\}/g, (_, path) => `var(--${path.split(".").join("-")})`);
 

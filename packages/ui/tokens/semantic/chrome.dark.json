@@ -1,6 +1,6 @@
 {
   "$description": "크롬 다크 — 생성기가 한 번 읽어 @media (prefers-color-scheme: dark) 블록과 [data-theme=dark] 블록에 같은 본문을 찍는다. 이름은 라이트와 같은 shadcn 어휘(B5, #22). 판정색은 원시 사다리 참조(값은 옛 다크 hex 그대로), 뉴트럴은 아직 raw hex 다(primary · info 는 #83 에서 Klein 사다리 참조로 옮겼다). 다크에서는 세 톤 모두 solid 위 흰 글자가 4.5:1 을 못 넘어 foreground 가 cool.950 이고 hover 는 밝아진다(#18).",
-  "$extensions": { "sds": { "scope": "chrome" } },
+  "$extensions": { "jds": { "scope": "chrome" } },
   "chrome": {
     "$type": "color",
     "background": { "$value": "#0e1116" },

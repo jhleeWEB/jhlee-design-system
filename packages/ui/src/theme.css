@@ -1,4 +1,4 @@
-/* Squircle 디자인 시스템 — 테마(#1198 → #18)
+/* jhlee design system — 테마(#1198 → #18)
  *
  * 값은 전부 생성물이다. 이 파일은 «규칙» 만 든다 — keyframes · 손 @utility · `.ds-*` 컴포넌트 규칙 · 컴포넌트 CSS 의 @import · @source 자기 등록.
  *   tokens.css                      토큰(:root · 크롬 라이트/다크) — generated/ 를 재수출한다
@@ -17,7 +17,7 @@
  *
  * 쓰는 법 — 앱 진입 CSS 에서:
  *     @import "tailwindcss/theme.css" layer(theme);
- *     @import "@jhleeweb/squircle-design-system/theme.css";
+ *     @import "@jhleeweb/jhlee-design-system/theme.css";
  *     @import "tailwindcss/utilities.css" source(none);
  * 이 파일이 아래 `@source "./"` 로 자기 자신을 등록하므로 소비자가 @source 를 따로 적지 않아도 패키지 안의 클래스가 굽힌다.
  */

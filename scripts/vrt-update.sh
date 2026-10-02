@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # VRT 기준선 갱신 — CI 의 vrt job 과 **같은 이미지**에서만 만든다. macOS 의 Chromium 은 폰트 래스터라이즈가 달라
-# 로컬 PNG 를 커밋하면 CI 가 곧바로 빨개진다. 실행: `pnpm --filter @jhleeweb/squircle-design-system vrt:update`.
+# 로컬 PNG 를 커밋하면 CI 가 곧바로 빨개진다. 실행: `pnpm --filter @jhleeweb/jhlee-design-system vrt:update`.
 #
 # `VRT_CHECK=1` 이면 갱신하지 않고 **검사만** 한다 — 같은 컨테이너에서 `--update-snapshots` 없이 돌려 현재 기준선과의 diff 를 종료 코드로 낸다
 # (시각이 바뀌면 안 되는 PR 이 머지 전에 0 diff 를 확인하는 길, C1). 실패 리포트는 vrt/report 로 되돌려 쓴다.

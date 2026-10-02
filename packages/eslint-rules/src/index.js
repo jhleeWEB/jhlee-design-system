@@ -1,7 +1,7 @@
 /* 디자인 시스템 전용 로컬 ESLint 규칙(`ds/*`).
  *
  * 왜 워크스페이스 패키지인가: 규칙은 eslint.config.js 안에 인라인으로 둘 수도 있지만, 그러면 RuleTester 단위
- * 테스트를 붙일 자리가 없고 Phase C 의 소비자 프리셋(`@jhleeweb/squircle-design-system/eslint`)으로 옮길 때
+ * 테스트를 붙일 자리가 없고 Phase C 의 소비자 프리셋(`@jhleeweb/jhlee-design-system/eslint`)으로 옮길 때
  * 다시 떼어내야 한다. 처음부터 패키지로 두면 그 이동이 import 경로 하나로 끝난다.
  *
  * 왜 JS + JSDoc 인가: ESLint 가 config 를 Node 로 직접 import 하므로 TS 소스면 jiti 나 Node 의 type stripping 에

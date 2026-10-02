@@ -1,5 +1,5 @@
 /**
- * `@jhleeweb/squircle-design-system/eslint` — 소비 레포용 ESLint flat config 조각(계획 §2.5-a, #31).
+ * `@jhleeweb/jhlee-design-system/eslint` — 소비 레포용 ESLint flat config 조각(계획 §2.5-a, #31).
  *
  * «인라인 CSS 덮어쓰기 금지·토큰 밖 값 금지» 는 문서가 아니라 린트가 고정한다 — 문서는 LLM 이 읽고도 잊지만 린트는 커밋마다 돈다.
  * 조각이 잡는 것 다섯:
@@ -17,8 +17,8 @@
  *
  * @example
  * // eslint.config.js (소비 레포)
- * import { squircleDesignSystem } from "@jhleeweb/squircle-design-system/eslint";
- * export default [...squircleDesignSystem({ entryPoint: new URL("./src/app/globals.css", import.meta.url).pathname })];
+ * import { jhleeDesignSystem } from "@jhleeweb/jhlee-design-system/eslint";
+ * export default [...jhleeDesignSystem({ entryPoint: new URL("./src/app/globals.css", import.meta.url).pathname })];
  */
 import type { ESLint, Linter } from "eslint";
 import betterTailwindcss from "eslint-plugin-better-tailwindcss";
@@ -40,7 +40,7 @@ export interface RestrictedClass {
 }
 
 /** 프리셋 옵션. */
-export interface SquircleDesignSystemOptions {
+export interface JhleeDesignSystemOptions {
   /** 소비 레포의 진입 CSS 절대 경로(`theme.css` 를 @import 하는 파일) — `no-unknown-classes` 가 이 파일에서 «아는 클래스» 를 읽는다. */
   readonly entryPoint: string;
   /**
@@ -64,29 +64,29 @@ export interface SquircleDesignSystemOptions {
 const FORBIDDEN_ELEMENTS: readonly { element: string; message: string }[] = [
   {
     element: "button",
-    message: "Use <Button> from @jhleeweb/squircle-design-system instead of a raw <button>.",
+    message: "Use <Button> from @jhleeweb/jhlee-design-system instead of a raw <button>.",
   },
   {
     element: "input",
     message:
-      "Use <Input> / <Checkbox> / <Switch> / <RadioGroupItem> from @jhleeweb/squircle-design-system instead of a raw <input>.",
+      "Use <Input> / <Checkbox> / <Switch> / <RadioGroupItem> from @jhleeweb/jhlee-design-system instead of a raw <input>.",
   },
   {
     element: "select",
-    message: "Use <Select> from @jhleeweb/squircle-design-system instead of a raw <select>.",
+    message: "Use <Select> from @jhleeweb/jhlee-design-system instead of a raw <select>.",
   },
   {
     element: "textarea",
-    message: "Use <Textarea> from @jhleeweb/squircle-design-system instead of a raw <textarea>.",
+    message: "Use <Textarea> from @jhleeweb/jhlee-design-system instead of a raw <textarea>.",
   },
   {
     element: "dialog",
     message:
-      "Use <Modal> / <Drawer> / <ConfirmDialog> from @jhleeweb/squircle-design-system instead of a raw <dialog>.",
+      "Use <Modal> / <Drawer> / <ConfirmDialog> from @jhleeweb/jhlee-design-system instead of a raw <dialog>.",
   },
   {
     element: "table",
-    message: "Use <Table> / <DataTable> from @jhleeweb/squircle-design-system instead of a raw <table>.",
+    message: "Use <Table> / <DataTable> from @jhleeweb/jhlee-design-system instead of a raw <table>.",
   },
 ];
 
@@ -135,7 +135,7 @@ export function restrictedClassPatterns(): RestrictedClass[] {
 
 /** 프리셋이 싣는 로컬 규칙 플러그인 `ds` — 소비 레포는 `ds/legacy-tone` 하나를 받는다. */
 export const dsPlugin: ESLint.Plugin = {
-  meta: { name: "@jhleeweb/squircle-design-system/eslint", version: "1" },
+  meta: { name: "@jhleeweb/jhlee-design-system/eslint", version: "1" },
   rules: { "legacy-tone": legacyTone },
 };
 
@@ -143,18 +143,18 @@ export const dsPlugin: ESLint.Plugin = {
  * 소비 레포 flat config 에 펼쳐 넣는 조각. `entryPoint` 는 필수다 — 없으면 `no-unknown-classes` 가 Tailwind 기본 사다리를 «아는 클래스» 로
  * 보고 `text-sm` 을 통과시킨다.
  */
-export function squircleDesignSystem(options: SquircleDesignSystemOptions): Linter.Config[] {
+export function jhleeDesignSystem(options: JhleeDesignSystemOptions): Linter.Config[] {
   const files = [...(options.files ?? ["**/*.{js,jsx,ts,tsx}"])];
   const severity = options.severity ?? "error";
   const styleIgnores = [...(options.styleIgnores ?? [])];
   return [
     {
-      name: "squircle-design-system/elements",
+      name: "jhlee-design-system/elements",
       files,
       rules: { "no-restricted-syntax": [severity, ...elementSelectors()] },
     },
     {
-      name: "squircle-design-system/classes",
+      name: "jhlee-design-system/classes",
       files,
       plugins: { "better-tailwindcss": betterTailwindcss },
       settings: { "better-tailwindcss": { entryPoint: options.entryPoint } },
@@ -168,7 +168,7 @@ export function squircleDesignSystem(options: SquircleDesignSystemOptions): Lint
       },
     },
     {
-      name: "squircle-design-system/inline-style",
+      name: "jhlee-design-system/inline-style",
       files,
       ignores: styleIgnores,
       rules: {
@@ -185,7 +185,7 @@ export function squircleDesignSystem(options: SquircleDesignSystemOptions): Lint
       },
     },
     {
-      name: "squircle-design-system/tone",
+      name: "jhlee-design-system/tone",
       files,
       plugins: { ds: dsPlugin },
       rules: { "ds/legacy-tone": severity },
@@ -193,4 +193,4 @@ export function squircleDesignSystem(options: SquircleDesignSystemOptions): Lint
   ];
 }
 
-export default squircleDesignSystem;
+export default jhleeDesignSystem;

@@ -1,8 +1,10 @@
-# CLAUDE.md — squircle-design-system
+# CLAUDE.md — jhlee-design-system
 
-**Squircle Design System** — 도면 캔버스와 UI 크롬을 가른 토큰(방향 C), 그 위의 Radix 기반 컨트롤 · 오버레이 · 피드백 · 내비게이션 · 데이터 층
-(3열 작업대 셸 `./legacy` 는 3.0.0 에서 지웠다, #49). 패키지 `@jhleeweb/squircle-design-system` 으로 GitHub Packages(npm.pkg.github.com)에 비공개 발행한다.
+**jhlee design system** — 도면 캔버스와 UI 크롬을 가른 토큰(방향 C), 그 위의 Radix 기반 컨트롤 · 오버레이 · 피드백 · 내비게이션 · 데이터 층
+(3열 작업대 셸 `./legacy` 는 3.0.0 에서 지웠다, #49). 패키지 `@jhleeweb/jhlee-design-system` 으로 GitHub Packages(npm.pkg.github.com)에 비공개 발행한다.
 `aaro-lab/apartment-configurator` 의 `packages/ui` 를 2026-09-29 에 이력째 분리했다(원 저장소 이슈 #1432).
+옛 이름은 `squircle-design-system`(패키지 `@jhleeweb/squircle-design-system`)이다 — 스쿼클 모서리를 폐기(#36)한 뒤 이름이 디자인을 말하지 않아
+2026-10-02 사용자 결정으로 패키지 · 저장소 · 이름에서 나온 공개 API 를 함께 바꿨다(4.0.0, #91). 표시 이름은 소문자 `jhlee design system` 이다.
 
 작업 규약(절차·브랜치·릴리스·커밋·언어)은 [`AGENTS.md`](AGENTS.md) 가 정본이고 아래 import 로 이 파일에 실린다.
 
@@ -20,8 +22,8 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              `--palette-{cool,klein,azure,mono,gray,moss,amber,rust}` · 치수·간격·시간 4단·굵기·자간·글꼴 스택) · `semantic/{canvas,chrome.light,chrome.dark,layer,tailwind}`
                              (값은 전부 참조; 판정 3색은 톤마다 DEFAULT/hover/ink/soft/line, `layer` 는 z-index 층) · `component/{control,collapse,toast,scroll,tooltip,overlay}` ·
                              옛 이름 alias 파일 `legacy.json` 은 3.0.0 에서 지웠다(#49 — 다시 생기면 schema 가 실패한다).
-                             파일 머리(또는 그룹)의 `$extensions.sds.scope` 가 생성물의 어느 블록으로 나가는지 정한다(root · chrome · theme · theme-inline);
-                             그룹의 `sds.utility` 는 생성 `@utility`(z-* · duration-*), `sds.reset` 은 `--<ns>-*: initial`, 토큰의 `sds.ts` 는 MOTION 키다.
+                             파일 머리(또는 그룹)의 `$extensions.jds.scope` 가 생성물의 어느 블록으로 나가는지 정한다(root · chrome · theme · theme-inline);
+                             그룹의 `jds.utility` 는 생성 `@utility`(z-* · duration-*), `jds.reset` 은 `--<ns>-*: initial`, 토큰의 `jds.ts` 는 MOTION 키다.
                              `schema.ts`(zod)가 모양과 파일 사이 약속(alias 존재 · chrome 은 light/dark 둘 다 · canvas 는 light 만, `canvas.dark.json` 은 존재가 곧 실패 ·
                              `legacy.json` 도 존재가 곧 실패)을 검사하고, `build.mjs` 가 Style Dictionary 4 + 우리 포맷 3
                              (`formats/{css-vars,tailwind-theme,ts-consts}.mjs`)으로 생성물을 쓴다. 다크는 source 가 아니라 options 로 읽어 두 다크 블록에 같은 본문을 찍는다
@@ -35,13 +37,13 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              `scripts/codemod-*.mjs`(한 번에, accent·muted · 옛 base 이름 `--ink`→`--palette-gray-900` 포함)의 공통 원천
   src/generated/legacy-classes.json 생성물 — 루트 eslint.config.js 와 소비자 프리셋(src/eslint)의 `no-restricted-classes` 가 `{pattern, fix}` 로 읽는다 = **`eslint --fix` 가 곧 코드모드**.
                              프리셋이 import 해 배포물에 실어야 해서 src/generated/ 에 있다(#31)
-  src/eslint/                **소비자 린트 프리셋** `@jhleeweb/squircle-design-system/eslint`(#31) — `squircleDesignSystem({ entryPoint })` 가 flat config 조각을 낸다:
+  src/eslint/                **소비자 린트 프리셋** `@jhleeweb/jhlee-design-system/eslint`(#31) — `jhleeDesignSystem({ entryPoint })` 가 flat config 조각을 낸다:
                              `no-restricted-syntax`(raw button input select textarea dialog table — #33 에서 react/forbid-elements 대체) · `better-tailwindcss/no-unknown-classes`(entryPoint = 소비자 진입 CSS) ·
                              `no-restricted-classes`(옛 이름 개명 + hex·색 함수·단위·격자 밖 간격 — `restrictedClassPatterns()`, 루트 eslint.config.js 와 한 벌) ·
                              `no-restricted-syntax`(style={{color|background|border}}, `styleIgnores`) · `ds/legacy-tone`(정본 `rules/legacy-tone.ts`, packages/eslint-rules 는 재수출).
                              `spacing.ts` 가 간격 어휘의 한 벌. 상대 import 는 `.ts` 확장자(루트 config 가 Node 24 로 빌드 없이 읽는다). peer 셋은 optional
-  src/agent/cli.ts           bin `sds-agent`(#31) — `sds-agent sync [--cwd]` 가 소비 레포 AGENTS.md 에 관리 블록(`<!-- sds:begin --> … <!-- sds:end -->`)을 upsert 하고
-                             `.claude/skills/squircle-ds/` 를 복사한다(멱등, 블록 밖 불변). 원문은 `agent/AGENTS.block.md` · `agent/skills/squircle-ds/SKILL.md`(files 에 실린다)
+  src/agent/cli.ts           bin `jds-agent`(#31) — `jds-agent sync [--cwd]` 가 소비 레포 AGENTS.md 에 관리 블록(`<!-- jds:begin --> … <!-- jds:end -->`)을 upsert 하고
+                             `.claude/skills/jhlee-ds/` 를 복사한다(멱등, 블록 밖 불변). 원문은 `agent/AGENTS.block.md` · `agent/skills/jhlee-ds/SKILL.md`(files 에 실린다)
   scripts/build-manifest.ts  `dist/components.manifest.json` 생성기(#31) — TS 컴파일러 API 로 index.ts export 전수를 순회: kind(component·compound·hook)·client·props(type/required/
                              default/values{value,doc})·parts·deprecated, cva 축/기본값(AST), 토큰 이름. `default` 는 `@default` → 같은 파일 cva defaultVariants, `values[].doc` 은
                              «`값` — 설명» 줄. react-docgen-typescript 는 쓰지 않는다. 게이트 `__tests__/package/manifest.spec.ts`(전수 포함 · client 일치 불변식 + KNOWN_GAPS 래칫)
@@ -134,14 +136,17 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 
 ## 소비자 계약
 
-버전은 3.x 다(shadcn 어휘 개명 #25 가 1.0.0 을, 스쿼클 폐기 #37 이 2.0.0 을, 부품 Select·Field·Tabs(#47) + legacy 제거(#49)가 3.0.0 을 냈다).
+버전은 4.x 다(shadcn 어휘 개명 #25 가 1.0.0 을, 스쿼클 폐기 #37 이 2.0.0 을, 부품 Select·Field·Tabs(#47) + legacy 제거(#49)가 3.0.0 을,
+패키지 · 저장소 개명(#91)이 4.0.0 을 냈다). 4.0.0 이 바꾼 것은 이름뿐이다 — 패키지 `@jhleeweb/squircle-design-system` → `@jhleeweb/jhlee-design-system`,
+린트 프리셋 `squircleDesignSystem()` → `jhleeDesignSystem()`, bin `sds-agent` → `jds-agent`(옛 `<!-- sds:begin -->` 블록 · `squircle-ds` 스킬 폴더를 sync 가 이어받는다).
 3.0.0 이 지운 것: `./legacy` · `./shell.css` 서브패스(3열 셸·컨트롤·`DesignSystemProvider`), 루트 배럴의 @deprecated 별칭(새 `Select`·`Field`·`Tabs` 가 그 이름을 이었다),
-옛 이름 alias(`generated/legacy.css` · @theme 의 옛 유틸 이름), `normalizeTone` · 옛 tone 키, Button 의 열린 `data-slot`. 이행 순서는 `packages/ui/README.md` «2.x → 3.0».
-소비 레포는 정확 버전을 고정하고(`"@buildos/ui": "npm:@jhleeweb/squircle-design-system@3.x.y"` 같은 별칭 허용) 갱신은 PR 로 한다.
+옛 이름 alias(`generated/legacy.css` · @theme 의 옛 유틸 이름), `normalizeTone` · 옛 tone 키, Button 의 열린 `data-slot`.
+이행 순서는 `packages/ui/README.md` «3.x → 4.0» · «2.x → 3.0».
+소비 레포는 정확 버전을 고정하고(`"@buildos/ui": "npm:@jhleeweb/jhlee-design-system@4.x.y"` 같은 별칭 허용) 갱신은 PR 로 한다.
 
 ```css
 @import "tailwindcss/theme.css" layer(theme);
-@import "@jhleeweb/squircle-design-system/theme.css";   /* @source "./" 자기 등록 — 소비자 @source 불필요 */
+@import "@jhleeweb/jhlee-design-system/theme.css";   /* @source "./" 자기 등록 — 소비자 @source 불필요 */
 @import "tailwindcss/utilities.css" source(none);        /* 레이어 없이 — tokens.css 의 button{border-radius:0} 이 레이어 안 규칙을 이기기 때문 */
 @source "./";
 ```
@@ -169,9 +174,9 @@ pnpm manifest:build    # index.ts export + JSDoc → dist/components.manifest.js
 pnpm manifest:check    # 커밋된 llms.txt · docs/components 가 매니페스트와 같은가 — 다르면 exit 1 (CI tokens job · verify)
 pnpm verify            # typecheck + lint + lint:css + format:check + tokens:check + manifest:check + test + build — PR 전 한 번
 bash scripts/smoke-next.sh   # Next App Router 스모크(tarball → 최소 앱 next build). 야간 workflow smoke-next.yml 이 돌린다(비필수)
-pnpm --filter @jhleeweb/squircle-design-system test:tokens    # arch 프로젝트의 토큰 스펙만(CI tokens job) — 대비 래칫 contrast.spec 포함
-pnpm --filter @jhleeweb/squircle-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(a11y test 'error', C2)
-pnpm --filter @jhleeweb/squircle-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
+pnpm --filter @jhleeweb/jhlee-design-system test:tokens    # arch 프로젝트의 토큰 스펙만(CI tokens job) — 대비 래칫 contrast.spec 포함
+pnpm --filter @jhleeweb/jhlee-design-system test:stories   # vitest storybook 프로젝트 — Chromium 에서 play + axe(a11y test 'error', C2)
+pnpm --filter @jhleeweb/jhlee-design-system vrt            # 시각 회귀(storybook:build 뒤). 스냅샷 갱신은 vrt:update(도커)만
 VRT_CHECK=1 sh scripts/vrt-update.sh                           # 도커 컨테이너에서 갱신 없이 0 diff 검사 — 시각이 바뀌면 안 되는 PR 의 머지 전 확인
 cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tmp/pack && pnpm exec attw /tmp/pack/*.tgz --profile esm-only --entrypoints . canvas-metrics testing eslint icons   # 패키지 계약(attw 는 pnpm tarball 로 — npm pack 은 publishConfig.exports 치환을 못 받는다)
 ```
@@ -214,7 +219,7 @@ Prettier 의 tailwind 플러그인은 클래스를 **정렬**한다 — 정렬�
 
 **발행**은 `main` 머지 시 자동이다(AGENTS.md «릴리스»). 로컬에서 발행하려면 `~/.npmrc` 에
 `//npm.pkg.github.com/:_authToken=<classic PAT: read:packages + write:packages>` 를 두고
-`pnpm --filter @jhleeweb/squircle-design-system publish --no-git-checks`.
+`pnpm --filter @jhleeweb/jhlee-design-system publish --no-git-checks`.
 
 ## 공유 패키지 — 워크스페이스는 소스, 소비자는 dist
 

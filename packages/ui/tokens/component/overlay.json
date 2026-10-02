@@ -1,6 +1,6 @@
 {
   "$description": "오버레이 폭 — Tailwind --container-* 네임스페이스라 max-w-dialog-md · w-drawer-sm 이 그대로 나온다(#18). 값은 오늘 컴포넌트가 대괄호로 들고 있는 리터럴(Modal.variants 380/560/880/1180 · Drawer.variants 280/400/620 · DropdownMenu 168 · Popover 180/360)을 이름으로 옮긴 것이다. 컴포넌트가 이것을 쓰게 바꾸는 것은 B5·D.",
-  "$extensions": { "sds": { "scope": "theme" } },
+  "$extensions": { "jds": { "scope": "theme" } },
   "container": {
     "$type": "dimension",
     "dialog": {
@@ -22,7 +22,7 @@
   },
   "size": {
     "$type": "dimension",
-    "$extensions": { "sds": { "scope": "root" } },
+    "$extensions": { "jds": { "scope": "root" } },
     "$description": "오버레이 꼬리(Radix Arrow) 치수 — 컴포넌트가 JSX 숫자(width={10})로 들던 것을 이름으로 옮겼다(D3, #44). `--size-*` 는 :root 커스텀 프로퍼티라 `w-(--size-arrow-…)` 로 읽는다. Radix 의 width/height 속성보다 CSS 가 이긴다.",
     "arrow": {
       "popover": {

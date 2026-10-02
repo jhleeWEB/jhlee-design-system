@@ -1,11 +1,11 @@
 {
   "$description": "스크롤바 — 실제 활동이 멈추고 500ms 뒤 200ms 동안 사라진다(ScrollArea 계약). 지연은 JS(MOTION.scrollHideDelayMs)가 재고 페이드는 theme.css 의 .ds-scroll-area-scrollbar 가 --duration-scrollbar-fade 로 읽는다 — 같은 토큰이라 둘이 갈릴 수 없다.",
-  "$extensions": { "sds": { "scope": "root" } },
+  "$extensions": { "jds": { "scope": "root" } },
   "duration": {
     "$type": "duration",
     "scrollbar": {
-      "hide-delay": { "$value": "500ms", "$extensions": { "sds": { "ts": "scrollHideDelayMs" } } },
-      "fade": { "$value": "200ms", "$extensions": { "sds": { "ts": "scrollFadeMs" } } }
+      "hide-delay": { "$value": "500ms", "$extensions": { "jds": { "ts": "scrollHideDelayMs" } } },
+      "fade": { "$value": "200ms", "$extensions": { "jds": { "ts": "scrollFadeMs" } } }
     }
   }
 }
