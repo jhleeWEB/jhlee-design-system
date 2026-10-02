@@ -61,12 +61,13 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [StatusDot](StatusDot.md) | component | server ok |  | 상태 점 — 글자를 넣을 수 없는 좁은 자리에서만 |
 | [Stepper](Stepper.md) | component | server ok |  | 단계 진행 — 순서 있는 목록(`ol`)에 단계마다 원(번호 · 체크 · X) · 이름 · 상태 글자 · 설명을 두고 사이를 선으로 잇는다. |
 | [Switch](Switch.md) | component | client |  | 스위치 — **즉시 적용되는** 켬/끔 |
-| [Table](Table.md) | component | server ok |  | 수치 표의 뿌리 — 가로 스크롤 영역 안의 `<table>` |
+| [Table](Table.md) | component | server ok | TableCaption | 수치 표의 뿌리 — 가로 스크롤 영역 안의 `<table>` |
 | [Tabs](Tabs.md) | component | client | TabsContent, TabsList, TabsTrigger | 탭의 루트 — 값(`value` · `defaultValue` · `onValueChange`)과 방향(`orientation`) · 활성화 방식(`activationMode`)을 든다. |
 | [Tbody](Tbody.md) | component | server ok |  | 표 본문 구역(`<tbody>`) — 행의 호버 면이 붙는 범위다. |
 | [Td](Td.md) | component | server ok |  | 표 본문 칸(`<td>`) — `numeric` · `tone` 축은 `tableCellVariants` 가 소유하고 `data-tone`(해석된 값)으로 찍힌다. |
 | [Textarea](Textarea.md) | component | client |  | 여러 줄 입력 — Input 의 `md` 모양에 높이만 풀었다(세로 크기 조절). |
-| [Th](Th.md) | component | server ok |  | 열 머리 칸(`<th>`) — mono 대문자 라벨 |
+| [Tfoot](Tfoot.md) | component | server ok |  | 표 합계 구역(`<tfoot>`) — 두꺼운 위 경계 · 옅은 면 · 굵은 글자 |
+| [Th](Th.md) | component | server ok |  | 머리 칸(`<th>`) — 열 머리는 mono 대문자 라벨, 줄 머리는 `variant="text"` 로 본문 글자 |
 | [Thead](Thead.md) | component | server ok |  | 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다. |
 | [ToastProvider](ToastProvider.md) | component | client |  | 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 |
 | [ToggleGroup](ToggleGroup.md) | component | client | ToggleGroupItem | 토글 묶음 — `type="single"`(값 하나, 다시 누르면 끈다) · `type="multiple"`(값 배열) |

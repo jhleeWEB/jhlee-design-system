@@ -124,12 +124,13 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [StatusDot](docs/components/StatusDot.md): 상태 점 — 글자를 넣을 수 없는 좁은 자리에서만
 - [Stepper](docs/components/Stepper.md): 단계 진행 — 순서 있는 목록(`ol`)에 단계마다 원(번호 · 체크 · X) · 이름 · 상태 글자 · 설명을 두고 사이를 선으로 잇는다.
 - [Switch](docs/components/Switch.md): 스위치 — **즉시 적용되는** 켬/끔 — "use client"
-- [Table](docs/components/Table.md): 수치 표의 뿌리 — 가로 스크롤 영역 안의 `<table>`
+- [Table](docs/components/Table.md): 수치 표의 뿌리 — 가로 스크롤 영역 안의 `<table>` — 부품: TableCaption
 - [Tabs](docs/components/Tabs.md): 탭의 루트 — 값(`value` · `defaultValue` · `onValueChange`)과 방향(`orientation`) · 활성화 방식(`activationMode`)을 든다. — 부품: TabsContent, TabsList, TabsTrigger — "use client"
 - [Tbody](docs/components/Tbody.md): 표 본문 구역(`<tbody>`) — 행의 호버 면이 붙는 범위다.
 - [Td](docs/components/Td.md): 표 본문 칸(`<td>`) — `numeric` · `tone` 축은 `tableCellVariants` 가 소유하고 `data-tone`(해석된 값)으로 찍힌다.
 - [Textarea](docs/components/Textarea.md): 여러 줄 입력 — Input 의 `md` 모양에 높이만 풀었다(세로 크기 조절). — "use client"
-- [Th](docs/components/Th.md): 열 머리 칸(`<th>`) — mono 대문자 라벨
+- [Tfoot](docs/components/Tfoot.md): 표 합계 구역(`<tfoot>`) — 두꺼운 위 경계 · 옅은 면 · 굵은 글자
+- [Th](docs/components/Th.md): 머리 칸(`<th>`) — 열 머리는 mono 대문자 라벨, 줄 머리는 `variant="text"` 로 본문 글자
 - [Thead](docs/components/Thead.md): 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다.
 - [ToastProvider](docs/components/ToastProvider.md): 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 — "use client"
 - [ToggleGroup](docs/components/ToggleGroup.md): 토글 묶음 — `type="single"`(값 하나, 다시 누르면 끈다) · `type="multiple"`(값 배열) — 부품: ToggleGroupItem — "use client"
@@ -193,7 +194,9 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `stepIndicatorVariants`: cva — 축 status(complete | current | upcoming | error); 기본 status=upcoming. 서버에서 호출 가능.
 - `stepperVariants`: cva — 축 orientation(horizontal | vertical); 기본 orientation=horizontal. 서버에서 호출 가능.
 - `switchVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.
+- `tableCaptionVariants`: cva — 축 side(top | bottom) · visuallyHidden(true | false); 기본 side=top, visuallyHidden=false. 서버에서 호출 가능.
 - `tableCellVariants`: cva — 축 numeric(true | false) · tone(neutral | success | warning | destructive); 기본 numeric=false, tone=neutral. 서버에서 호출 가능.
+- `tableHeadVariants`: cva — 축 variant(label | text) · numeric(true | false); 기본 variant=label, numeric=false. 서버에서 호출 가능.
 - `tabsListVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.
 - `tabsTriggerVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.
 - `toastDescriptionVariants`: cva — 축 tone(neutral | success | warning | destructive); 기본 tone=neutral. 서버에서 호출 가능.
