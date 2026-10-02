@@ -1,0 +1,40 @@
+name: pages
+# Storybook 카탈로그를 GitHub Pages 에 올린다(#113) — https://jhleeweb.github.io/jhlee-design-system/
+# main 이 곧 카탈로그다: PR 의 필수 체크(ci.yml)를 지난 것만 main 에 들어오므로 여기서는 다시 검사하지 않고 짓기만 한다.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  # 배포는 줄을 선다 — 뒤따른 머지가 진행 중인 배포를 끊으면 사이트가 반쯤 올라간 채 남을 수 있다. 대기 중인 것은 가장 새 것 하나만 남는다.
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      # `pnpm storybook:build` 가 아니다 — 그쪽은 `--test`(VRT · story test 의 입력)라 Docs 페이지가 빠진다. 공개 카탈로그는 전체 빌드다.
+      # Storybook 은 자산을 상대 경로로 짓는다 — 프로젝트 사이트의 하위 경로(/jhlee-design-system/)에 base 설정 없이 선다(로컬에서 같은 경로로 서빙해 확인, #113).
+      - run: pnpm --filter @jhleeweb/jhlee-design-system exec storybook build -o storybook-static
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: packages/ui/storybook-static
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # 배포 권한은 이 job 에만 준다 — 짓는 job(의존성 설치 · 빌드 스크립트 실행)은 읽기 권한뿐이다.
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

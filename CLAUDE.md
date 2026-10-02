@@ -77,7 +77,9 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   src/__arch__/              금지 패턴 래칫(`forbidden-patterns.spec` — 파일별 횟수 기준선, 늘면 실패·줄면 낮춰야 통과) + 소스 그래프. `arch` 프로젝트(#11).
                              `component-contract.tsx` 는 공통 계약의 검사기(`describeComponentContract(storiesModule, {slot, axes})` · `runContract`) — slot 존재·못 덮음 ·
                              className twMerge · ref DOM 도달 · rest 전달 · 축마다 data-* · axe 0. 폴더별 spec(Phase D)이 스토리를 넘겨 부른다(C3)
-  .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
+  .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host.
+                             공개본은 GitHub Pages https://jhleeweb.github.io/jhlee-design-system/ — `.github/workflows/pages.yml` 이 `main` push 마다 전체 빌드(`--test` 없이, Docs 포함)를
+                             올린다(#113). 자산이 상대 경로라 하위 경로에 base 설정 없이 선다(같은 경로로 서빙해 404 0 · 글꼴 · Docs 실측)
   stories/                   페이지 스토리 — `Pages/Workbench`(제품 화면 복제, 영구 — `workbench/Workbench.tsx`) · `Radius` · `Roles`(역할 → 글자 · 모서리 견본, #80) ·
                              ThemePair · Matrix. 옛 apps/ds-gallery 의
                              컴포넌트 명세 `Pages/Gallery` 는 Phase D 가 컴포넌트 스토리로 나눈 뒤 지웠다(#48)
@@ -168,6 +170,7 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 pnpm install           # pnpm 10, Node 24
 pnpm storybook         # 카탈로그 (6006) — Pages/Workbench 와 컴포넌트 스토리(ThemeContrast)로 캔버스/크롬 경계와 다크를 눈으로 확인
 pnpm storybook:build   # storybook-static (--test) — VRT 와 CI storybook job 의 입력
+pnpm --filter @jhleeweb/jhlee-design-system exec storybook build -o storybook-static   # 전체 빌드(Docs 포함) — Pages 배포(pages.yml)가 쓰는 것. VRT 입력과 같은 폴더라 로컬에서는 뒤에 storybook:build 를 다시 돌린다
 pnpm typecheck         # 엄격 프로필(src) + test 프로필(스펙·__arch__) + stories 프로필
 pnpm lint              # ESLint 10 — 기준선(eslint-suppressions.json) 밖 신규 위반만 실패
 pnpm lint:css          # stylelint — 손 CSS 의 리터럴. 기준선 없음(--max-warnings 0)
