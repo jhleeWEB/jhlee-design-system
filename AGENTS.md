@@ -11,7 +11,8 @@ Claude Code 는 `CLAUDE.md` 의 `@AGENTS.md` import 로 같은 내용을 싣는�
 3. **브랜치.** `main` 에서 `<type>/<slug>` 를 딴다. 도구 이름(`codex/…`·`claude/…`)을 브랜치에 붙이지 않는다.
 4. **작업 + 커밋.** 커밋 본문에 `#이슈번호`.
 5. **PR.** `gh pr create --base main --title "type(scope): 한글 설명" --body "... Closes #N"`. **PR 제목이 곧 squash 커밋 제목이고 곧 버전 입력이다**(아래 «릴리스»).
-6. **머지.** `gh pr merge --squash --delete-branch`.
+6. **머지 — 사용자 승인 뒤에만.** CI 가 초록이면 멈추고 «승인 대기» 로 보고한다. 사용자가 GitHub 에서 «Bypass rules» 로 머지하거나,
+   채팅으로 **그 PR 의** 머지를 명시하면 `gh pr merge <N> --squash --admin --delete-branch`(아래 «브랜치»). 그냥 `gh pr merge` 는 «review required» 로 실패한다 — 정상이다.
 
 ## 브랜치 — 라이브러리 레포 예외
 
@@ -21,9 +22,16 @@ main            기본 브랜치이자 유일한 장기 브랜치. 모든 PR 의
 ```
 
 원 저장소의 `develop`/`main` 이중 구조를 쓰지 않는다 — 라이브러리는 발행된 버전이 곧 승격이라 승격 단계가 하는 일이 없다.
-`main` 은 ruleset 으로 보호하려 했으나 비공개였던 동안은 **무료 개인 플랜의 비공개 레포라 ruleset(브랜치 보호)을 쓸 수 없었다**. 2026-10-02 저장소가 public 이 되어(#96)
-ruleset(필수 체크 · 자동 머지)을 걸 수 있다 — 아직 걸지 않았고 거는 것은 사용자 결정이다. 그때까지 브랜치 보호는 규약뿐이다.
-`main` 에 직접 push 하지 않는다. PR 은 CI 가 전부 초록일 때만 squash 로 머지한다.
+`main` 은 ruleset 둘로 보호한다(2026-10-02 사용자 결정 «내가 승인해야 머지되도록», #98 — 저장소가 public 이 되어 무료 플랜에서도 쓸 수 있다).
+
+| ruleset | 규칙 | 우회 |
+|---|---|---|
+| `main — PR · CI 필수(우회 없음)` | 직접 push 금지(PR 필수) · squash 만 · 필수 체크 7개(package · pr-title · static · storybook · tokens · unit · vrt) · 강제 push · 삭제 금지 | 없음 — 사용자도 CI 가 빨간 PR 은 못 넣는다 |
+| `main — 승인 1(소유자만 우회)` | 승인 리뷰 1 | 저장소 admin(사용자)만, PR 머지에서만 |
+
+GitHub 는 자기 PR 을 승인하지 못하게 하고 에이전트의 PR 도 사용자 계정으로 열린다 — 그래서 «승인» 은 사용자가 GitHub 의 «Bypass rules» 로 머지하거나
+채팅으로 그 PR 의 머지를 명시하는 것이다. 에이전트는 명시가 있을 때만 `--admin` 을 쓴다(«끝나면 머지해줘» 같은 앞선 포괄 지시는 이 규칙 전의 것이다).
+`main` 에 직접 push 하지 않는다(ruleset 이 막는다). PR 은 CI 가 전부 초록이고 사용자가 승인했을 때만 squash 로 머지한다.
 
 ## 릴리스
 
