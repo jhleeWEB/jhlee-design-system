@@ -1,5 +1,7 @@
 # 디자인 시스템 독립 레포 분리 · GitHub Packages 비공개 배포 · 표준화 계획
 
+> **공개 전환 메모(2026-10-02, #94).** 이 계획의 «비공개 배포» 는 당시의 결정이다 — 패키지 가시성은 2026-10-02 에 public 으로 바꿨다(저장소는 비공개 그대로).
+
 > **개명 메모(2026-10-02, #91).** 이 계획이 세운 레포 · 패키지의 이름은 `squircle-design-system`(`@jhleeweb/squircle-design-system`, bin `sds-agent`, 스킬 `squircle-ds`)이었다.
 > 4.0.0 에서 `jhlee-design-system`(`@jhleeweb/jhlee-design-system`, `jds-agent`, `jhlee-ds`)으로 바꿨고, 이 문서의 이름도 새 이름으로 고쳤다. 모서리 결정(스쿼클, §Q5)은 기록이라 그대로 둔다 — #36 에서 폐기했다.
 

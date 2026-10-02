@@ -10,7 +10,8 @@ jhlee design system 의 발행 패키지. 사용법·토큰·컴포넌트 계약
   값의 정본은 `tokens/*.json`(DTCG)이고 CSS 는 생성물이다. 크롬 이름은 shadcn 어휘(`bg-background` `text-muted-foreground` `bg-primary` …, `tokens/README.md`)이고
   옛 이름(`text-ink` `bg-surface` `var(--chrome-line)` · `var(--ink)` …)은 3.0.0 에서 alias 째 지웠다 — 코드모드(`scripts/codemod-*.mjs`)를 한 번 돌리고 프리셋 린트 `--fix` 로 마무리한다
 - 린트 프리셋: `…/eslint` — `jhleeDesignSystem({ entryPoint })` 를 소비 레포 flat config 에 펼친다(raw `<button>` · 토큰 밖 클래스 · 옛 이름(--fix) · hex/임의값/격자 밖 간격 · 인라인 색 · 옛 tone(--fix)). optional peer `eslint ^10` · `eslint-plugin-better-tailwindcss`.
-- peer: react ^19, react-dom ^19, tailwindcss ^4.3(선택)
+- peer: react ^19, react-dom ^19, tailwindcss ^4.3(선택 — **컴포넌트를 쓰면 필요하다**. 컴포넌트의 여백 · 패딩 · 간격 · 색은 패키지가 클래스 이름과 토큰(`--spacing` 4px 격자 …)으로 싣고,
+  CSS 는 소비자의 Tailwind v4 가 `theme.css` 의 `@source "./"` 로 패키지 dist 를 훑어 만든다 — 미리 컴파일된 유틸 CSS 는 없다. 토큰 CSS(`…/tokens.css`)만 쓸 때만 빼도 된다)
 
 ## AGENTS
 
@@ -41,7 +42,8 @@ npx jds-agent sync --cwd ../other-repo
 | 린트 프리셋 `squircleDesignSystem()` · `SquircleDesignSystemOptions` | `jhleeDesignSystem()` · `JhleeDesignSystemOptions`(`…/eslint`) |
 | bin `sds-agent` · 스킬 `.claude/skills/squircle-ds/` · 표식 `<!-- sds:begin -->` | `jds-agent` · `.claude/skills/jhlee-ds/` · `<!-- jds:begin -->` — `npx jds-agent sync` 한 번이 옛 블록을 제자리에서 바꾸고 옛 스킬 폴더를 지운다 |
 
-`.npmrc`(`@jhleeweb` 범위 · 토큰)는 그대로다. 옛 패키지의 3.x 발행본은 지우지 않는다 — 정확 버전을 고정한 소비 레포는 옮기기 전까지 그대로 설치된다.
+`.npmrc`(`@jhleeweb` 범위 · 토큰)는 그대로다. **옛 패키지 `@jhleeweb/squircle-design-system` 은 2026-10-02 에 레지스트리에서 지웠다**(#94) — 3.x 를 고정한 소비 레포는
+락 캐시 없는 새 설치(CI)에서 404 로 실패하므로 4.0.0 으로 옮긴다.
 
 ## 2.x → 3.0
 
