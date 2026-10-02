@@ -306,7 +306,7 @@ export function Card({
               <StripChevron className="size-4 shrink-0" />
               <span
                 className={cn(
-                  "flex-1 font-mono text-micro tracking-caps whitespace-nowrap uppercase",
+                  "flex-1 font-mono text-micro font-medium tracking-caps whitespace-nowrap uppercase",
                   "[writing-mode:vertical-rl]",
                   /* 왼쪽 탭은 아래에서 위로 읽는다 — 화면 중앙을 향해 글이 흐르는 쪽. */
                   side === "left" && "rotate-180",
@@ -417,7 +417,7 @@ export function CardHeader({
       {title ? (
         <Heading
           data-slot="card-title"
-          className="m-0 min-w-0 truncate text-control font-semibold text-foreground"
+          className="m-0 min-w-0 truncate text-body font-semibold text-foreground"
         >
           {title}
         </Heading>

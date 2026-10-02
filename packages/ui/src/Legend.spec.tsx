@@ -10,7 +10,7 @@ describeComponentContract(stories, { slot: "legend", axes: ["orientation"] });
 
 afterEach(cleanup);
 
-describe("Legend — 캔버스 컴포넌트", () => {
+describe("Legend — 상자는 크롬, 스와치는 캔버스(#80)", () => {
   it("이름 있는 목록이고 스와치는 장식이다 — 스크린리더는 라벨만 읽는다", () => {
     render(
       <Legend>
@@ -21,10 +21,28 @@ describe("Legend — 캔버스 컴포넌트", () => {
     const item = screen.getByRole("listitem");
     expect(item).toHaveAccessibleName("");
     expect(item).toHaveTextContent("Wall");
-    expect(item.querySelector('[data-slot="legend-swatch"]')).toHaveAttribute("aria-hidden", "true");
+    const tile = item.querySelector('[data-slot="legend-swatch-tile"]');
+    expect(tile).toHaveAttribute("aria-hidden", "true");
+    expect(tile?.querySelector('[data-slot="legend-swatch"]')).toBeInTheDocument();
   });
 
-  it("캔버스 토큰만 쓴다 — 크롬 색 · 둥근 모서리 · 그림자가 없다", () => {
+  it("상자는 크롬 떠 있는 패널이다 — rounded-lg · 테두리 · 카드 면 · shadow-pop · 크롬 라벨 글자", () => {
+    render(
+      <Legend>
+        <LegendItem>Wall</LegendItem>
+      </Legend>,
+    );
+    expect(screen.getByRole("list")).toHaveClass(
+      "rounded-lg",
+      "border-border",
+      "bg-card",
+      "shadow-pop",
+      "text-label",
+      "text-foreground-2",
+    );
+  });
+
+  it("스와치와 타일은 캔버스 토큰만 쓴다 — 크롬 색 · 둥근 모서리 · 그림자가 없다(다크에서도 같은 픽셀)", () => {
     render(
       <Legend>
         <LegendItem swatch="muted" pattern="hatch">
@@ -32,16 +50,14 @@ describe("Legend — 캔버스 컴포넌트", () => {
         </LegendItem>
       </Legend>,
     );
-    const nodes = [screen.getByRole("list"), ...document.querySelectorAll('[data-slot^="legend"]')];
+    const nodes = [...document.querySelectorAll('[data-slot^="legend-swatch"]')];
+    expect(nodes).toHaveLength(2);
+    expect(nodes[0]).toHaveClass("bg-canvas");
     for (const node of nodes) {
       const classes = [...node.classList];
       expect(classes.filter((c) => /^rounded-(?!none)/.test(c))).toEqual([]);
       expect(classes.filter((c) => /^shadow-/.test(c))).toEqual([]);
-      expect(
-        classes.filter(
-          (c) => /^(?:bg|text|border)-(?!canvas|current|solid|none)/.test(c) && !/^text-micro$/.test(c),
-        ),
-      ).toEqual([]);
+      expect(classes.filter((c) => /^(?:bg|text|border)-(?!canvas|current|solid|none)/.test(c))).toEqual([]);
     }
   });
 
@@ -65,7 +81,7 @@ describe("Legend — 캔버스 컴포넌트", () => {
       "text-canvas-line-strong",
       "border-current",
     );
-    expect(line!.querySelector('[data-slot="legend-swatch"]')).toHaveClass("h-0.5", "w-4");
+    expect(line!.querySelector('[data-slot="legend-swatch"]')).toHaveClass("h-0.5", "w-3");
     expect(fallback).toHaveAttribute("data-swatch", "ink");
     expect(fallback).toHaveAttribute("data-pattern", "fill");
   });

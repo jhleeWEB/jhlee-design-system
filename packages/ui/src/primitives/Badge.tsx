@@ -35,7 +35,8 @@ export function Badge({ className, tone, provisional, dot, children, ...rest }: 
       data-provisional={provisional ? "" : undefined}
       className={cn(badgeVariants({ tone: resolvedTone, provisional }), className)}
     >
-      {dot ? <i aria-hidden="true" className="size-3 shrink-0 rounded-full bg-current" /> : null}
+      {/* 6px — 11px 글자 옆의 점. 예전 `size-3`(12px)은 2px 격자 시절 값이 두 배로 남아 글자보다 컸다(#80). */}
+      {dot ? <i aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-current" /> : null}
       {children}
     </span>
   );
@@ -73,7 +74,8 @@ export function StatusDot({ tone = "neutral", label, className, ...rest }: Statu
       role="img"
       aria-label={label}
       title={label}
-      className={cn("inline-block size-4 shrink-0 rounded-full", dot, className)}
+      /* 8px — 예전 `size-4`(16px)은 2px 격자 시절 값이 두 배로 남은 것이다(#80). */
+      className={cn("inline-block size-2 shrink-0 rounded-full", dot, className)}
     />
   );
 }

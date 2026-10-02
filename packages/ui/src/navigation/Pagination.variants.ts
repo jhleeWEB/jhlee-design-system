@@ -21,12 +21,12 @@ export const paginationLinkVariants = cva(
   {
     variants: {
       /**
-       * 크기 — 컨트롤 높이 사다리(`h-ctl-*`). 번호 칸은 높이와 같은 최소 폭의 정사각이다.
-       * - `sm` — 작은 컨트롤 높이 · 본문 글자. 표 아래 · 패널 안
+       * 크기 — 컨트롤 높이 사다리(`h-ctl-*`). 번호 칸은 높이와 같은 최소 폭의 정사각이다. 글자는 두 단 모두 컨트롤 글자다(#80).
+       * - `sm` — 작은 컨트롤 높이. 표 아래 · 패널 안
        * - `md` — 기본 컨트롤 높이. 페이지 아래
        */
       size: {
-        sm: "h-ctl-sm min-w-(--height-ctl-sm) px-2 text-body",
+        sm: "h-ctl-sm min-w-(--height-ctl-sm) px-2 text-control",
         md: "h-ctl min-w-(--height-ctl) px-2 text-control",
       },
     },

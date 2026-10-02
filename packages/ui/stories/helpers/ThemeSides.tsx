@@ -17,7 +17,9 @@ export function ThemeSides({ children }: { children: (theme: ThemeSide) => React
           data-testid={`theme-${theme}`}
           className="flex flex-col gap-3 bg-background p-6 text-foreground"
         >
-          <span className="font-mono text-micro tracking-caps text-muted-foreground uppercase">{theme}</span>
+          <span className="font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
+            {theme}
+          </span>
           <div className="flex flex-wrap items-start gap-3">{children(theme)}</div>
         </section>
       ))}

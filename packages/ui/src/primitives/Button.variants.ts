@@ -8,7 +8,8 @@ import { cva, type VariantProps } from "../cn";
 export const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-3 whitespace-nowrap",
-    "font-sans text-control leading-none",
+    /* 컨트롤 글자 = text-control · medium(#80 역할 표) — 크기 축(sm · md · lg)은 높이와 여백만 바꾼다. */
+    "font-sans text-control leading-none font-medium",
     /* preflight 가 없으므로 `border` 만으로는 UA 테두리 스타일이 남는다 — solid 를 명시한다. */
     "cursor-pointer appearance-none rounded-md border border-solid transition-colors duration-fast",
     "focus-visible:focus-ring focus-visible:outline-none",

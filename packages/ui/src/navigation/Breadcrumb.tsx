@@ -30,7 +30,10 @@ export function Breadcrumb({ items, className, ...rest }: BreadcrumbProps) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className={cn("flex min-w-0 items-center gap-2 text-control text-muted-foreground", className)}
+      className={cn(
+        "flex min-w-0 items-center gap-2 text-control font-medium text-muted-foreground",
+        className,
+      )}
       {...rest}
       data-slot="breadcrumb"
     >
@@ -44,7 +47,8 @@ export function Breadcrumb({ items, className, ...rest }: BreadcrumbProps) {
               </span>
             ) : null}
             {last ? (
-              <span aria-current="page" className="min-w-0 truncate font-semibold text-foreground">
+              /* 지금 자리는 굵기가 아니라 색(text-foreground)으로 가른다 — 크럼은 모두 컨트롤 글자(medium)다(#80). */
+              <span aria-current="page" className="min-w-0 truncate text-foreground">
                 {item.label}
               </span>
             ) : item.href ? (
@@ -62,7 +66,8 @@ export function Breadcrumb({ items, className, ...rest }: BreadcrumbProps) {
                 data-slot="breadcrumb-link"
                 type="button"
                 onClick={item.onSelect}
-                className="min-w-0 cursor-pointer appearance-none truncate rounded-md border-0 bg-transparent p-0 text-inherit hover:text-foreground hover:underline focus-visible:focus-ring focus-visible:outline-none"
+                /* font-inherit — <button> 은 UA 의 font 단축이 굵기를 400 으로 되돌린다. nav 의 컨트롤 글자(medium)를 그대로 받는다(#55 와 같은 이유). */
+                className="min-w-0 cursor-pointer appearance-none truncate rounded-md border-0 bg-transparent p-0 font-inherit text-inherit hover:text-foreground hover:underline focus-visible:focus-ring focus-visible:outline-none"
               >
                 {item.label}
               </button>

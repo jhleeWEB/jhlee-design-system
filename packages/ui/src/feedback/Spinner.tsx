@@ -11,9 +11,9 @@ export interface SpinnerProps
   extends React.ComponentProps<"svg">, Omit<VariantProps<typeof spinnerVariants>, "tone"> {
   /**
    * 크기.
-   * - `sm` — 버튼·입력 안처럼 좁은 자리
-   * - `md` — 본문 줄 옆(기본)
-   * - `lg` — 패널·빈자리의 가운데
+   * - `sm` — 12px · 버튼·입력 안처럼 좁은 자리
+   * - `md` — 16px · 본문 줄 옆(기본) — 크롬 아이콘과 같은 크기
+   * - `lg` — 24px · 패널·빈자리의 가운데
    * @default "md"
    */
   size?: "sm" | "md" | "lg" | null | undefined;

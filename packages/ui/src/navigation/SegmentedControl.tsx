@@ -2,7 +2,7 @@
 import type { HTMLAttributes, ReactNode, RefAttributes } from "react";
 
 import { cn } from "../cn";
-import { segmentedControlItemVariants } from "./SegmentedControl.variants";
+import { segmentedControlItemVariants, segmentedControlVariants } from "./SegmentedControl.variants";
 
 /* 세그먼트 컨트롤 — 배타적 뷰 전환(Plan ↔ Model).
  *
@@ -40,7 +40,9 @@ export interface SegmentedControlProps<T extends string | number>
   /** 스크린리더가 읽는 이 컨트롤의 이름 — "View mode" 처럼. */
   label: string;
   /**
-   * 칸 높이 — `sm` — 24px, 라벨 글자 · `md` — 28px, 컨트롤 글자
+   * 크기 — 트랙 높이(칸 + 여백 4px × 2, #80).
+   * - `sm` — 30px(작은 컨트롤 높이) · 칸 22px · 라벨 글자
+   * - `md` — 36px(기본 컨트롤 높이) · 칸 28px · 컨트롤 글자
    * @default "md"
    */
   size?: "sm" | "md";
@@ -107,7 +109,7 @@ export function SegmentedControl<T extends string | number>({
         onChange(option.value);
         buttons[next]?.focus();
       }}
-      className={cn("inline-flex shrink-0 items-center rounded-md bg-primary-track p-0.5", className)}
+      className={cn(segmentedControlVariants(), className)}
     >
       {options.map((option) => {
         const active = option.value === value;
@@ -123,9 +125,8 @@ export function SegmentedControl<T extends string | number>({
             onClick={() => onChange(option.value)}
             className={cn(
               segmentedControlItemVariants({ size }),
-              /* 동심원 — 안쪽 반경 = 바깥(rounded-md) − 패딩(p-0.5) = 8 − 2 = 6px(#26). 스쿼클 폐기(#36) 뒤에도 값이 옛 rounded-sm 과 같아 그대로 둔다 —
-                 바깥 토큰이 바뀌면 안쪽이 따라가는 것이 임의값 6px 보다 낫다. */
-              "rounded-[calc(var(--radius-md)-var(--spacing)*0.5)]",
+              /* 동심원 — 안쪽 반경 = 바깥(rounded-md) − 패딩(p-1) = 8 − 4 = 4px(#80, 예전 p-0.5 에서는 6px). 바깥 토큰이 바뀌면 안쪽이 따라간다. */
+              "rounded-[calc(var(--radius-md)-var(--spacing))]",
               active ? "bg-card text-primary shadow-chip" : "text-muted-foreground hover:text-foreground-2",
             )}
           >

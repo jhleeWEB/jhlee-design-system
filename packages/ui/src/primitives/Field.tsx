@@ -139,7 +139,7 @@ export function FieldControl({ "aria-describedby": describedBy, ...rest }: Field
 }
 
 /**
- * 컨트롤 아래의 도움말 — 컨트롤의 `aria-describedby` 에 실린다. 흐린 라벨 글자.
+ * 컨트롤 아래의 도움말 — 컨트롤의 `aria-describedby` 에 실린다. 흐린 본문 글자(보조 문장, #80).
  * @slot field-description
  */
 export function FieldDescription({ className, ...rest }: React.ComponentPropsWithRef<"p">) {
@@ -149,7 +149,7 @@ export function FieldDescription({ className, ...rest }: React.ComponentPropsWit
   return (
     <p
       id={field.descriptionId}
-      className={cn("text-label text-muted-foreground", className)}
+      className={cn("text-body text-muted-foreground", className)}
       {...rest}
       data-slot="field-description"
     />
@@ -170,7 +170,7 @@ export function FieldError({ className, children, ...rest }: React.ComponentProp
   return (
     <p
       id={field.errorId}
-      className={cn("text-label text-destructive", className)}
+      className={cn("text-body text-destructive", className)}
       {...rest}
       data-slot="field-error"
     >

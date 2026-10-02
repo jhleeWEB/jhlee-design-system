@@ -70,7 +70,7 @@ export function TopBar({
       {leading === undefined ? null : <div className="flex shrink-0 items-center gap-2">{leading}</div>}
       <Heading className="m-0 truncate text-title font-semibold text-foreground">{title}</Heading>
       {eyebrow === undefined ? null : (
-        <span className="shrink-0 font-mono text-micro tracking-caps text-muted-foreground uppercase">
+        <span className="shrink-0 font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
           {eyebrow}
         </span>
       )}

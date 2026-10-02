@@ -180,7 +180,7 @@ export function SelectLabel({ className, ...rest }: React.ComponentPropsWithRef<
   return (
     <Radix.Label
       className={cn(
-        "px-3 py-2 font-mono text-micro tracking-caps text-muted-foreground uppercase",
+        "px-3 py-2 font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase",
         className,
       )}
       {...rest}

@@ -154,6 +154,14 @@ const PATTERNS: readonly Pattern[] = [
     baseline: {},
   },
   {
+    id: "font-bold",
+    why: "굵기는 font-normal · font-medium · font-semibold 셋만 쓴다(#80 역할 표, tokens/README.md «역할 → 토큰») — 700 이 끼면 제목 · 컨트롤 · 라벨의 굵기 위계가 한 단 더 갈린다. `font-bold` 는 사다리에 남아 있지만(지우면 소비자에게 major) 컴포넌트는 쓰지 않는다",
+    kinds: ["ts", "tsx", "css"],
+    find: (file) => matches(file.code, /\bfont-bold\b|--font-weight-bold\b/g),
+    // 첫 실측(2026-10-02, #80) 0 — 경비다.
+    baseline: {},
+  },
+  {
     id: "domain-vocabulary",
     why: "parcel · FSI · TBV · verdict · 필지 · 법규 는 원 저장소(인도 주거 컨피규레이터)의 도메인 어휘다 — 디자인 시스템은 도메인을 모른다. legacy 셸(`./legacy`, 3.0.0 에서 삭제 #49)과 함께 앱으로 돌려보냈다",
     kinds: ["ts", "tsx"],
@@ -290,6 +298,16 @@ const DETECTOR_CASES: Readonly<
       "/* var(--muted) 는 chrome-muted 로 */",
     ].join("\n"),
     hits: ["var(--ink)", "var( --gap ,", "var(--color-cool-500)"],
+  },
+  "font-bold": {
+    path: "primitives/__probe__.tsx",
+    source: [
+      'const a = cn("text-title font-bold", "font-semibold");',
+      'const b = "font-weight: var(--font-weight-bold)";',
+      'const c = "font-boldish font-medium";',
+      "// font-bold 는 font-semibold 로",
+    ].join("\n"),
+    hits: ["font-bold", "--font-weight-bold"],
   },
   "domain-vocabulary": {
     path: "primitives/__probe__.tsx",

@@ -416,7 +416,7 @@ function ZoomCluster() {
           <IconZoomIn />
         </Button>
       </Tooltip>
-      <ToolbarDivider className="mx-1 h-5" />
+      <ToolbarDivider />
       <Tooltip label="Zoom to fit" shortcut="⇧2">
         <Button variant="ghost" size="icon" aria-label="Zoom to fit">
           <IconZoomExtents />
@@ -803,7 +803,7 @@ export function Workbench() {
               <ToggleGroupItem value="axes" icon={<IconAxis />} aria-label="Axes" />
             </Tooltip>
           </ToggleGroup>
-          <ToolbarDivider className="h-5" />
+          <ToolbarDivider />
           <Tooltip label="Undo" shortcut="⌘Z">
             <Button variant="ghost" size="icon-sm" aria-label="Undo">
               <IconUndo />

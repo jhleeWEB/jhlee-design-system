@@ -15,7 +15,7 @@ export interface EmptyStateProps
    */
   description?: React.ReactNode;
   /**
-   * 제목 위의 흐린 아이콘. 안의 svg 크기는 여기서 맞춘다(`size-16`).
+   * 제목 위의 흐린 아이콘. 안의 svg 크기는 여기서 맞춘다(32px).
    * @default undefined
    */
   icon?: React.ReactNode;
@@ -43,7 +43,8 @@ export function EmptyState({ className, title, description, icon, action, size, 
       data-slot="empty-state"
       data-size={size ?? "default"}
     >
-      {icon ? <div className="text-foreground-disabled [&_svg]:size-16">{icon}</div> : null}
+      {/* 32px — 예전 `size-16`(64px)은 2px 격자 시절 값이 두 배로 남아 획(24 뷰박스의 2)이 5px 넘게 굵어졌다(#80). */}
+      {icon ? <div className="text-foreground-disabled [&_svg]:size-8">{icon}</div> : null}
       <div className={emptyStateTitleVariants({ size })}>{title}</div>
       {description ? (
         <p className="max-w-[46ch] text-body leading-relaxed text-muted-foreground">{description}</p>

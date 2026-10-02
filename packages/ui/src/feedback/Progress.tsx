@@ -37,7 +37,9 @@ export function Progress({ className, value = null, tone, ...rest }: ProgressPro
   return (
     <RadixProgress.Root
       value={pct}
-      className={cn("relative h-3 w-full overflow-hidden rounded-sm bg-secondary", className)}
+      /* 6px pill — Slider md 트랙(h-1.5 · rounded-full)과 같은 두께 · 모양이다. 예전 `h-3`(12px) · `rounded-sm` 은 2px 격자 시절 값이
+         두 배로 남은 것이다(#80). */
+      className={cn("relative h-1.5 w-full overflow-hidden rounded-full bg-secondary", className)}
       {...rest}
       /* 슬롯·축은 rest 뒤 — 소비자가 넘긴 data-slot 이 손잡이를 덮지 못하게 한다(공통 계약 slot-locked). */
       data-slot="progress"

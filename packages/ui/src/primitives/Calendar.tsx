@@ -223,7 +223,7 @@ export function Calendar({
         >
           <IconChevronLeft />
         </Button>
-        <div id={headingId} aria-live="polite" className="text-control font-semibold">
+        <div id={headingId} aria-live="polite" className="text-body font-semibold">
           {MONTH_NAMES[shown.getMonth()]} <span className="tnum">{shown.getFullYear()}</span>
         </div>
         <Button
@@ -253,7 +253,7 @@ export function Calendar({
                 key={name}
                 scope="col"
                 abbr={name}
-                className="size-8 p-0 text-center text-label font-medium text-muted-foreground"
+                className="size-8 p-0 text-center font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase"
               >
                 {name.slice(0, 2)}
               </th>

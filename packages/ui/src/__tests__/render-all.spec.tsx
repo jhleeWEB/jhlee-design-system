@@ -868,6 +868,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   },
   RadioGroupItem: {
     slot: "radio",
+    axes: ["size"],
     render: (p) => (
       <RadioGroup aria-label="Choice" defaultValue="a">
         <RadioGroupItem value="a" aria-label="A" {...p} />
@@ -1010,7 +1011,7 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
   },
   SkeletonText: { slot: "skeleton-text", render: (p) => <SkeletonText {...p} /> },
   StatusDot: { slot: "status-dot", render: (p) => <StatusDot tone="success" label="Pass" {...p} /> },
-  Switch: { slot: "switch", render: (p) => <Switch aria-label="Dark" {...p} /> },
+  Switch: { slot: "switch", axes: ["size"], render: (p) => <Switch aria-label="Dark" {...p} /> },
   TabsContent: {
     slot: "tabs-content",
     render: inTabs((p) => (

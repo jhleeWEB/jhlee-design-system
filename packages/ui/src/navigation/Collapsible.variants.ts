@@ -28,7 +28,8 @@ export const collapsibleTriggerVariants = cva(
        */
       variant: {
         row: "h-ctl w-full justify-between rounded-md px-3 text-control font-medium hover:bg-muted",
-        inline: "inline-flex rounded-sm px-1 text-body text-muted-foreground hover:text-foreground",
+        inline:
+          "inline-flex rounded-md px-1 text-control font-medium text-muted-foreground hover:text-foreground",
       },
     },
     defaultVariants: { variant: "row" },

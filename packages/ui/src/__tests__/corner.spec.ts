@@ -59,7 +59,9 @@ describe("반경 사다리", () => {
   const theme = (name: string): string | undefined =>
     model.tokens.find((t) => t.name === name && t.scope === "theme")?.value;
 
-  it("sm · md · lg · xl 은 6 · 8 · 12 · 16px 고정이고 full 9999px · none 0 이다 — calc 로 감싸지 않는다", () => {
+  it("xs · sm · md · lg · xl 은 4 · 6 · 8 · 12 · 16px 고정이고 full 9999px · none 0 이다 — calc 로 감싸지 않는다", () => {
+    /* xs 는 16px 이하 작은 표시 상자(체크박스)의 단이다(#80). */
+    expect(theme("--radius-xs")).toBe("4px");
     expect(theme("--radius-sm")).toBe("6px");
     expect(theme("--radius-md")).toBe("8px");
     expect(theme("--radius-lg")).toBe("12px");
@@ -79,15 +81,18 @@ describe("반경 사다리", () => {
 
   it("TSX 의 rounded-[…] 는 동심원 calc(var(--radius-…) − 패딩) 뿐이다", () => {
     expect(auditCorners(sources).filter((f) => f.rule === "arbitrary-rounded")).toEqual([]);
-    /* 컴포넌트(.tsx)만 — testing/corner-audit.ts 는 규칙 설명 문자열에 그 글자를 든다. */
+    /* 컴포넌트(.tsx)와 그 변형(.variants.ts)만 — testing/corner-audit.ts 는 규칙 설명 문자열에 그 글자를 든다.
+       세그먼트 트랙 셋(Tabs · ToggleGroup · SegmentedControl)이 `rounded-md` + `p-1` 이라 칸이 모두 md − spacing(4px)이다(#80). */
     const concentric = sources
-      .filter((s) => s.path.endsWith(".tsx"))
+      .filter((s) => s.path.endsWith(".tsx") || s.path.endsWith(".variants.ts"))
       .flatMap((s) => [...s.text.matchAll(/rounded-\[[^\]\n]*\]/g)].map((m) => `${s.path}: ${m[0]}`))
       .sort();
     expect(concentric).toMatchInlineSnapshot(`
       [
-        "navigation/SegmentedControl.tsx: rounded-[calc(var(--radius-md)-var(--spacing)*0.5)]",
+        "navigation/SegmentedControl.tsx: rounded-[calc(var(--radius-md)-var(--spacing))]",
+        "navigation/Tabs.variants.ts: rounded-[calc(var(--radius-md)-var(--spacing))]",
         "primitives/MediaCard.tsx: rounded-[calc(var(--radius-lg)-var(--space-hairline))]",
+        "primitives/ToggleGroup.variants.ts: rounded-[calc(var(--radius-md)-var(--spacing))]",
       ]
     `);
     expect(

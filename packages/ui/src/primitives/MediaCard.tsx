@@ -124,11 +124,13 @@ export function MediaCard({
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 p-4">
         {eyebrow ? (
-          <div className="font-mono text-micro tracking-caps text-muted-foreground uppercase">{eyebrow}</div>
+          <div className="font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
+            {eyebrow}
+          </div>
         ) : null}
 
         <div className="min-w-0">
-          <h3 className="truncate text-control font-semibold text-foreground">
+          <h3 className="truncate text-body font-semibold text-foreground">
             {onSelect ? (
               <button
                 data-slot="media-card-select"

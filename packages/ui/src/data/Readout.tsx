@@ -75,7 +75,9 @@ export function ReadoutItem({ className, label, value, unit, status, tone, ...re
       data-slot="readout-item"
       data-tone={resolvedTone satisfies ReadoutTone}
     >
-      <dt className="truncate font-mono text-micro tracking-caps text-muted-foreground uppercase">{label}</dt>
+      <dt className="truncate font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
+        {label}
+      </dt>
       <dd className={readoutValueVariants({ tone: resolvedTone })}>
         <span className="min-w-0 truncate">
           {value}

@@ -166,7 +166,7 @@ export const Variants: Story = {
     <div className="grid grid-cols-2 gap-6">
       {cases.map(({ variant, closed, key }) => (
         <article key={key} aria-label={`Shell ${key}`} className="flex flex-col gap-2">
-          <span className="font-mono text-micro tracking-caps text-muted-foreground uppercase">
+          <span className="font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
             {variant} · inspector {closed ? "closed" : "open"}
           </span>
           <Shell

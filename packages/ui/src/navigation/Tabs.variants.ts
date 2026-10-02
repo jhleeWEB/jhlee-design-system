@@ -5,8 +5,9 @@ import { cva } from "../cn";
 
 /**
  * 탭 목록의 변형 — `variant`.
- * `segmented` 는 SegmentedControl 과 같은 옅은 파란 트랙 위의 흰 pill 이다. 트랙 안쪽 여백을 `p-1` 로 두어 바깥 `rounded-lg`(12) −
- * 여백(4) = 안쪽 `rounded-md`(8) 로 **토큰끼리** 동심원이 된다 — SegmentedControl 의 `p-0.5` 는 간격 격자 밖이라 새 코드에 옮기지 않았다.
+ * `segmented` 는 SegmentedControl 과 같은 옅은 파란 트랙 위의 흰 pill 이다. 트랙은 컨트롤이라(#80) 모서리가 버튼 · 입력과 같은 `rounded-md` 이고,
+ * 칸(28px) + 여백 `p-1` 이 기본 컨트롤 높이(36px)다. 칸의 반경은 동심원 `calc(var(--radius-md) - var(--spacing))`(4px) — 예전 트랙은
+ * `rounded-lg`(12) 라 같은 높이의 버튼(8)보다 둥글었다.
  */
 export const tabsListVariants = cva("flex shrink-0 items-center", {
   variants: {
@@ -16,7 +17,7 @@ export const tabsListVariants = cva("flex shrink-0 items-center", {
      * - `underline` — 아래 경계선 위의 밑줄. 페이지 · 패널 머리의 큰 구획 전환
      */
     variant: {
-      segmented: "inline-flex rounded-lg bg-primary-track p-1",
+      segmented: "inline-flex rounded-md bg-primary-track p-1",
       underline: "gap-4 border-b border-border",
     },
   },
@@ -42,7 +43,7 @@ export const tabsTriggerVariants = cva(
        */
       variant: {
         segmented: [
-          "h-7 rounded-md px-3 text-control hover:text-foreground-2",
+          "h-7 rounded-[calc(var(--radius-md)-var(--spacing))] px-3 text-control hover:text-foreground-2",
           "data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-chip",
         ],
         underline: [

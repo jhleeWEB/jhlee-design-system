@@ -190,7 +190,7 @@ export function DataTable<Row>({
                     style={column.width === undefined ? undefined : { width: column.width }}
                     className={cn(
                       "border-b border-border align-bottom",
-                      "font-mono text-micro font-normal tracking-caps text-muted-foreground uppercase",
+                      "font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase",
                       column.numeric ? "text-right" : "text-left",
                       column.sortValue ? "p-0" : cellPad,
                     )}

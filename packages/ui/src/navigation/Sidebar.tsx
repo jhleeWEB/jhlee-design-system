@@ -110,7 +110,7 @@ export function SidebarItem({ className, icon, label, active, badge, shortcut, .
       className={cn(
         "cursor-pointer appearance-none border-0 bg-transparent p-0 text-inherit",
         "flex h-ctl-lg shrink-0 items-center gap-4 rounded-md border border-solid border-transparent",
-        "text-control text-muted-foreground transition-colors duration-fast",
+        "text-body text-muted-foreground transition-colors duration-fast",
         "hover:bg-muted hover:text-foreground",
         /* 활성은 **채우지 않고 물들인다.** 참고 화면 실측이 그랬고, 이유가 있다 — 레일은
            상시 보이므로 채워진 액센트 칸이 화면에서 가장 무거운 것이 되어 주 동작 버튼과
@@ -158,7 +158,7 @@ export function SidebarGroup({ label, className, children, ...rest }: SidebarGro
       {collapsed ? (
         <hr aria-label={label} className="my-2 w-8 self-center border-0 border-t border-border" />
       ) : (
-        <div className="px-3 pt-3 pb-1 font-mono text-micro tracking-caps text-muted-foreground uppercase">
+        <div className="px-3 pt-3 pb-1 font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
           {label}
         </div>
       )}

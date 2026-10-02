@@ -8,7 +8,16 @@ export { mediaCardMediaVariants, mediaCardVariants } from "./MediaCard.variants"
 export { Button, ButtonGroup, type ButtonProps } from "./Button";
 export { buttonVariants, type ButtonTone } from "./Button.variants";
 export { PanelToggleButton, type PanelToggleButtonProps } from "./PanelToggleButton";
-export { Checkbox, RadioGroup, RadioGroupItem, Switch } from "./Choice";
+export {
+  Checkbox,
+  RadioGroup,
+  RadioGroupItem,
+  Switch,
+  type CheckboxProps,
+  type RadioGroupItemProps,
+  type SwitchProps,
+} from "./Choice";
+export { checkboxVariants, radioGroupItemVariants, switchVariants, type ChoiceSize } from "./Choice.variants";
 export {
   Combobox,
   ComboboxContent,

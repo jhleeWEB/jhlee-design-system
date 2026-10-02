@@ -33,12 +33,14 @@ export function Toolbar({ className, onCanvas, ...rest }: ToolbarProps) {
   );
 }
 
-/** 툴바 안의 시각적 구분. `role="separator"` 를 주면 스크린리더가 툴바 항목 수를 잘못 센다. */
+/** 툴바 안의 시각적 구분(높이 20px). `role="separator"` 를 주면 스크린리더가 툴바 항목 수를 잘못 센다. */
 export function ToolbarDivider({ className, ...rest }: ComponentProps<"span">) {
   return (
     <span
       aria-hidden="true"
-      className={cn("mx-1 h-8 w-px shrink-0 bg-border", className)}
+      /* 20px — 30 · 36px 컨트롤 사이에서 위아래가 비는 높이. 예전 `h-8`(32px)은 2px 격자 시절 값이 두 배로 남아 컨트롤만큼 길었고,
+         Pages/Workbench 는 `h-5` 로 덮어 쓰고 있었다(#80). */
+      className={cn("mx-1 h-5 w-px shrink-0 bg-border", className)}
       {...rest}
       data-slot="toolbar-divider"
     />

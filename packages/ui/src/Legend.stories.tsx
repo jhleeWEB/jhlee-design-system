@@ -4,9 +4,10 @@ import { expect } from "storybook/test";
 import { ThemePair } from "../stories/decorators/ThemePair";
 import { Legend, LegendItem } from "./Legend";
 
-/* 3스토리 계약(본보기 primitives/Button.stories). 범례는 **캔버스**다 — 흰 바탕 고정 · radius 0 · 무채색 · 다크 없음. ThemeContrast 의 두 칸이
- * 같은 픽셀이어야 한다(CanvasScale 과 같은 구조적 약속). 축은 목록의 `orientation` 과 항목의 `swatch` · `pattern` —
- * Variants 는 무늬 넷 × swatch 일곱(28칸)과 두 방향을 함께 그린다. 도면 바닥(`bg-canvas`) 위에 올려 그린다. */
+/* 3스토리 계약(본보기 primitives/Button.stories). **범례 상자는 크롬, 스와치는 캔버스다**(#80) — 상자는 도면 위에 뜨는 패널(rounded-lg ·
+ * 테두리 · 카드 면 · shadow-pop)이라 ThemeContrast 의 두 칸에서 다크를 따르고, 흰 타일 위의 스와치는 두 칸에서 같은 픽셀이어야 한다
+ * (캔버스는 다크가 없다). 축은 목록의 `orientation` 과 항목의 `swatch` · `pattern` — Variants 는 무늬 넷 × swatch 일곱(28칸)과 두 방향을
+ * 함께 그린다. 도면 바닥(`bg-canvas`) 위에 올려 그린다 — 실제로 놓이는 자리다(Pages/Workbench 의 왼쪽 아래). */
 const swatchValues = ["ink", "ink-2", "muted", "line-strong", "line", "grid", "surface"] as const;
 const patternValues = ["fill", "outline", "hatch", "line"] as const;
 
@@ -53,7 +54,7 @@ export const Variants: Story = {
   tags: ["!manifest"],
   render: (args) => (
     <div className="flex flex-col gap-6">
-      {/* 무늬마다 한 상자, 상자 안에 swatch 일곱 단 — Matrix(크롬 글자)를 쓰지 않는 것은 캔버스 위에서 크롬 글자가 다크에서 흰 바탕 위 흰 글자가 되기 때문이다. */}
+      {/* 무늬마다 한 상자, 상자 안에 swatch 일곱 단 — 상자가 제 크롬 면을 들고 있어 다크에서도 글자가 상자 위에 선다(Matrix 의 크롬 글자는 캔버스 바닥 위에 바로 서서 다크에서 흰 바탕 위 흰 글자가 된다). */}
       <div className="flex items-start gap-4">
         {patternValues.map((pattern) => (
           <Legend {...args} key={pattern} aria-label={`Pattern ${pattern}`}>

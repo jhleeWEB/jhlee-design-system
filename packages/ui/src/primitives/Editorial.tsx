@@ -26,7 +26,7 @@ export function Eyebrow({
       {...rest}
       data-slot="eyebrow"
       className={cn(
-        "flex items-baseline gap-2 font-mono text-micro tracking-caps text-muted-foreground uppercase select-none",
+        "flex items-baseline gap-2 font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase select-none",
         className,
       )}
     >
