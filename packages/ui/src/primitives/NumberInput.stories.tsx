@@ -5,9 +5,10 @@ import { ThemePair } from "../../stories/decorators/ThemePair";
 import { Matrix } from "../../stories/helpers/Matrix";
 import { NumberInput } from "./NumberInput";
 
-/* 3스토리 계약(본보기 Button.stories). 축은 `size`(Input 과 같은 높이 사다리) — Variants 는 size × 상태(단위 · 버튼 없음 · 경계 · 검증 실패 · 비활성) 격자다. */
+/* 3스토리 계약(본보기 Button.stories). 축은 `size`(Input 과 같은 높이 사다리) — Variants 는 size × 상태(단위 · 버튼 없음 · 경계 · 검증 실패 · 비활성 ·
+ * 빈 값) 격자다. `empty` 는 `nullable` 로 비운 칸이다 — 값이 없다는 것을 placeholder 가 말한다(#104). */
 const sizeValues = ["sm", "md", "lg"] as const;
-const stateValues = ["unit", "no stepper", "at max", "invalid", "disabled"] as const;
+const stateValues = ["unit", "no stepper", "at max", "invalid", "disabled", "empty"] as const;
 
 const meta = {
   title: "Primitives/NumberInput",
@@ -43,6 +44,16 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
+  play: async ({ canvas }) => {
+    // nullable — 수를 치고 비운 뒤 떠나면 빈 칸으로 남는다(기본 동작이면 마지막 값으로 돌아온다).
+    const empty = canvas.getByRole("spinbutton", { name: "md empty" });
+    await expect(empty).toHaveValue(null);
+    await userEvent.type(empty, "4");
+    await expect(empty).toHaveValue(4);
+    await userEvent.clear(empty);
+    await userEvent.tab();
+    await expect(empty).toHaveValue(null);
+  },
   render: (args) => (
     <Matrix
       rows={sizeValues}
@@ -56,7 +67,9 @@ export const Variants: Story = {
           aria-label={`${size} ${state}`}
           unit={state === "no stepper" ? undefined : args.unit}
           stepper={state !== "no stepper"}
-          defaultValue={state === "at max" ? 6 : 3.2}
+          defaultValue={state === "at max" ? 6 : state === "empty" ? null : 3.2}
+          nullable={state === "empty"}
+          placeholder={state === "empty" ? "Off" : undefined}
           invalid={state === "invalid"}
           disabled={state === "disabled"}
           className="w-44"
