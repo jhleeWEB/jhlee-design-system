@@ -177,6 +177,17 @@ const PATTERNS: readonly Pattern[] = [
     // tokens.css 의 body 는 #20 · #24 에서 크롬(background · foreground)으로 옮겨 0 이다. canvas.css(--muted · --mono 폴백)와 Sidebar(--panel-w)는 #21 이 --canvas-muted · --font-stack-mono · --size-panel 로 옮겨 0 이다.
     baseline: {},
   },
+  {
+    id: "native-scroll",
+    why: "overflow-auto · overflow-y-scroll 은 브라우저 기본 스크롤바를 그린다 — DS 의 스크롤 영역은 ScrollArea(겹쳐 뜨는 6px 막대 · 스크롤 중에만 보임) 하나다(#87). 넘치는 영역은 ScrollArea 로 감싼다",
+    kinds: ["ts", "tsx", "css"],
+    find: (file) =>
+      file.kind === "css"
+        ? cssValues(file, /\boverflow(?:-[xy])?\s*:\s*(?:auto|scroll)\b/g)
+        : matches(file.code, /\boverflow(?:-[xy])?-(?:auto|scroll)\b/g),
+    // Command 목록(src/overlay/Command.tsx)의 overflow-y-auto 를 #87 이 ScrollArea 로 옮겨 0 이다.
+    baseline: {},
+  },
 ];
 
 /** 패턴 검출기가 실제로 잡는지 — 기준선이 `{}` 가 된 뒤에도 이 스펙이 «아무것도 안 보는 초록» 이 되지 않게 한다. */
@@ -298,6 +309,15 @@ const DETECTOR_CASES: Readonly<
       "/* var(--muted) 는 chrome-muted 로 */",
     ].join("\n"),
     hits: ["var(--ink)", "var( --gap ,", "var(--color-cool-500)"],
+  },
+  "native-scroll": {
+    path: "primitives/__probe__.tsx",
+    source: [
+      'const a = cn("max-h-80 overflow-y-auto", "overflow-x-scroll");',
+      'const b = "overflow-hidden overflow-clip";',
+      "// overflow-auto 는 ScrollArea 로",
+    ].join("\n"),
+    hits: ["overflow-y-auto", "overflow-x-scroll"],
   },
   "font-bold": {
     path: "primitives/__probe__.tsx",

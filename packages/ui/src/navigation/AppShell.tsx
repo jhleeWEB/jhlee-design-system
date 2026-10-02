@@ -9,6 +9,7 @@ import {
   appShellMainVariants,
   appShellVariants,
 } from "./AppShell.variants";
+import { ScrollArea } from "./ScrollArea";
 import { ResizableHandle, ResizablePanel, ResizablePanels } from "./ResizablePanels";
 
 /* 작업대 셸 — 상단바 · 왼쪽 사이드바 · 가운데 본문(캔버스) · 오른쪽 인스펙터 · 바닥줄(#60).
@@ -164,7 +165,15 @@ export function AppShell({
             {...(inspectorMaxSize === undefined ? {} : { maxSize: inspectorMaxSize })}
             className={appShellInspectorVariants({ variant })}
           >
-            {inspector}
+            {/* 인스펙터는 넘치면 DS 스크롤바로 스크롤한다 — 소비자가 `overflow-y-auto` 로 브라우저 기본 막대를 그리던 자리(#87).
+                내용은 자연 높이로 두면 된다(h-full · overflow 를 적지 않는다). */}
+            <ScrollArea
+              orientation="vertical"
+              className="h-full"
+              viewportProps={{ "data-slot": "app-shell-inspector-viewport" }}
+            >
+              {inspector}
+            </ScrollArea>
           </ResizablePanel>
         )}
       </ResizablePanels>

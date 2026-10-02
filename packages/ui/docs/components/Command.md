@@ -97,7 +97,9 @@ _(DS 가 더하는 prop 없음 — 물려받는 속성만)_
 
 클라이언트 컴포넌트(`"use client"` — 서버 컴포넌트에서 렌더할 수 없다) · 원본 `src/overlay/Command.tsx`
 
-거른 항목의 목록(`role="listbox"`) — 길면 `--size-command-list`(300px) 안에서 스크롤한다. 항목 · 묶음 · 빈 상태 · 구분선을 담는다.
+거른 항목의 목록(`role="listbox"`) — 길면 `--size-command-list`(300px) 안에서 DS 스크롤바(`ScrollArea`)로 스크롤한다. 항목 · 묶음 · 빈 상태 · 구분선을 담는다.
+스크롤은 바깥 ScrollArea 의 뷰포트가 맡고(#87 — 예전에는 listbox 가 `overflow-y-auto` 로 브라우저 기본 막대를 그렸다), 키보드 탐색의
+`scrollIntoView({ block: "nearest" })` 는 가장 가까운 스크롤 조상인 그 뷰포트를 움직인다. className · ref · rest 는 listbox 에 닿는다.
 보이는 항목이 하나도 없으면 listbox 역할을 내려놓는다 — 옵션 없는 listbox 는 ARIA 위반(aria-required-children)이고, 그때 안에는 빈 상태 문장뿐이다.
 
 물려받는 props: `ClassAttributes<HTMLDivElement>`, `HTMLAttributes<HTMLDivElement>`
