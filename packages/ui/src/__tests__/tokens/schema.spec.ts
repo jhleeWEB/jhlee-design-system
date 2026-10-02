@@ -222,6 +222,18 @@ describe("검출기", () => {
     ).toMatch(/scope/);
   });
 
+  it("글자 줄 높이는 px 만 — 비율(number)은 소수 px 를 내므로 실패(#82)", () => {
+    const text = (lineHeight: unknown) =>
+      errorsWith({
+        "primitive/x.json": rootScoped("theme", {
+          x: { $type: "typography", $value: { fontSize: "14px", lineHeight } },
+        }),
+      }).filter((e) => e.includes("x.json"));
+    expect(text(1.55).join("\n")).toMatch(/lineHeight 는 <n>px/);
+    expect(text("1.4").join("\n")).toMatch(/lineHeight 는 <n>px/);
+    expect(text("20px")).toEqual([]);
+  });
+
   it("음수 치수(tracking-tight)는 dimension 이다", () => {
     expect(
       errorsWith({

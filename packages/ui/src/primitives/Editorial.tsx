@@ -72,10 +72,6 @@ export function DisplayHeading({
 /** 들머리 아래 한 문단 — 읽히도록 폭을 제한한다. */
 export function Lede({ className, ...rest }: React.ComponentPropsWithRef<"p">) {
   return (
-    <p
-      {...rest}
-      data-slot="lede"
-      className={cn("max-w-[42ch] text-body leading-relaxed text-muted-foreground", className)}
-    />
+    <p {...rest} data-slot="lede" className={cn("max-w-[42ch] text-body text-muted-foreground", className)} />
   );
 }

@@ -48,6 +48,28 @@ legacy-map.mjs  옛 이름 → 새 이름 정적 표(JSON 정본 밖) — 린트
 시그널이 Klein 으로 정해지며 옛 액센트 `palette.azure`(#0869e1)는 크롬이 참조하지 않는다 — 공개 CSS 변수라 지우지 않는다. `info` 는 원래 primary 와
 같은 사다리를 공유했으므로(«안내» 는 판정이 아니다) 함께 Klein 으로 옮겼다. 단마다의 대비는 `primitive/color.json` 의 `$description` 이 정본이다.
 
+## 글자 사다리 — 크기 / 줄 높이, 전부 짝수 px(#82)
+
+사용자 결정(2026-10-02 «짝수 사다리, compact»). 줄 높이는 비율이 아니라 **px** 로 적는다 — 스키마(`schema.ts`)가 비율(number)을 거부하고
+`even-dimensions.spec` 이 생성물에서 짝수를 본다. 옛 비율은 크기와 곱해 소수 px(13 × 1.55 = 20.15px)를 냈다.
+
+| 토큰 | 크기 / 줄 높이 | 옛 값 | 역할 |
+|---|---|---|---|
+| `text-micro` | 10 / 14 | 10 / 1.4(14) | 메타 · 구획 라벨 · Kbd · 단위 · 표 머리 |
+| `text-label` | 12 / 16 | 11 / 1.45(15.95) | 배지 · 툴팁 · 범례 · 트랙 안 22px 칸 |
+| `text-body` | 14 / 20 | 13 / 1.55(20.15) | 본문 · 목록 · 메뉴 항목 · 면 제목 · 필드 라벨 · 보조 문장 |
+| `text-control` | 14 / 20 | 13.5 / 1.4(18.9) | 컨트롤 글자 · 입력 값 — 값은 body 와 같고 역할이 다르다 |
+| `text-title` | 16 / 24 | 15 / 1.4(21) | 대화 · 화면 제목 |
+| `text-readout` | 22 / 28 | 22 / 1.2(26.4) | Readout 값 |
+| `text-display` | 26 / 32 | 26 / 1.16(30.16) | 들머리 제목 |
+
+- **줄 높이 유틸은 쓰지 않는다.** 여러 줄 문단(Alert · Toast · Modal/Drawer/AlertDialog 설명 · EmptyState · MediaCard · Editorial · Textarea)도 글자 토큰의 줄 칸을
+  그대로 쓴다. 비율 `leading-snug/normal/relaxed`(#55 가 정본에 올린 세 단)는 #82 에서 내렸다 — 이 저장소의 린트(`no-unknown-classes`, 진입점 theme.css)가
+  모르는 클래스로 잡는다(소비자는 `tailwindcss/theme.css` 의 같은 값으로 계속 그려진다 — 픽셀이 같아 파괴적 변경이 아니다). 남은 leading 은 둘뿐이다:
+  한 줄 컨트롤의 `leading-none`(Button — 줄 = 크기, 짝수)과 Kbd 의 `leading-(--size-kbd)`(20px).
+- px 줄 높이는 비율과 달리 **px 로 물려받는다** — 부모의 text-* 아래에서 글자 크기만 바꾸는 자식(`font-size: var(--text-body)` 만 적은 CSS)은 부모의 줄 칸을 그대로 쓴다.
+  크기를 바꾸는 자리는 언제나 text-* 유틸(크기와 줄 높이를 함께 낸다)로 바꾼다.
+
 ## 역할 → 토큰(#80)
 
 컴포넌트마다 글자 크기 · 굵기 · 모서리가 갈려 «일관적이지 않다» 는 피드백(2026-10-02)에서 정했다. 새 컴포넌트는 글자 · 상자마다 **어느 역할인가**를
@@ -63,14 +85,14 @@ legacy-map.mjs  옛 이름 → 새 이름 정적 표(JSON 정본 밖) — 린트
 | 목록 · 메뉴 항목 | `text-body` | normal | Dropdown · Context · Select · Command · Combobox 항목 · SidebarItem |
 | 면 제목 | `text-body` | `font-semibold` | CardHeader · Toast · Alert · AccordionTrigger · MediaCard · Calendar 달 이름 · Popover/HoverCard 머리 |
 | 대화 · 화면 제목 | `text-title` | `font-semibold` | Modal · Drawer · AlertDialog · TopBar · EmptyState |
-| 필드 라벨 | `text-body` | `font-medium` | FieldLabel — 도움말 · 오류(`text-body`)와 같은 크기이고 굵기 · 색이 가른다. 11px(`text-label`)로 두었더니 아래 13px 도움말보다 작아 위계가 뒤집혔다(#80 검토) |
+| 필드 라벨 | `text-body` | `font-medium` | FieldLabel — 도움말 · 오류(`text-body`)와 같은 크기이고 굵기 · 색이 가른다. `text-label`(당시 11px)로 두었더니 아래 도움말(당시 13px)보다 작아 위계가 뒤집혔다(#80 검토) |
 | 보조 문장 | `text-body` | normal | 설명 · 도움말 — Modal/Drawer/Toast 설명 · FieldDescription · FieldError · EmptyState 설명 |
 | 메타 · 구획 라벨 | `text-micro` | `font-medium` · `font-mono` · `uppercase` · `tracking-caps` | Eyebrow · SectionLabel · 표 머리(Th · DataTable · Calendar 요일) · 메뉴 묶음 머리글 · Readout 라벨 |
 
 - **크기 축은 높이와 여백만 바꾼다.** Button · Input · Select · DatePicker · Pagination 의 `sm` 도 `text-control` 이다(예전 Input · Select · DatePicker ·
   Pagination 의 sm 은 `text-body`, ToggleGroup · SegmentedControl 의 sm 은 `text-label` 로 갈려 있었다). 예외 하나 — **트랙 안의 22px 칸**
-  (ToggleGroup `segmented` · SegmentedControl 의 sm)은 `text-label` 이다: 13.5px 글자가 22px 칸을 꽉 채워 위아래 여백이 1.5px 로 줄었다(실측).
-  굵기는 그대로 medium 이다.
+  (ToggleGroup `segmented` · SegmentedControl 의 sm)은 `text-label` 이다: 13.5px 글자가 22px 칸을 꽉 채워 위아래 여백이 1.5px 로 줄었다(#80 실측).
+  짝수 사다리(#82)에서도 같다 — `text-control`(14 / 20)이면 위아래 1px, `text-label`(12 / 16)이면 3px 가 남는다. 굵기는 그대로 medium 이다.
 - 표 밖의 글자(Badge · Tooltip 의 `text-label`, Kbd · 단축키 · 단위 · 슬라이더 눈금의 mono `text-micro`, Readout 값의 `text-readout`, Stepper 의
   상태 · 설명, DisplayHeading 의 `text-display`)는 자기 자리의 값을 유지한다 — 역할이 하나뿐이라 갈릴 짝이 없다.
 - `<button>` 은 UA 의 `font` 단축이 굵기를 400 으로 되돌린다(preflight 없음, theme.css `font-inherit` 주석). 부모의 글자를 받아야 하는 맨 버튼은
@@ -113,6 +135,25 @@ lg 44×24px(손잡이 = 트랙 높이 − 4px). 단과 근거는 `src/primitives
 
 옛 base 이름(`--ink` `--muted` `--line` `--bg` …)은 값이 크롬과 **다르다**(`--ink` #1a1a1a vs `--chrome-foreground` #191f28) — 그래서 코드모드는 크롬이 아니라
 같은 값의 `palette.gray.*` 로 옮긴다(픽셀 보존). 크롬으로 옮길지는 소비 레포가 따로 판단한다.
+
+## 짝수 치수 — 규칙과 예외 목록(#82)
+
+«치수는 최대한 짝수로. 예외는 아이콘처럼 홀수여야 육안으로 맞는 경우»(사용자 결정 2026-10-02). 홀수 · 소수 px 는 가운데 정렬마다 반 픽셀을 낳는다.
+정본에 새 치수를 더할 때(크기 · 줄 높이 · 간격 · 반경 · 오버레이 꼬리 · 오프셋) 짝수로 적는다. 래칫은 `src/__tests__/tokens/even-dimensions.spec.ts` 다 —
+생성물의 토큰 값과 렌더되는 소스(px 리터럴 · 계산되는 calc() · Tailwind 숫자 유틸 · `*-px` · 비율 leading · 선 굵기 · JS 숫자 치수)를 보고,
+홀수는 아래 허용 목록에만 이유와 함께 남는다(목록 = 실제 — 고쳐서 줄었으면 같은 PR 에서 목록을 낮춘다).
+
+| 예외 | 어디 | 왜 |
+|---|---|---|
+| 헤어라인 1px | `--space-hairline` · 테두리(`border`) · 구분선 · 연결선 · 눈금(`h-px` · `w-px`) · 이웃 테두리를 겹치는 `-ml-px` · `-mr-px` · 틈으로 그린 선(Readout `gap-px`) · 포커스 링 `outline-offset: 1px` · 범례 빗금 먹선 | 선 그 자체다 — 2px 면 선이 아니라 홈이 된다 |
+| 그림자 속 1px | `--shadow-chip/card` 의 y 오프셋 · `--shadow-pop/modal` 의 `0 0 0 1px` | 헤어라인 그림자 · 그림자 안에 넣은 테두리 |
+| 헤어라인 파생 동심원 | MediaCard 선택 링 `rounded-[calc(var(--radius-lg)-var(--space-hairline))]` = 11px | 1px 테두리의 안쪽 윤곽을 따라 돈다 — 짝수로 돌리면 모서리에서 벌어진다 |
+| pill 센티널 | `--radius-full` 9999px | 치수가 아니라 «상자 반보다 크면 반원» 이라는 표식 |
+| 숨김 상자 | DataTable 캡션 `size-px`(sr-only) | 화면에서 숨기는 표준 기법 — 보이는 치수가 아니다 |
+| 아이콘 | `ICON_EXCEPTIONS`(오늘 0) | 홀수여야 광학적으로 맞을 때만 근거와 함께. 아이콘은 12 · 16 · 20 · 24px, 커서 32px |
+
+세지 않는 것: 가운데 정렬이 낳는 파생 여백(44px 상단바 안 30px 버튼의 위아래 7px · 22px 칸 안 16px 줄의 3px), 아이콘 글리프의 SVG 좌표와 획 굵기(뷰박스가 비율로
+줄여 16px 에서 1.33px), 커서 이미지의 핫스팟 좌표, 단위 없는 수(z-index · 굵기) · em · ms · % · vw.
 
 ## 확장 필드 `$extensions.sds`
 

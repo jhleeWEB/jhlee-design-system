@@ -34,8 +34,9 @@ export const toastVariants = cva(
   },
 );
 
-/** 토스트 보조 문장의 변형 — neutral 은 한 단 옅은 회색, 판정 톤은 제목과 같은 톤 글자(옅은 면 위 4.5:1)다. */
-export const toastDescriptionVariants = cva("m-0 mt-1 leading-relaxed", {
+/** 토스트 보조 문장의 변형 — neutral 은 한 단 옅은 회색, 판정 톤은 제목과 같은 톤 글자(옅은 면 위 4.5:1)다.
+ *  줄 높이는 뿌리의 text-body(14/20px)를 물려받는다 — 비율 leading-relaxed 는 소수 px 줄을 내서 걷었다(#82). */
+export const toastDescriptionVariants = cva("m-0 mt-1", {
   variants: {
     tone: {
       neutral: "text-muted-foreground",

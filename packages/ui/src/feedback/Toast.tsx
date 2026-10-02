@@ -165,7 +165,7 @@ function ToastItem({
       className={cn(toastVariants({ tone }))}
     >
       {Icon ? (
-        /* 첫 줄(13px × 1.55 ≈ 20px) 높이의 칸 가운데에 16px 아이콘을 앉힌다 — 여러 줄 제목에서도 첫 줄에 붙는다. */
+        /* 첫 줄(text-body 의 20px 줄) 높이의 칸 가운데에 16px 아이콘을 앉힌다 — 여러 줄 제목에서도 첫 줄에 붙는다. */
         <span className="flex h-5 shrink-0 items-center">
           <Icon data-slot="toast-icon" className="size-4" />
         </span>

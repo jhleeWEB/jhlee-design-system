@@ -173,7 +173,6 @@ describe("cn — 사다리마다 뒤엣것이 이긴다", () => {
     animate: ["animate"],
     ease: ["ease"],
     tracking: ["tracking"],
-    leading: ["leading"],
     "font-weight": ["font"],
     height: ["h", "w"],
     container: ["max-w", "w"],

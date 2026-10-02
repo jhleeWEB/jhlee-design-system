@@ -68,7 +68,8 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              정확히 하나가 계약을 돈다 + 스토리 `component` 가 아닌 부품의 최소 props 픽스처, 실패 0 — #48) · `documented-contracts.spec`(CLAUDE.md 의 약속을 user-event 로: Input 선행 0 ·
                              0 전체선택 · PanelToggleButton 아이콘) · `stories-contract.spec`(3스토리 + a11y `KNOWN_A11Y_FAILURES` 래칫) · `axe.ts`(axe-core 15줄
                              헬퍼, jsdom 이라 color-contrast·region 은 끈다). `setup.ts` 가 jest-dom 매처를 붙인다. `tokens/`(배포 CSS 의 postcss 토큰 모델 +
-                             사다리·cn 동작 · 참조 무결성·미참조 원시 · MOTION↔CSS 대조 · 정본 스키마 · **WCAG 대비 래칫** `contrast.spec`+`contrast-pairs.ts`, #15 · #18 · C2)과
+                             사다리·cn 동작 · 참조 무결성·미참조 원시 · MOTION↔CSS 대조 · 정본 스키마 · **WCAG 대비 래칫** `contrast.spec`+`contrast-pairs.ts`, #15 · #18 · C2 ·
+                             **짝수 치수 래칫** `even-dimensions.spec`, #82)과
                              `package/`(exports · "use client" 집합 · 공개 API 목록)는 `arch` 프로젝트(node)가 돈다(#11)
   src/__arch__/              금지 패턴 래칫(`forbidden-patterns.spec` — 파일별 횟수 기준선, 늘면 실패·줄면 낮춰야 통과) + 소스 그래프. `arch` 프로젝트(#11).
                              `component-contract.tsx` 는 공통 계약의 검사기(`describeComponentContract(storiesModule, {slot, axes})` · `runContract`) — slot 존재·못 덮음 ·
@@ -116,6 +117,15 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
   굵기는 400·500·600 셋만(`font-bold` 래칫), 크기 축은 높이·여백만 바꾼다(예외: 트랙 안 22px 칸은 `text-label`). 모서리: 작은 표시(16px 이하 — 체크박스) `xs` ·
   칩·배지·Kbd `sm` · 컨트롤·메뉴 항목·세그먼트 트랙 `md` · 면(카드·알림·토스트·팝오버·메뉴·툴팁·범례) `lg` · 화면을 가리는 것 `xl` · 원형·pill `full`.
   선택 컨트롤(Checkbox·RadioGroupItem·Switch)은 `size` sm·md·lg(기본 md — 체크박스·라디오 14/16/20px, 스위치 28×16/36×20/44×24px).
+- **치수는 짝수 px 다**(#82 — 사용자 결정 2026-10-02 «치수는 최대한 짝수로. 예외는 아이콘처럼 홀수여야 육안으로 맞는 경우»). 홀수 · 소수 px 는 가운데 정렬마다
+  반 픽셀을 낳아 같은 줄의 아이콘 · 테두리 · 글자를 어긋낸다. 글자 사다리는 크기 / 줄 높이가 모두 짝수 px — `text-micro` 10/14 · `text-label` 12/16 · `text-body` 14/20 ·
+  `text-control` 14/20 · `text-title` 16/24 · `text-readout` 22/28 · `text-display` 26/32(정본 `tokens/primitive/typography.json`, 줄 높이는 비율이 아니라 px — 스키마가 막는다).
+  비율 `leading-snug/normal/relaxed` 는 정본에서 내렸다 — 여러 줄 문단도 글자 토큰의 줄 칸을 쓰고, 한 줄 컨트롤만 `leading-none`(줄 = 크기). 간격 · 치수 · 반경 · 오버레이 꼬리
+  (팝오버 12×6 · 툴팁 8×4) · Radix 오프셋 · 캔버스 글자(축척 10px)도 짝수다. **예외 목록**(래칫 `src/__tests__/tokens/even-dimensions.spec.ts` 의 허용 목록 — 항목마다 이유):
+  헤어라인 1px(테두리 · 구분선 · 연결선 · 눈금 · 이웃 테두리를 겹치는 `-ml-px` · 틈으로 그린 선 `gap-px` · 그림자 오프셋과 그림자 속 테두리 · 포커스 링 `outline-offset` ·
+  범례 빗금 먹선) · 헤어라인에서 파생된 동심원(`calc(var(--radius-lg) - var(--space-hairline))` = 11px, MediaCard 선택 링) · pill 센티널 `--radius-full` 9999px ·
+  숨김 캡션의 `size-px`(sr-only) · 아이콘(홀수여야 광학적으로 맞을 때만 `ICON_EXCEPTIONS` 에 근거와 함께 — 오늘 0, 아이콘은 12/16/20/24 · 커서 32).
+  가운데 정렬이 낳는 파생 여백(44px 상단바 안 30px 버튼의 위아래 7px)과 아이콘 글리프의 SVG 좌표 · 획 굵기는 치수가 아니라 세지 않는다.
 - **모서리는 일반 `border-radius` 원호 사다리다** — `rounded-xs/sm/md/lg/xl` = 4/6/8/12/16px 고정, 원형·pill 은 `rounded-full` 로만, 동심원은
   `calc(바깥 토큰 − 패딩)` 만. 스쿼클(`corner-shape`, #26)은 **2026-09-30 사용자 결정으로 폐기했다**(#36) — Chromium 에서 초타원의 안쪽 윤곽 간격 때문에
   1px 테두리가 모서리에서 두꺼워 보였다. `corner-shape` 를 다시 쓰지 않는다(`corner.spec` 이 막는다). `src/corner.css` 는 호환용 빈 파일이다.
@@ -179,6 +189,9 @@ cd packages/ui && pnpm exec publint --strict && pnpm pack --pack-destination /tm
 `render-all.spec` 의 `KNOWN_CONTRACT_FAILURES`(첫 실측 81 컴포넌트)와 `stories-contract.spec` 의 `STORIES_MISSING` 은 Phase D 가 0 으로 비워 지웠다(#48) —
 이제 «배럴 컴포넌트마다 옆 stories · 옆 spec(또는 부품 픽스처)» 는 예외 없는 불변식이다. 마지막 예외였던 Button 의 slot-locked 는 #49 에서 잠갔다 —
 DS 안에서 다른 이름이 필요한 자리(토스트 · 대화상자 닫기 · 패널 토글)는 내부 `SlottedButton`(배럴 밖)으로 이름을 넘긴다.
+`even-dimensions.spec`(#82)도 같은 «목록 = 실제» 래칫이다 — 생성 토큰의 px(글자 크기 · 줄 높이는 px 여야 한다)와 렌더되는 소스의 px 리터럴 · 계산되는 calc() ·
+Tailwind 숫자 유틸(4px × n) · `*-px` 유틸 · 비율 leading · 선 굵기 · JS 숫자 치수가 짝수인지 보고, 홀수는 규칙마다의 허용 목록(이유 필수)에만 남는다 —
+첫 실측: 토큰 6(`--space-hairline` · `--radius-full` · 그림자 넷) · `*-px` 헤어라인 14 파일 17 곳 · CSS 1px 4(theme.css 2 · canvas.css 2) · 동심원 calc 1 · 아이콘 0.
 토큰은 **JSON 정본만** 고치고 `pnpm tokens:build` 를 돌려 생성물을 함께 커밋한다 — `tokens:check` 가 생성물의 최신성을, VRT 가 픽셀을 지킨다.
 새 토큰은 값·출처·대비 근거를 `$description` 에 적는다.
 

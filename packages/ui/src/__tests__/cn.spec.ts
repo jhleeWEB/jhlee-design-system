@@ -25,13 +25,14 @@ describe("cn — 사다리가 충돌을 해소한다", () => {
 
   it("leading-* 은 text-* 사다리 앞에 와도 살아남는다 — v4 의 --tw-leading 이 순서와 무관하게 이기므로 지우면 그림이 바뀐다(C4)", () => {
     /* twMerge 는 남긴 클래스의 순서를 약속하지 않는다 — 집합으로 비교한다.
-       leading-* 은 #55 에서 정본(typography.json, 쓰는 세 단)에 올라 린트 진입점(theme.css)도 안다. */
+       컴포넌트가 쓰는 leading 은 둘뿐이다 — Button 의 leading-none(줄 높이 = 크기) · Kbd 의 leading-(--size-kbd)(20px). 비율 세 단(snug · normal ·
+       relaxed)은 #82 에서 정본에서 내렸다 — 이 저장소의 린트(no-unknown-classes, 진입점 theme.css)가 이제 그 이름을 모르는 클래스로 잡는다. */
     const set = (s: string) => s.split(" ").sort();
-    expect(set(cn("text-title leading-snug"))).toEqual(["leading-snug", "text-title"]);
-    expect(set(cn("text-title leading-snug"))).toEqual(["leading-snug", "text-title"]);
-    expect(set(cn("leading-relaxed", "text-body"))).toEqual(["leading-relaxed", "text-body"]);
+    expect(set(cn("text-control leading-none"))).toEqual(["leading-none", "text-control"]);
+    expect(set(cn("leading-(--size-kbd)", "text-micro"))).toEqual(["leading-(--size-kbd)", "text-micro"]);
     /* leading 끼리는 여전히 뒤엣것이 이긴다. */
-    expect(cn("leading-snug", "leading-relaxed")).toBe("leading-relaxed");
+    expect(cn("leading-none", "leading-(--size-kbd)")).toBe("leading-(--size-kbd)");
+    expect(cn("leading-(--size-kbd)", "leading-none")).toBe("leading-none");
   });
 
   it("손 유틸 font-inherit 는 제 그룹이다 — font-family 로 읽혀 font-mono 를 지우지 않는다(#55)", () => {
@@ -42,7 +43,7 @@ describe("cn — 사다리가 충돌을 해소한다", () => {
   it("역할 이름 사다리(radius · shadow · text)가 해소된다", () => {
     expect(cn("rounded-md", "rounded-xl")).toBe("rounded-xl");
     expect(cn("shadow-card", "shadow-pop")).toBe("shadow-pop");
-    /* 조밀한 레거시 표가 DS 기본 13px 를 11px 로 되돌리는 실제 경로다. */
+    /* 조밀한 레거시 표가 DS 기본 14px 를 12px 로 되돌리는 실제 경로다(#82 전에는 13 → 11). */
     expect(cn("text-body", "text-label")).toBe("text-label");
     expect(cn("text-control", "text-micro")).toBe("text-micro");
   });

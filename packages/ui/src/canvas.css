@@ -1,4 +1,6 @@
-/* 축척은 화면 px로 고정한다. SVG 안에 중첩되어도 도면 입력을 가로채지 않고, 바탕 상자를 만들지 않는다. */
+/* 축척은 화면 px로 고정한다. SVG 안에 중첩되어도 도면 입력을 가로채지 않고, 바탕 상자를 만들지 않는다.
+   글자는 10px — 옛 9.5px 는 소수 px 라 라벨 글리프가 반 픽셀 격자에 걸렸다(#82 «치수는 짝수 px»). 캔버스 요소라 크롬 글자 사다리(text-micro)를
+   따르지 않고 화면 px 리터럴로 둔다 — 크롬 사다리가 바뀌어도 도면의 축척 라벨은 바뀌지 않는다(stylelint 가 canvas.css 의 리터럴을 허용한다). */
 .ds-canvas-scale {
   display: block;
   overflow: visible;
@@ -6,7 +8,7 @@
   user-select: none;
   color: var(--canvas-scale-ink, var(--canvas-muted));
   font-family: var(--canvas-scale-font, var(--font-stack-mono));
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 400;
 }
 .ds-canvas-scale > rect,

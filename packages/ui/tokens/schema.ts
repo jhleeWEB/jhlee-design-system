@@ -82,6 +82,14 @@ const dimension = z
     /^(?:\{[a-z0-9.-]+\}|0|-?\d+(?:\.\d+)?(?:px|em|rem))$/,
     "dimension 은 0 · [-]<n>px|em|rem · {alias}",
   );
+/**
+ * 글자 줄 높이 — **px 만** 받는다(#82). DTCG 는 typography 의 lineHeight 를 비율(number)로 정하지만 이 시스템은 px 로 적는다: 비율은 크기와 곱해
+ * 13 × 1.55 = 20.15px 같은 소수 px 를 냈고, 글자 상자가 픽셀 격자에서 미끄러져 같은 줄의 아이콘 · 테두리와 반 픽셀씩 어긋났다. 짝수인지는
+ * `even-dimensions.spec` 이 생성물에서 본다 — 여기서는 «비율이 다시 들어오지 않는다» 만 막는다. 생성기(formats/shared.mjs)는 값을 그대로 흘린다.
+ */
+const LINE_HEIGHT_PX = "lineHeight 는 <n>px — 비율(number)은 소수 px 를 낸다(#82)";
+const lineHeight = z.string({ error: LINE_HEIGHT_PX }).regex(/^\d+(?:\.\d+)?px$/, LINE_HEIGHT_PX);
+
 const valueSchemas: Readonly<Record<TokenType, z.ZodType>> = {
   color: z
     .string()
@@ -103,7 +111,7 @@ const valueSchemas: Readonly<Record<TokenType, z.ZodType>> = {
   fontFamily: z.string().min(1),
   number: z.number(),
   shadow: z.string().min(1),
-  typography: z.strictObject({ fontSize: dimension, lineHeight: z.number().positive() }),
+  typography: z.strictObject({ fontSize: dimension, lineHeight }),
   animation: z.string().min(1),
 };
 
@@ -111,7 +119,7 @@ const valueSchemas: Readonly<Record<TokenType, z.ZodType>> = {
 export type SdsExtension = z.infer<typeof sdsSchema>;
 /** 토큰 값 — `$type` 이 정한다. */
 export type TokenValue =
-  string | number | readonly number[] | { readonly fontSize: string; readonly lineHeight: number };
+  string | number | readonly number[] | { readonly fontSize: string; readonly lineHeight: string };
 
 /** 트리를 편 토큰 하나 — 생성기와 스펙이 읽는 형태. */
 export interface FlatToken {

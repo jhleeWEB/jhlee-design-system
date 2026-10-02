@@ -15,8 +15,10 @@ import { cva, type VariantProps } from "../cn";
  */
 export const alertVariants = cva(
   /* font-sans 를 스스로 든다 — Toast · Button 과 같은 이유: font-sans 밖(body 의 대체 글꼴 스택)에 놓이면 같은 13px 가 한 단 굵어 보였다.
-     #80 에서 body 도 같은 스택이 되어 지금은 겹치지만, 소비 앱이 body 글꼴을 따로 정해도 이 면은 UI 글꼴로 서게 남겨 둔다. */
-  "flex max-w-full min-w-0 gap-3 rounded-lg border border-solid p-4 font-sans text-body leading-relaxed",
+     #80 에서 body 도 같은 스택이 되어 지금은 겹치지만, 소비 앱이 body 글꼴을 따로 정해도 이 면은 UI 글꼴로 서게 남겨 둔다.
+     줄 높이는 text-body 의 20px 그대로다 — 예전 leading-relaxed(13 × 1.625 = 21.1px)는 첫 줄이 아이콘 칸(h-5, 20px)보다 1px 남짓 커서
+     아이콘이 반 픽셀 위로 떴다(#82). */
+  "flex max-w-full min-w-0 gap-3 rounded-lg border border-solid p-4 font-sans text-body",
   {
     variants: {
       tone: {

@@ -109,11 +109,9 @@ export function ConfirmDialog({
           )}
         >
           <ModalBody className="pt-5 pb-4">
-            <Radix.Title className="text-title leading-snug font-semibold text-foreground">
-              {title}
-            </Radix.Title>
+            <Radix.Title className="text-title font-semibold text-foreground">{title}</Radix.Title>
             {description ? (
-              <Radix.Description id={descriptionId} className="mt-2 leading-relaxed text-muted-foreground">
+              <Radix.Description id={descriptionId} className="mt-2 text-body text-muted-foreground">
                 {description}
               </Radix.Description>
             ) : null}

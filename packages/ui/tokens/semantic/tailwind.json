@@ -68,7 +68,7 @@
   },
   "font": {
     "$type": "fontFamily",
-    "$description": "Instrument Sans(제목에서 성격이 나오고 13px 본문에서 버틴다) · Geist Mono(tabular 기본) — 스택은 --font-stack-* 하나를 그대로 가리킨다. body · tnum · .num 이 같은 스택을 읽어 font-sans 를 들지 않은 컴포넌트도 같은 글꼴이다(#80).",
+    "$description": "Instrument Sans(제목에서 성격이 나오고 14px 본문에서 버틴다) · Geist Mono(tabular 기본) — 스택은 --font-stack-* 하나를 그대로 가리킨다. body · tnum · .num 이 같은 스택을 읽어 font-sans 를 들지 않은 컴포넌트도 같은 글꼴이다(#80).",
     "sans": { "$value": "{font-stack.sans}" },
     "mono": { "$value": "{font-stack.mono}" }
   }

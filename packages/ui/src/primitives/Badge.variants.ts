@@ -4,9 +4,11 @@ import { cva, type VariantProps } from "../cn";
  * 거기서 export 한 cva 는 Next App Router 의 서버 컴포넌트가 className 을 얻으려 부를 수 없었다(계획 §2.5-g, #10).
  * 이 파일에는 지시문·훅·Radix 가 없어야 한다. */
 
-/** 배지의 변형 — `tone` 과 `provisional`(TBV 점선). */
+/** 배지의 변형 — `tone` 과 `provisional`(TBV 점선).
+ *  높이는 `h-5`(20px)로 못 박는다(#82) — 예전 `py-px leading-normal` 은 1px 여백 + 11 × 1.5 = 16.5px 줄 + 테두리 2 = 20.5px 로 소수였다.
+ *  지금은 테두리 2 + 글자 칸 18px 안에 text-label 의 16px 줄이 가운데 선다. 배지는 한 줄(`whitespace-nowrap`)이라 높이를 고정해도 넘치지 않는다. */
 export const badgeVariants = cva(
-  "inline-flex items-center gap-2 rounded-sm border px-3 py-px text-label leading-normal whitespace-nowrap",
+  "inline-flex h-5 items-center gap-2 rounded-sm border px-3 text-label whitespace-nowrap",
   {
     variants: {
       tone: {
