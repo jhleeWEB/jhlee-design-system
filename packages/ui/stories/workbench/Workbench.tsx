@@ -453,7 +453,8 @@ function Inspector({
 }) {
   const overHeight = height > RULES.heightCap;
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-y-auto">
+    /* 스크롤은 AppShell 이 인스펙터를 감싼 ScrollArea 가 맡는다(#87) — 여기서 overflow 를 적으면 브라우저 기본 막대가 다시 나온다. */
+    <div className="flex flex-col">
       <div className="flex items-start gap-3 px-4 pt-4 pb-3">
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <SectionLabel>Selection</SectionLabel>
