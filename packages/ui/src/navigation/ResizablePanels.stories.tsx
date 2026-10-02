@@ -17,7 +17,7 @@ const orientationValues = ["horizontal", "vertical"] as const;
 function Pane({ title, detail }: { title: string; detail: string }) {
   return (
     <div className="flex h-full flex-col gap-1 p-4">
-      <span className="text-label font-semibold text-foreground">{title}</span>
+      <span className="text-body font-semibold text-foreground">{title}</span>
       <span className="text-label text-muted-foreground">{detail}</span>
     </div>
   );
@@ -107,7 +107,7 @@ export const Variants: Story = {
     <div className="grid grid-cols-2 gap-6">
       {cases.map(({ orientation, collapsed }) => (
         <div key={`${orientation}-${collapsed}`} className="flex flex-col gap-2">
-          <span className="font-mono text-micro tracking-caps text-muted-foreground uppercase">
+          <span className="font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
             {orientation} · {collapsed ? "end collapsed" : "open"}
           </span>
           <Workbench

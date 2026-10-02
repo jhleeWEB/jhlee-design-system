@@ -11,10 +11,12 @@ import { cva, type VariantProps } from "../cn";
  *  - 면 `{tone}-soft` · 글자 `{tone}`(제목 · 본문) — 이 쌍은 contrast.spec 이 라이트 · 다크 모두 4.5:1 을 지킨다(info 포함).
  *  - 테두리는 `{tone}` 의 25% — 토스트와 같은 값. 경계는 면의 색이 이미 말하고, 3:1 선(`{tone}-line`)은 흐름 안에서 상자를 무겁게 했다.
  *  - 여백 · 간격(p-4 · gap-3)도 토스트와 같다 — 같은 알림 어휘가 떠 있느냐(토스트) 흐름 안이냐(이것)만 다르다.
+ *  - 모서리도 토스트와 같은 `rounded-lg`(면, #80 역할 표) — 예전 `rounded-md`(컨트롤의 단)는 같은 면을 다른 반경으로 그렸다.
  */
 export const alertVariants = cva(
-  /* font-sans 를 스스로 든다 — Toast · Button 과 같은 이유: font-sans 밖(body 의 대체 글꼴 스택)에 놓이면 같은 13px 가 한 단 굵어 보였다. */
-  "flex max-w-full min-w-0 gap-3 rounded-md border border-solid p-4 font-sans text-body leading-relaxed",
+  /* font-sans 를 스스로 든다 — Toast · Button 과 같은 이유: font-sans 밖(body 의 대체 글꼴 스택)에 놓이면 같은 13px 가 한 단 굵어 보였다.
+     #80 에서 body 도 같은 스택이 되어 지금은 겹치지만, 소비 앱이 body 글꼴을 따로 정해도 이 면은 UI 글꼴로 서게 남겨 둔다. */
+  "flex max-w-full min-w-0 gap-3 rounded-lg border border-solid p-4 font-sans text-body leading-relaxed",
   {
     variants: {
       tone: {

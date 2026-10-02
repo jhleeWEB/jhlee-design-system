@@ -32,18 +32,31 @@ import {
 
 /* Foundations/Radius — 반경 사다리 시트.
  * 모서리는 일반 `border-radius` 원호다. 스쿼클 시트(Foundations/Corners, #26)는 2026-09-30 사용자 결정으로 폐기했다(#36) — Chromium 에서
- * 초타원의 안쪽 윤곽 간격 때문에 1px 테두리가 모서리에서 두꺼워 보였다. 이 시트는 사다리 견본 · 동심원 · 실컴포넌트만 보인다. */
+ * 초타원의 안쪽 윤곽 간격 때문에 1px 테두리가 모서리에서 두꺼워 보였다. 이 시트는 사다리 견본 · 동심원 · 실컴포넌트만 보인다.
+ * 역할 → 단(어느 컴포넌트가 어느 반경인가)의 정본 견본은 Foundations/Roles 다(#80). */
 
 const STEPS = [
-  { step: "sm", token: "--radius-sm", base: 6, role: "Badge · chip · skeleton" },
-  { step: "md", token: "--radius-md", base: 8, role: "Button · input · select · segmented track" },
-  { step: "lg", token: "--radius-lg", base: 12, role: "Card · popover · toast · dropdown · toolbar" },
+  { step: "xs", token: "--radius-xs", base: 4, role: "Checkbox — small marks up to 16px" },
+  { step: "sm", token: "--radius-sm", base: 6, role: "Badge · chip · kbd · skeleton" },
+  {
+    step: "md",
+    token: "--radius-md",
+    base: 8,
+    role: "Button · input · select · segmented track · menu item",
+  },
+  {
+    step: "lg",
+    token: "--radius-lg",
+    base: 12,
+    role: "Card · alert · toast · popover · menu · tooltip · legend",
+  },
   { step: "xl", token: "--radius-xl", base: 16, role: "Modal · drawer" },
-  { step: "full", token: "--radius-full", base: 9999, role: "Switch · status dot · pill" },
+  { step: "full", token: "--radius-full", base: 9999, role: "Radio · switch · status dot · pill" },
 ] as const;
 type Step = (typeof STEPS)[number]["step"];
 /* 정적 문자열이어야 Tailwind 가 굽는다 — 템플릿으로 조립하면 클래스가 CSS 에 없다. */
 const ROUNDED: Record<Step, string> = {
+  xs: "rounded-xs",
   sm: "rounded-sm",
   md: "rounded-md",
   lg: "rounded-lg",
@@ -131,7 +144,7 @@ function ConcentricSpecimens() {
           ]}
         />
         <figcaption className="font-mono text-micro text-muted-foreground">
-          segmented · md track − p-0.5 → calc(var(--radius-md) − spacing × 0.5)
+          segmented · md track − p-1 → calc(var(--radius-md) − spacing)
         </figcaption>
       </figure>
       <figure className="m-0 flex flex-col items-start gap-2">

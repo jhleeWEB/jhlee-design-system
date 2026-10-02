@@ -95,9 +95,10 @@ React 19에서는 ref를 prop으로 받을 수 있다. 단순 래퍼는 native/R
 
 ## 모서리 — 일반 border-radius(스쿼클 폐기 결정 기록)
 
-컴포넌트는 `rounded-sm|md|lg|xl|full`(6/8/12/16/9999px 고정 원호)만 고른다. 원형·pill 은 `rounded-full` 로만 적고, 트랙 안의 pill·탭처럼
-안쪽 반경이 필요하면 동심원 `calc(바깥 토큰 − 패딩)` 이 유일한 허용 임의값이다(SegmentedControl `rounded-[calc(var(--radius-md)-var(--spacing)*0.5)]`,
-레거시 탭 `calc(var(--radius-md) - 2px)` — 둘 다 6px).
+컴포넌트는 `rounded-xs|sm|md|lg|xl|full`(4/6/8/12/16/9999px 고정 원호)만 고르고, **역할이 단을 정한다**(#80 — 작은 표시 `xs` · 칩 `sm` ·
+컨트롤과 메뉴 항목 `md` · 면 `lg` · 화면을 가리는 것 `xl`, 표는 `packages/ui/tokens/README.md` «역할 → 토큰»). 원형·pill 은 `rounded-full` 로만 적고,
+트랙 안의 pill·탭처럼 안쪽 반경이 필요하면 동심원 `calc(바깥 토큰 − 패딩)` 이 유일한 허용 임의값이다(Tabs · ToggleGroup · SegmentedControl 칸
+`rounded-[calc(var(--radius-md)-var(--spacing))]` — 트랙 `rounded-md` − 여백 `p-1` = 4px).
 
 **결정 기록(2026-09-30, #36).** #26·#27 이 CSS `corner-shape: squircle`(K=2) 진행형 향상 + 보정 반경(`--corner-k` 1.5)으로 모든 크롬 모서리를
 스쿼클로 만들었으나, Chromium 에서 초타원의 안쪽 윤곽(바깥 곡선 − 테두리 폭)이 같은 지수의 초타원이 아니라 모서리 중앙에서 두 윤곽 간격이

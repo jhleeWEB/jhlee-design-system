@@ -17,7 +17,8 @@ export const toastVariants = cva(
   [
     "ds-toast group pointer-events-auto relative flex w-full items-start gap-3 overflow-hidden",
     /* font-sans 를 스스로 든다 — 뷰포트는 대개 앱 루트(AppShell 바깥)에 있어 body 의 대체 글꼴 스택(Noto Sans KR …)을 물려받아
-       같은 13px 가 한 단 굵어 보였다(#76 실측). Button 도 같은 이유로 글꼴을 든다. */
+       같은 13px 가 한 단 굵어 보였다(#76 실측). Button 도 같은 이유로 글꼴을 든다. #80 에서 body 도 같은 스택(--font-stack-sans)이 되어
+       지금은 겹치지만 남겨 둔다 — 소비 앱이 body 글꼴을 따로 정해도 이 면은 UI 글꼴로 선다. */
     "rounded-lg border border-solid p-4 font-sans text-body shadow-pop",
   ],
   {

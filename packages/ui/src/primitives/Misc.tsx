@@ -11,8 +11,10 @@ export function Kbd({ className, ...rest }: React.ComponentPropsWithRef<"kbd">) 
       {...rest}
       data-slot="kbd"
       className={cn(
-        "inline-flex min-w-7 items-center justify-center rounded-sm border border-border-strong",
-        "bg-muted px-2 font-mono text-micro leading-(--size-kbd) text-muted-foreground",
+        /* 최소 폭 = 줄 높이(--size-kbd 20px) · 가로 여백 4px — 한 글자 키가 20px 정사각이다. 예전 `min-w-7`(28px) · `px-2`(8px)는 2px 격자 시절
+           값(14 · 4px)이 두 배로 남은 것이라 한 글자 키도 28 × 20px 로 옆으로 퍼졌다(#80). */
+        "inline-flex min-w-(--size-kbd) items-center justify-center rounded-sm border border-border-strong",
+        "bg-muted px-1 font-mono text-micro leading-(--size-kbd) text-muted-foreground",
         className,
       )}
     />
@@ -47,7 +49,7 @@ export function SectionLabel({ className, ...rest }: React.ComponentPropsWithRef
       {...rest}
       data-slot="section-label"
       className={cn(
-        "font-mono text-micro tracking-caps text-muted-foreground uppercase select-none",
+        "font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase select-none",
         className,
       )}
     />

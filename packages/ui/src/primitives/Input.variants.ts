@@ -22,13 +22,13 @@ export const inputVariants = cva(
   {
     variants: {
       /**
-       * 크기 — 컨트롤 높이 사다리(`h-ctl-*`).
-       * - `sm` — 작은 컨트롤 높이 · 본문 글자
+       * 크기 — 컨트롤 높이 사다리(`h-ctl-*`). 값 글자는 세 단 모두 `text-control` 이다(#80 — 크기 축은 높이와 여백만 바꾼다).
+       * - `sm` — 작은 컨트롤 높이
        * - `md` — 기본 컨트롤 높이
        * - `lg` — 큰 컨트롤 높이 · 넓은 가로 여백
        */
       size: {
-        sm: "h-ctl-sm px-3 text-body",
+        sm: "h-ctl-sm px-3 text-control",
         md: "h-ctl px-3 text-control",
         lg: "h-ctl-lg px-4 text-control",
       },

@@ -21,7 +21,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | `defaultOpen` | `boolean` |  | `false` | 처음에 열려 있는가(비제어). |
 | `onOpenChange` | `((open: boolean) => void)` |  | `undefined` | 팝오버가 열리고 닫힐 때. |
 | `placeholder` | `string` |  | `"Pick a date"` | 고른 날이 없을 때 트리거에 보일 글자. |
-| `size` | `"sm" \| "md" \| "lg" \| null` |  | `"md"` | 값: `sm` — 작은 컨트롤 높이 · 본문 글자 · `md` — 기본 컨트롤 높이 · `lg` — 큰 컨트롤 높이 · 넓은 가로 여백 |
+| `size` | `"sm" \| "md" \| "lg" \| null` |  | `"md"` | 값: `sm` — 작은 컨트롤 높이 · `md` — 기본 컨트롤 높이 · `lg` — 큰 컨트롤 높이 · 넓은 가로 여백 |
 | `invalid` | `boolean \| null` |  | `"false"` | 검증 실패 — 파괴색 테두리와 `aria-invalid`. |
 | `max` | `Date` |  | `undefined` | 고를 수 있는 가장 늦은 날. |
 | `min` | `Date` |  | `undefined` | 고를 수 있는 가장 이른 날. 그 앞은 흐리고 고를 수 없으며 키보드 이동도 여기서 멈춘다. |

@@ -111,8 +111,8 @@
   --duration-slow: 200ms;
 
   /* primitive/typography.json */
-  --font-stack-sans: "Noto Sans KR", Pretendard, "Apple SD Gothic Neo", system-ui, -apple-system, sans-serif;
-  --font-stack-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --font-stack-sans: "Instrument Sans", "Noto Sans KR", Pretendard, "Apple SD Gothic Neo", system-ui, -apple-system, sans-serif;
+  --font-stack-mono: "Geist Mono", ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
 
   /* semantic/canvas.json */
   --canvas-bg: var(--palette-gray-0);

@@ -77,7 +77,7 @@ function OuterCollapse() {
   return (
     <Card className="w-80" collapsed={collapsed} onCollapsedChange={setCollapsed} collapsedLabel="brief">
       <div className="flex items-center justify-between px-4 py-3">
-        <span className="text-control font-semibold text-foreground">Brief</span>
+        <span className="text-body font-semibold text-foreground">Brief</span>
         <CardCollapse />
       </div>
       <p className="m-0 px-4 pb-4 text-body text-muted-foreground">CardCollapse outside the header.</p>

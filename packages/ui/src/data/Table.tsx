@@ -79,7 +79,7 @@ export function Th({ className, numeric, ...rest }: ThProps) {
       scope={rest.scope ?? "col"}
       className={cn(
         "border-b border-border px-4 py-3 text-left align-bottom",
-        "font-mono text-micro font-normal tracking-caps text-muted-foreground uppercase",
+        "font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase",
         numeric && "text-right",
         className,
       )}

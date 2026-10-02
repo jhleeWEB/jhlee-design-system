@@ -56,9 +56,6 @@
     }
   },
   "packages/ui/src/navigation/SegmentedControl.tsx": {
-    "better-tailwindcss/no-restricted-classes": {
-      "count": 1
-    },
     "jsx-a11y/interactive-supports-focus": {
       "count": 1
     }

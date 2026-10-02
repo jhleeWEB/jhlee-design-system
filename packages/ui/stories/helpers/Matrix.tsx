@@ -22,7 +22,7 @@ export function Matrix<R extends string, C extends string>({
         <tr>
           <th
             scope="col"
-            className="text-left font-mono text-micro font-normal tracking-caps text-muted-foreground uppercase"
+            className="text-left font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase"
           >
             {rowLabel} \ {colLabel}
           </th>

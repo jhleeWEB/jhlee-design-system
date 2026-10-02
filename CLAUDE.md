@@ -74,7 +74,8 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              `component-contract.tsx` 는 공통 계약의 검사기(`describeComponentContract(storiesModule, {slot, axes})` · `runContract`) — slot 존재·못 덮음 ·
                              className twMerge · ref DOM 도달 · rest 전달 · 축마다 data-* · axe 0. 폴더별 spec(Phase D)이 스토리를 넘겨 부른다(C3)
   .storybook/                Storybook 10.6 — 정본 카탈로그(포트 6006). addon-themes 가 `html[data-theme]` 을 토글하고 폰트는 @fontsource self-host
-  stories/                   페이지 스토리 — `Pages/Workbench`(제품 화면 복제, 영구 — `workbench/Workbench.tsx`) · `Radius` · ThemePair · Matrix. 옛 apps/ds-gallery 의
+  stories/                   페이지 스토리 — `Pages/Workbench`(제품 화면 복제, 영구 — `workbench/Workbench.tsx`) · `Radius` · `Roles`(역할 → 글자 · 모서리 견본, #80) ·
+                             ThemePair · Matrix. 옛 apps/ds-gallery 의
                              컴포넌트 명세 `Pages/Gallery` 는 Phase D 가 컴포넌트 스토리로 나눈 뒤 지웠다(#48)
   vrt/                       Playwright 시각 회귀 — storybook-static/index.json 의 `vrt` 태그 스토리 × 라이트/다크, `maxDiffPixels: 0` · threshold 기본 0.2(arm64 개발 기기와 x86_64 CI 의 래스터 차이 흡수, #75) — 토큰 색 감지는 `Foundations/Colors · Swatches` 만 threshold 0. 부분 래스터 끔 · CSS 전이 끔 · 글꼴 선적재로 결정론(#70). 기준선은 도커로만(scripts/vrt-update.sh).
   tsconfig.json              엄격 프로필 한 벌(src 전량, 스펙·스토리 제외) — tsdown dts 가 읽는다. app-profile(느슨한 2차 검사)은 하는 일이 없어 지웠다(#11)
@@ -98,16 +99,23 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 ## 핵심 원칙
 
 - **캔버스인가 크롬인가.** 새 컴포넌트를 만들 때 묻는 질문은 언제나 이것 하나다. 도면 요소·치수선·범례 스와치는 캔버스(흰 바탕 고정·radius 0·무채색·다크 없음),
-  그 밖은 전부 크롬(듀얼 테마·작은 radius·부유 레이어에만 그림자).
+  그 밖은 전부 크롬(듀얼 테마·작은 radius·부유 레이어에만 그림자). 한 부품에 둘이 섞이면 요소마다 가른다 — **범례 상자는 크롬, 스와치는 캔버스**(#80: 상자는
+  `rounded-lg`·테두리·카드 면·`shadow-pop` 의 떠 있는 패널로 다크를 따르고, 스와치는 흰 캔버스 타일 위에 각진 무채색으로 선다).
 - **유채색은 판정에만**(base 원칙 2) — `primary` azure `#0869e1` 은 «지금 고른 것·주된 동작», 판정색 `success`·`warning`·`destructive`·`info` 는 «통과했는가». 상태는 항상 텍스트와 병기한다.
 - **수치는 mono + tabular-nums**(원칙 3).
 - **토큰 밖 값을 쓰지 않는다.** 색·간격·반경·글자·시간·층위는 생성물 사다리만 — 크롬 색은 **shadcn 어휘**(`bg-background` `bg-card` `bg-muted` `bg-secondary` `text-foreground`
   `text-muted-foreground` `border-border` `bg-primary` `text-primary-foreground` `bg-accent` `ring-ring` `bg-destructive-soft` …, B5 #22), 캔버스는 `canvas-*`, 그 밖은 역할 이름
-  (`rounded-sm/md/lg/xl` = 6/8/12/16, `text-body`, `shadow-pop`, `h-ctl`, `font-semibold`, `z-toast`, `duration-fast` …). 간격은 4px 스텝 `0 1 2 3 4 5 6 8 10 12 16 20 24` 만(간격 계열,
+  (`rounded-xs/sm/md/lg/xl` = 4/6/8/12/16, `text-body`, `shadow-pop`, `h-ctl`, `font-semibold`, `z-toast`, `duration-fast` …). 간격은 4px 스텝 `0 1 2 3 4 5 6 8 10 12 16 20 24` 만(간격 계열,
   ESLint). 리터럴(hex·px·ms)이 필요하면 `tokens/` JSON 에 토큰을 더한다. 조어 규칙은 [`packages/ui/tokens/README.md`](packages/ui/tokens/README.md), shadcn 과 다른 점은
   [`docs/design-tokens.md`](docs/design-tokens.md). 옛 이름(`text-ink`·`bg-surface`·`--chrome-line`·`--ink`·`--gap`)은 3.0.0 에서 alias 째 지웠다(#49) — 린트 `--fix` · 코드모드가 옮긴다.
   `tone` prop 도 같은 어휘다: `neutral | primary | success | warning | destructive | info`(옛 키는 3.0.0 에서 타입 오류 — ESLint `ds/legacy-tone --fix`).
-- **모서리는 일반 `border-radius` 원호 사다리다** — `rounded-sm/md/lg/xl` = 6/8/12/16px 고정, 원형·pill 은 `rounded-full` 로만, 동심원은
+- **역할이 글자와 모서리를 정한다**(#80 — 정본 표 [`packages/ui/tokens/README.md`](packages/ui/tokens/README.md) «역할 → 토큰», 견본 `Foundations/Roles`).
+  글자: 컨트롤 `text-control font-medium` · 입력 값 `text-control` · 목록·메뉴 항목 `text-body` · 면 제목 `text-body font-semibold` · 대화·화면 제목
+  `text-title font-semibold` · 필드 라벨 `text-body font-medium`(도움말과 같은 크기 — 굵기 · 색이 가른다) · 보조 문장 `text-body` · 메타·구획 라벨 `font-mono text-micro font-medium tracking-caps uppercase`.
+  굵기는 400·500·600 셋만(`font-bold` 래칫), 크기 축은 높이·여백만 바꾼다(예외: 트랙 안 22px 칸은 `text-label`). 모서리: 작은 표시(16px 이하 — 체크박스) `xs` ·
+  칩·배지·Kbd `sm` · 컨트롤·메뉴 항목·세그먼트 트랙 `md` · 면(카드·알림·토스트·팝오버·메뉴·툴팁·범례) `lg` · 화면을 가리는 것 `xl` · 원형·pill `full`.
+  선택 컨트롤(Checkbox·RadioGroupItem·Switch)은 `size` sm·md·lg(기본 md — 체크박스·라디오 14/16/20px, 스위치 28×16/36×20/44×24px).
+- **모서리는 일반 `border-radius` 원호 사다리다** — `rounded-xs/sm/md/lg/xl` = 4/6/8/12/16px 고정, 원형·pill 은 `rounded-full` 로만, 동심원은
   `calc(바깥 토큰 − 패딩)` 만. 스쿼클(`corner-shape`, #26)은 **2026-09-30 사용자 결정으로 폐기했다**(#36) — Chromium 에서 초타원의 안쪽 윤곽 간격 때문에
   1px 테두리가 모서리에서 두꺼워 보였다. `corner-shape` 를 다시 쓰지 않는다(`corner.spec` 이 막는다). `src/corner.css` 는 호환용 빈 파일이다.
 - **클라이언트 경계.** 훅·핸들러·컨텍스트·Radix 를 쓰는 파일은 첫 줄에 `"use client"`. 배럴(index.ts)·cn·canvas-metrics·순수 표시 컴포넌트에는 없다.

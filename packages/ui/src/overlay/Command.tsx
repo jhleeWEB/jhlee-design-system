@@ -387,7 +387,7 @@ export function CommandGroup({ className, heading, children, ...rest }: CommandG
       {heading ? (
         <div
           id={headingId}
-          className="px-3 py-2 font-mono text-micro tracking-caps text-muted-foreground uppercase select-none"
+          className="px-3 py-2 font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase select-none"
         >
           {heading}
         </div>

@@ -27,4 +27,4 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | `stepper` | `boolean` |  | `true` | 오른쪽에 −/+ 버튼을 둔다. 버튼은 탭 순서에 들지 않는다 — 키보드는 칸 안의 ↑↓ 가 같은 일을 한다. |
 | `decrementLabel` | `string` |  | `"Decrease"` | − 버튼의 접근 가능한 이름. |
 | `incrementLabel` | `string` |  | `"Increase"` | + 버튼의 접근 가능한 이름. |
-| `size` | `"sm" \| "md" \| "lg" \| null` |  | `"md"` | 값: `sm` — 작은 컨트롤 높이 · 본문 글자 · `md` — 기본 컨트롤 높이 · `lg` — 큰 컨트롤 높이 · 넓은 가로 여백 |
+| `size` | `"sm" \| "md" \| "lg" \| null` |  | `"md"` | 값: `sm` — 작은 컨트롤 높이 · `md` — 기본 컨트롤 높이 · `lg` — 큰 컨트롤 높이 · 넓은 가로 여백 |

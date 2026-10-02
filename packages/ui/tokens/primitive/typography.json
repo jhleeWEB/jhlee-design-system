@@ -40,10 +40,12 @@
   "font-stack": {
     "$type": "fontFamily",
     "$extensions": { "sds": { "scope": "root" } },
-    "$description": "한글 폴백까지 든 시스템 스택 — 옛 --sans · --mono. Tailwind 의 --font-sans 는 «Instrument Sans» 를 이 앞에 붙인다(semantic/tailwind.json). 원칙 3(수치는 mono + tabular-nums)의 .num 과 tnum 이 mono 스택을 직접 읽는다.",
+    "$description": "UI 글꼴 스택 둘 — 맨 앞이 이 제품의 글꼴(Instrument Sans · Geist Mono)이고 그 뒤가 한글 폴백까지 든 시스템 스택(옛 --sans · --mono)이다. Tailwind 의 font-sans · font-mono(semantic/tailwind.json)와 body · .num · tnum 이 **같은 스택**을 읽는다(#80). 예전에는 맨 앞 글꼴을 Tailwind 쪽에서만 붙여, font-sans 를 스스로 들지 않은 컴포넌트와 포털(메뉴 · 대화상자 · 툴팁)이 body 의 시스템 스택(macOS 의 Noto Sans KR · Apple SD Gothic Neo)으로 그려져 같은 13px 가 한 단 굵어 보였고, tnum 수치는 font-mono 라벨(Geist Mono)과 다른 시스템 mono 로 그려졌다. 글꼴 파일은 앱(스토리북은 @fontsource)이 싣는다 — 없으면 시스템 스택으로 떨어진다.",
     "sans": {
-      "$value": "\"Noto Sans KR\", Pretendard, \"Apple SD Gothic Neo\", system-ui, -apple-system, sans-serif"
+      "$value": "\"Instrument Sans\", \"Noto Sans KR\", Pretendard, \"Apple SD Gothic Neo\", system-ui, -apple-system, sans-serif"
     },
-    "mono": { "$value": "ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Consolas, monospace" }
+    "mono": {
+      "$value": "\"Geist Mono\", ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Consolas, monospace"
+    }
   }
 }

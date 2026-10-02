@@ -166,7 +166,8 @@
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: var(--text-control);
+  /* 아코디언 항목은 면(카드)이고 트리거는 그 면의 제목이다 — 면 제목 = text-body · semibold(#80 역할 표, Card · Toast · Alert 와 같다). */
+  font-size: var(--text-body);
   font-weight: var(--font-weight-semibold);
   text-align: left;
   cursor: pointer;

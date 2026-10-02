@@ -30,7 +30,7 @@
 
 `bg-background` `bg-card` `bg-muted` `bg-secondary` `bg-popover` `bg-accent` `text-foreground` `text-muted-foreground` `text-primary-foreground`
 `text-accent-foreground` `border-border` `border-input` `bg-primary` `hover:bg-primary-hover`(확장) `ring-ring` `bg-destructive` `text-destructive-foreground`
-`rounded-sm/md/lg/xl`(6/8/12/16 — shadcn 의 `--radius` 계산식이 아니라 **고정값**) — 전부 shadcn 과 같은 뜻이다. `tone` prop 도 같은 어휘다:
+`rounded-sm/md/lg/xl`(6/8/12/16 — shadcn 의 `--radius` 계산식이 아니라 **고정값**, 여기에 `rounded-xs` 4px 를 더했다) — 전부 shadcn 과 같은 뜻이다. `tone` prop 도 같은 어휘다:
 `neutral | primary | success | warning | destructive | info`.
 
 ### 다른 것
@@ -39,8 +39,8 @@
 |---|---|---|---|
 | 캔버스(도면이 사는 면) | 없음 | `bg-canvas` `text-canvas-ink` `text-canvas-ink-2` `text-canvas-muted` `border-canvas-line` `border-canvas-line-strong` `bg-canvas-surface` `bg-canvas-grid` | 도면은 인쇄되고 색각 이상에서도 읽혀야 한다 — 흰 바탕 고정 · radius 0 · 무채색 · **다크 없음**. 크롬(`--chrome-*`)과 다른 면이다. 새 컴포넌트마다 «캔버스인가 크롬인가» 를 먼저 묻는다 |
 | 글자 사다리 | `text-sm` `text-base`(크기) | `text-micro`(10) `text-label`(11) `text-body`(13) `text-control`(13.5) `text-title`(15) `text-readout`(22) `text-display`(26) — **역할 이름** | 이 제품의 본문은 13px 다. Tailwind 기본 사다리는 `--text-*: initial` 로 지웠으므로 `text-sm` 은 **CSS 없이 조용히 무시된다** — 린트(`no-unknown-classes`)가 잡는다 |
-| 굵기·자간 | `font-bold` `tracking-wide` | `font-normal/medium/semibold/bold`(400/500/600/700) · `tracking-tight` `tracking-caps` 만 | 그 밖(`font-light` `tracking-wide`)은 initial 리셋으로 사라졌다 |
-| 반경 | `rounded-sm/md/lg/xl/full`(원호) | 같은 이름 `rounded-sm/md/lg/xl/full`(6/8/12/16/9999px 고정, 원호) | 값만 이 제품의 밀도다. 임의값은 동심원 `rounded-[calc(var(--radius-…)-…)]` 만, 원형은 `rounded-full` 로만. `corner-shape`(스쿼클)는 쓰지 않는다 — 2026-09-30 폐기(#36) |
+| 굵기·자간 | `font-bold` `tracking-wide` | `font-normal/medium/semibold/bold`(400/500/600/700) · `tracking-tight` `tracking-caps` 만 — 컴포넌트는 **400 · 500 · 600 셋만** 쓰고 역할이 굵기를 정한다(컨트롤 글자 · 필드 라벨 · 메타 라벨 medium, 제목 semibold, 나머지 normal, #80) | 그 밖(`font-light` `tracking-wide`)은 initial 리셋으로 사라졌다 |
+| 반경 | `rounded-sm/md/lg/xl/full`(원호) | 같은 이름 + `rounded-xs`(4/6/8/12/16/9999px 고정, 원호) — **역할이 단을 정한다**: 작은 표시(16px 이하 · 체크박스) `xs` · 칩 `sm` · 컨트롤 · 메뉴 항목 `md` · 면(카드 · 알림 · 토스트 · 팝오버 · 메뉴 · 툴팁 · 범례) `lg` · 화면을 가리는 것 `xl` | 값만 이 제품의 밀도다. 임의값은 동심원 `rounded-[calc(var(--radius-…)-…)]` 만, 원형은 `rounded-full` 로만. `corner-shape`(스쿼클)는 쓰지 않는다 — 2026-09-30 폐기(#36). 역할 표는 `packages/ui/tokens/README.md` «역할 → 토큰»(#80) |
 | 그림자 | `shadow-sm/md/lg` | `shadow-chip` `shadow-card` `shadow-pop` `shadow-modal` — 부유 층위의 이름 | 3·4단은 inset 헤어라인을 그림자 안에 넣는다(부유 레이어가 테두리를 따로 그리지 않게). 기본 사다리는 지웠다 |
 | 컨트롤 높이 | `h-9` `h-10` | `h-ctl-sm`(30) `h-ctl`(36) `h-ctl-lg`(44) · 정사각은 `w-ctl*` | 세 단만 있다 — 다른 높이는 컨트롤이 아니다 |
 | 판정색 | `destructive` 하나 | `success` `warning` `destructive` `info` 각각 `DEFAULT / -hover / -foreground / -soft / -line` 다섯 역할 | 이 제품의 색은 «판정» 이다(원칙 2: 유채색은 판정에만). `-soft` 는 배지·알림의 옅은 면, `-line` 은 면 위 3:1 테두리, `-foreground` 는 solid 위의 글자(amber 와 다크는 흰색이 4.5:1 을 못 넘어 어두운 글자다) |
@@ -95,7 +95,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [Input](docs/components/Input.md): 입력 — 글자와 수치 — "use client"
 - [Kbd](docs/components/Kbd.md): 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. — "use client"
 - [Lede](docs/components/Lede.md): 들머리 아래 한 문단 — 읽히도록 폭을 제한한다.
-- [Legend](docs/components/Legend.md): 캔버스 범례 — `LegendItem` 의 목록 — 부품: LegendItem
+- [Legend](docs/components/Legend.md): 범례 — `LegendItem` 의 목록 — 부품: LegendItem
 - [MediaCard](docs/components/MediaCard.md): 내용 카드 — 고를 수 있는 후보 한 개(썸네일 · 제목 · 메타 · 조치) — "use client"
 - [Modal](docs/components/Modal.md): 모달의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 모달성만 든다 — 부품: ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger — "use client"
 - [NumberInput](docs/components/NumberInput.md): 수치 입력 — 범위(`min` · `max`) · 보폭(`step`, Shift ×10) · 단위(`unit`) · 증감 버튼(`stepper`) — "use client"
@@ -150,6 +150,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `buttonVariants`: cva — 축 variant(solid | outline | ghost | link) · tone(neutral | primary | destructive) · size(sm | md | lg | icon-sm | icon | icon-lg); 기본 variant=outline, tone=neutral, size=md. 서버에서 호출 가능.
 - `calendarDayVariants`: cva — 축 없음. 서버에서 호출 가능.
 - `cardVariants`: cva — 축 elevation(raised | flat | flush) · pad(none | sm | md | lg); 기본 elevation=raised, pad=none. 서버에서 호출 가능.
+- `checkboxVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.
 - `collapsibleTriggerVariants`: cva — 축 variant(row | inline); 기본 variant=row. 서버에서 호출 가능.
 - `comboboxTriggerVariants`: cva — 축 size(sm | md | lg) · invalid(true | false); 기본 size=md, invalid=false. 서버에서 호출 가능.
 - `commandVariants`: cva — 축 surface(card | plain); 기본 surface=card. 서버에서 호출 가능.
@@ -172,6 +173,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `paginationLinkVariants`: cva — 축 size(sm | md); 기본 size=md. 서버에서 호출 가능.
 - `popoverContentVariants`: cva — 축 onCanvas(true | false); 기본 onCanvas=false. 서버에서 호출 가능.
 - `progressVariants`: cva — 축 tone(primary | success | warning | destructive | neutral); 기본 tone=primary. 서버에서 호출 가능.
+- `radioGroupItemVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.
 - `readoutValueVariants`: cva — 축 tone(neutral | primary | success | warning | destructive | info); 기본 tone=neutral. 서버에서 호출 가능.
 - `readoutVariants`: cva — 축 size(sm | md) · variant(inline | floating); 기본 size=md, variant=inline. 서버에서 호출 가능.
 - `resizableHandleVariants`: cva — 축 orientation(horizontal | vertical); 기본 orientation=horizontal. 서버에서 호출 가능.
@@ -185,6 +187,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `stepConnectorVariants`: cva — 축 orientation(horizontal | vertical) · complete(true | false); 기본 orientation=horizontal, complete=false. 서버에서 호출 가능.
 - `stepIndicatorVariants`: cva — 축 status(complete | current | upcoming | error); 기본 status=upcoming. 서버에서 호출 가능.
 - `stepperVariants`: cva — 축 orientation(horizontal | vertical); 기본 orientation=horizontal. 서버에서 호출 가능.
+- `switchVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.
 - `tableCellVariants`: cva — 축 numeric(true | false) · tone(neutral | success | warning | destructive); 기본 numeric=false, tone=neutral. 서버에서 호출 가능.
 - `tabsListVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.
 - `tabsTriggerVariants`: cva — 축 variant(segmented | underline); 기본 variant=segmented. 서버에서 호출 가능.
@@ -208,8 +211,9 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 값은 `theme.css`(생성물)에 있고 여기는 이름만이다. 접두는 Tailwind 규칙대로(`bg-` `text-` `border-` `ring-` `fill-` …).
 
 - 색: `white` `black` `canvas` `canvas-surface` `canvas-line` `canvas-line-strong` `canvas-ink` `canvas-ink-2` `canvas-muted` `canvas-grid` `background` `card` `muted` `secondary` `popover` `foreground` `foreground-2` `muted-foreground` `foreground-disabled` `border` `input` `border-strong` `primary` `primary-hover` `primary-foreground` `primary-track` `primary-line` `accent` `accent-foreground` `selection-fill` `selection-stroke` `scrim` `ring` `tooltip` `tooltip-foreground` `success` `success-hover` `success-foreground` `success-soft` `success-line` `warning` `warning-hover` `warning-foreground` `warning-soft` `warning-line` `destructive` `destructive-hover` `destructive-foreground` `destructive-soft` `destructive-line` `info` `info-hover` `info-foreground` `info-soft` `info-line`
-- 반경 `rounded-*`: `none` `sm` `md` `lg` `xl` `full` (6 / 8 / 12 / 16 px 고정 원호; 원형은 `rounded-full` 로만)
+- 반경 `rounded-*`: `none` `xs` `sm` `md` `lg` `xl` `full` (4 / 6 / 8 / 12 / 16 px 고정 원호 — 역할: `xs` 16px 이하 작은 표시(체크박스) · `sm` 칩·배지·Kbd · `md` 컨트롤·메뉴 항목 · `lg` 면(카드·알림·토스트·팝오버·메뉴·툴팁·범례) · `xl` 모달·서랍; 원형·pill 은 `rounded-full` 로만, 안쪽은 동심원 `calc(var(--radius-바깥) - 패딩)`)
 - 글자 `text-*`(역할 이름, 크기·행간 포함): `micro` `label` `body` `control` `title` `readout` `display`
+- 글자 역할(#80 — 굵기는 `font-normal` `font-medium` `font-semibold` 셋만): 컨트롤 글자 `text-control font-medium`(크기 축은 높이만 바꾼다) · 입력 값 `text-control` · 목록·메뉴 항목 `text-body` · 면 제목 `text-body font-semibold` · 대화·화면 제목 `text-title font-semibold` · 필드 라벨 `text-label font-medium` · 보조 문장 `text-body` · 메타·구획 라벨 `font-mono text-micro font-medium tracking-caps uppercase`
 - 그림자 `shadow-*`: `none` `chip` `card` `pop` `modal`
 - 컨트롤 높이 `h-*`(정사각은 `w-ctl*`): `ctl-sm` `ctl` `ctl-lg`
 - 컨테이너 `max-w-*` `min-w-*`: `dialog-sm` `dialog-md` `dialog-lg` `dialog-xl` `drawer-sm` `drawer-md` `drawer-lg` `menu` `popover-min` `popover-max` (+ 유동 `w-dialog-fluid` `h-dialog-fluid` `max-h-dialog-fluid` `max-w-popover-fluid`)

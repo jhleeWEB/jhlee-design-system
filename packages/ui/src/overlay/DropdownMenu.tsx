@@ -130,12 +130,14 @@ export function DropdownMenuCheckboxItem({
   return (
     <Radix.CheckboxItem
       asChild={asChild}
-      className={cn(dropdownMenuItemVariants(), "pl-8", className)}
+      /* 체크 색은 항목 수준에서 건다 — 항목 바탕의 `[&_svg]:text-muted-foreground` 가 svg 자신의 text-primary 를 특이도로 이겨
+         체크만 회색이었다(라디오 점 · Select · Combobox 는 주색). 크기(16px)는 항목 바탕의 `[&_svg]:size-4` 가 정한다(#80). */
+      className={cn(dropdownMenuItemVariants(), "pl-8 [&_svg[data-check]]:text-primary", className)}
       {...rest}
       data-slot="menu-checkbox-item"
     >
       <Radix.ItemIndicator className="absolute left-3">
-        <svg viewBox="0 0 16 16" aria-hidden="true" className="size-6 text-primary">
+        <svg viewBox="0 0 16 16" aria-hidden="true" data-check="">
           <path
             d="M3.6 8.4l3 3 5.8-6.3"
             fill="none"
@@ -169,7 +171,8 @@ export function DropdownMenuRadioItem({
       data-slot="menu-radio-item"
     >
       <Radix.ItemIndicator className="absolute left-4">
-        <span className="block size-3 rounded-full bg-primary" />
+        {/* 8px — 체크(left-3 + 16px)와 같은 중심(20px)에 선다. 예전 `size-3`(12px)은 2px 격자 시절 값이 두 배로 남아 중심이 2px 어긋났다(#80). */}
+        <span className="block size-2 rounded-full bg-primary" />
       </Radix.ItemIndicator>
       {asChild ? <Slot.Slottable>{children}</Slot.Slottable> : children}
     </Radix.RadioItem>
@@ -184,7 +187,7 @@ export function DropdownMenuLabel({ className, ...rest }: React.ComponentPropsWi
   return (
     <Radix.Label
       className={cn(
-        "px-3 py-2 font-mono text-micro tracking-caps text-muted-foreground uppercase",
+        "px-3 py-2 font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase",
         className,
       )}
       {...rest}
@@ -234,7 +237,7 @@ export function DropdownMenuSubTrigger({
       ) : (
         <span className="min-w-0 flex-1 truncate">{children}</span>
       )}
-      <svg viewBox="0 0 16 16" aria-hidden="true" className="size-6">
+      <svg viewBox="0 0 16 16" aria-hidden="true">
         <path
           d="M6 4l4 4-4 4"
           fill="none"

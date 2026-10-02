@@ -91,7 +91,9 @@ export const ThemeContrast: Story = {
           data-testid={`theme-${theme}`}
           className="flex flex-col gap-3 bg-background p-6 text-foreground"
         >
-          <span className="font-mono text-micro tracking-caps text-muted-foreground uppercase">{theme}</span>
+          <span className="font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
+            {theme}
+          </span>
           <ToastProvider {...args} className="static" label={`Notifications · ${theme}`}>
             <Seed toasts={toneValues.map((tone) => ({ ...SAMPLE[tone], tone }))} />
           </ToastProvider>
