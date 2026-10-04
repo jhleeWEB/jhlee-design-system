@@ -210,6 +210,7 @@ describe("공개 API", () => {
         "inputVariants",
         "legendSwatchVariants",
         "legendVariants",
+        "mediaCardDescriptionVariants",
         "mediaCardMediaVariants",
         "mediaCardVariants",
         "modalVariants",

@@ -4,7 +4,11 @@ export { Card, CardCollapse, CardHeader, CardWell, type CardProps } from "./Card
 export { cardVariants } from "./Card.variants";
 export { DisplayHeading, Eyebrow, Lede } from "./Editorial";
 export { CardGrid, MediaCard, type MediaCardProps } from "./MediaCard";
-export { mediaCardMediaVariants, mediaCardVariants } from "./MediaCard.variants";
+export {
+  mediaCardDescriptionVariants,
+  mediaCardMediaVariants,
+  mediaCardVariants,
+} from "./MediaCard.variants";
 export { Button, ButtonGroup, type ButtonProps } from "./Button";
 export { buttonVariants, type ButtonTone } from "./Button.variants";
 export { PanelToggleButton, type PanelToggleButtonProps } from "./PanelToggleButton";
