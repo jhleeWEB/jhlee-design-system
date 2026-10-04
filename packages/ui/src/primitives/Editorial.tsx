@@ -43,8 +43,9 @@ export function Eyebrow({
   );
 }
 
-/* 들머리 제목. 한 패널에 **하나만** 둔다 — 둘이 되는 순간 둘 다 제목이 아니게 된다. */
-/** 들머리 제목 — 한 패널에 하나만. */
+/* 들머리 제목. 한 패널에 **하나만** 둔다 — 둘이 되는 순간 둘 다 제목이 아니게 된다.
+   `m-0` — preflight 가 없어 h1–h3 의 UA 위아래 여백(0.67–1em)이 남으면 `Eyebrow` 와 `gap` 으로 쌓은 간격이 어긋난다(#100). */
+/** 들머리 제목 — 한 패널에 하나만. UA 여백은 걷는다(간격은 부모의 `gap` 이 정한다). */
 export function DisplayHeading({
   className,
   as: Tag = "h2",
@@ -63,15 +64,22 @@ export function DisplayHeading({
     <Tag
       {...rest}
       data-slot="display-heading"
-      className={cn("text-display font-semibold tracking-[-0.015em] text-balance text-foreground", className)}
+      className={cn(
+        "m-0 text-display font-semibold tracking-[-0.015em] text-balance text-foreground",
+        className,
+      )}
     />
   );
 }
 
 /* 들머리 아래 한 문단. 읽히라고 두는 줄이므로 폭을 제한한다 — 패널 폭을 꽉 채우면 안 읽힌다. */
-/** 들머리 아래 한 문단 — 읽히도록 폭을 제한한다. */
+/** 들머리 아래 한 문단 — 읽히도록 폭을 제한한다. `<p>` 의 UA 위아래 여백은 걷는다(#100). */
 export function Lede({ className, ...rest }: React.ComponentPropsWithRef<"p">) {
   return (
-    <p {...rest} data-slot="lede" className={cn("max-w-[42ch] text-body text-muted-foreground", className)} />
+    <p
+      {...rest}
+      data-slot="lede"
+      className={cn("m-0 max-w-[42ch] text-body text-muted-foreground", className)}
+    />
   );
 }

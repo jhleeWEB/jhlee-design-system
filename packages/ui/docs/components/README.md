@@ -25,7 +25,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [DataTable](DataTable.md) | component | client |  | 명세서 표 — 한 열 정렬 · 행 선택 · 합계 줄 · 줄 높이를 지키는 로딩 |
 | [DatePicker](DatePicker.md) | component | client |  | 날짜 고르기 — 트리거를 누르면 달력 팝오버가 열린다 |
 | [DescriptionList](DescriptionList.md) | component | server ok |  | 이름-값 목록(`<dl>` 격자) — 이름은 왼쪽에서 말줄임, 값은 오른쪽 정렬. |
-| [DisplayHeading](DisplayHeading.md) | component | server ok |  | 들머리 제목 — 한 패널에 하나만. |
+| [DisplayHeading](DisplayHeading.md) | component | server ok |  | 들머리 제목 — 한 패널에 하나만 |
 | [Drawer](Drawer.md) | component | client | DrawerBody, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger | 서랍의 루트 — 열림 상태와 모달성(`modal={false}` 면 비모달)을 든다 |
 | [DropdownMenu](DropdownMenu.md) | component | client | DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger | 메뉴의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)만 든다 |
 | [EmptyState](EmptyState.md) | component | server ok |  | 빈 상태 — 비어 있다는 사실보다 채우는 방법을 말한다. |
@@ -35,7 +35,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [HoverCard](HoverCard.md) | component | client | HoverCardContent, HoverCardTrigger | 호버 카드의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 지연(`openDelay` · `closeDelay`)만 든다 |
 | [Input](Input.md) | component | client |  | 입력 — 글자와 수치 |
 | [Kbd](Kbd.md) | component | client |  | 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. |
-| [Lede](Lede.md) | component | server ok |  | 들머리 아래 한 문단 — 읽히도록 폭을 제한한다. |
+| [Lede](Lede.md) | component | server ok |  | 들머리 아래 한 문단 — 읽히도록 폭을 제한한다 |
 | [Legend](Legend.md) | component | server ok | LegendItem | 범례 — `LegendItem` 의 목록 |
 | [MediaCard](MediaCard.md) | component | client |  | 내용 카드 — 고를 수 있는 후보 한 개(썸네일 · 제목 · 메타 · 조치) |
 | [Modal](Modal.md) | component | client | ModalBody, ModalClose, ModalContent, ModalFooter, ModalHeader, ModalTrigger | 모달의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 모달성만 든다 |

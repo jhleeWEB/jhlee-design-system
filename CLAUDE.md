@@ -69,7 +69,8 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              동작 테스트. 훅 옆 `useX.spec.ts` 도 같다. tsconfig.test.json · ESLint tests 프로필이 `src/**/*.spec.{ts,tsx}` 로 잡는다(빌드 tsconfig 밖)
   src/__tests__/             vitest + jsdom 동작·계약 테스트(vitest `unit` 프로젝트). `render-all.spec`(불변식: 배럴의 공개 컴포넌트마다 옆 spec 이나 부품 픽스처 중
                              정확히 하나가 계약을 돈다 + 스토리 `component` 가 아닌 부품의 최소 props 픽스처, 실패 0 — #48) · `documented-contracts.spec`(CLAUDE.md 의 약속을 user-event 로: Input 선행 0 ·
-                             0 전체선택 · PanelToggleButton 아이콘) · `stories-contract.spec`(3스토리 + a11y `KNOWN_A11Y_FAILURES` 래칫) · `axe.ts`(axe-core 15줄
+                             0 전체선택 · PanelToggleButton 아이콘) · `stories-contract.spec`(3스토리 + a11y `KNOWN_A11Y_FAILURES` 래칫) · `ua-margins.spec`(스토리 전수 —
+                             UA 여백을 가진 태그는 그 쪽의 여백 유틸을 단다, #100) · `axe.ts`(axe-core 15줄
                              헬퍼, jsdom 이라 color-contrast·region 은 끈다). `setup.ts` 가 jest-dom 매처를 붙인다. `tokens/`(배포 CSS 의 postcss 토큰 모델 +
                              사다리·cn 동작 · 참조 무결성·미참조 원시 · MOTION↔CSS 대조 · 정본 스키마 · **WCAG 대비 래칫** `contrast.spec`+`contrast-pairs.ts`, #15 · #18 · C2 ·
                              **짝수 치수 래칫** `even-dimensions.spec`, #82)과
@@ -136,6 +137,9 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
   1px 테두리가 모서리에서 두꺼워 보였다. `corner-shape` 를 다시 쓰지 않는다(`corner.spec` 이 막는다). `src/corner.css` 는 호환용 빈 파일이다.
 - **클라이언트 경계.** 훅·핸들러·컨텍스트·Radix 를 쓰는 파일은 첫 줄에 `"use client"`. 배럴(index.ts)·cn·canvas-metrics·순수 표시 컴포넌트에는 없다.
 - **JS 에서 CSS 를 import 하지 않는다.** 컴포넌트 CSS 는 theme.css 가 `@import` 한다.
+- **UA 여백을 걷는다.** 소비자 계약에 preflight 가 없다 — 제목 · 문단 · 목록(`h1–h6` · `p` · `ul` · `ol` · `dl` · `dd` · `figure` · `blockquote` · `pre` · `hr`)을 그리면
+  그 쪽의 여백 유틸(`m-0` · `mt-1 mb-0` · 목록은 `p-0` 까지)을 **조건 없이** 단다. 걷지 않으면 카드 · 패널 안에 1em 안팎의 빈 줄이 남는다(#90 · #100).
+  `src/__tests__/ua-margins.spec.tsx` 가 스토리 전부를 그려 전수 검사한다 — 스토리가 직접 쓴 `<p>` 도 대상이다.
 
 ## 소비자 계약
 
@@ -149,8 +153,8 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 
 ```css
 @import "tailwindcss/theme.css" layer(theme);
-@import "@jhleeweb/jhlee-design-system/theme.css";   /* @source "./" 자기 등록 — 소비자 @source 불필요 */
-@import "tailwindcss/utilities.css" source(none);        /* 레이어 없이 — tokens.css 의 button{border-radius:0} 이 레이어 안 규칙을 이기기 때문 */
+@import "@jhleeweb/jhlee-design-system/theme.css"; /* @source "./" 자기 등록 — 소비자 @source 불필요 */
+@import "tailwindcss/utilities.css" source(none); /* 레이어 없이 — tokens.css 의 button{border-radius:0} 이 레이어 안 규칙을 이기기 때문 */
 @source "./";
 ```
 

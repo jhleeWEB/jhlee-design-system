@@ -152,7 +152,7 @@ export function AccordionHeader({ className, ref, ...props }: ComponentProps<typ
       {...props}
       ref={ref}
       data-slot="accordion-header"
-      className={cn("ds-accordion-header", className)}
+      className={cn("ds-accordion-header m-0", className)}
     />
   );
 }

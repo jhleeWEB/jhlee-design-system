@@ -8,7 +8,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 서버에서도 렌더 가능(지시문 없음) · 원본 `src/primitives/Editorial.tsx`
 
-들머리 아래 한 문단 — 읽히도록 폭을 제한한다.
+들머리 아래 한 문단 — 읽히도록 폭을 제한한다. `<p>` 의 UA 위아래 여백은 걷는다(#100).
 
 물려받는 props: `ClassAttributes<HTMLParagraphElement>`, `HTMLAttributes<HTMLParagraphElement>`
 

@@ -8,7 +8,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 서버에서도 렌더 가능(지시문 없음) · 원본 `src/primitives/Editorial.tsx`
 
-들머리 제목 — 한 패널에 하나만.
+들머리 제목 — 한 패널에 하나만. UA 여백은 걷는다(간격은 부모의 `gap` 이 정한다).
 
 물려받는 props: `ClassAttributes<HTMLHeadingElement>`, `HTMLAttributes<HTMLHeadingElement>`
 
