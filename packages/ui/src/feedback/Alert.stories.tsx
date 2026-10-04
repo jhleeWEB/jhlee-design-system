@@ -5,8 +5,8 @@ import { ThemePair } from "../../stories/decorators/ThemePair";
 import { Button } from "../primitives/Button";
 import { Alert } from "./Alert";
 
-/* 3스토리 계약(본보기 primitives/Button.stories). 톤은 판정 넷 — 흐름 안의 알림에는 중립·주된 것이 없다. */
-const toneValues = ["info", "success", "warning", "destructive"] as const;
+/* 3스토리 계약(본보기 primitives/Button.stories). 톤은 중립(상주 안내문, #105) + 판정 넷 — 주된 것(primary)은 없다. */
+const toneValues = ["neutral", "info", "success", "warning", "destructive"] as const;
 
 const meta = {
   title: "Feedback/Alert",

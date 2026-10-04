@@ -11,6 +11,8 @@ import { cva, type VariantProps } from "../cn";
  *  - 면 `{tone}-soft` · 글자 `{tone}`(제목 · 본문) — 이 쌍은 contrast.spec 이 라이트 · 다크 모두 4.5:1 을 지킨다(info 포함).
  *  - 테두리는 `{tone}` 의 25% — 토스트와 같은 값. 경계는 면의 색이 이미 말하고, 3:1 선(`{tone}-line`)은 흐름 안에서 상자를 무겁게 했다.
  *  - 여백 · 간격(p-4 · gap-3)도 토스트와 같다 — 같은 알림 어휘가 떠 있느냐(토스트) 흐름 안이냐(이것)만 다르다.
+ *  - `neutral` 은 판정이 아닌 **상주 안내문**(출처 띠 · 늘 떠 있는 설명)이다 — 유채색은 판정에만 쓰므로 물들이지 않는다: 카드 면 · 기본 테두리 ·
+ *    `foreground-2` 글자(토스트 · 배지의 neutral 과 같은 무채색 문법, #105).
  *  - 모서리도 토스트와 같은 `rounded-lg`(면, #80 역할 표) — 예전 `rounded-md`(컨트롤의 단)는 같은 면을 다른 반경으로 그렸다.
  */
 export const alertVariants = cva(
@@ -22,6 +24,7 @@ export const alertVariants = cva(
   {
     variants: {
       tone: {
+        neutral: "border-border bg-card text-foreground-2",
         info: "border-info/25 bg-info-soft text-info",
         success: "border-success/25 bg-success-soft text-success",
         warning: "border-warning/25 bg-warning-soft text-warning",
@@ -32,5 +35,5 @@ export const alertVariants = cva(
   },
 );
 
-/** 알림이 받는 톤 — 안내가 기본이고 중립·주된 것은 없다(흐름 안의 알림은 언제나 «무슨 일» 이다). */
+/** 알림이 받는 톤 — 안내가 기본이다. `neutral` 은 판정 없는 상주 안내문, 주된 것(`primary`)은 없다. */
 export type AlertTone = NonNullable<VariantProps<typeof alertVariants>["tone"]>;
