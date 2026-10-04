@@ -47,8 +47,19 @@ export interface DataTableProps<Row> extends Omit<React.ComponentProps<"div">, "
   columns: readonly Column<Row>[];
   /** 행 데이터. 정렬해도 이 배열은 바꾸지 않는다. */
   rows: readonly Row[];
-  /** 각 행의 안정적인 키. */
+  /** 각 행의 안정적인 키 — React key 와 선택 키로만 쓰는 내부 id 다. 화면 · 스크린리더에 읽히지 않는다(이름은 `rowLabel`). */
   rowKey: (row: Row, index: number) => string;
+  /**
+   * 선택 radio 가 읽는 행의 이름 — 사람이 아는 이름을 준다(«Kitchen»). 없으면 첫 열에 그려진 글자가 이름이 된다.
+   * 첫 열이 버튼 · 입력 같은 컨트롤을 담으면 그 글자까지 이름에 섞이므로 이 prop 으로 정한다.
+   * @default undefined
+   */
+  rowLabel?: ((row: Row, index: number) => string) | undefined;
+  /**
+   * 선택 radio 이름의 앞말 — 이름은 «앞말 + 행 이름» 이다(`Select row Kitchen`). 제품 어휘는 앱이 정한다.
+   * @default "Select row"
+   */
+  selectLabel?: string;
   /** 표의 이름. 스크린리더가 읽고, `captionVisible` 이면 화면에도 보인다. */
   caption: string;
   /**
@@ -63,6 +74,7 @@ export interface DataTableProps<Row> extends Omit<React.ComponentProps<"div">, "
   selectedKey?: string | undefined;
   /**
    * 행을 골랐을 때 — 주면 첫 칸에 선택 radio 가 붙고 행 클릭이 선택이 된다. 없으면 표는 읽기 전용이다.
+   * radio 의 이름은 `selectLabel` + `rowLabel`(없으면 첫 칸의 글자)이다.
    * @default undefined
    */
   onSelect?: ((key: string, row: Row) => void) | undefined;
@@ -109,6 +121,8 @@ export function DataTable<Row>({
   columns,
   rows,
   rowKey,
+  rowLabel,
+  selectLabel = "Select row",
   caption,
   captionVisible,
   selectedKey,
@@ -123,6 +137,11 @@ export function DataTable<Row>({
 }: DataTableProps<Row>) {
   const [sort, setSort] = useState<SortState>(null);
   const selectionGroup = useId();
+  /* 선택 radio 의 이름은 «앞말 + 행 이름» 이다. 예전에는 `rowKey` 를 그대로 읽어 스크린리더가 내부 id(«Select row U1-kitchen»)를 말했다(#101).
+     `rowLabel` 이 없으면 첫 칸에 **그려진 글자**를 이름으로 삼는다 — 셀 내용은 임의의 ReactNode 라 글자를 뽑아낼 수 없으므로
+     `aria-labelledby` 로 «숨긴 앞말 + 첫 칸» 을 가리킨다(참조된 요소는 숨겨져 있어도 이름 계산에 들어간다). */
+  const selectPrefixId = `${selectionGroup}-select`;
+  const labelledByCell = Boolean(onSelect) && !rowLabel;
 
   const sorted = useMemo(() => {
     if (!sort) return rows;
@@ -159,6 +178,11 @@ export function DataTable<Row>({
       {...rest}
       data-slot="data-table"
     >
+      {labelledByCell ? (
+        <span id={selectPrefixId} hidden>
+          {selectLabel}
+        </span>
+      ) : null}
       <ScrollArea className="min-h-0 flex-auto" orientation="both">
         <table className="w-full border-collapse text-body text-foreground">
           <caption
@@ -288,9 +312,12 @@ export function DataTable<Row>({
                         const content = column.cell
                           ? column.cell(row, index)
                           : ((row as Record<string, unknown>)[column.key] as React.ReactNode);
+                        const cellId =
+                          labelledByCell && columnIndex === 0 ? `${selectionGroup}-r${index}` : undefined;
                         return (
                           <td
                             key={column.key}
+                            id={cellId}
                             className={cn(cellPad, tableCellVariants({ numeric: column.numeric, tone }))}
                           >
                             {onSelect && columnIndex === 0 ? (
@@ -302,7 +329,9 @@ export function DataTable<Row>({
                                   name={selectionGroup}
                                   value={key}
                                   checked={selected}
-                                  aria-label={`Select row ${key}`}
+                                  {...(rowLabel
+                                    ? { "aria-label": `${selectLabel} ${rowLabel(row, index)}` }
+                                    : { "aria-labelledby": `${selectPrefixId} ${cellId}` })}
                                   onChange={() => onSelect(key, row)}
                                   className="m-0 size-4 shrink-0 cursor-pointer accent-primary focus-visible:focus-ring focus-visible:outline-none"
                                 />

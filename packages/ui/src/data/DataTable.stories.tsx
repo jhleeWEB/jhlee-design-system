@@ -71,6 +71,11 @@ export const Default: Story = {
 
 export const Variants: Story = {
   tags: ["!manifest"],
+  play: async ({ canvas }) => {
+    // 선택 radio 의 이름은 «Select row + 첫 칸의 글자» 다 — 내부 키가 아니라 화면에 그려진 이름을 읽는다(#101).
+    await expect(canvas.getByRole("radio", { name: "Select row B" })).toBeChecked();
+    await expect(canvas.getByRole("radio", { name: "Select row A" })).not.toBeChecked();
+  },
   render: (args) => (
     <div className="flex flex-col gap-6">
       <DataTable

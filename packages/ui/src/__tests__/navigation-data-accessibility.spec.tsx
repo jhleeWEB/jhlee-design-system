@@ -99,6 +99,8 @@ describe("데이터 표의 행 선택", () => {
         caption="Editable towers"
         rows={rows.slice(0, 1)}
         rowKey={(row) => row.id}
+        // 첫 칸이 버튼을 담는다 — 그 글자(«Edit T1»)가 radio 이름에 섞이지 않게 행 이름을 정한다(#101).
+        rowLabel={(row) => row.id}
         onSelect={select}
         columns={[
           { key: "id", header: "Tower", cell: (row) => <button onClick={edit}>Edit {row.id}</button> },
