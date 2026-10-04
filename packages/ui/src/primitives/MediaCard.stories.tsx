@@ -11,6 +11,9 @@ import { CardGrid, MediaCard } from "./MediaCard";
  * 썸네일은 캔버스다(흰 바탕 고정 · 무채색) — 테마가 바뀌어도 그대로여야 한다(ThemeContrast). */
 const orientationValues = ["vertical", "horizontal"] as const;
 const elevationValues = ["raised", "flat", "flush"] as const;
+const descriptionLinesValues = [2, 3, "none"] as const;
+const longDescription =
+  "Rear setback is 4.5 m against a required 6.0 m under regulation 41(2). The east core sits inside the marginal open space, so the tower footprint has to move 1.5 m west before the scheme can pass.";
 
 function PlanThumb() {
   return (
@@ -43,6 +46,7 @@ const meta = {
     orientation: { control: "select", options: orientationValues },
     elevation: { control: "select", options: elevationValues },
     selected: { control: "boolean" },
+    descriptionLines: { control: "select", options: descriptionLinesValues },
   },
 } satisfies Meta<typeof MediaCard>;
 
@@ -89,6 +93,19 @@ export const Variants: Story = {
           </Button>
         }
       />
+      {/* 설명 자르기 — 같은 문장이 두 줄 · 세 줄에서 잘리고 `none` 에서 끝까지 그려진다(#103). */}
+      <div className="flex items-start gap-3">
+        {descriptionLinesValues.map((lines) => (
+          <MediaCard
+            key={lines}
+            {...args}
+            media={undefined}
+            eyebrow={`descriptionLines ${lines}`}
+            description={longDescription}
+            descriptionLines={lines}
+          />
+        ))}
+      </div>
       <CardGrid min="180px" className="w-160">
         {["01", "02", "03", "04"].map((n) => (
           <MediaCard

@@ -73,3 +73,21 @@ export const mediaCardMediaVariants = cva("relative shrink-0 overflow-hidden bg-
   },
   defaultVariants: { orientation: "vertical", ratio: "plan" },
 });
+
+/** 내용 카드 설명의 변형 — 몇 줄에서 자르는가(`lines`). */
+export const mediaCardDescriptionVariants = cva("mt-1 mb-0 text-body text-muted-foreground", {
+  variants: {
+    /**
+     * 설명을 자르는 줄 수.
+     * - `2` — 두 줄. 격자에서 카드 높이를 맞춘다. 기본값
+     * - `3` — 세 줄
+     * - `none` — 자르지 않는다. 잘리면 안 되는 근거 문장
+     */
+    lines: {
+      2: "line-clamp-2",
+      3: "line-clamp-3",
+      none: "",
+    },
+  },
+  defaultVariants: { lines: 2 },
+});
