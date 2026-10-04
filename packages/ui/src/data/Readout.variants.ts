@@ -28,32 +28,35 @@ export const readoutVariants = cva(
   },
 );
 
-/** 칸 값의 변형 — `tone`. 판정색은 값 글자에만 입힌다(원칙 2) — 라벨 · 단위 · `status` 글자가 색 없이도 뜻을 말한다. */
-export const readoutValueVariants = cva(
-  [
-    "m-0 flex min-w-0 flex-col gap-1 tnum font-medium",
-    "text-readout group-data-[size=sm]/readout:text-title",
-  ],
-  {
-    variants: {
-      /**
-       * 판정 톤 — 값 글자의 색.
-       * - `neutral` — 판정 없음(기본 글자색)
-       * - `primary` — 지금 고른 것 · 주된 것
-       * - `success` — 통과
-       * - `warning` — 주의
-       * - `destructive` — 실패
-       * - `info` — 안내
-       */
-      tone: {
-        neutral: "text-foreground",
-        primary: "text-primary",
-        success: "text-success",
-        warning: "text-warning",
-        destructive: "text-destructive",
-        info: "text-info",
-      },
+/** 칸 값의 변형 — `tone` · `kind`. 판정색은 값 글자에만 입힌다(원칙 2) — 라벨 · 단위 · `status` 글자가 색 없이도 뜻을 말한다. */
+export const readoutValueVariants = cva("m-0 flex min-w-0 flex-col gap-1 font-medium", {
+  variants: {
+    /**
+     * 칸의 종류 — 값 자리에 무엇이 서는가.
+     * - `value` — 수치. mono + tabular-nums 의 큰 글자
+     * - `status` — 상태를 말하는 글자("Contacts checked"). sans 본문 글자 + 톤 점 — 옆 칸의 수치와 다른 종류로 읽힌다
+     */
+    kind: {
+      value: "tnum text-readout group-data-[size=sm]/readout:text-title",
+      status: "font-sans text-body",
     },
-    defaultVariants: { tone: "neutral" },
+    /**
+     * 판정 톤 — 값 글자의 색.
+     * - `neutral` — 판정 없음(기본 글자색)
+     * - `primary` — 지금 고른 것 · 주된 것
+     * - `success` — 통과
+     * - `warning` — 주의
+     * - `destructive` — 실패
+     * - `info` — 안내
+     */
+    tone: {
+      neutral: "text-foreground",
+      primary: "text-primary",
+      success: "text-success",
+      warning: "text-warning",
+      destructive: "text-destructive",
+      info: "text-info",
+    },
   },
-);
+  defaultVariants: { tone: "neutral", kind: "value" },
+});

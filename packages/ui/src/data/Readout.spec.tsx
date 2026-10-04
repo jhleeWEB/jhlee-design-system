@@ -51,6 +51,35 @@ describe("Readout 렌더", () => {
     expect(document.querySelector('[data-slot="readout-status"]')).toBeNull();
   });
 
+  it("kind=status 는 값 자리의 글자를 mono 가 아니라 sans 본문 글자로 그린다 — 판정 톤이면 점이 붙는다(#106)", () => {
+    render(
+      <Readout>
+        <ReadoutItem label="Units" value="412" />
+        <ReadoutItem label="Contact status" kind="status" value="Contacts checked" tone="success" />
+        <ReadoutItem label="Assembly" kind="status" value="Fixed layout" />
+      </Readout>,
+    );
+    const checked = screen.getByText("Contact status").nextElementSibling;
+    expect(checked?.tagName).toBe("DD");
+    expect(checked).toHaveTextContent("Contacts checked");
+    expect(checked).toHaveClass("font-sans", "text-body", "text-success");
+    expect(checked).not.toHaveClass("tnum");
+    expect(checked).not.toHaveClass("text-readout");
+    expect(checked?.closest('[data-slot="readout-item"]')).toHaveAttribute("data-kind", "status");
+    const dot = checked?.querySelector('[data-slot="readout-dot"]');
+    expect(dot).toHaveAttribute("aria-hidden", "true");
+
+    // neutral 은 판정이 아니다 — 점 없이 글자만.
+    const assembly = screen.getByText("Assembly").nextElementSibling;
+    expect(assembly).toHaveClass("font-sans", "text-foreground");
+    expect(assembly?.querySelector('[data-slot="readout-dot"]')).toBeNull();
+
+    // 기본은 수치 칸이다.
+    const units = screen.getByText("Units").nextElementSibling;
+    expect(units).toHaveClass("tnum");
+    expect(units?.closest('[data-slot="readout-item"]')).toHaveAttribute("data-kind", "value");
+  });
+
   it("live 면 aria-live=polite, 기본은 낭독하지 않는다", () => {
     const { rerender } = render(
       <Readout aria-label="Metrics">
