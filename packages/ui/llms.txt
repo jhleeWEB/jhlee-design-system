@@ -132,6 +132,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [Tfoot](docs/components/Tfoot.md): 표 합계 구역(`<tfoot>`) — 두꺼운 위 경계 · 옅은 면 · 굵은 글자
 - [Th](docs/components/Th.md): 머리 칸(`<th>`) — 열 머리는 mono 대문자 라벨, 줄 머리는 `variant="text"` 로 본문 글자
 - [Thead](docs/components/Thead.md): 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다.
+- [ThemeToggle](docs/components/ThemeToggle.md): 라이트/다크 전환 아이콘 버튼 — 상단바 오른쪽 끝에 둔다 — "use client"
 - [ToastProvider](docs/components/ToastProvider.md): 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 — "use client"
 - [ToggleGroup](docs/components/ToggleGroup.md): 토글 묶음 — `type="single"`(값 하나, 다시 누르면 끈다) · `type="multiple"`(값 배열) — 부품: ToggleGroupItem — "use client"
 - [Toolbar](docs/components/Toolbar.md): 툴바 — 캔버스 위 또는 그 바로 위의 한 줄 — 부품: ToolbarDivider, ToolbarSpacer
@@ -143,6 +144,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 
 - [usePanelLayout](docs/components/usePanelLayout.md): 여러 패널의 접힘 상태를 한 곳에서 든다 — "use client"
 - [useSidebarCollapse](docs/components/useSidebarCollapse.md): 접기/펴기 상태를 쓰는 쪽에서 들고 있기 위한 훅 — "use client"
+- [useTheme](docs/components/useTheme.md): 테마 전환 훅 — `html[data-theme]` 을 읽고 쓴다 — "use client"
 - [useToast](docs/components/useToast.md): 가장 가까운 `ToastProvider` 의 큐 — 밖에서 부르면 던진다. — "use client"
 
 ## 유틸리티
