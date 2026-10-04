@@ -1,6 +1,6 @@
-import { cn } from "../cn";
+import { cn, type VariantProps } from "../cn";
 import { ScrollArea } from "../navigation/ScrollArea";
-import { tableCellVariants, type CellTone } from "./Table.variants";
+import { tableCaptionVariants, tableCellVariants, tableHeadVariants, type CellTone } from "./Table.variants";
 
 export type { CellTone } from "./Table.variants";
 
@@ -37,6 +37,51 @@ export function Tbody({ className, ...rest }: React.ComponentProps<"tbody">) {
   return <tbody className={cn(className)} {...rest} data-slot="table-body" />;
 }
 
+/* 합계 구역. 명세서는 «합계가 맞는가» 를 보려고 읽는다 — 그 줄이 본문과 같은 모양이면 눈이 못 찾으므로 위 경계를 두껍게, 면을 옅게, 글자를 굵게 한다.
+   `DataTable` 의 합계 줄과 같은 모양이다(#108) — 합성 표에서 합계 줄이 둘 이상이어도 같은 어휘로 선다. 안의 `Tr` 은 호버 면이 없다(호버는 tbody 안에서만 붙는다). */
+/** 표 합계 구역(`<tfoot>`) — 두꺼운 위 경계 · 옅은 면 · 굵은 글자. 합계 줄(`Tr`)을 하나 이상 담는다. */
+export function Tfoot({ className, ...rest }: React.ComponentProps<"tfoot">) {
+  return (
+    <tfoot
+      className={cn("border-t-2 border-border-strong bg-muted font-medium", className)}
+      {...rest}
+      data-slot="table-footer"
+    />
+  );
+}
+
+type CaptionSide = NonNullable<VariantProps<typeof tableCaptionVariants>["side"]>;
+
+/** `TableCaption` 의 props — `<caption>` 속성 전부(ref 포함) + `side` · `visuallyHidden`. */
+export interface TableCaptionProps extends React.ComponentProps<"caption"> {
+  /**
+   * 캡션이 서는 쪽.
+   *  - `top` — 표 위
+   *  - `bottom` — 표 아래(출처 · 주석)
+   * @default "top"
+   */
+  side?: CaptionSide | undefined;
+  /**
+   * 화면에서 숨기고 스크린리더만 읽는다 — 보이는 제목이 따로 있을 때도 표의 이름은 남긴다.
+   * @default false
+   */
+  visuallyHidden?: boolean;
+}
+
+/** 표의 이름(`<caption>`) — 스크린리더가 표에 들어설 때 읽는다. `Table` 의 **첫 자식**으로 둔다(HTML 규칙). */
+export function TableCaption({ className, side, visuallyHidden = false, ...rest }: TableCaptionProps) {
+  const resolvedSide = side ?? "top";
+  return (
+    <caption
+      className={cn(tableCaptionVariants({ side: resolvedSide, visuallyHidden }), className)}
+      {...rest}
+      data-slot="table-caption"
+      data-side={resolvedSide satisfies CaptionSide}
+      data-visually-hidden={visuallyHidden ? "" : undefined}
+    />
+  );
+}
+
 /** `Tr` 의 props. */
 export interface TrProps extends React.ComponentProps<"tr"> {
   /**
@@ -63,8 +108,17 @@ export function Tr({ className, selected, ...rest }: TrProps) {
   );
 }
 
+type HeadVariant = NonNullable<VariantProps<typeof tableHeadVariants>["variant"]>;
+
 /** `Th` 의 props. */
 export interface ThProps extends React.ComponentProps<"th"> {
+  /**
+   * 글자 역할.
+   *  - `label` — 메타 라벨(mono 대문자 · 흐린 글자 · 아래 구분선). 열 머리
+   *  - `text` — 본문 글자(`text-body font-medium`). `scope="row"` 인 줄 머리 — 줄의 이름을 본문처럼 읽힌다
+   * @default "label"
+   */
+  variant?: HeadVariant | undefined;
   /**
    * 수치 열의 머리 — 본문 칸(`Td numeric`)과 같은 우측 정렬.
    * @default false
@@ -72,19 +126,16 @@ export interface ThProps extends React.ComponentProps<"th"> {
   numeric?: boolean;
 }
 
-/** 열 머리 칸(`<th>`) — mono 대문자 라벨. `scope` 의 기본은 `col` 이다. */
-export function Th({ className, numeric, ...rest }: ThProps) {
+/** 머리 칸(`<th>`) — 열 머리는 mono 대문자 라벨, 줄 머리는 `variant="text"` 로 본문 글자. `scope` 의 기본은 `col` 이다. */
+export function Th({ className, variant, numeric, ...rest }: ThProps) {
+  const resolved = variant ?? "label";
   return (
     <th
       scope={rest.scope ?? "col"}
-      className={cn(
-        "border-b border-border px-4 py-3 text-left align-bottom",
-        "font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase",
-        numeric && "text-right",
-        className,
-      )}
+      className={cn(tableHeadVariants({ variant: resolved, numeric }), className)}
       {...rest}
       data-slot="table-head"
+      data-variant={resolved satisfies HeadVariant}
       data-numeric={numeric ? "" : undefined}
     />
   );

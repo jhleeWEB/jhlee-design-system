@@ -134,9 +134,11 @@ const {
   TabsContent,
   TabsList,
   TabsTrigger,
+  TableCaption,
   Tbody,
   Td,
   Textarea,
+  Tfoot,
   Th,
   Thead,
   ToggleGroup,
@@ -1051,6 +1053,20 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
       </>
     )),
   },
+  TableCaption: {
+    slot: "table-caption",
+    axes: ["side"],
+    render: (p) => (
+      <Table>
+        <TableCaption {...p}>Schedule</TableCaption>
+        <Tbody>
+          <Tr>
+            <Td>Alpha</Td>
+          </Tr>
+        </Tbody>
+      </Table>
+    ),
+  },
   Tbody: {
     slot: "table-body",
     render: (p) => (
@@ -1077,8 +1093,26 @@ const FIXTURES: Readonly<Record<string, ContractSubject>> = {
     ),
   },
   Textarea: { slot: "textarea", render: (p) => <Textarea aria-label="Notes" {...p} /> },
+  Tfoot: {
+    slot: "table-footer",
+    render: (p) => (
+      <Table>
+        <Tbody>
+          <Tr>
+            <Td>Alpha</Td>
+          </Tr>
+        </Tbody>
+        <Tfoot {...p}>
+          <Tr>
+            <Td>Total</Td>
+          </Tr>
+        </Tfoot>
+      </Table>
+    ),
+  },
   Th: {
     slot: "table-head",
+    axes: ["variant"],
     render: (p) => (
       <Table>
         <Thead>

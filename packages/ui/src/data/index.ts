@@ -4,14 +4,17 @@ export { Readout, ReadoutItem, type ReadoutItemProps, type ReadoutProps } from "
 export { readoutValueVariants, readoutVariants } from "./Readout.variants";
 export {
   Table,
+  TableCaption,
   Tbody,
   Td,
+  Tfoot,
   Th,
   Thead,
   Tr,
+  type TableCaptionProps,
   type TableProps,
   type TdProps,
   type ThProps,
   type TrProps,
 } from "./Table";
-export { tableCellVariants, type CellTone } from "./Table.variants";
+export { tableCaptionVariants, tableCellVariants, tableHeadVariants, type CellTone } from "./Table.variants";
