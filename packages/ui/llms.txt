@@ -148,7 +148,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 ## 유틸리티
 
 - `accordionVariants`: cva — 축 variant(separated | contained | flush); 기본 variant=separated. 서버에서 호출 가능.
-- `alertVariants`: cva — 축 tone(info | success | warning | destructive); 기본 tone=info. 서버에서 호출 가능.
+- `alertVariants`: cva — 축 tone(neutral | info | success | warning | destructive); 기본 tone=info. 서버에서 호출 가능.
 - `appShellVariants`: cva — 축 variant(flush | inset); 기본 variant=flush. 서버에서 호출 가능.
 - `avatarGroupVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.
 - `avatarVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.

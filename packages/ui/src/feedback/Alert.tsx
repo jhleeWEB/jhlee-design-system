@@ -8,8 +8,9 @@ import { alertVariants, type AlertTone } from "./Alert.variants";
  * 그래서 `tone` 마다 기본 아이콘을 여기서 고정한다 — 호출처가 잊으면 흑백에서 정보가 사라진다. */
 
 /* 톤마다 아이콘 하나 — Toast 와 같은 글리프다(#78). 예전에는 16 뷰박스에 손으로 그린 원 + 획을 28px(`size-7`)로 키웠고 색은 회색 본문을
-   물려받았다 — 이제 크롬 아이콘 16px · 톤 글자색이다. */
+   물려받았다 — 이제 크롬 아이콘 16px · 톤 글자색이다. neutral 도 아이콘을 둔다(Info) — 토스트와 달리 흐름 안의 상자라 아이콘이 «안내문» 임을 말한다(#105). */
 const TONE_ICON: Record<AlertTone, typeof IconInfo> = {
+  neutral: IconInfo,
   info: IconInfo,
   success: IconCircleCheck,
   warning: IconAlertTriangle,
@@ -21,6 +22,7 @@ export interface AlertProps
   extends Omit<React.ComponentProps<"div">, "title">, Omit<VariantProps<typeof alertVariants>, "tone"> {
   /**
    * 톤 — 판정색 한 벌과 기본 아이콘을 함께 고른다. `destructive` 만 `role="alert"`(끼어들어 읽힌다), 나머지는 `role="status"`.
+   * - `neutral` — 판정 없는 상주 안내문(출처 · 설명). 무채색 — 카드 면 · 기본 테두리
    * - `info` — 안내. 판정이 아니라 알아 둘 것(기본)
    * - `success` — 통과·완료
    * - `warning` — 주의. 진행은 되지만 확인이 필요하다

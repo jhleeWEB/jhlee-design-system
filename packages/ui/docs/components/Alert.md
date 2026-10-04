@@ -14,6 +14,6 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
-| `tone` | `AlertTone \| null` |  | `"info"` | 값: `info` — 안내. 판정이 아니라 알아 둘 것(기본) · `success` — 통과·완료 · `warning` — 주의. 진행은 되지만 확인이 필요하다 · `destructive` — 실패·위반. 고치기 전에는 진행할 수 없다 |
+| `tone` | `AlertTone \| null` |  | `"info"` | 값: `neutral` — 판정 없는 상주 안내문(출처 · 설명). 무채색 — 카드 면 · 기본 테두리 · `info` — 안내. 판정이 아니라 알아 둘 것(기본) · `success` — 통과·완료 · `warning` — 주의. 진행은 되지만 확인이 필요하다 · `destructive` — 실패·위반. 고치기 전에는 진행할 수 없다 |
 | `title` | `ReactNode` |  | `undefined` | 굵은 첫 줄 — 무슨 일인지 한 문장. 없으면 본문만 그린다. `title` 을 Omit 하고 다시 선언한다 — DOM 의 `title` 은 툴팁 문자열이라 ReactNode 를 못 받는다. |
 | `action` | `ReactNode` |  | `undefined` | 오른쪽 끝에 붙는 조치 — 대개 버튼 하나. |

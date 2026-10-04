@@ -11,7 +11,7 @@ describeComponentContract(stories, { slot: "alert", axes: ["tone"] });
 afterEach(cleanup);
 
 describe("Alert 톤 표시(#78)", () => {
-  it.each(["info", "success", "warning", "destructive"] as const)(
+  it.each(["neutral", "info", "success", "warning", "destructive"] as const)(
     "%s — 톤 아이콘이 있고 장식이다(판정은 제목 글자가 말한다)",
     (tone) => {
       render(<Alert tone={tone} title="Notice" />);
@@ -27,6 +27,16 @@ describe("Alert 톤 표시(#78)", () => {
     expect(alert.className).not.toMatch(/border-l-/);
     expect(alert.className).toMatch(/bg-warning-soft/);
     expect(alert.className).toMatch(/text-warning/);
+  });
+
+  it("neutral 은 무채색이다 — 판정색 면 · 글자를 쓰지 않는다(#105)", () => {
+    render(<Alert tone="neutral" title="Source" />);
+    const alert = screen.getByRole("status");
+    expect(alert).toHaveAttribute("data-tone", "neutral");
+    expect(alert.className).toMatch(/bg-card/);
+    expect(alert.className).toMatch(/border-border/);
+    expect(alert.className).toMatch(/text-foreground-2/);
+    expect(alert.className).not.toMatch(/(info|success|warning|destructive)/);
   });
 
   it("destructive 만 끼어들어 읽힌다(role=alert), 나머지는 status", () => {
