@@ -4,7 +4,7 @@ jhlee design system 의 발행 패키지. 사용법·토큰·컴포넌트 계약
 컴포넌트를 눈으로 보려면 카탈로그(Storybook) https://jhleeweb.github.io/jhlee-design-system/ — 컴포넌트마다 Docs · Default · Variants · ThemeContrast(라이트/다크).
 
 - 진입: `import { … } from "@jhleeweb/jhlee-design-system"` · `…/canvas-metrics` · `…/testing` · `…/eslint` · `…/icons`(`./legacy` 는 3.0.0 에서 지웠다 — 아래 «2.x → 3.0»)
-- 아이콘: `…/icons` — `import { IconOrbit, IconMove, icons } from "@jhleeweb/jhlee-design-system/icons"`(#64). 24 뷰박스 · 획 2 · currentColor, 기본 16px(`--size-icon-md`), `title` 을 주면 `role="img"`(없으면 `aria-hidden`). 크롬 · 툴 클러스터(선택 · 오빗 · 팬 · 줌 · 이동/회전/축척 · 그리기 · 오프셋/돌출/단면 · 측정 · 카메라 뷰) · 글자 서식 · 테마(해 · 달) 72개 — lucide 에서 옮긴 글리프의 ISC 고지는 `dist/icons/LICENSE-lucide.txt`. `react-icons` 의존은 없다.
+- 아이콘: `…/icons` — `import { IconOrbit, IconMove, icons } from "@jhleeweb/jhlee-design-system/icons"`(#64). 24 뷰박스 · 획 2 · currentColor, 기본 16px(`--size-icon-md`), `title` 을 주면 `role="img"`(없으면 `aria-hidden`). 크롬 · 툴 클러스터(선택 · 오빗 · 팬 · 줌 · 이동/회전/축척 · 그리기 · 오프셋/돌출/단면 · 측정 · 카메라 뷰) · 글자 서식 · 테마(해 · 달) 75개 — lucide 에서 옮긴 글리프의 ISC 고지는 `dist/icons/LICENSE-lucide.txt`. `react-icons` 의존은 없다.
 - 커서: `theme.css`/`tokens.css` 가 `--cursor-<이름>`(32px SVG · 핫스팟 · 키워드 폴백)을, `theme.css` 가 유틸리티 `cursor-cad-<이름>` 을 낸다 — `select` `orbit` `pan` `grabbing` `zoom-window` `crosshair` `draw` `measure` `section` `snap` `resize-*` … 27개(카탈로그 `Foundations/Cursors`).
 - CSS: `…/theme.css`(Tailwind v4 @theme + 캔버스/크롬 토큰 + 컴포넌트 규칙, `@source "./"` 자기 등록) · `…/tokens.css`(토큰만) · `…/corner.css`(비어 있는 호환 파일 — 스쿼클 폐기, #36) · `…/canvas.css`.
 - 검사: `…/testing` — 소비 레포의 `__arch__` 래칫이 부르는 순수 함수(`auditCorners` · `countByFile`). 모서리는 일반 `border-radius` 사다리(4/6/8/12/16px)라 원시 반경·`corner-shape` 선언·임의값 `rounded-[…]` 를 잡는다(스쿼클은 2026-09-30 폐기, #36).
