@@ -1,6 +1,10 @@
 "use client";
 import { cn, type VariantProps } from "../cn";
-import { mediaCardVariants, mediaCardMediaVariants } from "./MediaCard.variants";
+import {
+  mediaCardDescriptionVariants,
+  mediaCardMediaVariants,
+  mediaCardVariants,
+} from "./MediaCard.variants";
 
 /* 내용 카드 — 썸네일 + 제목 + 메타 + 조치.
  *
@@ -31,10 +35,18 @@ export interface MediaCardProps
    */
   eyebrow?: React.ReactNode;
   /**
-   * 제목 아래 설명 — 두 줄에서 자른다.
+   * 제목 아래 설명 — 기본은 두 줄에서 자른다(`descriptionLines`).
    * @default undefined
    */
   description?: React.ReactNode;
+  /**
+   * 설명을 자르는 줄 수. 격자의 카드 높이를 맞추려 기본은 자른다 — 잘리면 안 되는 문장(판정 근거)은 `none` 으로 푼다(#103).
+   * - `2` — 두 줄에서 자른다
+   * - `3` — 세 줄에서 자른다
+   * - `none` — 자르지 않는다
+   * @default 2
+   */
+  descriptionLines?: 2 | 3 | "none";
   /**
    * 썸네일. 없으면 그 칸 자체가 사라진다.
    * @default undefined
@@ -86,6 +98,7 @@ export function MediaCard({
   title,
   eyebrow,
   description,
+  descriptionLines = 2,
   media,
   mediaRatio,
   mediaWidth = "132px",
@@ -154,7 +167,14 @@ export function MediaCard({
             )}
           </h3>
           {description ? (
-            <p className="mt-1 mb-0 line-clamp-2 text-body text-muted-foreground">{description}</p>
+            <p
+              data-slot="media-card-description"
+              // `satisfies` — 문자열 · 숫자 축이지 불리언이 아니다(boolean-string-data-attr 래칫이 식별자 하나짜리 값을 불리언으로 의심한다, Readout 과 같다).
+              data-lines={descriptionLines satisfies 2 | 3 | "none"}
+              className={mediaCardDescriptionVariants({ lines: descriptionLines })}
+            >
+              {description}
+            </p>
           ) : null}
         </div>
 

@@ -16,7 +16,8 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 |---|---|---|---|---|
 | `title` | `ReactNode` | 예 |  | 제목 — `onSelect` 가 있으면 카드 전체를 누르는 버튼의 접근 이름이 된다. |
 | `eyebrow` | `ReactNode` |  | `undefined` | 제목 위 작은 라벨 — "Candidate 03" · "Dahisar". |
-| `description` | `ReactNode` |  | `undefined` | 제목 아래 설명 — 두 줄에서 자른다. |
+| `description` | `ReactNode` |  | `undefined` | 제목 아래 설명 — 기본은 두 줄에서 자른다(`descriptionLines`). |
+| `descriptionLines` | `"none" \| 2 \| 3` |  | `2` | 설명을 자르는 줄 수. 격자의 카드 높이를 맞추려 기본은 자른다 — 잘리면 안 되는 문장(판정 근거)은 `none` 으로 푼다(#103). - `2` — 두 줄에서 자른다 - `3` — 세 줄에서 자른다 - `none` — 자르지 않는다 |
 | `media` | `ReactNode` |  | `undefined` | 썸네일. 없으면 그 칸 자체가 사라진다. |
 | `mediaRatio` | `"1/1" \| "16/9" \| "4/3" \| "none" \| "plan" \| null` |  | `"plan"` | 값: `1/1` — 정사각 · `16/9` — 와이드 · `4/3` — 표준 · `none` — 비율 없음. 썸네일 내용의 높이를 따른다 · `plan` — 3:2. 도면 썸네일 — 필지는 대개 가로로 길다 |
 | `mediaWidth` | `string` |  | `"132px"` | 가로 배치일 때 썸네일 폭(CSS 길이). 세로 배치에서는 무시된다. |
