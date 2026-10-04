@@ -133,6 +133,110 @@ describe("NumberInput — 보폭 · Shift ×10 · 경계", () => {
   });
 });
 
+describe("NumberInput — nullable: 비우면 빈 값을 확정한다(#104)", () => {
+  it("빈 칸으로 떠나면 되돌리지 않고 onValueChange(null) — Enter 도 같은 확정이다", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <NumberInput aria-label="Area" defaultValue={42} min={0} nullable onValueChange={onValueChange} />,
+    );
+    await user.clear(input());
+    // 타이핑 중의 빈 초안은 확정이 아니다 — 새 수를 치려고 지운 것일 수 있다.
+    expect(onValueChange).not.toHaveBeenCalled();
+    await user.tab();
+    expect(input()).toHaveValue(null);
+    expect(onValueChange).toHaveBeenCalledExactlyOnceWith(null);
+
+    await user.click(input());
+    await user.keyboard("7{Enter}");
+    expect(onValueChange).toHaveBeenLastCalledWith(7);
+    await user.clear(input());
+    await user.keyboard("{Enter}");
+    expect(onValueChange).toHaveBeenLastCalledWith(null);
+    expect(input()).toHaveValue(null);
+  });
+
+  it("수가 되다 만 글자(«-»)는 «비웠다» 가 아니다 — 빈 값으로 확정하지 않고 되돌린다", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<NumberInput aria-label="Area" defaultValue={42} nullable onValueChange={onValueChange} />);
+    await user.clear(input());
+    await user.keyboard("-");
+    // 브라우저의 type=number 칸은 불완전한 수의 value 를 "" 로 돌려주고 validity.badInput 으로만 구별된다 — jsdom 은 그 플래그를
+    // 세우지 않으므로 브라우저가 하는 대로 세워 준다.
+    expect(input().value).toBe("");
+    Object.defineProperty(input(), "validity", { configurable: true, value: { badInput: true } });
+    await user.tab();
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(input()).toHaveValue(42);
+  });
+
+  it("빈 값에서 다시 비우고 떠나도 같은 값을 두 번 알리지 않는다", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<NumberInput aria-label="Area" nullable onValueChange={onValueChange} />);
+    await user.click(input());
+    await user.tab();
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it("빈 칸에서의 증감은 min(없으면 0)에서 시작한다", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<NumberInput aria-label="Area" nullable min={10} max={20} onValueChange={onValueChange} />);
+    expect(screen.getByRole("button", { name: "Decrease" })).toBeEnabled();
+    await user.click(input());
+    await user.keyboard("{ArrowUp}");
+    expect(input()).toHaveValue(11);
+    expect(onValueChange).toHaveBeenLastCalledWith(11);
+  });
+
+  it("제어 값 null 은 «비어 있다» 다 — 부모가 null 로 비우고 수로 채운다", async () => {
+    const user = userEvent.setup();
+    function Controlled() {
+      const [value, setValue] = useState<number | null>(12);
+      return (
+        <>
+          <NumberInput aria-label="Area" nullable value={value} onValueChange={setValue} />
+          <button type="button" onClick={() => setValue(null)}>
+            Turn off
+          </button>
+          <output>{value === null ? "off" : `on ${value}`}</output>
+        </>
+      );
+    }
+    render(<Controlled />);
+    expect(input()).toHaveValue(12);
+    await user.click(screen.getByRole("button", { name: "Turn off" }));
+    expect(input()).toHaveValue(null);
+    expect(screen.getByRole("status")).toHaveTextContent("off");
+    await user.click(input());
+    await user.keyboard("30");
+    expect(screen.getByRole("status")).toHaveTextContent("on 30");
+    await user.clear(input());
+    await user.tab();
+    expect(screen.getByRole("status")).toHaveTextContent("off");
+  });
+
+  it("부모가 null 을 받지 않으면(값을 그대로 두면) 칸은 그 값으로 돌아온다", async () => {
+    const user = userEvent.setup();
+    render(<NumberInput aria-label="Area" nullable value={5} onValueChange={() => {}} />);
+    await user.clear(input());
+    await user.tab();
+    expect(input()).toHaveValue(5);
+  });
+
+  it("nullable 이 아니면 지금과 같다 — 빈 칸은 마지막 확정 값으로 돌아오고 null 은 오지 않는다", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<NumberInput aria-label="Area" defaultValue={42} onValueChange={onValueChange} />);
+    await user.clear(input());
+    await user.tab();
+    expect(input()).toHaveValue(42);
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+});
+
 describe("NumberInput — Input 의 숫자 계약을 물려받는다(CLAUDE.md «DS Input 의 type=number»)", () => {
   it("'0234' 를 한 자씩 치면 정수부 선행 0 이 사라져 234 가 된다", async () => {
     const user = userEvent.setup();
