@@ -6,7 +6,7 @@ import { MediaCard } from "./MediaCard";
 import * as stories from "./MediaCard.stories";
 
 /* 공통 계약(C3) — 스토리 `Default` 가 유일한 픽스처다. 같은 모듈의 부품은 render-all.spec 의 FIXTURES 가 돈다(#48). */
-describeComponentContract(stories, { slot: "media-card", axes: ["orientation", "elevation"] });
+describeComponentContract(stories, { slot: "media-card", axes: ["orientation", "elevation", "density"] });
 
 afterEach(cleanup);
 
@@ -33,5 +33,21 @@ describe("MediaCard descriptionLines", () => {
     const description = screen.getByText(sentence);
     expect(description.className).not.toMatch(/line-clamp/);
     expect(description).toHaveAttribute("data-lines", "none");
+  });
+});
+
+/* 썸네일 없는 항목이 한 화면에 10–30개 서는 목록 — 기본 패딩(16px)은 성기다(#111). */
+describe("MediaCard density", () => {
+  it("기본은 comfortable(p-4) 이고 compact 는 패딩 · 줄 사이를 좁힌다", () => {
+    const { rerender } = render(<MediaCard title="Rear setback" />);
+    const card = document.querySelector('[data-slot="media-card"]')!;
+    const body = screen.getByRole("heading", { name: "Rear setback" }).parentElement!.parentElement!;
+    expect(card).toHaveAttribute("data-density", "comfortable");
+    expect(body).toHaveClass("p-4", "gap-2");
+
+    rerender(<MediaCard title="Rear setback" density="compact" />);
+    expect(card).toHaveAttribute("data-density", "compact");
+    expect(body).toHaveClass("p-3", "gap-1");
+    expect(body).not.toHaveClass("p-4");
   });
 });

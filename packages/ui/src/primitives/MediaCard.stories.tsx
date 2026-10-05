@@ -12,6 +12,7 @@ import { CardGrid, MediaCard } from "./MediaCard";
 const orientationValues = ["vertical", "horizontal"] as const;
 const elevationValues = ["raised", "flat", "flush"] as const;
 const descriptionLinesValues = [2, 3, "none"] as const;
+const densityValues = ["comfortable", "compact"] as const;
 const longDescription =
   "Rear setback is 4.5 m against a required 6.0 m under regulation 41(2). The east core sits inside the marginal open space, so the tower footprint has to move 1.5 m west before the scheme can pass.";
 
@@ -47,6 +48,7 @@ const meta = {
     elevation: { control: "select", options: elevationValues },
     selected: { control: "boolean" },
     descriptionLines: { control: "select", options: descriptionLinesValues },
+    density: { control: "select", options: densityValues },
   },
 } satisfies Meta<typeof MediaCard>;
 
@@ -104,6 +106,27 @@ export const Variants: Story = {
             description={longDescription}
             descriptionLines={lines}
           />
+        ))}
+      </div>
+      {/* 밀도 — 썸네일 없는 판정 목록(#111). 같은 항목 셋이 comfortable · compact 로 선다. 근거 문장은 자르지 않는다. */}
+      <div className="flex items-start gap-6">
+        {densityValues.map((density) => (
+          <div key={density} className="flex w-80 flex-col gap-2">
+            {["Rear setback", "Marginal open space", "Height"].map((title, i) => (
+              <MediaCard
+                key={title}
+                elevation="flat"
+                density={density}
+                eyebrow={i === 0 ? `density ${density}` : undefined}
+                title={title}
+                description={longDescription}
+                descriptionLines="none"
+                meta={<Badge tone={i === 2 ? "success" : "destructive"}>{i === 2 ? "Pass" : "Fail"}</Badge>}
+                selected={i === 1}
+                onSelect={fn()}
+              />
+            ))}
+          </div>
         ))}
       </div>
       <CardGrid min="180px" className="w-160">
