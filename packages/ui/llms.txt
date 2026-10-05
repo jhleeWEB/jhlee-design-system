@@ -97,6 +97,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - [Eyebrow](docs/components/Eyebrow.md): 들머리 눈썹 — 대문자 mono 한 줄
 - [Field](docs/components/Field.md): 필드의 루트 — 라벨 · 컨트롤 · 설명 · 오류가 쓸 id 를 만들어 나눠 준다 — 부품: FieldControl, FieldDescription, FieldError, FieldLabel — "use client"
 - [Fieldset](docs/components/Fieldset.md): 묶음 상자 — 테두리 상자 위 선에 제목(legend)이 걸치는 네이티브 fieldset — "use client"
+- [FileInput](docs/components/FileInput.md): 파일 입력 — 고르기 버튼 · 고른 파일 이름과 크기 · 지우기 — "use client"
 - [HoverCard](docs/components/HoverCard.md): 호버 카드의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 지연(`openDelay` · `closeDelay`)만 든다 — 부품: HoverCardContent, HoverCardTrigger — "use client"
 - [Input](docs/components/Input.md): 입력 — 글자와 수치 — "use client"
 - [Kbd](docs/components/Kbd.md): 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. — "use client"
@@ -172,6 +173,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `dropdownMenuItemVariants`: cva — 축 tone(neutral | destructive); 기본 tone=neutral. 서버에서 호출 가능.
 - `emptyStateVariants`: cva — 축 size(default | compact); 기본 size=default. 서버에서 호출 가능.
 - `fieldVariants`: cva — 축 orientation(vertical | horizontal); 기본 orientation=vertical. 서버에서 호출 가능.
+- `fileInputVariants`: cva — 축 size(sm | md | lg) · invalid(true | false) · dragging(true | false); 기본 size=md, invalid=false, dragging=false. 서버에서 호출 가능.
 - `hoverCardVariants`: cva — 축 onCanvas(true | false); 기본 onCanvas=false. 서버에서 호출 가능.
 - `inputVariants`: cva — 축 size(sm | md | lg) · invalid(true | false) · numeric(true | false); 기본 size=md, invalid=false, numeric=false. 서버에서 호출 가능.
 - `legendSwatchVariants`: cva — 축 swatch(ink | ink-2 | muted | line-strong | line | grid | surface) · pattern(fill | outline | hatch | line); 기본 swatch=ink, pattern=fill. 서버에서 호출 가능.

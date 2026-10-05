@@ -3,6 +3,8 @@ export { badgeVariants, type BadgeTone } from "./Badge.variants";
 export { Card, CardCollapse, CardHeader, CardWell, type CardProps } from "./Card";
 export { cardVariants } from "./Card.variants";
 export { DisplayHeading, Eyebrow, Lede } from "./Editorial";
+export { FileInput, type FileInputProps } from "./FileInput";
+export { fileInputVariants } from "./FileInput.variants";
 export { CardGrid, MediaCard, type MediaCardProps } from "./MediaCard";
 export {
   mediaCardBodyVariants,
