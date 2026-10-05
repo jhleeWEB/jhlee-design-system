@@ -33,6 +33,7 @@
     "./corner.css": "./src/corner.css",
     "./tokens.css": "./src/tokens.css",
     "./canvas.css": "./src/canvas.css",
+    "./cursors.css": "./src/cursors.css",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -68,6 +69,7 @@
       "./corner.css": "./dist/corner.css",
       "./tokens.css": "./dist/tokens.css",
       "./canvas.css": "./dist/canvas.css",
+      "./cursors.css": "./dist/cursors.css",
       "./package.json": "./package.json"
     }
   },

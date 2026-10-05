@@ -24,7 +24,6 @@
 
 @import "./tokens.css";
 @import "./generated/theme.tailwind.css";
-@import "./generated/cursors.tailwind.css";
 /* 비어 있는 호환 파일(corner.css 머리) — 서브패스 `./corner.css` 를 쓰던 소비자를 위해 @import 만 남긴다. */
 @import "./corner.css";
 @import "./canvas.css";

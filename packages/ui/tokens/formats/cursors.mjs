@@ -1,11 +1,13 @@
 /* 커서 생성물(#64) — `src/cursors/cursors.ts` 의 표 → 두 파일.
  *
- *   cursors.css           :root 의 `--cursor-<이름>: url("data:…") x y, <폴백>` — tokens.css 가 @import 한다(Tailwind 없이도 쓴다)
- *   cursors.tailwind.css  `@utility cursor-cad-<이름> { cursor: var(--cursor-<이름>) }` — theme.css 가 @import 한다
+ *   cursors.css           :root 의 `--cursor-<이름>: url("data:…") x y, <폴백>` — 서브패스 `./cursors.css`(src/cursors.css)가 @import 한다(Tailwind 없이도 쓴다)
+ *   cursors.tailwind.css  `@utility cursor-cad-<이름> { cursor: var(--cursor-<이름>) }` — 같은 서브패스가 @import 한다
+ *
+ * theme.css · tokens.css 는 둘 다 싣지 않는다(5.0.0, #102) — `:root` 선언은 Tailwind 가 걸러 내지 못해 커서를 쓰지 않는 앱도 20 kB 를 받았다.
  *
  * 유틸리티 이름에 `cad-` 를 끼우는 이유: Tailwind 는 같은 이름의 손 @utility 와 내장 유틸리티를 한 규칙으로 합치고 뒤의 선언이 이긴다
  * (4.3.3 실측: `.cursor-move { cursor: move; cursor: var(--cursor-move) }`). 그대로 `cursor-move` · `cursor-wait` · `cursor-not-allowed` 를
- * 내면 theme.css 를 싣는 순간 소비자가 쓰던 내장 키워드 유틸리티가 말없이 SVG 커서로 바뀐다. 변수 이름은 겹칠 것이 없어 `--cursor-<이름>` 그대로다.
+ * 내면 cursors.css 를 싣는 순간 소비자가 쓰던 내장 키워드 유틸리티가 말없이 SVG 커서로 바뀐다. 변수 이름은 겹칠 것이 없어 `--cursor-<이름>` 그대로다.
  * SD 를 거치지 않는다 — 값이 DTCG 토큰이 아니라 SVG 문서에서 나오기 때문이다(legacy-classes.json 과 같은 처지). */
 import { HEADER } from "./shared.mjs";
 

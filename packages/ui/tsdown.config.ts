@@ -32,7 +32,8 @@ export default defineConfig({
     // 생성물 — theme.css · tokens.css 가 `@import "./generated/…"` 로 본다(#18). 디렉터리 깊이를 소스와 같게 유지해야 tarball 안에서도 상대경로가 산다.
     { from: "src/generated/tokens.css", to: "dist/generated" },
     { from: "src/generated/theme.tailwind.css", to: "dist/generated" },
-    // 커서(#64) — tokens.css 가 cursors.css(:root 의 --cursor-*)를, theme.css 가 cursors.tailwind.css(@utility cursor-*)를 @import 한다.
+    // 커서(#64) — 서브패스 `./cursors.css` 가 cursors.css(:root 의 --cursor-*)와 cursors.tailwind.css(@utility cursor-cad-*)를 @import 한다(#102 — theme.css · tokens.css 는 싣지 않는다).
+    { from: "src/cursors.css", to: "dist" },
     { from: "src/generated/cursors.css", to: "dist/generated" },
     { from: "src/generated/cursors.tailwind.css", to: "dist/generated" },
     // lucide 에서 옮긴 글리프의 ISC 고지 — 아이콘 서브패스 옆에 싣는다(#64).

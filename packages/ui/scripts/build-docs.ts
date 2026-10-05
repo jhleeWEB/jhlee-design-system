@@ -143,6 +143,7 @@ export function renderLlmsTxt(manifest: Manifest, differences: string): string {
     `  \`\`\`css`,
     `  @import "tailwindcss/theme.css" layer(theme);`,
     `  @import "${IMPORT_PATH}/theme.css";`,
+    `  @import "${IMPORT_PATH}/cursors.css"; /* CAD 커서(cursor-cad-* · --cursor-*)를 쓰는 화면만 — theme.css 에는 없다 */`,
     `  @import "tailwindcss/utilities.css" source(none);`,
     `  @source "./";`,
     `  \`\`\``,

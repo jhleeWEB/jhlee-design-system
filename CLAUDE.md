@@ -55,8 +55,9 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
                              장식이면 aria-hidden · `title` 이면 role="img"), `icons.ts` 가 `Icon<Pascal>` 목록과 `icons` 맵(패키지 안은 이 파일을 import), `index.ts` 가 서브패스 진입.
                              순수 모듈(지시문 없음). `react-icons` 의존은 없다 — 옮긴 자리는 같은 경로라 VRT 0 diff. 카탈로그 `Foundations/Icons`(stories/Icons.stories.tsx)
   src/cursors/cursors.ts     3D 모델링 커서 정본(#64) — 32px SVG 조각(글리프 재사용) · 핫스팟 · 키워드 폴백. `tokens/build.mjs` 가 `formats/cursors.mjs` 로
-                             `generated/cursors.css`(:root `--cursor-*`, tokens.css 가 @import)와 `generated/cursors.tailwind.css`(`@utility cursor-cad-*`, theme.css 가 @import)를
-                             쓴다(`tokens:check` 대상). 유틸리티의 `cad-` 는 Tailwind 내장 `cursor-move` 류와 합쳐져 덮는 것을 피한다. JS 배포물에는 없다. 카탈로그 `Foundations/Cursors`
+                             `generated/cursors.css`(:root `--cursor-*`)와 `generated/cursors.tailwind.css`(`@utility cursor-cad-*`)를
+                             쓴다(`tokens:check` 대상). **theme.css · tokens.css 는 둘을 싣지 않는다** — 서브패스 `./cursors.css`(`src/cursors.css`)가 싣고 쓰는 앱만 import 한다(5.0.0, #102:
+                             `:root` 선언은 Tailwind 가 걸러 내지 못해 쓰지 않는 앱도 20 kB 를 받았다. `cursors.spec` 이 @import 사슬을 지킨다). 유틸리티의 `cad-` 는 Tailwind 내장 `cursor-move` 류와 합쳐져 덮는 것을 피한다. JS 배포물에는 없다. 카탈로그 `Foundations/Cursors`
   src/lib/tone.ts            톤 어휘 한 벌(`toneValues` · `Tone`). 옛 키 shim `normalizeTone()` 은 3.0.0 에서 지웠다 — 옛 키는 타입 오류, 이행은 `ds/legacy-tone --fix`(#49)
   src/tokens.css             `generated/tokens.css` 재수출 + 원칙을 강제하는 요소 규칙(box-sizing · body · 컨트롤 radius 0 · .num). 값은 없다
   src/theme.css              tokens.css + `generated/theme.tailwind.css` 재수출, @source "./" 자기 등록, 컴포넌트 CSS(@import), keyframes,
@@ -144,17 +145,19 @@ docs/plan/                   분리·표준화 계획(2026-09-29). 단계별 진
 
 ## 소비자 계약
 
-버전은 4.x 다(shadcn 어휘 개명 #25 가 1.0.0 을, 스쿼클 폐기 #37 이 2.0.0 을, 부품 Select·Field·Tabs(#47) + legacy 제거(#49)가 3.0.0 을,
-패키지 · 저장소 개명(#91)이 4.0.0 을 냈다). 4.0.0 이 바꾼 것은 이름뿐이다 — 패키지 `@jhleeweb/squircle-design-system` → `@jhleeweb/jhlee-design-system`,
+버전은 5.x 다(shadcn 어휘 개명 #25 가 1.0.0 을, 스쿼클 폐기 #37 이 2.0.0 을, 부품 Select·Field·Tabs(#47) + legacy 제거(#49)가 3.0.0 을,
+패키지 · 저장소 개명(#91)이 4.0.0 을, CAD 커서 CSS 분리(#102)가 5.0.0 을 냈다). 5.0.0 이 바꾼 것은 하나다 — `theme.css` · `tokens.css` 가 CAD 커서를 싣지 않고
+쓰는 앱이 `@import "@jhleeweb/jhlee-design-system/cursors.css"` 한 줄을 더한다. 4.0.0 이 바꾼 것은 이름뿐이다 — 패키지 `@jhleeweb/squircle-design-system` → `@jhleeweb/jhlee-design-system`,
 린트 프리셋 `squircleDesignSystem()` → `jhleeDesignSystem()`, bin `sds-agent` → `jds-agent`(옛 `<!-- sds:begin -->` 블록 · `squircle-ds` 스킬 폴더를 sync 가 이어받는다).
 3.0.0 이 지운 것: `./legacy` · `./shell.css` 서브패스(3열 셸·컨트롤·`DesignSystemProvider`), 루트 배럴의 @deprecated 별칭(새 `Select`·`Field`·`Tabs` 가 그 이름을 이었다),
 옛 이름 alias(`generated/legacy.css` · @theme 의 옛 유틸 이름), `normalizeTone` · 옛 tone 키, Button 의 열린 `data-slot`.
-이행 순서는 `packages/ui/README.md` «3.x → 4.0» · «2.x → 3.0».
-소비 레포는 정확 버전을 고정하고(`"@buildos/ui": "npm:@jhleeweb/jhlee-design-system@4.x.y"` 같은 별칭 허용) 갱신은 PR 로 한다.
+이행 순서는 `packages/ui/README.md` «4.x → 5.0» · «3.x → 4.0» · «2.x → 3.0».
+소비 레포는 정확 버전을 고정하고(`"@buildos/ui": "npm:@jhleeweb/jhlee-design-system@5.x.y"` 같은 별칭 허용) 갱신은 PR 로 한다.
 
 ```css
 @import "tailwindcss/theme.css" layer(theme);
 @import "@jhleeweb/jhlee-design-system/theme.css"; /* @source "./" 자기 등록 — 소비자 @source 불필요 */
+@import "@jhleeweb/jhlee-design-system/cursors.css"; /* CAD 커서(cursor-cad-* · --cursor-*)를 쓰는 앱만 — 5.0.0 부터 theme.css 에 없다(#102) */
 @import "tailwindcss/utilities.css" source(none); /* 레이어 없이 — tokens.css 의 button{border-radius:0} 이 레이어 안 규칙을 이기기 때문 */
 @source "./";
 ```

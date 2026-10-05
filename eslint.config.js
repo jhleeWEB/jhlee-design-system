@@ -266,6 +266,17 @@ export default tseslint.config(
       ],
     },
   },
+  /* 스토리는 Storybook 의 진입 CSS 로 «아는 클래스» 를 읽는다 — CAD 커서 유틸리티(`cursor-cad-*`)는 5.0.0 부터 theme.css 에 없고(#102)
+     서브패스 cursors.css 를 따로 싣는 진입에서만 선다. 소비 앱이 프리셋의 `entryPoint` 에 자기 진입 CSS 를 주는 것과 같은 모양이다. */
+  {
+    files: ["packages/ui/stories/**/*.{ts,tsx}", "packages/ui/.storybook/**/*.{ts,tsx}"],
+    settings: {
+      "better-tailwindcss": {
+        cwd: "packages/ui",
+        entryPoint: `${import.meta.dirname}/packages/ui/.storybook/storybook.css`,
+      },
+    },
+  },
 
   // ── 로컬 규칙 ds/* ──
   {

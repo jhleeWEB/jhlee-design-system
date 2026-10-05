@@ -1,0 +1,17 @@
+/* jhlee design system — 3D 모델링 커서(#64 · #102)
+ *
+ * 값은 여기 없다. 정본은 `src/cursors/cursors.ts` 의 SVG 표이고 생성기(`tokens/build.mjs`)가 아래 두 파일을 쓴다:
+ *   generated/cursors.css           :root 의 `--cursor-<이름>`(32px SVG data URI · 핫스팟 · 키워드 폴백)
+ *   generated/cursors.tailwind.css  `@utility cursor-cad-<이름>`
+ *
+ * **theme.css · tokens.css 는 이 파일을 싣지 않는다**(5.0.0, #102). `:root` 선언은 Tailwind 가 유틸리티처럼 걸러 내지 못해, 커서를 하나도 쓰지 않는
+ * 소비 앱의 산출 CSS 87.5 kB 중 20.1 kB(23%)가 이 선언이었다(module5 `vite build` 실측). 커서를 쓰는 앱만 한 줄을 더한다:
+ *
+ *     @import "@jhleeweb/jhlee-design-system/theme.css";
+ *     @import "@jhleeweb/jhlee-design-system/cursors.css";
+ *
+ * Tailwind 없이 변수만 쓰는 앱도 이 파일을 그대로 싣는다 — `@utility` 는 Tailwind 의 at-rule 이라 브라우저는 모르는 규칙으로 건너뛴다.
+ */
+
+@import "./generated/cursors.css";
+@import "./generated/cursors.tailwind.css";

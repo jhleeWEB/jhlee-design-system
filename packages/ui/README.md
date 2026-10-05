@@ -5,8 +5,8 @@ jhlee design system 의 발행 패키지. 사용법·토큰·컴포넌트 계약
 
 - 진입: `import { … } from "@jhleeweb/jhlee-design-system"` · `…/canvas-metrics` · `…/testing` · `…/eslint` · `…/icons`(`./legacy` 는 3.0.0 에서 지웠다 — 아래 «2.x → 3.0»)
 - 아이콘: `…/icons` — `import { IconOrbit, IconMove, icons } from "@jhleeweb/jhlee-design-system/icons"`(#64). 24 뷰박스 · 획 2 · currentColor, 기본 16px(`--size-icon-md`), `title` 을 주면 `role="img"`(없으면 `aria-hidden`). 크롬 · 툴 클러스터(선택 · 오빗 · 팬 · 줌 · 이동/회전/축척 · 그리기 · 오프셋/돌출/단면 · 측정 · 카메라 뷰) · 글자 서식 · 테마(해 · 달) 75개 — lucide 에서 옮긴 글리프의 ISC 고지는 `dist/icons/LICENSE-lucide.txt`. `react-icons` 의존은 없다.
-- 커서: `theme.css`/`tokens.css` 가 `--cursor-<이름>`(32px SVG · 핫스팟 · 키워드 폴백)을, `theme.css` 가 유틸리티 `cursor-cad-<이름>` 을 낸다 — `select` `orbit` `pan` `grabbing` `zoom-window` `crosshair` `draw` `measure` `section` `snap` `resize-*` … 27개(카탈로그 `Foundations/Cursors`).
-- CSS: `…/theme.css`(Tailwind v4 @theme + 캔버스/크롬 토큰 + 컴포넌트 규칙, `@source "./"` 자기 등록) · `…/tokens.css`(토큰만) · `…/corner.css`(비어 있는 호환 파일 — 스쿼클 폐기, #36) · `…/canvas.css`.
+- 커서: 서브패스 `…/cursors.css` 가 `--cursor-<이름>`(32px SVG · 핫스팟 · 키워드 폴백)과 유틸리티 `cursor-cad-<이름>` 을 낸다(5.0.0 부터 `theme.css` · `tokens.css` 에는 없다 — 쓰는 앱만 `@import "…/cursors.css"` 한 줄을 더한다, 아래 «4.x → 5.0») — `select` `orbit` `pan` `grabbing` `zoom-window` `crosshair` `draw` `measure` `section` `snap` `resize-*` … 27개(카탈로그 `Foundations/Cursors`).
+- CSS: `…/theme.css`(Tailwind v4 @theme + 캔버스/크롬 토큰 + 컴포넌트 규칙, `@source "./"` 자기 등록) · `…/tokens.css`(토큰만) · `…/corner.css`(비어 있는 호환 파일 — 스쿼클 폐기, #36) · `…/canvas.css` · `…/cursors.css`(CAD 커서 — 따로 싣는다, #102).
 - 검사: `…/testing` — 소비 레포의 `__arch__` 래칫이 부르는 순수 함수(`auditCorners` · `countByFile`). 모서리는 일반 `border-radius` 사다리(4/6/8/12/16px)라 원시 반경·`corner-shape` 선언·임의값 `rounded-[…]` 를 잡는다(스쿼클은 2026-09-30 폐기, #36).
   값의 정본은 `tokens/*.json`(DTCG)이고 CSS 는 생성물이다. 크롬 이름은 shadcn 어휘(`bg-background` `text-muted-foreground` `bg-primary` …, `tokens/README.md`)이고
   옛 이름(`text-ink` `bg-surface` `var(--chrome-line)` · `var(--ink)` …)은 3.0.0 에서 alias 째 지웠다 — 코드모드(`scripts/codemod-*.mjs`)를 한 번 돌리고 프리셋 린트 `--fix` 로 마무리한다
@@ -53,6 +53,18 @@ npx jds-agent sync --cwd ../other-repo
 - 없는 컴포넌트 — 지어내지 않고 [요청 양식](https://github.com/jhleeWEB/jhlee-design-system/issues/new?template=component-request.yml)으로 이 저장소에 이슈를 연다(원하는 모양의 이미지 첨부 권장, #96). 블록 · 스킬의 양식 URL 은 `repository.url` 에서 채워진다.
 
 세 생성물은 소스의 JSDoc 에서 나온다(`scripts/build-manifest.ts` · `build-docs.ts`) — 설명을 고치려면 JSDoc 을 고치고 `pnpm manifest:build` 로 다시 만든다.
+
+## 4.x → 5.0
+
+5.0.0 이 바꾼 것은 하나다 — **`theme.css` · `tokens.css` 가 CAD 커서를 싣지 않는다**(#102). 커서 27개의 `:root` 선언(`--cursor-*`, SVG data URI)은 Tailwind 가
+유틸리티처럼 걸러 내지 못해, 커서를 쓰지 않는 앱도 산출 CSS 에 20 kB(비압축, module5 실측 87.5 kB 중 23%)를 받았다.
+
+| 4.x | 5.0 |
+|---|---|
+| `cursor-cad-*` 유틸리티 · `var(--cursor-*)` 가 `theme.css`(변수는 `tokens.css`)만으로 선다 | 진입 CSS 에 한 줄을 더한다: `@import "@jhleeweb/jhlee-design-system/cursors.css";`(`theme.css` 뒤). 더하지 않으면 `cursor-cad-*` 는 Tailwind 가 모르는 클래스가 되고 `var(--cursor-*)` 는 빈 값이라 기본 커서로 남는다 — 오류 없이 조용하다 |
+| 커서를 쓰지 않는 앱 | 할 일 없음 — 산출 CSS 에서 `--cursor-*` 가 사라진다 |
+
+커서를 쓰는지는 `grep -rE "cursor-cad-|--cursor-" src` 로 본다. 컴포넌트 · 토큰 · JS API 는 4.x 의 마지막 판과 같다.
 
 ## 3.x → 4.0
 
