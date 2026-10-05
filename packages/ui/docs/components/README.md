@@ -32,6 +32,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Eyebrow](Eyebrow.md) | component | server ok |  | 들머리 눈썹 — 대문자 mono 한 줄 |
 | [Field](Field.md) | component | client | FieldControl, FieldDescription, FieldError, FieldLabel | 필드의 루트 — 라벨 · 컨트롤 · 설명 · 오류가 쓸 id 를 만들어 나눠 준다 |
 | [Fieldset](Fieldset.md) | component | client |  | 묶음 상자 — 테두리 상자 위 선에 제목(legend)이 걸치는 네이티브 fieldset |
+| [FileInput](FileInput.md) | component | client |  | 파일 입력 — 고르기 버튼 · 고른 파일 이름과 크기 · 지우기 |
 | [HoverCard](HoverCard.md) | component | client | HoverCardContent, HoverCardTrigger | 호버 카드의 루트 — 열림 상태(`open` · `defaultOpen` · `onOpenChange`)와 지연(`openDelay` · `closeDelay`)만 든다 |
 | [Input](Input.md) | component | client |  | 입력 — 글자와 수치 |
 | [Kbd](Kbd.md) | component | client |  | 단축키 표기 — `⌘K` 같은 키 이름을 mono 칩으로. |
