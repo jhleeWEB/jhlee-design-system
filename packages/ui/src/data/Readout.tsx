@@ -13,6 +13,7 @@ import { readoutValueVariants, readoutVariants } from "./Readout.variants";
 type ReadoutSize = NonNullable<VariantProps<typeof readoutVariants>["size"]>;
 type ReadoutVariant = NonNullable<VariantProps<typeof readoutVariants>["variant"]>;
 type ReadoutTone = NonNullable<VariantProps<typeof readoutValueVariants>["tone"]>;
+type ReadoutKind = NonNullable<VariantProps<typeof readoutValueVariants>["kind"]>;
 
 /** `Readout` 의 props — `<dl>` 속성(ref 포함) + `size` · `variant` · `live`. */
 export interface ReadoutProps extends ComponentPropsWithRef<"dl">, VariantProps<typeof readoutVariants> {
@@ -43,12 +44,12 @@ export function Readout({ className, size, variant, live = false, ...rest }: Rea
   );
 }
 
-/** `ReadoutItem` 의 props — `<div>` 속성(ref 포함, `children` 제외) + 라벨 · 값 · 단위 · 판정. */
+/** `ReadoutItem` 의 props — `<div>` 속성(ref 포함, `children` 제외) + 라벨 · 값 · 단위 · 판정 · 종류. */
 export interface ReadoutItemProps
   extends Omit<ComponentPropsWithRef<"div">, "children">, VariantProps<typeof readoutValueVariants> {
   /** 칸의 이름(`<dt>`) — mono 대문자 미세라벨. */
   label: ReactNode;
-  /** 값(`<dd>`) — mono + tabular-nums. 숫자 서식(천 단위 쉼표 · 소수 자리)은 앱이 정한다. */
+  /** 값(`<dd>`) — mono + tabular-nums. 숫자 서식(천 단위 쉼표 · 소수 자리)은 앱이 정한다. `kind="status"` 면 상태를 말하는 글자다. */
   value: ReactNode;
   /**
    * 값 뒤의 단위 — "m²", "%", "units". 값보다 작고 흐리다.
@@ -64,27 +65,54 @@ export interface ReadoutItemProps
 
 /**
  * 판독 한 칸 — 라벨 · 값 · 단위, 그리고 판정(`tone` + `status`). 판정색은 값과 `status` 글자에만 입힌다.
+ * 값 자리에 수치가 아니라 상태 글자가 서는 칸은 `kind="status"` 다 — sans 본문 글자 + 톤 점으로 그려 수치 칸과 구분된다.
  * @slot readout-item
  */
-export function ReadoutItem({ className, label, value, unit, status, tone, ...rest }: ReadoutItemProps) {
+export function ReadoutItem({
+  className,
+  label,
+  value,
+  unit,
+  status,
+  tone,
+  kind,
+  ...rest
+}: ReadoutItemProps) {
   const resolvedTone = tone ?? "neutral";
+  const resolvedKind = kind ?? "value";
   return (
     <div
       className={cn("flex min-w-0 flex-1 basis-28 flex-col gap-1 bg-card px-3 py-2", className)}
       {...rest}
       data-slot="readout-item"
       data-tone={resolvedTone satisfies ReadoutTone}
+      data-kind={resolvedKind satisfies ReadoutKind}
     >
       <dt className="truncate font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
         {label}
       </dt>
-      <dd className={readoutValueVariants({ tone: resolvedTone })}>
-        <span className="min-w-0 truncate">
-          {value}
-          {unit === undefined ? null : (
-            <span className="ml-1 text-label font-normal text-muted-foreground">{unit}</span>
-          )}
-        </span>
+      <dd className={readoutValueVariants({ tone: resolvedTone, kind: resolvedKind })}>
+        {resolvedKind === "status" ? (
+          /* 줄 칸을 옆 수치 칸의 값 줄(text-readout 28px · sm 은 text-title 24px)에 맞춘다 — 본문 글자(20px)를 그대로 두면 상태 글자가
+             수치의 가운데가 아니라 위에 붙어 한 줄로 읽히지 않는다(#106). 점은 판정이 있을 때만 — neutral 은 판정이 아니다(Toast 의 neutral 과 같다). */
+          <span className="flex min-h-7 min-w-0 items-center gap-2 group-data-[size=sm]/readout:min-h-6">
+            {resolvedTone === "neutral" ? null : (
+              <i
+                data-slot="readout-dot"
+                aria-hidden="true"
+                className="size-2 shrink-0 rounded-full bg-current"
+              />
+            )}
+            <span className="min-w-0 truncate">{value}</span>
+          </span>
+        ) : (
+          <span className="min-w-0 truncate">
+            {value}
+            {unit === undefined ? null : (
+              <span className="ml-1 text-label font-normal text-muted-foreground">{unit}</span>
+            )}
+          </span>
+        )}
         {status === undefined ? null : (
           <span data-slot="readout-status" className="font-sans text-label font-normal">
             {status}

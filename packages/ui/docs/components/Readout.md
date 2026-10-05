@@ -27,13 +27,15 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 서버에서도 렌더 가능(지시문 없음) · 원본 `src/data/Readout.tsx`
 
 판독 한 칸 — 라벨 · 값 · 단위, 그리고 판정(`tone` + `status`). 판정색은 값과 `status` 글자에만 입힌다.
+값 자리에 수치가 아니라 상태 글자가 서는 칸은 `kind="status"` 다 — sans 본문 글자 + 톤 점으로 그려 수치 칸과 구분된다.
 
 물려받는 props: `Omit<ComponentPropsWithRef<"div">, "children">`
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
 | `label` | `ReactNode` | 예 |  | 칸의 이름(`<dt>`) — mono 대문자 미세라벨. |
-| `value` | `ReactNode` | 예 |  | 값(`<dd>`) — mono + tabular-nums. 숫자 서식(천 단위 쉼표 · 소수 자리)은 앱이 정한다. |
+| `value` | `ReactNode` | 예 |  | 값(`<dd>`) — mono + tabular-nums. 숫자 서식(천 단위 쉼표 · 소수 자리)은 앱이 정한다. `kind="status"` 면 상태를 말하는 글자다. |
 | `unit` | `string` |  | `undefined` | 값 뒤의 단위 — "m²", "%", "units". 값보다 작고 흐리다. |
 | `status` | `ReactNode` |  | `undefined` | 판정을 말하는 글자 — "Over limit" · "Within range". `tone` 이 색을 줄 때 함께 준다: 상태는 언제나 글자와 병기한다(원칙 2). |
 | `tone` | `"neutral" \| "primary" \| "success" \| "warning" \| "destructive" \| "info" \| null` |  | `"neutral"` | 값: `neutral` — 판정 없음(기본 글자색) · `primary` — 지금 고른 것 · 주된 것 · `success` — 통과 · `warning` — 주의 · `destructive` — 실패 · `info` — 안내 |
+| `kind` | `"value" \| "status" \| null` |  | `"value"` | 값: `value` — 수치. mono + tabular-nums 의 큰 글자 · `status` — 상태를 말하는 글자("Contacts checked"). sans 본문 글자 + 톤 점 — 옆 칸의 수치와 다른 종류로 읽힌다 |

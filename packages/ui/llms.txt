@@ -181,7 +181,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `popoverContentVariants`: cva — 축 onCanvas(true | false); 기본 onCanvas=false. 서버에서 호출 가능.
 - `progressVariants`: cva — 축 tone(primary | success | warning | destructive | neutral); 기본 tone=primary. 서버에서 호출 가능.
 - `radioGroupItemVariants`: cva — 축 size(sm | md | lg); 기본 size=md. 서버에서 호출 가능.
-- `readoutValueVariants`: cva — 축 tone(neutral | primary | success | warning | destructive | info); 기본 tone=neutral. 서버에서 호출 가능.
+- `readoutValueVariants`: cva — 축 kind(value | status) · tone(neutral | primary | success | warning | destructive | info); 기본 tone=neutral, kind=value. 서버에서 호출 가능.
 - `readoutVariants`: cva — 축 size(sm | md) · variant(inline | floating); 기본 size=md, variant=inline. 서버에서 호출 가능.
 - `resizableHandleVariants`: cva — 축 orientation(horizontal | vertical); 기본 orientation=horizontal. 서버에서 호출 가능.
 - `resizablePanelsVariants`: cva — 축 orientation(horizontal | vertical); 기본 orientation=horizontal. 서버에서 호출 가능.
