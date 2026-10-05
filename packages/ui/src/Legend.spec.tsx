@@ -86,6 +86,30 @@ describe("Legend — 상자는 크롬, 스와치는 캔버스(#80)", () => {
     expect(fallback).toHaveAttribute("data-pattern", "fill");
   });
 
+  it("color 를 주면 swatch 대신 그 색으로 그린다 — 무늬 · 타일 · 각진 모서리는 그대로(#110)", () => {
+    render(
+      <Legend>
+        <LegendItem color="#c2410c" pattern="outline" swatch="muted">
+          Wet room
+        </LegendItem>
+        <LegendItem swatch="muted">Core</LegendItem>
+      </Legend>,
+    );
+    const [custom, plain] = screen.getAllByRole("listitem");
+    expect(custom).toHaveAttribute("data-swatch", "color");
+    expect(custom).toHaveAttribute("data-pattern", "outline");
+    expect(custom).not.toHaveAttribute("color");
+    const swatch = custom!.querySelector<HTMLElement>('[data-slot="legend-swatch"]')!;
+    expect(swatch.style.getPropertyValue("--legend-swatch")).toBe("#c2410c");
+    expect(swatch).toHaveClass("text-(--legend-swatch)", "border-current", "rounded-none");
+    expect([...swatch.classList].filter((c) => c.startsWith("text-canvas-"))).toEqual([]);
+    expect(custom!.querySelector('[data-slot="legend-swatch-tile"]')).toHaveClass("bg-canvas");
+    // color 가 없는 항목은 그대로 캔버스 무채색이고 인라인 스타일이 없다.
+    const plainSwatch = plain!.querySelector<HTMLElement>('[data-slot="legend-swatch"]')!;
+    expect(plainSwatch).toHaveClass("text-canvas-muted");
+    expect(plainSwatch.getAttribute("style")).toBeNull();
+  });
+
   it("aria-label 로 이름을 바꾼다", () => {
     render(
       <Legend aria-label="Plan legend">

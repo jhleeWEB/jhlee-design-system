@@ -35,6 +35,9 @@ export const legendVariants = cva(
 export const legendSwatchTileClassName =
   "inline-flex size-4 shrink-0 items-center justify-center rounded-none bg-canvas";
 
+/** 도메인 색 스와치(`LegendItem` 의 `color`, #110) — 앱이 준 색을 `--legend-swatch` 로 받아 currentColor 에 싣는다. 무늬는 그대로 그 색을 읽는다. */
+export const legendSwatchColorClassName = "text-(--legend-swatch)";
+
 /** 스와치의 변형 — `swatch`(캔버스 무채색 한 단) · `pattern`(무늬). 12px 안에 그리고 각진 채로 둔다. */
 export const legendSwatchVariants = cva("inline-block shrink-0 rounded-none", {
   variants: {

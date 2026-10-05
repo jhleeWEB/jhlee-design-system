@@ -26,11 +26,12 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 서버에서도 렌더 가능(지시문 없음) · 원본 `src/Legend.tsx`
 
 범례 한 줄 — 스와치(장식, 스크린리더는 건너뛴다) + 라벨(`children`). 스와치는 흰 캔버스 타일 위에 캔버스 무채색 한 단(`swatch`)과
-무늬(`pattern`)로 그린다.
+무늬(`pattern`)로 그린다. 도면의 그림과 맞춰야 하는 도메인 색은 `color` 로 준다.
 
-물려받는 props: `ComponentPropsWithRef<"li">`
+물려받는 props: `Omit<ComponentPropsWithRef<"li">, "color">`
 
 | prop | 타입 | 필수 | 기본값 | 설명 · 값 |
 |---|---|---|---|---|
+| `color` | `string` |  | `undefined` | 도메인 색(CSS 색 값) — 도면의 그림과 맞춰야 하는 **앱의 값**(실 종류 · 검출 층). 주면 `swatch` 대신 이 색으로 그리고 `pattern` 은 그대로다. 색만으로 말하지 않는다 — 라벨(`children`)이 항목의 이름이다. |
 | `pattern` | `"fill" \| "outline" \| "hatch" \| "line" \| null` |  | `"fill"` | 값: `fill` — 꽉 찬 사각(면 · 영역) · `outline` — 외곽선만 있는 사각(경계 · 계획선) · `hatch` — 외곽선 + 45° 빗금(단면 · 제외 구역) · `line` — 가로 선 하나(선 요소 · 치수선) |
 | `swatch` | `"ink" \| "ink-2" \| "muted" \| "line-strong" \| "line" \| "grid" \| "surface" \| null` |  | `"ink"` | 값: `ink` — 가장 진한 먹(벽 · 주된 선) · `ink-2` — 한 단 옅은 먹 · `muted` — 흐린 먹(보조 선 · 치수) · `line-strong` — 진한 선색 · `line` — 옅은 선색 · `grid` — 격자색 · `surface` — 바탕에서 한 단 들어간 면(채움보다 외곽 · 빗금과 함께 쓴다 — 흰 바탕 위 채움은 거의 보이지 않는다) |
