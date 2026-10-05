@@ -39,6 +39,12 @@
       "sm": { "$value": "44px" },
       "md": { "$value": "56px" }
     },
+    "view": {
+      "$description": "스크롤 본문 안에 서는 캔버스 칸(평면 · 3D · 버블 뷰어)의 높이 세 단 — 뷰어는 position:absolute 로 칸을 채우므로 칸이 높이를 가져야 하는데 임의값(h-[60vh] · h-[560px])은 프리셋이 막고 간격 사다리는 96px 까지다(#107). 값은 소비 레포(apartment-configurator module5)가 4px 격자 고정값으로 쓰던 실측 그대로: sm 360(셋으로 나눈 칸) · md 440(둘로 나눈 칸) · lg 560(한 장짜리 주 뷰). 전부 짝수 · 4의 배수. theme.css 의 손 @utility h-view-sm/md/lg 가 읽는다. 뷰포트를 따라 자라지 않는다 — 본문 전체가 캔버스 한 장인 화면은 flex-1 이다(Pages/Workbench).",
+      "sm": { "$value": "360px" },
+      "md": { "$value": "440px" },
+      "lg": { "$value": "560px" }
+    },
     "panel": {
       "$value": "300px",
       "$description": "펼친 사이드바·3열 셸 패널 폭 — 옛 --panel-w 값 그대로(#21). Sidebar 가 w-(--size-panel) 로 읽는다."

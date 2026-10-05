@@ -100,6 +100,9 @@
   --size-inspector: 340px;
   --size-topbar-sm: 44px;
   --size-topbar-md: 56px;
+  --size-view-sm: 360px;
+  --size-view-md: 440px;
+  --size-view-lg: 560px;
   --size-panel: 300px;
   --size-sheet-sm: 280px;
   --size-sheet-md: 460px;

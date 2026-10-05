@@ -19,7 +19,7 @@ import { LADDERS } from "./generated/ladders";
    h-ctl* · w-ctl* 은 @theme 의 height 사다리 이름이고 w-rail · gap-shell 은 셸 치수, *-dialog-fluid · max-w-popover-fluid 는 오버레이의
    유동 치수(#22)다 — ladders.spec 이 theme.css 의 @utility 와 대조한다. */
 const HAND_UTILITIES = {
-  h: [...LADDERS.height, "dialog-fluid"],
+  h: [...LADDERS.height, "dialog-fluid", "view-sm", "view-md", "view-lg"],
   w: [...LADDERS.height, "rail", "dialog-fluid"],
   "max-h": ["dialog-fluid"],
   "max-w": ["popover-fluid"],
