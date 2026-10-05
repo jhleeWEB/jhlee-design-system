@@ -74,6 +74,22 @@ export const mediaCardMediaVariants = cva("relative shrink-0 overflow-hidden bg-
   defaultVariants: { orientation: "vertical", ratio: "plan" },
 });
 
+/** 내용 카드 글 칸(제목 · 설명 · 메타 · 조치)의 변형 — `density`. 썸네일 · 선택 표시는 밀도와 무관하다. */
+export const mediaCardBodyVariants = cva("flex min-w-0 flex-1 flex-col", {
+  variants: {
+    /**
+     * 밀도 — 글 칸의 패딩과 줄 사이.
+     * - `comfortable` — 16px 패딩. 격자의 후보 카드. 기본값
+     * - `compact` — 12px 패딩 · 좁은 줄 사이. 한 화면에 10–30개가 서는 목록
+     */
+    density: {
+      comfortable: "gap-2 p-4",
+      compact: "gap-1 p-3",
+    },
+  },
+  defaultVariants: { density: "comfortable" },
+});
+
 /** 내용 카드 설명의 변형 — 몇 줄에서 자르는가(`lines`). */
 export const mediaCardDescriptionVariants = cva("mt-1 mb-0 text-body text-muted-foreground", {
   variants: {

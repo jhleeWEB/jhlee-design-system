@@ -5,6 +5,7 @@ export { cardVariants } from "./Card.variants";
 export { DisplayHeading, Eyebrow, Lede } from "./Editorial";
 export { CardGrid, MediaCard, type MediaCardProps } from "./MediaCard";
 export {
+  mediaCardBodyVariants,
   mediaCardDescriptionVariants,
   mediaCardMediaVariants,
   mediaCardVariants,

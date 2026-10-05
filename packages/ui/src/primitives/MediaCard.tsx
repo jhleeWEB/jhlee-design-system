@@ -1,6 +1,7 @@
 "use client";
 import { cn, type VariantProps } from "../cn";
 import {
+  mediaCardBodyVariants,
   mediaCardDescriptionVariants,
   mediaCardMediaVariants,
   mediaCardVariants,
@@ -47,6 +48,13 @@ export interface MediaCardProps
    * @default 2
    */
   descriptionLines?: 2 | 3 | "none";
+  /**
+   * 밀도 — 글 칸의 패딩과 줄 사이. 판정 목록처럼 썸네일 없는 항목이 한 화면에 여럿 설 때 `compact` 로 좁힌다(#111).
+   * - `comfortable` — 16px 패딩. 격자의 후보 카드
+   * - `compact` — 12px 패딩 · 좁은 줄 사이. 목록
+   * @default "comfortable"
+   */
+  density?: VariantProps<typeof mediaCardBodyVariants>["density"];
   /**
    * 썸네일. 없으면 그 칸 자체가 사라진다.
    * @default undefined
@@ -99,6 +107,7 @@ export function MediaCard({
   eyebrow,
   description,
   descriptionLines = 2,
+  density,
   media,
   mediaRatio,
   mediaWidth = "132px",
@@ -109,6 +118,7 @@ export function MediaCard({
   ...rest
 }: MediaCardProps) {
   const horizontal = orientation === "horizontal";
+  const resolvedDensity = density ?? "comfortable";
   return (
     <div
       {...rest}
@@ -117,6 +127,7 @@ export function MediaCard({
       data-selected={selected || undefined}
       /* 선택 버튼의 ::after 링이 카드 반경을 따르려면 자기 elevation 을 알아야 한다(#26) — 링은 안쪽 버튼에 있고 카드 반경은 여기 있다. */
       data-elevation={elevation ?? "raised"}
+      data-density={resolvedDensity satisfies "comfortable" | "compact"}
       className={cn(
         mediaCardVariants({ orientation, elevation, selected: selected ?? false, interactive: !!onSelect }),
         className,
@@ -135,7 +146,7 @@ export function MediaCard({
         </div>
       ) : null}
 
-      <div className="flex min-w-0 flex-1 flex-col gap-2 p-4">
+      <div className={mediaCardBodyVariants({ density: resolvedDensity })}>
         {eyebrow ? (
           <div className="font-mono text-micro font-medium tracking-caps text-muted-foreground uppercase">
             {eyebrow}

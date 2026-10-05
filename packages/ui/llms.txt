@@ -174,6 +174,7 @@ alias 로 살았고 3.0.0 에서 지웠다(#49) — 이제 Tailwind 가 모르�
 - `inputVariants`: cva — 축 size(sm | md | lg) · invalid(true | false) · numeric(true | false); 기본 size=md, invalid=false, numeric=false. 서버에서 호출 가능.
 - `legendSwatchVariants`: cva — 축 swatch(ink | ink-2 | muted | line-strong | line | grid | surface) · pattern(fill | outline | hatch | line); 기본 swatch=ink, pattern=fill. 서버에서 호출 가능.
 - `legendVariants`: cva — 축 orientation(vertical | horizontal); 기본 orientation=vertical. 서버에서 호출 가능.
+- `mediaCardBodyVariants`: cva — 축 density(comfortable | compact); 기본 density=comfortable. 서버에서 호출 가능.
 - `mediaCardDescriptionVariants`: cva — 축 lines(2 | 3 | none); 기본 lines=2. 서버에서 호출 가능.
 - `mediaCardMediaVariants`: cva — 축 orientation(vertical | horizontal) · ratio(16/9 | 4/3 | 1/1 | plan | none); 기본 orientation=vertical, ratio=plan. 서버에서 호출 가능.
 - `mediaCardVariants`: cva — 축 orientation(vertical | horizontal) · elevation(raised | flat | flush) · selected(true | false) · interactive(true | false); 기본 orientation=vertical, elevation=raised, selected=false, interactive=false. 서버에서 호출 가능.
