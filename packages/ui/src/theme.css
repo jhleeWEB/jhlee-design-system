@@ -127,6 +127,16 @@
 @utility h-ctl-lg {
   height: var(--height-ctl-lg);
 }
+/* 스크롤 본문 안 캔버스 칸의 높이 세 단(#107) — 값과 근거는 tokens/primitive/dimension.json 의 size.view. 본문 전체가 캔버스면 flex-1 을 쓴다. */
+@utility h-view-sm {
+  height: var(--size-view-sm);
+}
+@utility h-view-md {
+  height: var(--size-view-md);
+}
+@utility h-view-lg {
+  height: var(--size-view-lg);
+}
 @utility w-ctl-sm {
   width: var(--height-ctl-sm);
 }

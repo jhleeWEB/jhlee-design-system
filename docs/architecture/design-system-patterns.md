@@ -107,6 +107,34 @@ React 19에서는 ref를 prop으로 받을 수 있다. 단순 래퍼는 native/R
 `src/__tests__/corner.spec.ts` 가 «배포 CSS·제품 소스에 `corner-shape` 없음 · 사다리 px 고정 · 원시 반경 래칫 · 임의값은 동심원만» 을 지키고,
 소비 레포는 `@jhleeweb/jhlee-design-system/testing` 의 `auditCorners` 로 같은 규칙을 래칫에 건다.
 
+## 스크롤 본문 안의 캔버스 칸
+
+본문이 **스크롤되는 문서**이고 그 안에 캔버스 칸(평면 · 3D · 버블 뷰어)이 서는 화면에서는 칸이 높이를 가져야 한다 — 뷰어는
+`position: absolute` 로 칸을 채우므로 내용이 높이를 만들어 주지 않는다. 임의값(`h-[60vh]` · `h-[560px]`)은 린트 프리셋이 막고
+간격 사다리는 96px 까지라, 칸 높이는 전용 세 단으로 정한다(#107).
+
+| 유틸리티 | 높이 | 쓰는 자리 |
+|---|---|---|
+| `h-view-sm` | 360px | 셋으로 나눈 칸 · 보조 뷰 |
+| `h-view-md` | 440px | 둘로 나눈 칸 |
+| `h-view-lg` | 560px | 한 장짜리 주 뷰 |
+
+```tsx
+<ScrollArea className="flex-1">
+  <section className="relative h-view-lg bg-canvas">{/* 뷰어가 absolute inset-0 으로 채운다 */}</section>
+  <div className="grid grid-cols-2 gap-3">
+    <section className="relative h-view-md bg-canvas" />
+    <section className="relative h-view-md bg-canvas" />
+  </div>
+</ScrollArea>
+```
+
+- 칸은 캔버스다 — `bg-canvas` · 각진 모서리 · 다크 없음. 칸을 감싸는 카드 · 머리줄은 크롬이다.
+- 세 단은 고정값이라 뷰포트가 커져도 자라지 않는다. **본문 전체가 캔버스 한 장**인 화면은 높이 토큰이 아니라 `flex-1` 이다
+  (`Pages/Workbench` — AppShell 의 본문 칸이 남는 높이를 전부 갖는다).
+- 값의 정본은 `packages/ui/tokens/primitive/dimension.json` 의 `size.view`(`--size-view-sm/md/lg`)다. 다른 높이가 필요하면
+  임의값이 아니라 이 사다리에 단을 더한다.
+
 ## 검증 기준
 
 새 패턴은 클래스명 검사보다 사용자 동작으로 검증한다. 최소한 바뀐 계약에 해당하는

@@ -22,6 +22,7 @@ LLM 의 사전 분포는 shadcn/ui 다 — 그와 **같은 이름**은 설명 �
 | 반경 | `rounded-sm/md/lg/xl/full`(원호) | 같은 이름 + `rounded-xs`(4/6/8/12/16/9999px 고정, 원호) — **역할이 단을 정한다**: 작은 표시(16px 이하 · 체크박스) `xs` · 칩 `sm` · 컨트롤 · 메뉴 항목 `md` · 면(카드 · 알림 · 토스트 · 팝오버 · 메뉴 · 툴팁 · 범례) `lg` · 화면을 가리는 것 `xl` | 값만 이 제품의 밀도다. 임의값은 동심원 `rounded-[calc(var(--radius-…)-…)]` 만, 원형은 `rounded-full` 로만. `corner-shape`(스쿼클)는 쓰지 않는다 — 2026-09-30 폐기(#36). 역할 표는 `packages/ui/tokens/README.md` «역할 → 토큰»(#80) |
 | 그림자 | `shadow-sm/md/lg` | `shadow-chip` `shadow-card` `shadow-pop` `shadow-modal` — 부유 층위의 이름 | 3·4단은 inset 헤어라인을 그림자 안에 넣는다(부유 레이어가 테두리를 따로 그리지 않게). 기본 사다리는 지웠다 |
 | 컨트롤 높이 | `h-9` `h-10` | `h-ctl-sm`(30) `h-ctl`(36) `h-ctl-lg`(44) · 정사각은 `w-ctl*` | 세 단만 있다 — 다른 높이는 컨트롤이 아니다 |
+| 캔버스 칸 높이 | 임의 값(`h-[60vh]`) | `h-view-sm`(360) `h-view-md`(440) `h-view-lg`(560) | 스크롤 본문 안에 서는 뷰어 칸의 높이 — 뷰어가 absolute 로 칸을 채워 높이가 꼭 필요하다. 본문 전체가 캔버스면 `flex-1` |
 | 판정색 | `destructive` 하나 | `success` `warning` `destructive` `info` 각각 `DEFAULT / -hover / -foreground / -soft / -line` 다섯 역할 | 이 제품의 색은 «판정» 이다(원칙 2: 유채색은 판정에만). `-soft` 는 배지·알림의 옅은 면, `-line` 은 면 위 3:1 테두리, `-foreground` 는 solid 위의 글자(amber 와 다크는 흰색이 4.5:1 을 못 넘어 어두운 글자다) |
 | 액센트 두 가지 | `primary`(채움) · `accent`(옅은 면) | 같다 — 덧붙여 `primary-hover` `primary-track`(슬라이더·진행 바닥) | 옛 이름 `accent`(azure) 는 shadcn 의 `primary` 였다 — B5(#22)에서 개명 |
 | 글자 사다리(크롬) | `foreground` `muted-foreground` | + `foreground-2`(한 단 약한 글자) `foreground-disabled` | 라벨·설명·비활성이 각각 다른 회색이다 |

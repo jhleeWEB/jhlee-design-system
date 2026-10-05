@@ -60,7 +60,7 @@ packages/ui/                 발행 패키지. src/ 가 정본, dist/ 는 tsdown
   src/lib/tone.ts            톤 어휘 한 벌(`toneValues` · `Tone`). 옛 키 shim `normalizeTone()` 은 3.0.0 에서 지웠다 — 옛 키는 타입 오류, 이행은 `ds/legacy-tone --fix`(#49)
   src/tokens.css             `generated/tokens.css` 재수출 + 원칙을 강제하는 요소 규칙(box-sizing · body · 컨트롤 radius 0 · .num). 값은 없다
   src/theme.css              tokens.css + `generated/theme.tailwind.css` 재수출, @source "./" 자기 등록, 컴포넌트 CSS(@import), keyframes,
-                             손 @utility(tnum · focus-ring · on-canvas · h-ctl* · w-rail · gap-shell · *-dialog-fluid · max-w-popover-fluid), `.ds-*` 컴포넌트 규칙. 값은 없다 —
+                             손 @utility(tnum · focus-ring · on-canvas · h-ctl* · h-view-*(스크롤 본문 안 캔버스 칸 360/440/560, #107) · w-rail · gap-shell · *-dialog-fluid · max-w-popover-fluid), `.ds-*` 컴포넌트 규칙. 값은 없다 —
                              방향 C(캔버스/크롬)의 «왜» 는 머리 주석
   src/{primitives,overlay,feedback,navigation,data}/   DS 컴포넌트(Tailwind 유틸 + cva + Radix)
   src/**/Name.variants.ts    컴포넌트의 cva 한 벌 — `"use client"` 없음(서버에서 호출 가능). 컴포넌트가 import 하고 층 배럴이 `*Variants` 를 export
