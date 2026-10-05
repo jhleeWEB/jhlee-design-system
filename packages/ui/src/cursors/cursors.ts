@@ -1,5 +1,6 @@
 /* 3D 모델링 커서의 정본(#64) — 생성기(`tokens/build.mjs`)가 이 표로 `generated/cursors.css`(:root 의 `--cursor-*`)와
  * `generated/cursors.tailwind.css`(`@utility cursor-cad-*`)를 쓰고, 카탈로그(`Foundations/Cursors`)가 같은 SVG 를 미리보기로 그린다.
+ * 소비자는 서브패스 `./cursors.css` 로 둘을 싣는다 — theme.css · tokens.css 에는 없다(5.0.0, #102).
  *
  * 모양: 32×32 SVG, 검정 본체(획 2) 아래에 흰 외곽(획 5 → 바깥으로 1.5px)을 한 번 더 그린다 — 흰 캔버스와 다크 크롬 어느 바탕에서도 읽힌다.
  * 아이콘과 같은 글리프를 쓰는 커서(손 · 돋보기 · 연필 · 스포이트 · 모래시계 …)는 `glyphs.ts` 를 24 → 32 칸 가운데로 옮겨(translate 4 4) 그린다 —

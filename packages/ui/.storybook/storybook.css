@@ -2,6 +2,7 @@
    서야 카탈로그가 대표성을 갖는다. preflight 를 빼는 이유는 theme.css 머리 주석에 있다(tokens.css 의 요소 규칙이 레이어 안 규칙을 이긴다). */
 @import "tailwindcss/theme.css" layer(theme);
 @import "../src/theme.css"; /* `@source "./"` 로 src/ 를 자기 등록한다 */
+@import "../src/cursors.css"; /* CAD 커서는 따로 싣는다(#102) — Foundations/Cursors · Pages/Workbench 가 쓴다 */
 @import "tailwindcss/utilities.css" source(none);
 
 /* 페이지 스토리(옛 갤러리)와 이 디렉터리의 데코레이터가 쓰는 클래스도 굽는다. */

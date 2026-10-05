@@ -35,6 +35,7 @@ describe("exports", () => {
         "./corner.css",
         "./tokens.css",
         "./canvas.css",
+        "./cursors.css",
         "./package.json",
       ]
     `);
@@ -60,6 +61,7 @@ describe("exports", () => {
         },
         "./canvas.css": "./dist/canvas.css",
         "./corner.css": "./dist/corner.css",
+        "./cursors.css": "./dist/cursors.css",
         "./eslint": {
           "default": "./dist/eslint/index.js",
           "import": "./dist/eslint/index.js",
