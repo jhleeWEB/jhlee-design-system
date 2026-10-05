@@ -10,6 +10,12 @@ import { Legend, LegendItem } from "./Legend";
  * 함께 그린다. 도면 바닥(`bg-canvas`) 위에 올려 그린다 — 실제로 놓이는 자리다(Pages/Workbench 의 왼쪽 아래). */
 const swatchValues = ["ink", "ink-2", "muted", "line-strong", "line", "grid", "surface"] as const;
 const patternValues = ["fill", "outline", "hatch", "line"] as const;
+/* 도메인 색(#110) — 도면의 그림과 맞춘 **앱의 값**이다. 디자인 시스템의 토큰이 아니라서 스토리가 값을 든다(실 종류 셋). */
+const roomColors = [
+  ["Living", "#2563eb"],
+  ["Bedroom", "#15803d"],
+  ["Wet room", "#c2410c"],
+] as const;
 
 const meta = {
   title: "Canvas/Legend",
@@ -79,6 +85,18 @@ export const Variants: Story = {
         </LegendItem>
         <LegendItem swatch="grid">Grid</LegendItem>
       </Legend>
+      {/* 도메인 색 × 무늬 — `color` 는 swatch 자리만 바꾸고 무늬는 그대로다. */}
+      <div className="flex items-start gap-4">
+        {patternValues.map((pattern) => (
+          <Legend {...args} key={pattern} aria-label={`Colour ${pattern}`}>
+            {roomColors.map(([label, color]) => (
+              <LegendItem key={label} color={color} pattern={pattern}>
+                {label}
+              </LegendItem>
+            ))}
+          </Legend>
+        ))}
+      </div>
     </div>
   ),
 };
@@ -98,6 +116,7 @@ export const ThemeContrast: Story = {
           <LegendItem swatch="ink-2" pattern="line">
             Dimension
           </LegendItem>
+          <LegendItem color={roomColors[2][1]}>Wet room</LegendItem>
         </Legend>
       )}
     </ThemePair>
