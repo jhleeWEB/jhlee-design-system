@@ -46,6 +46,10 @@ export const IconCopy = /* @__PURE__ */ createIcon("copy");
 export const IconDownload = /* @__PURE__ */ createIcon("download");
 /** 글리프 `settings` — 정본 `glyphs.ts`. */
 export const IconSettings = /* @__PURE__ */ createIcon("settings");
+/** 글리프 `sun` — 정본 `glyphs.ts`. */
+export const IconSun = /* @__PURE__ */ createIcon("sun");
+/** 글리프 `moon` — 정본 `glyphs.ts`. */
+export const IconMoon = /* @__PURE__ */ createIcon("moon");
 /** 글리프 `file-text` — 정본 `glyphs.ts`. */
 export const IconFileText = /* @__PURE__ */ createIcon("file-text");
 /** 글리프 `folder-open` — 정본 `glyphs.ts`. */
@@ -175,6 +179,8 @@ export const icons = {
   copy: IconCopy,
   download: IconDownload,
   settings: IconSettings,
+  sun: IconSun,
+  moon: IconMoon,
   "file-text": IconFileText,
   "folder-open": IconFolderOpen,
   map: IconMap,

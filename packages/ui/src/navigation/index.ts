@@ -22,6 +22,8 @@ export {
 export { collapsibleTriggerVariants } from "./Collapsible.variants";
 export { ScrollArea, type ScrollAreaProps } from "./ScrollArea";
 export { usePanelLayout, type PanelLayout } from "./usePanelLayout";
+export { useTheme, type ResolvedTheme, type Theme, type ThemeState } from "./useTheme";
+export { ThemeToggle, type ThemeToggleProps } from "./ThemeToggle";
 export { SegmentedControl, type SegmentedControlProps, type SegmentedOption } from "./SegmentedControl";
 export {
   Sidebar,

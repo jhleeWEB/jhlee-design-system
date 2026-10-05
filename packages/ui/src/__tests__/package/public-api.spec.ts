@@ -172,6 +172,7 @@ describe("공개 API", () => {
         "Tfoot",
         "Th",
         "Thead",
+        "ThemeToggle",
         "ToastProvider",
         "ToggleGroup",
         "ToggleGroupItem",
@@ -248,6 +249,7 @@ describe("공개 API", () => {
         "topBarVariants",
         "usePanelLayout",
         "useSidebarCollapse",
+        "useTheme",
         "useToast",
       ]
     `);

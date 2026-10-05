@@ -4,7 +4,7 @@ jhlee design system 의 발행 패키지. 사용법·토큰·컴포넌트 계약
 컴포넌트를 눈으로 보려면 카탈로그(Storybook) https://jhleeweb.github.io/jhlee-design-system/ — 컴포넌트마다 Docs · Default · Variants · ThemeContrast(라이트/다크).
 
 - 진입: `import { … } from "@jhleeweb/jhlee-design-system"` · `…/canvas-metrics` · `…/testing` · `…/eslint` · `…/icons`(`./legacy` 는 3.0.0 에서 지웠다 — 아래 «2.x → 3.0»)
-- 아이콘: `…/icons` — `import { IconOrbit, IconMove, icons } from "@jhleeweb/jhlee-design-system/icons"`(#64). 24 뷰박스 · 획 2 · currentColor, 기본 16px(`--size-icon-md`), `title` 을 주면 `role="img"`(없으면 `aria-hidden`). 크롬 · 툴 클러스터(선택 · 오빗 · 팬 · 줌 · 이동/회전/축척 · 그리기 · 오프셋/돌출/단면 · 측정 · 카메라 뷰) · 글자 서식 70개 — lucide 에서 옮긴 글리프의 ISC 고지는 `dist/icons/LICENSE-lucide.txt`. `react-icons` 의존은 없다.
+- 아이콘: `…/icons` — `import { IconOrbit, IconMove, icons } from "@jhleeweb/jhlee-design-system/icons"`(#64). 24 뷰박스 · 획 2 · currentColor, 기본 16px(`--size-icon-md`), `title` 을 주면 `role="img"`(없으면 `aria-hidden`). 크롬 · 툴 클러스터(선택 · 오빗 · 팬 · 줌 · 이동/회전/축척 · 그리기 · 오프셋/돌출/단면 · 측정 · 카메라 뷰) · 글자 서식 · 테마(해 · 달) 75개 — lucide 에서 옮긴 글리프의 ISC 고지는 `dist/icons/LICENSE-lucide.txt`. `react-icons` 의존은 없다.
 - 커서: `theme.css`/`tokens.css` 가 `--cursor-<이름>`(32px SVG · 핫스팟 · 키워드 폴백)을, `theme.css` 가 유틸리티 `cursor-cad-<이름>` 을 낸다 — `select` `orbit` `pan` `grabbing` `zoom-window` `crosshair` `draw` `measure` `section` `snap` `resize-*` … 27개(카탈로그 `Foundations/Cursors`).
 - CSS: `…/theme.css`(Tailwind v4 @theme + 캔버스/크롬 토큰 + 컴포넌트 규칙, `@source "./"` 자기 등록) · `…/tokens.css`(토큰만) · `…/corner.css`(비어 있는 호환 파일 — 스쿼클 폐기, #36) · `…/canvas.css`.
 - 검사: `…/testing` — 소비 레포의 `__arch__` 래칫이 부르는 순수 함수(`auditCorners` · `countByFile`). 모서리는 일반 `border-radius` 사다리(4/6/8/12/16px)라 원시 반경·`corner-shape` 선언·임의값 `rounded-[…]` 를 잡는다(스쿼클은 2026-09-30 폐기, #36).
@@ -13,6 +13,28 @@ jhlee design system 의 발행 패키지. 사용법·토큰·컴포넌트 계약
 - 린트 프리셋: `…/eslint` — `jhleeDesignSystem({ entryPoint })` 를 소비 레포 flat config 에 펼친다(raw `<button>` · 토큰 밖 클래스 · 옛 이름(--fix) · hex/임의값/격자 밖 간격 · 인라인 색 · 옛 tone(--fix)). optional peer `eslint ^10` · `eslint-plugin-better-tailwindcss`.
 - peer: react ^19, react-dom ^19, tailwindcss ^4.3(선택 — **컴포넌트를 쓰면 필요하다**. 컴포넌트의 여백 · 패딩 · 간격 · 색은 패키지가 클래스 이름과 토큰(`--spacing` 4px 격자 …)으로 싣고,
   CSS 는 소비자의 Tailwind v4 가 `theme.css` 의 `@source "./"` 로 패키지 dist 를 훑어 만든다 — 미리 컴파일된 유틸 CSS 는 없다. 토큰 CSS(`…/tokens.css`)만 쓸 때만 빼도 된다)
+
+## 테마 전환
+
+다크는 `html[data-theme="dark"]` 한 줄이다 — 뒤집히는 것은 크롬뿐이고 캔버스는 그대로다. 속성이 없으면 OS 설정(prefers-color-scheme)을 따른다(#112).
+
+```tsx
+import { ThemeToggle, useTheme } from "@jhleeweb/jhlee-design-system";
+
+<ThemeToggle storageKey="app-theme" />; // 상단바의 아이콘 버튼 — 라이트 ↔ 다크
+const { theme, resolved, setTheme } = useTheme({ storageKey: "app-theme" }); // theme: "light" | "dark" | "system"
+```
+
+훅은 마운트 뒤에야 저장본을 읽는다 — 다크를 저장한 사용자가 첫 페인트에서 라이트를 한 번 보지 않게 하려면 `<head>` 의 **맨 앞**(스타일시트보다 먼저)에 같은 키로 속성을 쓰는 인라인 스크립트를 둔다:
+
+```html
+<script>
+  try {
+    var t = localStorage.getItem("app-theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
+```
 
 ## AGENTS
 

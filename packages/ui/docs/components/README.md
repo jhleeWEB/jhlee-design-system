@@ -69,6 +69,7 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Tfoot](Tfoot.md) | component | server ok |  | 표 합계 구역(`<tfoot>`) — 두꺼운 위 경계 · 옅은 면 · 굵은 글자 |
 | [Th](Th.md) | component | server ok |  | 머리 칸(`<th>`) — 열 머리는 mono 대문자 라벨, 줄 머리는 `variant="text"` 로 본문 글자 |
 | [Thead](Thead.md) | component | server ok |  | 표 머리 구역(`<thead>`) — 옅은 면으로 본문과 가른다. |
+| [ThemeToggle](ThemeToggle.md) | component | client |  | 라이트/다크 전환 아이콘 버튼 — 상단바 오른쪽 끝에 둔다 |
 | [ToastProvider](ToastProvider.md) | component | client |  | 토스트 큐와 뷰포트 — 앱 루트에 한 번 둔다 |
 | [ToggleGroup](ToggleGroup.md) | component | client | ToggleGroupItem | 토글 묶음 — `type="single"`(값 하나, 다시 누르면 끈다) · `type="multiple"`(값 배열) |
 | [Toolbar](Toolbar.md) | component | server ok | ToolbarDivider, ToolbarSpacer | 툴바 — 캔버스 위 또는 그 바로 위의 한 줄 |
@@ -77,4 +78,5 @@ _생성물 — `scripts/build-docs.ts` 가 `components.manifest.json` 에서 만
 | [Tr](Tr.md) | component | server ok |  | 표 행(`<tr>`) — 본문 안에서만 호버 면이 붙는다. |
 | [usePanelLayout](usePanelLayout.md) | hook | client |  | 여러 패널의 접힘 상태를 한 곳에서 든다 |
 | [useSidebarCollapse](useSidebarCollapse.md) | hook | client |  | 접기/펴기 상태를 쓰는 쪽에서 들고 있기 위한 훅 |
+| [useTheme](useTheme.md) | hook | client |  | 테마 전환 훅 — `html[data-theme]` 을 읽고 쓴다 |
 | [useToast](useToast.md) | hook | client |  | 가장 가까운 `ToastProvider` 의 큐 — 밖에서 부르면 던진다. |
